@@ -4,14 +4,2299 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-01-04T22:11:26+08:00</updated>
+  <updated>2013-05-04T23:24:32+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
-    <name><![CDATA[Bill]]></name>
+    <name><![CDATA[Bill Xia]]></name>
     <email><![CDATA[ibillxia@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Alize等工具构建说话人识别平台]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/"/>
+    <updated>2013-04-26T22:07:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc</id>
+    <content type="html"><![CDATA[<p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
+开学后不久抽时间写了一个Demo，并上传到了GitHub：https://github.com/ibillxia/VoicePrintReco/tree/master/Demo</p>
+
+
+
+
+<p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</br>
+1.Features extraction 特征提取</br>
+sfbcep.exe（MFCC）或slpcep.exe（LPCC）</br>
+
+2.Silence removal 静音检测和去除</br>
+NormFeat.exe 先能量规整</br>
+EnergyDetector.exe 基于能量检测的静音去除</br>
+
+3.Features Normalization 特征规整</br>
+NormFeat.exe 再使用这个工具进行特征规整</br>
+
+4.World model training</br>
+TrainWorld.exe 训练UBM</br>
+
+5.Target model training</br>
+TrainWorld.exe 在训练好UBM的基础上训练training set和testing set的GMM</br>
+
+6.Testing</br>
+ComputeTest.exe 将testing set 的GMM在training set的GMM上进行测试和打分</br>
+
+7.Score Normalization</br>
+ComputeNorm.exe 将得分进行规整</br>
+
+8. Compute EER 计算等错误率</br>
+你可以查查计算EER的matlab代码，NIST SRE的官网上有下载（http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm）。</br>
+</p>
+
+
+
+
+<!--more-->
+
+
+
+
+<p>关于各步骤中参数的问题，可以在命令行“工具 -help”来查看该工具个参数的具体含义，另外还可参考Alize源码中各个工具的test目录中提供的实例，
+而关于每个工具的作用及理论知识则需要查看相关论文。</p>
+
+
+
+
+<p>常见问题及解答: http://mistral.univ-avignon.fr/mediawiki/index.php/Frequently_asked_questions</p>
+
+
+
+
+<p>更多问题请在Google论坛（https://groups.google.com/forum/?fromgroups=&hl=zh-CN#!forum/alize&#8212;voice-print-recognition）提出，大家一起讨论！</p>
+
+
+
+
+<h3>推荐资料</h3>
+
+
+<p>
+[1] ALIZE - User Manual: http://mistral.univ-avignon.fr/doc/userguide_alize.001.pdf</br>
+[2] LIA_SPKDET Package documentation: http://mistral.univ-avignon.fr/doc/userguide_LIA_SpkDet.002.pdf</br>
+[3] Reference System based on speech modality ALIZE/LIA RAL: http://www-clips.imag.fr/geod/User/laurent.besacier/NEW-TPs/TP-Biometrie/tools/CommentsLBInstall/doc.pdf</br>
+[4] Jean-Francois Bonastre, etc. ALIZE/SpkDet: a state-of-the-art open source software for speaker recognition</br>
+[5] TOMMIE GANNERT. A Speaker Veri?cation System Under The Scope: Alize</br>
+[6] Alize Wiki: http://mistral.univ-avignon.fr/mediawiki/index.php/Main_Page
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[VALSE2013]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/22/VALSE2013/"/>
+    <updated>2013-04-22T22:28:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/22/VALSE2013</id>
+    <content type="html"><![CDATA[<h3>学术研讨</h3>
+
+
+<p>VALSE是Vision And Learning SEminar的缩写，它主要目的是为计算机视觉、图像处理、模式识别与机器学习研究领域内的中国青年学者（以70后研发
+人员为主）提供一个深层次学术交流的舞台。虽然参与会议和做报告的人主要是做视觉的，但很多问题是机器学习和模式识别当中的一般性问题，所以我这
+个搞语音的也去打酱油了^_^。</p>
+
+
+
+
+<p>今年的VALSE在南京东南大学召开，参加会议的人数超出预期，会场爆满，仅学校的老师和公司的研究人员就占了会场大半，学生沦落到只能座最后两排，
+或者座分会场（这个太不科学了-_-!）。会程安排也很紧凑，中午几乎没有休息时间，吃饭都很赶，而下午也很晚（6点半左右）才结束。这次会议有好几个
+perfect的报告，但也有些不太感兴趣的，有的甚至感觉很2。除了一些报告，还有两个主题讨论会，印象中主要包括三个论题：学术界与工业界的Gap及衔接
+问题，深度学习是否是计算机视觉的终极解决方案，计算机视觉要不要从生物视觉机理中受启发等。</p>
+
+
+
+
+<p>闲话少说，言归正传，数萝卜下窖的讲讲这两天的经历吧。
+第一天上午，第一个做报告的是MSRA的张磊，主要讲了计算机视觉的一些基本问题，从AI的历史将起，提到了Turing Test，是人工智能
+的Benchmark。而CV的一个基本问题是Object Recognition，人们的研究经历了从之前的Model Based到如今的Data Driven及Big Data的过程，各种模型和方法可谓
+层出不穷，然而对于真正解决问题、真正达到人类一般的视觉智能，还相差甚远。接着他讲了关于在路灯下找钥匙的故事（详询http://tongyanyan.blog.edu.cn/2006/427512.html），
+听了这个故事后，感觉那个找钥匙的人很滑稽可笑，然而再想想我们自己正在做的研究，是不是在某种程度上和故事中的这个人一样呢。通过这个故事，他引出自己
+的观点：要想解决Object Recognition这个问题或者说要解决CV的问题，就需要More Effective Representation & Match。接下来讲在Representation方面一些研究
+人员提出的一些人工设计的Feature，而在Match方面则从Point、Line、Plane、Volume（点线面体）进行了详尽的讲述。最后还提了一下Deep Neural Network在CV中的
+应用，可以discover hidden patterns。虽然对CV中的很多概念和模型方法不太了解，但感觉还是挺有收获的。</p>
+
+
+
+
+<p>上午的后两个报告都是讲Sparse的，虽然之前看过关于Sparse Coding的东西，但当他们在上面讲的，主要偏重与Sparse这个问题的优化求解方法及其变形，
+涉及到很多数学公式和推导，感觉很枯燥，加之晚睡早起，有点犯困，所以基本没有听进去。贾佳亚的报告还似懂非懂，而陈欢欢的Sparse Bayesian Learning
+表示完全没听懂。个人感觉Sparse还是很重要的，所以在弄完Deep Learning这个专题后，我想有必要对这两个报告及其相关论文再做深入的学习和研究。</p>
+
+
+<!--more-->
+
+
+<p>中午3个东南大学的同学请我们实验室的在他们学校食堂吃饭，虽然不太记得他们名字了，真心感谢他们！</p>
+
+
+
+
+<p>下午第一个报告是高新波的IQA&VALSE，主要讲了图像质量评价的一些东西，虽然也提到了一些生物视觉方面的东西，感觉很没趣，基本没怎么听，打了个盹。
+第二个报告是俞洪波的关于生物视觉方面的东西，很感兴趣，他从深层复杂网络结构、神经元、突触、离子通道、蛋白等多个层面上讲了视觉系统的信息处理流程，
+后面还提到了视觉功能柱，指出了视觉神经元具有很强的选择性，不同部位的神经元对不同方向、距离的视觉信息具有选择性的激活增强，最后还讲了一些模拟
+视觉系统的计算模型，并描述了一些实验，虽然对报告题目中的Self Organization Model到底是什么还不是很清楚，但对生物视觉系统有了更进一步的了解，
+而且知道了他们是怎么获取神经元激活区域的。</p>
+
+
+
+
+<p>下午的第2个Session的第一个报告是颜水成的Fashion Recommendation，包括Hair Style，Makeup，Clothing，Shoes等的Recommendation，不太感冒，只是对他重复提到
+的关于华人做研究的一个问题深表同感，他说华人做研究其实很不错的，能在很多TOP会议期刊发Paper甚至Best Paper，但原创性的问题却很少，我们都在提高别人的Citation，
+所以华人还需要在发现问题方面多下功夫，而不是仅仅在解决问题方面。后面两个报告一个是王亦洲的General Purpose Vision，表示没听懂。最后一个报告是王晓刚的Crowd 
+Video Surveillance，主要是讲在Video中识别人并跟踪人的移动，或者统计视场中人的数量之类的，只是感性的了解了一下，印象里报告中好像没有提到什么具体的CV技术，
+只是举了一个人体位置跟踪的例子，还有一个用在足球视屏中运动员跟踪的例子。</p>
+
+
+
+
+<p>第二天上午第一个Session是两个报告，一个是陈小武的Image/Video/3D Scene Understanding and Editing，主要分以下四个方面：Illumination Learning and Synthesis，
+Labeling and Lavering and Editing，Estimating 3D Model from a single Image，Video Event Representation and Inference，总体感觉讲的内容涉及到很多东西，甚至他的
+学生不仅懂CV，还要懂美术、剪纸等，而且他们每年都会发CVPR、ICCV、ECCV之类的，感觉还挺NB的。另外一个报告是非常期待的于凯的关于深度学习和大数据的报告，但听了之后，
+感觉有些Depressed，因为他的报告中没有涉及Deep Learning的一些细节的东西，诸如RBM的原理及其训练等，基本上只是泛泛而谈，之前对Deep Learning做了深入的调研和学习，
+自我感觉Deep Learning也没什么神秘的，虽然对Gibbs采样和CD算法的理论还没有完全理解清楚，但我觉得Deep Learning更多的是一种思想方法，在Deep Architecture中，Knowledge
+通过一层一层抽象和提取后，对于Classification、Clustering等任务具有更有效Representation，而且在Training Error非常小的情况下，还是可以再Testing中获得理想的Error Ratio，
+相比Shallow Architecture，不存在模型Over Fitting的问题。另外，有人提到Deep Architecture中Layer数目的确定的问题，于凯的回答是，在Neural Networks中加一层后，进行Deep 
+Learning的过程，如果相对于没加该层得到的Test Error更小，并且是非常有效的性能提升，那么就加进这一层。然后同样的，再加一层，再进行Deep Learning，以此类推。</p>
+
+
+
+
+<p>上午的后一个Session是关于CV在Industry中的Application，先是来在Industry中的一些研究开发人员对他们目前的工作做一些简短的介绍，感觉某些公司有严重的广告嫌疑，很是讨厌。
+然后是讨论阶段，各自就CV在学术界和工业界之间的Gap发表意见，总结起来主要有以下观点：一方面学术界与工业界的Gap是必要的，学术必须要超前，这样工业界才可能将其成熟的应用；
+另一方面，学术界与工业界的Gap可以通过在工业界设置研究院（比如MSRA、百度最近在硅谷设置深度学习研究院之类），这样可以加快学术成果应用于工业界的进程，学术最终的目的就是
+在工业界中发挥巨大作用，服务广大民众，给社会带来价值。</p>
+
+
+
+
+<p>上午的Panel严重超时了，直到快1点了才结束，去餐馆吃饭，我们跟老板说我们下午要考试，让快点上菜，结果上菜速度果然飞快，而我们吃得也很快，基本上一盘菜一会儿就吃光，
+真是高效啊，哈哈！</p>
+
+
+
+
+<p>下午首先是一个Panel，讨论（更确切的说是辩论）了两个主题，一个是关于计算机视觉是否要借鉴吸收生物神经视觉的结果，另一个是Deep Learning是否是CV的终极解决方案，这两个辩论
+都非常精彩，笑点不断。Panel开始之前，首先是两位报告者发言，首先上台的是 @老师木（袁进辉），他自我介绍了一番，然后讲了讲生物视觉与计算机视觉的紧密联系，认为计算机视觉要想
+取得重大突破，就必须借鉴生物视觉的研究的发现。另外一位是李学龙老师，很有个性，只写了一张PPT，但发言时却如滔滔江水绵绵不绝，可以听得出，他对生物视觉也非常了解，也认为计算机
+视觉必须借鉴生物视觉的一些研究成果。后面的讨论非常精彩，将学术娱乐化了。这两个论题本身就很具争议性，正反两方各执其词，要辩论出个是非来，还真需要真才实学。</p>
+
+
+
+
+<p>Panel完之后是两个报告，一个是吴建鑫的Approximating Additive Kernel for Large Scale Vision Tasks，没怎么听懂。另一个是张敏灵的Multi-label Learning，感觉很没趣，主要是
+觉得这并不是一个新问题，但在图像标注方面确实是一个很重要的问题。</p>
+
+
+
+
+<p>最后，还可以从一些微博内容中获取更多关于VALSE2013的信息，可以搜索主题\#VALSE\# 或\#VALSE2013\#，或者关注 @潘布衣（会议Chair潘刚）、@张磊MSRA、@余凯_西二旗民工、
+@老师木等等。。。</p>
+
+
+
+
+<h3>游玩休闲</h3>
+
+
+<p>我们周五下午6点多到，下雨了。坐地铁然后走到旅馆，吃晚饭就8点了，但还好雨也听了，我们就去附近的夫子庙、秦淮河逛了逛。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042201.jpg"></center>
+第二天晚上去阅江楼逛了逛，到哪儿才发现晚上关门，坑爹啊！不过在外面远眺夜晚的阅江楼也不错，然后走了一个把小时到南京长江大桥。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042202.jpg"></center>
+第三天晚上就待在住处。因为订的第四天下午6点多的票，所以白天就可以尽情的去玩玩了。第一站来到了中山园陵
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042203.jpg"></center>
+只可惜周一不开放，被挡在“天下为公”的门外。原打算接下来要去的雨花台、大屠杀纪念馆也不开放，坑爹啊！
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042204.jpg"></center>
+木办法，就在里面找了一个开放的十朝历史博物馆去了
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042205.jpg"></center>
+然后去总统府了，就在外面看了看
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042206.jpg"></center>
+再然后去玄武门，一到哪儿就又下雨了
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042207.jpg"></center>
+进里面看了看玄武湖，然后就直接回旅馆了
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013042208.jpg"></center>
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深度学习及其在语音方面的应用]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/17/Deep-Learning-and-its-application-in-audio-and-speech-processing/"/>
+    <updated>2013-04-17T22:43:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/17/Deep-Learning-and-its-application-in-audio-and-speech-processing</id>
+    <content type="html"><![CDATA[<p>以下是今天在组会上讲的内容，与大家分享一下。有些地方我也没有完全理解，欢迎大家一起来讨论。</p>
+
+
+<p><center>
+<embed width="780"
+    height="574"
+    name="plugin"
+    src="http://ibillxia.github.com/upload/Deep Learning - Bill Xia.pdf"
+    type="application/pdf"
+/>
+</center></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于能量的模型和波尔兹曼机]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/12/Energy-Based-Models-and-Boltzmann-Machines/"/>
+    <updated>2013-04-12T22:12:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/12/Energy-Based-Models-and-Boltzmann-Machines</id>
+    <content type="html"><![CDATA[<p>由于深度置信网络（Deep Belief Networks，DBN）是基于限制性玻尔兹曼机（Restricted Boltzmann Machines，RBM）的深层网络结构，
+所以本文重点讨论一下玻尔兹曼机（BM），以及它的学习算法——对比散度（Contrastive Divergence，CD）算法。在介绍BM前，我们首先介绍一下
+基于能量的模型（Energy Based Model，EBM），因为BM是一种特殊的EBM。</p>
+
+
+
+
+<h2>1. 基于能量的模型(EBM)</h2>
+
+
+<p>基于能量的模型是一种具有普适意义的模型，可以说它是一种模型框架，在它的框架下囊括传统的判别模型和生成模型，图变换网络(Graph-transformer 
+Networks)，条件随机场，最大化边界马尔科夫网络以及一些流形学习的方法等。EBM通过对变量的每个配置施加一个有范围限制的能量来捕获变量之间的依赖
+关系。EBM有两个主要的任务，一个是推断(Inference)，它主要是在给定观察变量的情况，找到使能量值最小的那些隐变量的配置；另一个是学习(Learning)，
+它主要是寻找一个恰当的能量函数，使得观察变量的能量比隐变量的能量低。</p>
+
+
+
+
+<p>基于能量的概率模型通过一个能量函数来定义概率分布，
+<center>$p(x) = \frac{e^{E(x)}}{Z}.$ &#8230; ①</center>
+其中Z为规整因子，
+<center>$Z = \sum _{x} e^{-E(x)}.$ &#8230; ②</center>
+基于能量的模型可以利用使用梯度下降或随机梯度下降的方法来学习，具体而言，就是以训练集的负对数作为损失函数，
+<center>$l(\theta,D) = -L(\theta,D) = - \frac{1}{N}\sum_{x^{(i)}\in D} log p(x^{(i)}).$ &#8230; ③</center>
+其中$\theta$为模型的参数，将损失函数对$\theta$求偏导，
+<center>$\Delta = \frac{\partial l(\theta,D)}{\partial \theta} = - \frac{1}{N} \frac{\partial \sum log p(x^{(i)})}{\partial \theta}.$ &#8230; ④</center>
+即得到损失函数下降最快的方向。</p>
+
+
+
+
+<!--more-->
+
+
+
+
+<h3>包含隐单元的EBMs</h3>
+
+
+<p>在很多情况下，我们无法观察到样本的所有属性，或者我们需要引进一些没有观察到的变量，以增加模型的表达能力，这样得到的就是包含隐含变量的EBM，
+<center>$P(x) = \sum _{h} P(x,h) = \sum _{h} \frac{e^{-E(x,h)}}{Z}.$ &#8230; ⑤</center>
+其中$h$表示隐含变量。在这种情况下，为了与不包含隐含变量的模型进行统一，我们引入如下的自由能量函数，
+<center>$F(x) = - log \sum_{h}e^{-E(x,h)}.$ &#8230; ⑥</center>
+这样$P(x)$就可以写成，
+<center>$P(x) = \frac{e^{-F(x)}}{Z}, where Z = \sum_{x} e^{-F(x)}.$ &#8230; ⑦</center>
+此时，损失函数还是类似的定义，只是在进行梯度下降求解时稍微有些不同，
+<center>$\Delta = - \frac{\partial log p(x)}{\partial \theta} 
+= - \frac{\partial (-F(x) -log Z)}{\partial \theta} 
+= \frac{\partial F(x)}{\partial \theta} - \sum_{\hat{x}} p(\hat{x}) \frac{\partial F(\hat{x})}{\partial \theta}$. &#8230; ⑧</center>
+该梯度表达式中包含两项，他们都影响着模型所定义的分布密度：第一项增加训练数据的概率（通过减小对应的自由能量），而第二项则减小模型
+生成的样本的概率。</p>
+
+
+
+
+<p>通常，我们很难精确计算这个梯度，因为式中第一项涉及到可见单元与隐含单元的联合分布，由于归一化因子$Z(\theta)$的存在，该分布很难获取[3]。
+我们只能通过一些采样方法（如Gibbs采样）获取其近似值，其具体方法将在后文中详述。</p>
+
+
+
+
+<h2>2. 限制性玻尔兹曼机</h2>
+
+
+<p>玻尔兹曼机（Boltzmann Machine，BM）是一种特殊形式的对数线性的马尔科夫随机场（Markov Random Field，MRF），即能量函数是自由变量的线性函数。
+通过引入隐含单元，我们可以提升模型的表达能力，表示非常复杂的概率分布。</p>
+
+
+
+
+<p>限制性玻尔兹曼机（RBM）进一步加一些约束，在RBM中不存在可见单元与可见单元的链接，也不存在隐含单元与隐含单元的链接，如下图所示
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013041201.png"></center>
+RBM的能量函数$E(v,h)$定义为，
+<center>$E(v,h) = -b&#8217;v - c&#8217;h - h&#8217;Wv$.</center>
+其中&#8217;表示转置，$b,c,W$为模型的参数，$b,c$分别为可见层和隐含层的偏置，$W$为可见层与隐含层的链接权重。此时，对应的自由能量为，
+<center>$F(v) = -b&#8217;v - \sum_{i}log\sum_{h_{i}}e^{h_{i}(c_{i}+W_{i}v)}.$ &#8230; ⑨</center>
+另外，由于RBM的特殊结构，可见层/隐含层内个单元之间是相互独立的，所以我们有，
+<center>$p(h|v) = \prod _{i} p(h_{i}|v)$,</center>
+<center>$p(v|h) = \prod _{j} p(v_{j}|h).$ &#8230; ⑩</center>
+</p>
+
+
+
+
+<h3>使用二值单元的RBM</h3>
+
+
+<p>如果RBM中的每个单元都是二值的，即有$v_{j},h_{i} \in \{0,1\}$，我们可以得到，
+<center>$p(h_{i}=1|v) = sigmoid(c_{i} + W_{i}v)$,</center>
+<center>$p(v_{j}=1|h) = sigmoid(b_{j} + W_{j}&#8217;h).$ &#8230; ⑪</center>
+而对应的自由能量函数为，
+<center>$F(v) = -b&#8217;v - \sum_{i}log(1+e^{c_{i}+W_{i}v}).$ &#8230; ⑫</center>
+使用梯度下降法求解模型参数时，各参数的梯度值如下[2]，
+<center>$-\frac{\partial logp(v)}{\partial W_{ij}} = E_{v}[p(h_{i}|v) * v_{j}] - v_{j}^{(i)} * sigmoid(W_{i} * v^{(i)}+c_{i}),$</center>
+<center>$-\frac{\partial logp(v)}{\partial c_{i}} = E_{v}[p(h_{i}|v) * v_{j}] - sigmoid(W_{i} * v^{(i)}),$</center>
+<center>$-\frac{\partial logp(v)}{\partial b_{j}} = E_{v}[p(h_{i}|v) * v_{j}] - v_{j}^{(i)}.$ &#8230; ⑬</center>
+</p>
+
+
+
+
+<h2>3. RBM的学习</h2>
+
+
+<p>前面提到了，RBM是很难学习的，即模型的参数很难确定，下面我们就具体讨论一下基于采样的近似学习方法。学习RBM的任务是求出模型的参数
+$\theta = \{c, b, W\}$的值。</p>
+
+
+
+
+<h3>3.1 Gibbs采样</h3>
+
+
+<p>Gibbs采样是一种基于马尔科夫链蒙特卡罗(Markov Chain Monte Carlo,MCMC)策略的采样方法。对于一个$K$为随机向量$X = (X_{1},X_{2},&#8230;,X_{K})$，
+假设我们无法求得关于$X$的联合分布$P(X)$，但我们知道给定$X$的其他分量时，其第$k$个分量$X_{k}$的条件分布，即$P(X_{k}|X_{k^{-}})$，其中$X_{k^{-}} = 
+(X_{1},X_{2},&#8230;,X_{k-1},X_{k+1},&#8230;,X_{K})$，那么，我们可以从$X$的一个任意状态(比如[$x_{1}(0),x_{2}(0),&#8230;,x_{K}(0)$])开始，利用上述条件
+分布，迭代的对其分量依次采样，随着采样次数的增加，随机变量[$x_{1}(n),x_{2}(n),&#8230;,x_{K}(n)$]的概率分布将以$n$的几何级数的速度收敛于$X$的联合
+概率分布$P(X)$。也就是说，我们可以在未知联合概率分布的条件下对其进行采样。</p>
+
+
+
+
+<p>基于RBM的对称结构，以及其中神经元状态的条件独立性，我们可以使用Gibbs采样方法得到服从RBM定义的分布的随机样本。在RBM中进行$k$步Gibbs采样的具体
+算法为：用一个训练样本(或可见层的任何随机化状态)初始化可见层的状态$v0$，交替进行如下采样：
+<center>$h_{0} \sim P(h|v_{0}), v_{1} \sim P(v|h_{0}),$</center>
+<center>$h_{1} \sim P(h|v_{1}), v_{2} \sim P(v|h_{1}),$</center>
+<center>$&#8230; &#8230;, v_{k+1} \sim P(v|h_{k})$.</center>
+在经过步数$k$足够大的情况下，我们可以得到服从RBM所定义的分布的样本。此外，使用Gibbs采样我们也可以得到式⑧中第一项的近似。</p>
+
+
+
+
+<h3>3.2 对比散度算法</h3>
+
+
+<p>尽管利用Gibbs采样我们可以得到对数似然函数关于未知参数梯度的近似，但通常情况下需要使用较大的采样步数，这使得RBM的训练效率仍然不高，尤其是当观测数据
+的特征维数较高时。2002年，Hinton[4]提出了RBM的一个快速学习算法，即对比散度（Contrastive Divergence，CD）。与Gibbs采样不同，Hinton指出当使用训练数据初
+始化$v_{0}$时，我们仅需要使用$k$（通常k=1）步Gibbs采样变可以得到足够好的近似。在CD算法一开始，可见单元的状态被设置成一个训练样本，并利用式⑪第一个式子
+来计算所有隐层单元的二值状态，在所有隐层单元的状态确定了之后，根据式⑪第二个式子来确定第$i$个可见单元$v_{i}$取值为1的概率，进而产生可见层的一个重构
+(reconstruction)。然后将重构的可见层作为真实的模型代入式⑬各式中第一项，这样就可以进行梯度下降算法了。</p>
+
+
+
+
+<p>在RBM中，可见单元一般等于训练数据的特征维数，而隐层单元数需要事先给定，这里设可见单元数和隐单元数分别为$n$和$m$，令$W$表示可见层与隐层间的链接权重
+矩阵(m×n阶)，$a$(n维列向量)和$b$(m维列向量)分别表示可见层与隐层的偏置向量。RBM的基于CD的快速学习算法主要步骤如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//输入：一个训练样本x0; 隐层单元个数m; 学习率alpha; 最大训练周期T
+</span><span class='line'>//输出：链接权重矩阵W, 可见层的偏置向量a, 隐层的偏置向量b
+</span><span class='line'>//训练阶段
+</span><span class='line'>初始化：令可见层单元的初始状态v1 = x0; W, a, b为随机的较小数值
+</span><span class='line'>For t=1,2,...,T
+</span><span class='line'>  For j=1,2,...,m //对所有隐单元
+</span><span class='line'>      计算P(h1j=1|v1), 即P(h1j=1|v1) = sigmoid(bj+sum_i(v1i*Wij));
+</span><span class='line'>      从条件分布P(h1j|v1)中抽取h1j ∈ {0,1}
+</span><span class='line'>  EndFor
+</span><span class='line'>  
+</span><span class='line'>  For i=1,2,...,n //对所有可见单元
+</span><span class='line'>      计算P(v2i=1|h1), 即P(v2i=1|h1) = sigmoid(ai+sum_j(Wij*h1j));
+</span><span class='line'>      从条件分布P(v2i|h1)中抽取v2i ∈ {0,1}
+</span><span class='line'>  EndFor
+</span><span class='line'>  
+</span><span class='line'>  For j=1,2,...,m //对所有隐单元
+</span><span class='line'>      计算P(h2j=1|v2), 即P(h2j=1|v2) = sigmoid(bj+sum_i(v2i*Wij));
+</span><span class='line'>  EndFor
+</span><span class='line'>  
+</span><span class='line'>  //更新RBM的参数
+</span><span class='line'>  W = W + alpha *(P(h1=1|v1)v1' - P(h2=1|v2)v2');
+</span><span class='line'>  a = a + alpha *(v1-v2);
+</span><span class='line'>  b = b + alpha *(P(h1=1|v1) - P(h2=1|v2));
+</span><span class='line'>EndFor</span></code></pre></td></tr></table></div></figure>
+
+上述基于CD的学习算法是针对RBM的可见单元和隐层单元均为二值变量的情形，我们可以很容易的推广到这些单元为高斯变量的情形。
+</p>
+
+
+
+
+<p>RBM的完整实现参见https://github.com/ibillxia/DeepLearnToolbox/tree/master/DBN的Matlab代码。</p>
+
+
+
+
+<h2>References</h2>
+
+
+<p>
+[1] Learn Deep Architectures for AI, Chapter 5.</br>
+[2] Deep Learning Tutorial, Release 0.1, Chapter 9.</br>
+[3] 受限波尔兹曼机简介. 张春霞. </br>
+[4] Training Products of experts by minimizing contrastive divergence. GE Hinton.
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[2013IDF声龙语音识别技术演示]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/10/Intel-Developer-Forum-2013-Nuance-Dragon-Presentation/"/>
+    <updated>2013-04-10T12:57:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/10/Intel-Developer-Forum-2013-Nuance-Dragon-Presentation</id>
+    <content type="html"><![CDATA[<p>2013英特尔信息技术峰会(Intel Developer Forum, IDF)上，来自Nuance的声龙语音合成和识别技术的演示，中文语音识别不给力，
+笑点频出啊，哈哈</p>
+
+
+
+
+<p><iframe height=560 width=780 src="http://player.youku.com/embed/XNTQwNjQ0MjUy" frameborder=0 allowfullscreen></iframe></p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[卷积神经网络（CNN）]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/06/Convolutional-Neural-Networks/"/>
+    <updated>2013-04-06T23:34:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/06/Convolutional-Neural-Networks</id>
+    <content type="html"><![CDATA[<h2>1. 概述</h2>
+
+
+<p>卷积神经网络是一种特殊的深层的神经网络模型，它的特殊性体现在两个方面，一方面它的神经元间的连接是<strong>非全连接</strong>的，
+另一方面同一层中某些神经元之间的连接的<strong>权重是共享的</strong>（即相同的）。它的非全连接和权值共享的网络结构使之更类似于生物
+神经网络，降低了网络模型的复杂度（对于很难学习的深层结构来说，这是非常重要的），减少了权值的数量。</p>
+
+
+
+
+<p>卷积网络最初是受视觉神经机制的启发而设计的，是为识别二维形状而设计的一个多层感知器，这种网络结构对平移、比例缩放、倾斜或者共他
+形式的变形具有高度不变性。1962年Hubel和Wiesel通过对猫视觉皮层细胞的研究，提出了感受野(receptive field)的概念，1984年日本学者Fukushima
+基于感受野概念提出的神经认知机(neocognitron)模型，它可以看作是卷积神经网络的第一个实现网络，也是感受野概念在人工神经网络领域的首次应用。</p>
+
+
+
+
+<p>神经认知机将一个视觉模式分解成许多子模式(特征)，然后进入分层递阶式相连的特征平面进行处理，它试图将视觉系统模型化，使其能够在即使物体有
+位移或轻微变形的时候，也能完成识别。神经认知机能够利用位移恒定能力从激励模式中学习，并且可识别这些模式的变化形。在其后的应用研究中，Fukushima
+将神经认知机主要用于手写数字的识别。随后，国内外的研究人员提出多种卷积神经网络形式，在邮政编码识别（Y. LeCun etc）、车牌识别和人脸识别等方面
+得到了广泛的应用。</p>
+
+
+
+
+<h2>2. CNN的结构</h2>
+
+
+<p>卷积网络是为识别二维形状而特殊设计的一个多层感知器，这种网络结构对平移、比例缩放、倾斜或者共他形式的变形具有高度不变性。
+这些良好的性能是网络在有监督方式下学会的，网络的结构主要有稀疏连接和权值共享两个特点，包括如下形式的约束：</br>
+1 特征提取。每一个神经元从上一层的局部接受域得到突触输人，因而迫使它提取<strong>局部特征</strong>。一旦一个特征被提取出来，
+只要它相对于其他特征的位置被近似地保留下来，它的精确位置就变得没有那么重要了。</br>
+2 特征映射。网络的每一个计算层都是由<strong>多个特征映射组</strong>成的，每个特征映射都是平面形式的。平面中单独的神经元在约束下<strong>共享
+相同的突触权值</strong>集，这种结构形式具有如下的有益效果：a.平移不变性。b.自由参数数量的缩减(通过权值共享实现)。</br>
+3.子抽样。每个卷积层跟着一个实现局部平均和子抽样的计算层，由此特征映射的分辨率降低。这种操作具有使特征映射的输出对平移和其他
+形式的变形的敏感度下降的作用。</p>
+
+
+<!--more-->
+
+
+
+
+<h3>2.1 稀疏连接(Sparse Connectivity)</h3>
+
+
+<p>卷积网络通过在相邻两层之间强制使用局部连接模式来利用图像的空间局部特性，在第m层的隐层单元只与第m-1层的输入单元的局部区域有连接，第m-1层的这些局部
+区域被称为空间连续的接受域。我们可以将这种结构描述如下：</br>
+设第m-1层为视网膜输入层，第m层的接受域的宽度为3，也就是说该层的每个单元与且仅与输入层的3个相邻的神经元相连，第m层与第m+1层具有类似的链接规则，如下图所示。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040201.jpg"></center>
+可以看到m+1层的神经元相对于第m层的接受域的宽度也为3，但相对于输入层的接受域为5，这种结构将学习到的过滤器（对应于输入信号中被最大激活的单元）限制在局部空间
+模式（因为每个单元对它接受域外的variation不做反应）。从上图也可以看出，多个这样的层堆叠起来后，会使得过滤器（不再是线性的）逐渐成为全局的（也就是覆盖到了更
+大的视觉区域）。例如上图中第m+1层的神经元可以对宽度为5的输入进行一个非线性的特征编码。
+</p>
+
+
+
+
+<h3>2.2 权值共享(Shared Weights)</h3>
+
+
+<p>在卷积网络中，每个稀疏过滤器<em>$h_{i}$</em>通过共享权值都会覆盖整个可视域，这些共享权值的单元构成一个特征映射，如下图所示。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040202.jpg"></center>
+在图中，有3个隐层单元，他们属于同一个特征映射。同种颜色的链接的权值是相同的，我们仍然可以使用梯度下降的方法来学习这些权值，只需要对原始算法做一些小的改动，
+这里共享权值的梯度是所有共享参数的梯度的总和。我们不禁会问为什么要权重共享呢？一方面，重复单元能够对特征进行识别，而不考虑它在可视域中的位置。另一方面，权值
+共享使得我们能更有效的进行特征抽取，因为它极大的减少了需要学习的自由变量的个数。通过控制模型的规模，卷积网络对视觉问题可以具有很好的泛化能力。
+</p>
+
+
+
+
+<h3>2.3 The Full Model</h3>
+
+
+<p>卷积神经网络是一个多层的神经网络，每层由多个二维平面组成，而每个平面由多个独立神经元组成。网络中包含一些简单元和复杂元，分别记为S-元
+和C-元。S-元聚合在一起组成S-面，S-面聚合在一起组成S-层，用Us表示。C-元、C-面和C-层(Us)之间存在类似的关系。网络的任一中间级由S-层与C-层
+串接而成，而输入级只含一层，它直接接受二维视觉模式，样本特征提取步骤已嵌入到卷积神经网络模型的互联结构中。</p>
+
+
+
+
+<p>一般地，Us为特征提取层，每个神经元的输入与前一层的局部感受野相连，并提取该局部的特征，一旦该局部特征被提取后，它与其他特征间的位置关系
+也随之确定下来；Uc是特征映射层，网络的每个计算层由多个特征映射组成，每个特征映射为一个平面，平面上所有神经元的权值相等。特征映射结构采用
+影响函数核小的sigmoid函数作为卷积网络的激活函数，使得特征映射具有位移不变性(这一句表示没看懂，那位如果看懂了，请给我讲解一下)。此外，由于
+一个映射面上的神经元共享权值，因而减少了网络自由参数的个数，降低了网络参数选择的复杂度。卷积神经网络中的每一个特征提取层(S-层)都紧跟着一个
+用来求局部平均与二次提取的计算层(C-层)，这种特有的两次特征提取结构使网络在识别时对输入样本有较高的畸变容忍能力。</p>
+
+
+
+
+<p>下图是一个卷积网络的实例
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040203.jpg"></center>
+图中的卷积网络工作流程如下，输入层由32×32个感知节点组成，接收原始图像。然后，计算流程在卷积和子抽样之间交替进行，如下所
+述：第一隐藏层进行卷积，它由8个特征映射组成，每个特征映射由28×28个神经元组成，每个神经元指定一个 5×5 的接受域；第二隐藏层实现子
+抽样和局部平均，它同样由 8 个特征映射组成，但其每个特征映射由14×14 个神经元组成。每个神经元具有一个 2×2 的接受域，一个可训练
+系数，一个可训练偏置和一个 sigmoid 激活函数。可训练系数和偏置控制神经元的操作点。第三隐藏层进行第二次卷积，它由 20 个特征映射组
+成每个特征映射由 10×10 个神经元组成。该隐藏层中的每个神经元可能具有和下一个隐藏层几个特征映射相连的突触连接，它以与第一个卷积
+层相似的方式操作。第四个隐藏层进行第二次子抽样和局部平均汁算。它由 20 个特征映射组成，但每个特征映射由 5×5 个神经元组成，它以
+与第一次抽样相似的方式操作。第五个隐藏层实现卷积的最后阶段，它由 120 个神经元组成，每个神经元指定一个 5×5 的接受域。最后是个全
+连接层，得到输出向量。相继的计算层在卷积和抽样之间的连续交替，我们得到一个“双尖塔”的效果，也就是在每个卷积或抽样层，随着空
+间分辨率下降，与相应的前一层相比特征映射的数量增加。卷积之后进行子抽样的思想是受到动物视觉系统中的“简单的”细胞后面跟着“复
+杂的”细胞的想法的启发而产生的。</p>
+
+
+
+
+<p>图中所示的多层感知器包含近似 100000 个突触连接，但只有大约2600 个自由参数。自由参数在数量上显著地减少是通过权值共享获得
+的，学习机器的能力（以 VC 维的形式度量）因而下降，这又提高它的泛化能力。而且它对自由参数的调整通过反向传播学习的随机形式来实
+现。另一个显著的特点是使用权值共享使得以并行形式实现卷积网络变得可能。这是卷积网络对全连接的多层感知器而言的另一个优点。</p>
+
+
+
+
+<h2>3. CNN的学习</h2>
+
+
+<p>总体而言，前面提到的卷积网络可以简化为下图所示模型：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040204.jpg"></center>
+其中，input 到C1、S4到C5、C5到output是全连接，C1到S2、C3到S4是一一对应的连接，S2到C3为了消除网络对称性，去掉了一部分连接，
+可以让特征映射更具多样性。需要注意的是 C5 卷积核的尺寸要和 S4 的输出相同，只有这样才能保证输出是一维向量。</p>
+
+
+
+
+<h3>3.1 卷积层的学习</h3>
+
+
+<p>卷积层的典型结构如下图所示。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040205.jpg"></center>
+</p>
+
+
+
+
+<p>卷积层的前馈运算是通过如下算法实现的：</br>
+<center>卷积层的输出= Sigmoid( Sum(卷积) +偏移量) </center>
+其中卷积核和偏移量都是可训练的。下面是其核心代码：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ConvolutionLayer::fprop(input,output) {
+</span><span class='line'>  //取得卷积核的个数
+</span><span class='line'>  int n=kernel.GetDim(0);
+</span><span class='line'>  for (int i=0;i&lt;n;i++) {
+</span><span class='line'>      //第i个卷积核对应输入层第a个特征映射，输出层的第b个特征映射
+</span><span class='line'>      //这个卷积核可以形象的看作是从输入层第a个特征映射到输出层的第b个特征映射的一个链接
+</span><span class='line'>      int a=table[i][0], b=table[i][1];
+</span><span class='line'>      //用第i个卷积核和输入层第a个特征映射做卷积
+</span><span class='line'>      convolution = Conv(input[a],kernel[i]);
+</span><span class='line'>      //把卷积结果求和
+</span><span class='line'>      sum[b] +=convolution;
+</span><span class='line'>  }
+</span><span class='line'>  for (i=0;i&lt;(int)bias.size();i++) {
+</span><span class='line'>      //加上偏移量
+</span><span class='line'>      sum[i] += bias[i];
+</span><span class='line'>  }
+</span><span class='line'>  //调用Sigmoid函数
+</span><span class='line'>  output = Sigmoid(sum);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+其中，input是 n1×n2×n3 的矩阵，n1是输入层特征映射的个数，n2是输入层特征映射的宽度，n3是输入层特征映射的高度。output, sum, convolution,
+bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图中是5×5)。kernel是卷积核矩阵。table是连接表，即如果第a输入和第b个输出之间
+有连接，table里就会有[a,b]这一项，而且每个连接都对应一个卷积核。</p>
+
+
+
+
+<p>卷积层的反馈运算的核心代码如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ConvolutionLayer::bprop(input,output,in_dx,out_dx) {
+</span><span class='line'>  //梯度通过DSigmoid反传
+</span><span class='line'>  sum_dx = DSigmoid(out_dx);
+</span><span class='line'>  //计算bias的梯度
+</span><span class='line'>  for (i=0;i&lt;bias.size();i++)  {
+</span><span class='line'>      bias_dx[i] = sum_dx[i];
+</span><span class='line'>  }
+</span><span class='line'>  //取得卷积核的个数
+</span><span class='line'>  int n=kernel.GetDim(0);
+</span><span class='line'>  for (int i=0;i&lt;n;i++)
+</span><span class='line'>  {
+</span><span class='line'>      int a=table[i][0],b=table[i][1];
+</span><span class='line'>      //用第i个卷积核和第b个输出层反向卷积（即输出层的一点乘卷积模板返回给输入层），并把结果累加到第a个输入层
+</span><span class='line'>      input_dx[a] += DConv(sum_dx[b],kernel[i]);
+</span><span class='line'>      //用同样的方法计算卷积模板的梯度
+</span><span class='line'>      kernel_dx[i] += DConv(sum_dx[b],input[a]);
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+其中in_dx,out_dx 的结构和 input,output 相同，代表的是相应点的梯度。
+</p>
+
+
+<p></p>
+
+
+
+
+<h3>3.2 子采样层的学习</h3>
+
+
+<p>子采样层的典型结构如下图所示。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040206.jpg"></center></p>
+
+
+
+
+<p>类似的字采样层的输出的计算式为：</br>
+<center>输出= Sigmoid( 采样*权重 +偏移量)</center>
+其核心代码如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>SubSamplingLayer::fprop(input,output) {
+</span><span class='line'>  int n1= input.GetDim(0);
+</span><span class='line'>  int n2= input.GetDim(1);
+</span><span class='line'>  int n3= input.GetDim(2);
+</span><span class='line'>  for (int i=0;i&lt;n1;i++) {
+</span><span class='line'>      for (int j=0;j&lt;n2;j++) {
+</span><span class='line'>          for (int k=0;k&lt;n3;k++) {
+</span><span class='line'>              //coeff 是可训练的权重，sw 、sh 是采样窗口的尺寸。
+</span><span class='line'>              sub[i][j/sw][k/sh] += input[i][j][k]*coeff[i];
+</span><span class='line'>          }
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'>  for (i=0;i&lt;n1;i++) {
+</span><span class='line'>      //加上偏移量
+</span><span class='line'>      sum[i] = sub[i] + bias[i];
+</span><span class='line'>  }
+</span><span class='line'>  output = Sigmoid(sum);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+</p>
+
+
+
+
+<p>子采样层的反馈运算的核心代码如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>SubSamplingLayer::bprop(input,output,in_dx,out_dx) {
+</span><span class='line'>  //梯度通过DSigmoid反传
+</span><span class='line'>  sum_dx = DSigmoid(out_dx);
+</span><span class='line'>  //计算bias和coeff的梯度
+</span><span class='line'>  for (i=0;i&lt;n1;i++) {
+</span><span class='line'>      coeff_dx[i] = 0;
+</span><span class='line'>      bias_dx[i] = 0;
+</span><span class='line'>      for (j=0;j&lt;n2/sw;j++)
+</span><span class='line'>          for (k=0;k&lt;n3/sh;k++) {
+</span><span class='line'>              coeff_dx[i] += sub[j][k]*sum_dx[i][j][k];
+</span><span class='line'>              bias_dx[i] += sum_dx[i][j][k]);
+</span><span class='line'>          }
+</span><span class='line'>  }
+</span><span class='line'>  for (i=0;i&lt;n1;i++) {
+</span><span class='line'>      for (j=0;j&lt;n2;j++)
+</span><span class='line'>          for (k=0;k&lt;n3;k++) {
+</span><span class='line'>              in_dx[i][j][k] = coeff[i]*sum_dx[i][j/sw][k/sh];
+</span><span class='line'>          }
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+</p>
+
+
+
+
+<h3>3.3 全连接层的学习</h3>
+
+
+<p>全连接层的学习与传统的神经网络的学习方法类似，也是使用BP算法，这里就不详述了。</p>
+
+
+
+
+<p>关于CNN的完整代码可以参考https://github.com/ibillxia/DeepLearnToolbox/tree/master/CNN中的Matlab代码。</p>
+
+
+
+
+<h2>References</h2>
+
+
+<p>[1] Learn Deep Architectures for AI, Chapter 4.5.</br>
+[2] Deep Learning Tutorial, Release 0.1, Chapter 6.</br>
+[3] Convolutional Networks for Images Speech and Time-Series.</br>
+[4] 基于卷积网络的三维模型特征提取. 王添翼.</br>
+[5] 卷积神经网络的研究及其在车牌识别系统中的应用. 陆璐.
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[为什么要进行傅立叶变换 ]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/04/04/why-do-Fourier-transformation/"/>
+    <updated>2013-04-04T10:42:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/04/04/why-do-Fourier-transformation</id>
+    <content type="html"><![CDATA[<h2>一、傅立叶变换的由来</h2>
+
+
+<p>关于傅立叶变换，无论是书本还是在网上可以很容易找到关于傅立叶变换的描述，但是大都是些故弄玄虚的文章，太过抽象，
+尽是一些让人看了就望而生畏的公式的罗列，让人很难能够从感性上得到理解，最近，我偶尔从网上看到一个关于数字信号处理
+的电子书籍，是一个叫Steven W. Smith, Ph.D.外国人写的，写得非常浅显，里面有七章由浅入深地专门讲述关于离散信号的傅
+立叶变换，虽然是英文文档，我还是硬着头皮看完了有关傅立叶变换的有关内容，看了有茅塞顿开的感觉，在此把我从中得到的
+理解拿出来跟大家分享，希望很多被傅立叶变换迷惑的朋友能够得到一点启发，这电子书籍是免费的，有兴趣的朋友也可以从网
+上下载下来看一下，URL地址是：http://www.dspguide.com/pdfbook.htm </p>
+
+
+
+
+<p>要理解傅立叶变换，确实需要一定的耐心，别一下子想着傅立叶变换是怎么变换的，当然，也需要一定的高等数学基础，最基本
+的是级数变换，其中傅立叶级数变换是傅立叶变换的基础公式。</p>
+
+
+
+
+<h2>二、傅立叶变换的提出</h2>
+
+
+<p>让我们先看看为什么会有傅立叶变换？傅立叶是一位法国数学家和物理学家的名字，英语原名是Jean Baptiste Joseph Fourier(1768-1830), 
+Fourier对热传递很感兴趣，于1807年在法国科学学会上发表了一篇论文，运用正弦曲线来描述温度分布，论文里有个在当时具有争议性的决断：
+任何连续周期信号可以由一组适当的正弦曲线组合而成。当时审查这个论文的人，其中有两位是历史上著名的数学家拉格朗日(Joseph Louis 
+Lagrange, 1736-1813)和拉普拉斯(Pierre Simon de Laplace, 1749-1827)，当拉普拉斯和其它审查者投票通过并要发表这个论文时，拉格朗日
+坚决反对，在近50年的时间里，拉格朗日坚持认为傅立叶的方法无法表示带有棱角的信号，如在方波中出现非连续变化斜率。法国科学学会屈服
+于拉格朗日的威望，拒绝了傅立叶的工作，幸运的是，傅立叶还有其它事情可忙，他参加了政治运动，随拿破仑远征埃及，法国大革命后因会被
+推上断头台而一直在逃避。直到拉格朗日死后15年这个论文才被发表出来。</p>
+
+
+
+
+<!--more-->
+
+
+
+
+<p>谁是对的呢？拉格朗日是对的：正弦曲线无法组合成一个带有棱角的信号。但是，我们可以用正弦曲线来非常逼近地表示它，逼近到两种表示方法
+不存在能量差别，基于此，傅立叶是对的。</p>
+
+
+
+
+<p>为什么我们要用正弦曲线来代替原来的曲线呢？如我们也还可以用方波或三角波来代替呀，分解信号的方法是无穷的，但分解信号的目的是为了
+更加简单地处理原来的信号。用正余弦来表示原信号会更加简单，因为正余弦拥有原信号所不具有的性质：正弦曲线保真度。一个正弦曲线信号
+输入后，输出的仍是正弦曲线，只有幅度和相位可能发生变化，但是频率和波的形状仍是一样的。且只有正弦曲线才拥有这样的性质，正因如此
+我们才不用方波或三角波来表示。</p>
+
+
+
+
+<h2>三、傅立叶变换分类</h2>
+
+
+<p>根据原信号的不同类型，我们可以把傅立叶变换分为四种类别：</br>
+1 非周期性连续信号 傅立叶变换（Fourier Transform）</br>
+2 周期性连续信号 傅立叶级数(Fourier Series)</br>
+3 非周期性离散信号 离散时域傅立叶变换（Discrete Time Fourier Transform）</br>
+4 周期性离散信号 离散傅立叶变换(Discrete Fourier Transform)
+</p>
+
+
+
+
+<p>下图是四种原信号图例：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040401.jpg"></center>
+</p>
+
+
+
+
+<p>这四种傅立叶变换都是针对正无穷大和负无穷大的信号，即信号的的长度是无穷大的，我们知道这对于计算机处理来说是不可能的，那么有没有
+针对长度有限的傅立叶变换呢？没有。因为正余弦波被定义成从负无穷小到正无穷大，我们无法把一个长度无限的信号组合成长度有限的信号。面对
+这种困难，方法是把长度有限的信号表示成长度无限的信号，可以把信号无限地从左右进行延伸，延伸的部分用零来表示，这样，这个信号就可以被
+看成是非周期性离解信号，我们就可以用到离散时域傅立叶变换的方法。还有，也可以把信号用复制的方法进行延伸，这样信号就变成了周期性离解
+信号，这时我们就可以用离散傅立叶变换方法进行变换。这里我们要学的是离散信号，对于连续信号我们不作讨论，因为计算机只能处理离散的数值
+信号，我们的最终目的是运用计算机来处理信号的。</p>
+
+
+
+
+<p>但是对于非周期性的信号，我们需要用无穷多不同频率的正弦曲线来表示，这对于计算机来说是不可能实现的。所以对于离散信号的变换只有离散傅立叶
+变换（DFT）才能被适用，对于计算机来说只有离散的和有限长度的数据才能被处理，对于其它的变换类型只有在数学演算中才能用到，在计算机面前我们
+只能用DFT方法，后面我们要理解的也正是DFT方法。这里要理解的是我们使用周期性的信号目的是为了能够用数学方法来解决问题，至于考虑周期性信号
+是从哪里得到或怎样得到是无意义的。</p>
+
+
+
+
+<p>每种傅立叶变换都分成实数和复数两种方法，对于实数方法是最好理解的，但是复数方法就相对复杂许多了，需要懂得有关复数的理论知识，不过，如果
+理解了实数离散傅立叶变换(real DFT)，再去理解复数傅立叶就更容易了，所以我们先把复数的傅立叶放到一边去，先来理解实数傅立叶变换，在后面
+我们会先讲讲关于复数的基本理论，然后在理解了实数傅立叶变换的基础上再来理解复数傅立叶变换。</p>
+
+
+
+
+<p>还有，这里我们所要说的变换(transform)虽然是数学意义上的变换，但跟函数变换是不同的，函数变换是符合一一映射准则的，对于离散数字信号处理（DSP），
+有许多的变换：傅立叶变换、拉普拉斯变换、Z变换、希尔伯特变换、离散余弦变换等，这些都扩展了函数变换的定义，允许输入和输出有多种的值，简单地
+说变换就是把一堆的数据变成另一堆的数据的方法。</p>
+
+
+
+
+<h2>四、傅立叶变换的物理意义</h2>
+
+
+<p>傅立叶变换是数字信号处理领域一种很重要的算法。要知道傅立叶变换算法的意义，首先要了解傅立叶原理的意义。傅立叶原理表明：任何连续测量的时序或信号，
+都可以表示为不同频率的正弦波信号的无限叠加。而根据该原理创立的傅立叶变换算法利用直接测量到的原始信号，以累加方式来计算该信号中不同正弦波信号的频率、
+振幅和相位。</p>
+
+
+
+
+<p>和傅立叶变换算法对应的是反傅立叶变换算法。该反变换从本质上说也是一种累加处理，这样就可以将单独改变的正弦波信号转换成一个信号。因此，可以说，
+傅立叶变换将原来难以处理的时域信号转换成了易于分析的频域信号（信号的频谱），可以利用一些工具对这些频域信号进行处理、加工。最后还可以利用傅立叶
+反变换将这些频域信号转换成时域信号。</p>
+
+
+
+
+<p>从现代数学的眼光来看，傅里叶变换是一种特殊的积分变换。它能将满足一定条件的某个函数表示成正弦基函数的线性组合或者积分。在不同的研究领域，傅里叶
+变换具有多种不同的变体形式，如连续傅里叶变换和离散傅里叶变换。</p>
+
+
+
+
+<p>在数学领域，尽管最初傅立叶分析是作为热过程的解析分析的工具，但是其思想方法仍然具有典型的还原论和分析主义的特征。&#8221;任意&#8221;的函数通过一定的分解，
+都能够表示为正弦函数的线性组合的形式，而正弦函数在物理上是被充分研究而相对简单的函数类：1. 傅立叶变换是线性算子,若赋予适当的范数,它还是酉算子;
+2. 傅立叶变换的逆变换容易求出,而且形式与正变换非常类似;3. 正弦基函数是微分运算的本征函数,从而使得线性微分方程的求解可以转化为常系数的代数方程的
+求解.在线性时不变杂的卷积运算为简单的乘积运算,从而提供了计算卷积的一种简单手段;4. 离散形式的傅立叶的物理系统内,频率是个不变的性质,从而系统对于
+复杂激励的响应可以通过组合其对不同频率正弦信号的响应来获取;5. 著名的卷积定理指出:傅立叶变换可以化复变换可以利用数字计算机快速的算出(其算法称为
+快速傅立叶变换算法(FFT))。</p>
+
+
+
+
+<p>正是由于上述的良好性质,傅里叶变换在物理学、数论、组合数学、信号处理、概率、统计、密码学、声学、光学等领域都有着广泛的应用。</p>
+
+
+
+
+<h2>五、图像傅立叶变换的物理意义</h2>
+
+
+<p>图像的频率是表征图像中灰度变化剧烈程度的指标，是灰度在平面空间上的梯度。如：大面积的沙漠在图像中是一片灰度变化缓慢的区域，对应的频率值很低；
+而对于地表属性变换剧烈的边缘区域在图像中是一片灰度变化剧烈的区域，对应的频率值较高。傅立叶变换在实际中有非常明显的物理意义，设f是一个能量有限的
+模拟信号，则其傅立叶变换就表示f的谱。从纯粹的数学意义上看，傅立叶变换是将一个函数转换为一系列周期函数来处理的。从物理效果看，傅立叶变换是将图像
+从空间域转换到频率域，其逆变换是将图像从频率域转换到空间域。换句话说，傅立叶变换的物理意义是将图像的灰度分布函数变换为图像的频率分布函数，傅立叶
+逆变换是将图像的频率分布函数变换为灰度分布函数。</p>
+
+
+
+
+<p>傅立叶变换以前，图像（未压缩的位图）是由对在连续空间（现实空间）上的采样得到一系列点的集合，我们习惯用一个二维矩阵表示空间上各点，则图像可由z=f(x,y)
+来表示。由于空间是三维的，图像是二维的，因此空间中物体在另一个维度上的关系就由梯度来表示，这样我们可以通过观察图像得知物体在三维空间中的对应关系。为什么
+要提梯度？因为实际上对图像进行二维傅立叶变换得到频谱图，就是图像梯度的分布图，当然频谱图上的各点与图像上各点并不存在一一对应的关系，即使在不移频的情况
+下也是没有。傅立叶频谱图上我们看到的明暗不一的亮点，实际上图像上某一点与邻域点差异的强弱，即梯度的大小，也即该点的频率的大小（可以这么理解，图像中的低
+频部分指低梯度的点，高频部分相反）。一般来讲，梯度大则该点的亮度强，否则该点亮度弱。这样通过观察傅立叶变换后的频谱图，也叫功率图，我们首先就可以看出，
+图像的能量分布，如果频谱图中暗的点数更多，那么实际图像是比较柔和的（因为各点与邻域差异都不大，梯度相对较小），反之，如果频谱图中亮的点数多，那么实际图
+像一定是尖锐的，边界分明且边界两边像素差异较大的。对频谱移频到原点以后，可以看出图像的频率分布是以原点为圆心，对称分布的。将频谱移频到圆心除了可以清晰
+地看出图像频率分布以外，还有一个好处，它可以分离出有周期性规律的干扰信号，比如正弦干扰，一副带有正弦干扰，移频到原点的频谱图上可以看出除了中心以外还存
+在以某一点为中心，对称分布的亮点集合，这个集合就是干扰噪音产生的，这时可以很直观的通过在该位置放置带阻滤波器消除干扰。</p>
+
+
+
+
+<p>另外我还想说明以下几点： </br>
+1、图像经过二维傅立叶变换后，其变换系数矩阵表明：若变换矩阵Fn原点设在中心，其频谱能量集中分布在变换系数短阵的中心附近(图中阴影区)。若所用的二维傅立叶
+变换矩阵Fn的原点设在左上角，那么图像信号能量将集中在系数矩阵的四个角上。这是由二维傅立叶变换本身性质决定的。同时也表明一股图像能量集中低频区域。 </br>
+2 、变换之后的图像在原点平移之前四角是低频，最亮，平移之后中间部分是低频，最亮，亮度大说明低频的能量大（幅角比较大）。</p>
+
+
+
+
+<h2>六、一个关于实数离散傅立叶变换(Real DFT)的例子</h2>
+
+
+<p>先来看一个变换实例，一个原始信号的长度是16，于是可以把这个信号分解9个余弦波和9个正弦波（一个长度为N的信号可以分解成N/2+1个正余弦信号，这是为什么呢？
+结合下面的18个正余弦图,我想从计算机处理精度上就不难理解，一个长度为N的信号，最多只能有N/2+1个不同频率，再多的频率就超过了计算机所能所处理的精度范围），
+如下图，9个正弦信号：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040402.jpg"></center>
+9个余弦信号：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040403.jpg"></center>
+</p>
+
+
+
+
+<p>把以上所有信号相加即可得到原始信号，至于是怎么分别变换出9种不同频率信号的，我们先不急，先看看对于以上的变换结果，在程序中又是该怎么表示的，我们可以看看
+下面这个示例图：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040404.jpg"></center>
+</p>
+
+
+
+
+<p>上图中左边表示时域中的信号，右边是频域信号表示方法，从左向右表示正向转换(Forward DFT)，从右向左表示逆向转换(Inverse DFT)，用小写x[]表示信号在每个时间点上
+的幅度值数组, 用大写X[]表示每种频率的副度值数组, 因为有N/2+1种频率，所以该数组长度为N/2+1，X[]数组又分两种，一种是表示余弦波的不同频率幅度值：Re X[]，另
+一种是表示正弦波的不同频率幅度值：Im X[]，Re是实数(Real)的意思，Im是虚数(Imagine)的意思，采用复数的表示方法把正余弦波组合起来进行表示，但这里我们不考虑复
+数的其它作用，只记住是一种组合方法而已，目的是为了便于表达（在后面我们会知道，复数形式的傅立叶变换长度是N，而不是N/2+1）。</p>
+
+
+
+
+<h2>七、用Matlab实现快速傅立叶变换</h2>
+
+
+<p>FFT是离散傅立叶变换的快速算法，可以将一个信号变换到频域。有些信号在时域上是很难看出什么特征的，但是如果变换到频域之后，就很容易看出特征了。这就是很多
+信号分析采用FFT变换的原因。另外，FFT可以将一个信号的频谱提取出来，这在频谱分析方面也是经常用的。 </p>
+
+
+
+
+<p>虽然很多人都知道FFT是什么，可以用来做什么，怎么去做，但是却不知道FFT之后的结果是什意思、如何决定要使用多少点来做FFT。 </p>
+
+
+
+
+<p>现在就根据实际经验来说说FFT结果的具体物理意义。一个模拟信号，经过ADC采样之后，就变成了数字信号。采样定理告诉我们，采样频率要大于信号频率的两倍，这些我就不在此啰嗦了。 </p>
+
+
+
+
+<p>采样得到的数字信号，就可以做FFT变换了。N个采样点，经过FFT之后，就可以得到N个点的FFT结果。为了方便进行FFT运算，通常N取2的整数次方。 </p>
+
+
+
+
+<p>假设采样频率为Fs，信号频率F，采样点数为N。那么FFT之后结果就是一个为N点的复数。每一个点就对应着一个频率点。这个点的模值，就是该频率值下的幅度特性。
+具体跟原始信号的幅度有什么关系呢？假设原始信号的峰值为A，那么FFT的结果的每个点（除了第一个点直流分量之外）的模值就是A的N/2倍。而第一个点就是直流分量，
+它的模值就是直流分量的N倍。而每个点的相位呢，就是在该频率下的信号的相位。第一个点表示直流分量（即0Hz），而最后一个点N的再下一个点（实际上这个点是不存在的，
+这里是假设的第N+1个点，也可以看做是将第一个点分做两半分，另一半移到最后）则表示采样频率Fs，这中间被N-1个点平均分成N等份，每个点的频率依次增加。例如某点n所
+表示的频率为：Fn=(n-1)*Fs/N。由上面的公式可以看出，Fn所能分辨到频率为为Fs/N，如果采样频率Fs为1024Hz，采样点数为1024点，则可以分辨到1Hz。1024Hz的采样率采样
+1024点，刚好是1秒，也就是说，采样1秒时间的信号并做FFT，则结果可以分析到1Hz，如果采样2秒时间的信号并做FFT，则结果可以分析到0.5Hz。如果要提高频率分辨力，则必
+须增加采样点数，也即采样时间。频率分辨率和采样时间是倒数关系。 </p>
+
+
+
+
+<p>假设FFT之后某点n用复数a+bi表示，那么这个复数的模就是An=根号a*a+b*b，相位就是Pn=atan2(b,a)。根据以上的结果，就可以计算出n点（n≠1，且n<=N/2）对应的信号的
+表达式为：An/(N/2)*cos(2*pi*Fn*t+Pn)，即2*An/N*cos(2*pi*Fn*t+Pn)。对于n=1点的信号，是直流分量，幅度即为A1/N。由于FFT结果的对称性，通常我们只使用前半部分的
+结果，即小于采样频率一半的结果。 </p>
+
+<p>下面以一个实际的信号来做说明。假设我们有一个信号，它含有2V的直流分量，频率为50Hz、相位为-30度、幅度为3V的交流信号，以及一个频率为75Hz、相位为90度、幅度
+为1.5V的交流信号。用数学表达式就是如下：S=2+3*cos(2*pi*50*t-pi*30/180)+1.5*cos(2*pi*75*t+pi*90/180)。式中cos参数为弧度，所以-30度和90度要分别换算成弧度。
+我们以256Hz的采样率对这个信号进行采样，总共采样256点。按照我们上面的分析，Fn=(n-1)*Fs/N，我们可以知道，每两个点之间的间距就是1Hz，第n个点的频率就是n-1。
+我们的信号有3个频率：0Hz、50Hz、75Hz，应该分别在第1个点、第51个点、第76个点上出现峰值，其它各点应该接近0。实际情况如何呢？我们来看看FFT的结果的模值如图
+所示。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040405.jpg"></center>
+</p>
+
+<p>从图中我们可以看到，在第1点、第51点、和第76点附近有比较大的值。我们分别将这三个点附近的数据拿上来细看： </br>
+1点： 512+0i </br>
+2点： -2.6195E-14 - 1.4162E-13i </br>
+3点： -2.8586E-14 - 1.1898E-13i </br>
+50点：-6.2076E-13 - 2.1713E-12i </br>
+51点：332.55 - 192i </br>
+52点：-1.6707E-12 - 1.5241E-12i </br>
+75点：-2.2199E-13 -1.0076E-12i </br>
+76点：3.4315E-12 + 192i </br>
+77点：-3.0263E-14 +7.5609E-13i </br>
+很明显，1点、51点、76点的值都比较大，它附近的点值都很小，可以认为是0，即在那些频率点上的信号幅度为0。接着，我们来计算各点的幅度值。分别计算这三个点的模值，结果如下： </br>
+1点： 512 </br>
+51点：384 </br>
+76点：192 </br>
+按照公式，可以计算出直流分量为：512/N=512/256=2；50Hz信号的幅度为：384/(N/2)=384/(256/2)=3；75Hz信号的幅度为192/(N/2)=192/(256/2)=1.5。可见，从频谱分析出来的幅度是正确的。</p>
+ 
+<p>然后再来计算相位信息。直流信号没有相位可言，不用管它。先计算50Hz信号的相位，atan2(-192, 332.55)=-0.5236,结果是弧度，换算为角度就是180*(-0.5236)/pi=-30.0001。
+再计算75Hz信号的相位，atan2(192, 3.4315E-12)=1.5708弧度，换算成角度就是180*1.5708/pi=90.0002。可见，相位也是对的。根据FFT结果以及上面的分析计算，我们就可以写出
+信号的表达式了，它就是我们开始提供的信号。
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013040406.jpg"></center>
+</p>
+
+<p>总结：假设采样频率为Fs，采样点数为N，做FFT之后，某一点n（n从1开始）表示的频率为：Fn=(n-1)*Fs/N；该点的模值除以N/2就是对应该频率下的信号的幅度（对于直流信号是除以N）；
+该点的相位即是对应该频率下的信号的相位。相位的计算可用函数atan2(b,a)计算。atan2(b,a)是求坐标为(a,b)点的角度值，范围从-pi到pi。要精确到xHz，则需要采样长度为1/x秒的信号，
+并做FFT。要提高频率分辨率，就需要增加采样点数，这在一些实际的应用中是不现实的，需要在较短的时间内完成分析。解决这个问题的方法有频率细分法，比较简单的方法是采样比较短
+时间的信号，然后在后面补充一定数量的0，使其长度达到需要的点数，再做FFT，这在一定程度上能够提高频率分辨力。具体的频率细分法可参考相关文献。</p>
+
+<h2>八、 让傅立叶变换从理性蜕变到感性，从抽象升华到具体</h2>
+<p>（应不少网友反应说以上7部分还是不够浅显而另加的一部分，希望对大家有所启发）</p>
+
+<p>1、我们都知道，LTI系统对谐波函数的响应也是相同频率的谐波函数，只是幅度和相位可能不同罢了，因此我们用谐波函数来表示信号正是为了导出频域的概念。
+那你就会问为什么我们要在频域来分析信号，它比时域分析究竟好在哪里呢？这个问题非常好，我来回答你，第一，在频域观察和分析信号有助于揭示系统的本质属性，
+更重要的是对于某些系统可以极大地简化其设计和分析过程。这一点想必大家都知道，我不再啰嗦！第二，从数学上来看，系统从时域到频域的转换就意味着系统的微分
+或差分方程将转变为代数方程，而系统的分析也将采用描述系统的复系数代数方程而不是微分或差分方程。既然如此，那么请问？童鞋，你是喜欢跟微分差分方程玩儿呢
+还是喜欢跟代数方程玩儿呢？假若你说你更喜欢跟微分差分方程玩儿。那我也无话可说啦！</p>
+
+<p>可能你还是觉得以上所述只是一个很理性的认识，那么接下来，满足你的感性需求。其实，在生活中，我们无时无刻不在进行着傅立叶变换。（什么？我没有听错吧？！）
+对的，请相信你的耳朵，你完全没有听错。我们来看人类听觉系统的处理过程：当我们听到一个声音，大脑的实际反应是什么？事实上耳朵感觉到一个时变的空气压力，
+这种变化也许是一个类似于口哨声的单音。当我们听到一个口哨声时，我们所关心的并不是气压随时间的振动（它非常非常快！），而是声音的三个特征：基音、声强以及
+音长。基音可以理解为频率的同义词，声强不是别的，它就是幅度。我们的耳朵—大脑系统能有效地将信号表示成三个简单的特征参数：基音、声强以及音长，并不理会气压
+的快速变化过程（一个重复的变化过程）。这样耳朵—大脑系统就提取了信号的本质信息。傅立叶变换的分析过程与此类似，只不过我们从数学意义把它更加精确化和专业话罢了。</p>
+
+<p>2、不要把傅立叶变换想得那么高深莫测，其实它就是对傅立叶级数的一种拓展。我们知道，傅立叶级数能描述无限时间的周期信号。那么，傅立叶级数能不能描述某些特殊的
+无限时间的非周期信号呢？答案是，不能。但我们经常要分析处理这样的信号啊！于是傅立叶变换这个家伙现身啦！傅立叶变换就是为了使傅立叶级数能够描述所有（没错！
+就是所有！）周期和非周期的无限时间信号而导出的，因而傅立叶变换是对傅立叶级数的一种拓展。</p>
+
+<p>可能你还是觉得以上所述只是一个很抽象的认识，那么接下来，满足你的具体需求。我们先不管是怎么进行拓展的。我们先关注另外两个概念：周期信号和非周期信号。
+他们的显著区别就在于：周期信号每隔一个有限的时间即基波周期To重复一次。它自始至终都将以这个基波周期To重复。而非周期信号则没有一个确定的或固定的周期，
+可能在一段时间内他将重复某一段波形很多次，但不会在整个无限长时间范围都如此。我们找到一个周期信号的傅立叶级数，然后让这个信号的基波周期趋于无限，就
+完成了从傅立叶级数到傅立叶变换的演变过程。因为当周期信号的基波周期趋于无限时，它的波形在有限长时间内都不会重复，这时它就不具有周期性啦！也就是说，
+说一个信号具有无限长的周期和说它是一个非周期信号实际上是一回事！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[反向传播(BP)神经网络]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/03/30/back-propagation-neural-networks/"/>
+    <updated>2013-03-30T21:37:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/03/30/back-propagation-neural-networks</id>
+    <content type="html"><![CDATA[<p>前面几篇文章中对神经网络和深度学习进行一些简介，包括神经网络的发展历史、基本概念和常见的几种神经网络以及神经网络的学习方法等，
+本文具体来介绍一下一种非常常见的神经网络模型——反向传播(Back Propagation)神经网络。</p>
+
+
+
+
+<h2>1.概述</h2>
+
+
+<p>BP（Back Propagation）神经网络是1986年由Rumelhart和McCelland为首的科研小组提出，参见他们发表在Nature上的论文
+<em><a href="http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf">Learning representations by back-propagating errors</a></em>
+值得一提的是，该文的第三作者Geoffrey E. Hinton就是在深度学习邻域率先取得突破的神犇。
+</p>
+
+
+
+
+<p>BP神经网络是一种按误差逆传播算法训练的多层前馈网络，是目前应用最广泛的神经网络模型之一。BP网络能学习和存贮大量的
+输入-输出模式映射关系，而无需事前揭示描述这种映射关系的数学方程。它的学习规则是使用最速下降法，通过反向传播来不断
+调整网络的权值和阈值，使网络的误差平方和最小。</p>
+
+
+
+
+<!-- more -->
+
+
+
+
+<h2>2.BP网络模型</h2>
+
+
+<p>一个典型的BP神经网络模型如图1所示。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013033001.jpg"></center>
+<center>图1 典型的BP神经网络模型</center></p>
+
+
+
+
+<p>BP神经网络与其他神经网络模型类似，不同的是，BP神经元的传输函数为非线性函数(而在感知机中为阶跃函数，在线性神经网络中为线性函数)，最常用的
+是log-sigmoid函数或tan-sigmoid函数。BP神经网络(BPNN)一般为多层神经网络，图1中所示的BP神经网络的隐层的传输函数即为非线性函数，隐层可以有多层，
+而输出层的传输函数为线性函数，当然也可以是非线性函数，只不过线性函数的输出结果取值范围较大，而非线性函数则限制在较小范围（如logsig函数输出
+取值在(0,1)区间）。图1所示的神经网络的输入输出关系如下：</br>
+1)输入层与隐层的关系：</br>
+<center>$\boldsymbol{h} = \mathit{f_{1}} (\boldsymbol{W^{(1)}x}+\boldsymbol{b^{(1)}})$.</center>
+其中$\boldsymbol{x}$为$m$维特征向量(列向量)，$\boldsymbol{W^{(1)}}$为$n × m$维权值矩阵，$\boldsymbol{b^{(1)}}$为$n$维的偏置(bias)向量(列向量)。</br>
+2)隐层与输出层的关系：</br>
+<center>$\boldsymbol{y} = \mathit{f_{2}} (\boldsymbol{W^{(2)}h}+\boldsymbol{b^{(2)}})$.</center>
+</p>
+
+
+
+
+<h2>3.BP网络的学习方法</h2>
+
+
+<p>神经网络的关键之一是权值的确定，也即神经网络的学习，下面主要讨论一下BP神经网络的学习方法，它是一种监督学习的方法。</br>
+假定我们有$q$个带label的样本(即输入)$p_{1},p_{2},&#8230;,p_{q}$，对应的label(即期望输出Target)为$T_{1},T_{2},&#8230;,T_{q}$，神经网络的实际输出
+为$a2_{1},a2_{2},&#8230;,a2_{q}$，隐层的输出为$a1[.]$那么可以定义误差函数：</br>
+<center>$\boldsymbol{E(W,B)} = \frac{1}{2}\sum_{k=1}^{n}(t_{k} - a2_{k})^{2} $.</center>
+BP算法的目标是使得实际输出approximate期望输出，即使得训练误差最小化。BP算法利用梯度下降(Gradient Descent)法来求权值的变化及
+误差的反向传播。对于图1中的BP神经网络，我们首先计算输出层的权值的变化量，从第$i$个输入到第$k$个输出的权值改变为：</br>
+<center>$\Delta w2_{ki} = - \eta \frac{\partial E}{\partial w2_{ki}} &#92;
+= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial w2_{ki}} &#92;
+= \eta (t_{k}-a2_{k})f_{2}&#8217;a1_{i} = \eta \delta_{ki}a1_{i}$.</center>
+其中$\eta$为学习速率。同理可得：</br>
+<center>$\Delta b2_{ki} = - \eta \frac{\partial E}{\partial b2_{ki}} 
+= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial b2_{ki}}
+= \eta (t_{k}-a2_{k})f_{2}&#8217; = \eta \delta_{ki}$.</center>
+而隐层的权值变化为：</br>
+<center>$\Delta w1_{ij} = - \eta \frac{\partial E}{\partial w1_{ij}} 
+= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial a1_{i}} \frac{\partial a1_{i}}{\partial w1_{ij}}
+= \eta \sum_{k=1}^{n}(t_{k}-a2_{k})f_{2}&#8217;w2_{ki}f_{1}&#8217;p_{j} = \eta \delta_{ij}p_{j}$.</center>
+其中，$\delta_{ij} = e_{i}f_{1}&#8217;, e_{i} = \sum_{k=1}^{n}\delta_{ki}w2_{ki}$</br>
+同理可得，$\Delta b1_{i} = \eta \delta_{ij}$。</br>
+这里我们注意到，输出层的误差为$e_{j},j=1..n$，隐层的误差为$e_{i},i=1..m$，其中$e_{i}$可以认为是$e_{j}$的加权组合，由于作用函数的
+存在，$e_{j}$的等效作用为$\delta_{ji} = e_{j}f&#8217;()$。
+</p>
+
+
+
+
+<h2>4.BP网络的设计</h2>
+
+
+<p>在进行BP网络的设计是，一般应从网络的层数、每层中的神经元个数和激活函数、初始值以及学习速率等几个方面来进行考虑，下面是一些选取的原则。</p>
+
+
+
+
+<p><strong>1.网络的层数</strong></br>
+理论已经证明，具有偏差和至少一个S型隐层加上一个线性输出层的网络，能够逼近任何有理函数，增加层数可以进一步降低误差，提高精度，但同时也是网络
+复杂化。另外不能用仅具有非线性激活函数的单层网络来解决问题，因为能用单层网络解决的问题，用自适应线性网络也一定能解决，而且自适应线性网络的
+运算速度更快，而对于只能用非线性函数解决的问题，单层精度又不够高，也只有增加层数才能达到期望的结果。
+</p>
+
+
+
+
+<p><strong>2.隐层神经元的个数</strong></br>
+网络训练精度的提高，可以通过采用一个隐含层，而增加其神经元个数的方法来获得，这在结构实现上要比增加网络层数简单得多。一般而言，我们用精度和
+训练网络的时间来恒量一个神经网络设计的好坏：</br>
+（1）神经元数太少时，网络不能很好的学习，训练迭代的次数也比较多，训练精度也不高。</br>
+（2）神经元数太多时，网络的功能越强大，精确度也更高，训练迭代的次数也大，可能会出现过拟合(over fitting)现象。</br>
+由此，我们得到神经网络隐层神经元个数的选取原则是：在能够解决问题的前提下，再加上一两个神经元，以加快误差下降速度即可。
+</p>
+
+
+
+
+<p><strong>3.初始权值的选取</strong></br>
+一般初始权值是取值在$(-1,1)$之间的随机数。另外威得罗等人在分析了两层网络是如何对一个函数进行训练后，提出选择初始权值量级为$\sqrt[r]{s}$的策略，
+其中$r$为输入个数，$s$为第一层神经元个数。
+</p>
+
+
+
+
+<p><strong>4.学习速率</strong></br>
+学习速率一般选取为$0.01 - 0.8$，大的学习速率可能导致系统的不稳定，但小的学习速率导致收敛太慢，需要较长的训练时间。对于较复杂的网络，
+在误差曲面的不同位置可能需要不同的学习速率，为了减少寻找学习速率的训练次数及时间，比较合适的方法是采用变化的自适应学习速率，使网络在
+不同的阶段设置不同大小的学习速率。
+</p>
+
+
+
+
+<p><strong>5.期望误差的选取</strong></br>
+在设计网络的过程中，期望误差值也应当通过对比训练后确定一个合适的值，这个合适的值是相对于所需要的隐层节点数来确定的。一般情况下，可以同时对两个不同
+的期望误差值的网络进行训练，最后通过综合因素来确定其中一个网络。
+</p>
+
+
+
+
+<h2>5.BP网络的局限性</h2>
+
+
+<p>BP网络具有以下的几个问题：</br>
+<strong>(1)需要较长的训练时间</strong>：这主要是由于学习速率太小所造成的，可采用变化的或自适应的学习速率来加以改进。</br>
+<strong>(2)完全不能训练</strong>：这主要表现在网络的麻痹上，通常为了避免这种情况的产生，一是选取较小的初始权值，而是采用较小的学习速率。</br>
+<strong>(3)局部最小值</strong>：这里采用的梯度下降法可能收敛到局部最小值，采用多层网络或较多的神经元，有可能得到更好的结果。
+</p>
+
+
+
+
+<h2>6.BP网络的改进</h2>
+
+
+<p>BP算法改进的主要目标是加快训练速度，避免陷入局部极小值等，常见的改进方法有带动量因子算法、自适应学习速率、变化的学习速率以及作用函数后缩法等。
+动量因子法的基本思想是在反向传播的基础上，在每一个权值的变化上加上一项正比于前次权值变化的值，并根据反向传播法来产生新的权值变化。而自适应学习
+速率的方法则是针对一些特定的问题的。改变学习速率的方法的原则是，若连续几次迭代中，若目标函数对某个权倒数的符号相同，则这个权的学习速率增加，
+反之若符号相反则减小它的学习速率。而作用函数后缩法则是将作用函数进行平移，即加上一个常数。</p>
+
+
+
+
+<h2>7.BP网络实现异或</h2>
+
+
+<p>见参考文献[7]或Andrew Ng. 的ML公开课的第8讲。</p>
+
+
+<p>另外BP算法的讲解及C++实现参见[4]。</p>
+
+
+
+
+<h2>参考文献</h2>
+
+
+<p>[1]An Introduction to Back-Propagation Neural Networks: http://www.seattlerobotics.org/encoder/nov98/neural.html</br>
+[2]Wiki - Backpropagation: http://en.wikipedia.org/wiki/Backpropagation</br>
+[3]Chapter 7 The backpropagation algorithm of Neural Networks - A Systematic Introduction by Raúl Rojas: http://page.mi.fu-berlin.de/rojas/neural/chapter/K7.pdf</br>
+[4]Back-propagation Neural Net - C++ 实现: http://www.codeproject.com/Articles/13582/Back-propagation-Neural-Net</br>
+[5]《Visual C++数字图像模式识别技术及工程实践》(第3章)，求实科技 张宏林</br>
+[6]《Matlab神经网络设置及应用》(第5章)，周品，清华大学出版社
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[神经网络的学习方法概述]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/03/27/learning-process-of-neural-networks/"/>
+    <updated>2013-03-27T23:51:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/03/27/learning-process-of-neural-networks</id>
+    <content type="html"><![CDATA[<p>本文主要讨论一下神经网络的一般学习方法，主要有error-correction learning，memory-based learning， Hebbian learning，competitive learning，
+Boltzmann learning等。然后介绍一些学习的方式，如监督学习、非监督学习、强化学习等。最后是一些具体的应用领域和实际问题。</p>
+
+
+
+
+<h2>1.Knowledge Representation</h2>
+
+
+<p>好的学习方法固然重要，但知识的表示，直接影响到feature的表示，也是非常重要的，因此在正式讨论学习方法之前，我们首先谈谈知识的表示。
+首先一个问题是，什么是知识？在PRML中我们有如下定义：</br>
+<blockquote><p>Knowledge refers to stored information or models used by a person or machine to interpret, predict, and appropriately respond to the outside world.</p><footer><strong>Fischler and Firschein</strong> <cite>Intelligence: The Eye，the Brain and the Computer</cite></footer></blockquote>
+</p>
+
+
+
+
+<!-- more -->
+
+
+<p>在知识的表示中需要考虑的两个核心问题是：</br>
+1). What information is actually made explicit(明确的；清楚的；直率的；详述的);</br>
+2). How the information is physically encoded for subsequent(后来的，随后的) use.</br>
+很显然，这里知识的表示是目标驱动的(goal directed)，在现实世界的智能设备中，一些好的解决问题的办法依赖于好的知识表示方法。
+</p>
+
+
+
+
+<p>一个精心设计的神经网络应该能够很恰当的表示出现实世界的知识，这是一个极大的挑战，因为知识的表示方式是多种多样的，而现实世界的知识也是丰富多彩的，
+也就意味着我们的神经网络的输入是千变万化的。一般而言，在PRML中我们将现实世界的知识分为以下两种：</br>
+1). Prior information = the known facts.</br>
+2). Observation (measurements). Usually noisy, but give examples(prototypes) for training the neural network.</br>
+其中Observation中的examples包含两种类型的，一种是labeled，另一种是unlabeled。</p>
+
+
+
+
+<p>在神经网络中，那些自由变量(包括weights和biases)是知识表示的关键。知识的表示一般应该满足一下几个规则：</br>
+<strong>Rule 1</strong>. Similar inputs from similar classes should produce similar representations inside the network, and they should be classiﬁed to the same category.</br>
+<strong>Rule 2</strong>. Items to be categorized as separate classes should be given widely diﬀerent representations in the network.</br>
+<strong>Rule 3</strong>. If a particular feature is important, there should be a large number of neurons involved in representing it in the network.</br>
+<strong>Rule 4</strong>. Prior information and invariances should be built into the design of a neural network.</p>
+
+
+
+
+<p>一方面，我们应该如何将先验知识运用到我们的神经网络(简记为NN)的设计中呢？没有通用的方法，但能产生更好结果的专用方法到是有两种：</br>
+1). Restricting the network architecture through the use of local connections known as receptive ﬁelds(接受域).</br>
+2). Constraining the choice of synaptic weights through the use of weight-sharing.</br>
+这两种方法都是通过减少需要学习的自由变量来达到目的的。当然我们也可以利用Bayes公式来将先验知识应用到我们的NN的设计中。</p>
+
+
+
+
+<p>另一方面，我们应该如何将Invariances(不变性；恒定性)融入到我们的NN的设计中呢？我们有三种思路可以考虑：</br>
+<strong>1). Invariance by Structure</strong> - Synaptic connections between the neurons are created so that transformed versions of the 
+same input are forced to produce the same output. Drawback: the number of synaptic connections tends to grow very large.</br>
+<strong>2). Invariance by Training</strong> - The network is trained using diﬀerent examples of the same object corresponding to 
+diﬀerent transformations (for example rotations). Drawbacks: computational load, generalization ability for other objects.</br>
+<strong>3). Invariant feature space</strong> - Try to extract features of the data invariant to transformations. Use these instead of the 
+original input data. Probably the most suitable technique to be used for neural classiﬁers. Requires prior knowledge on the problem.</br>
+然而，要优化一个NN的结构是非常困难的，通常需要一些先验的知识。
+</p>
+
+
+
+
+<h2>2.Basic Learning Rules</h2>
+
+
+<p>首先我们对NN的学习做如下的定义：</br>
+<blockquote><p>Learning is a process by which the free parameters of a neural network are adapted through a process of stimulation by the environment in which the network is embedded. The type of learning is determined by the manner in which the parameters changes take place.</p><footer><strong>Simon Haykin</strong> <cite>Neural Networks: A Comprehensive Foundation</cite></footer></blockquote>
+这个定义蕴含以下几个意思：</br>
+1). The neural network is <em>stimulated</em> by an envirnment.</br>
+2). The neural network <em>undergoes changes</em> in its free parameters as a result of this stimulation.</br>
+3). The neural network <em>responds in a new way</em> to the envirnment because of the changes that have 
+occurred in its internal structure.</br>
+</p>
+
+
+
+
+<h4>2.1 Error-Correction Learning</h4>
+
+
+<p>Error-Correction的学习方法的核心思想是：对于给定输入，优化权值(weights)使得输出(设为$y_{k}(n)$)与真实值(设为$d_{k}(n)$)
+的偏差最小。我们先定义一个error signal如下：</br>
+<center>$e_{k}(n) = d_{k}(n) - y_{k}(n)$.</center></br>
+那么，我们需要优化的目标函数为：</br>
+<center>$\mathscr{E}(n) = \frac{1}{2}e^{2}_{k}(n)$.</center></br>
+其中$\mathscr{E}(n)$称为error energy，也是我们要优化(最小化)的目标函数。</p>
+
+
+
+
+<p>那么如何来求解这个优化问题呢？这里我们有一个所谓的delta-rule，也称为Widrow-Hoff rule</br>
+<center>$\Delta w_{kj}(n) = \eta e_{k}(n)x_{j}(n)$.</center></br>
+这里$w_{kj}(n)$是第$k$个输出神经元的第$j$个输入的权重，$\Delta w_{kj}(n)$为第$n$步迭代过程中，权值$w_{kj}(n)$的改变量，$\eta$称为学习速率，
+是一个$(0,1]$之间的常数。关于该方法的详细内容会在后续文章中深入讨论。</p>
+
+
+
+
+<h4>2.2 Memory-Based Learning</h4>
+
+
+<p>Memory-Based Learning，顾名思义，是一种将past experiences全部保存起来的策略。假设我们的经验数据集为：</br>
+<center>{$(x_{1},d_{1}),(x_{2},d_{2}),&#8230;,(x_{N},d_{N})$}.</center></br>
+那么对于新来的测试数据$\mathbf{x} _{test}$，我们需要分析它与经验数据的关系，主要就是需要找出与它最相近的经验数据，即它的local neighborhood。
+在Memory-Based Learning方法中，主要涉及两个问题，一个是定义local neighborhood的标准，另一个是训练样本集上的学习规则。一个最简单的学习规则是
+最近邻规则(nearest-neighbor rule)。另外我们可以构造Memory-Based Classifier，如k-nearest-neighbor classifier，radial-basis function networks 
+classifier等。</p>
+
+
+
+
+<h4>2.3 Hebbian Learning</h4>
+
+
+<p>Hebb规则是最古老也是最流行的NN学习规则，现在一般都是它的扩展版的规则，其基本思想是根据联接的神经元的活化
+水平改变权，即两种神经元间联接权的变化与两神经元的活化值（激活值）相关，若突触(connection)两端的两神经元同时
+兴奋，则联接加强；若不同时兴奋，则联接减弱甚至忽略。</p>
+
+
+
+
+<p>Hebbian规则有以下几个特点：</br>
+Time-dependent: 权值修正仅发生于突触前(如输入$x_{i}$)和突触后(如输出$y_{j}$)同时存在信号的时候；</br>
+Local: 仅使用神经元能够取得的局部的信息；</br>
+Interactive: 权值修正同时依赖于突触前和突触后，信号间的交互可以是确定性的或随机的；</br>
+Conjunctional or Correlational: 突触前与突触后的信号产生时间与权值修正是密切相关的。</p>
+
+
+
+
+<p>权值修正可以分为Hebbian, anti-Hebbian, 和non-Hebbian等三种情况。Hebbian方式会增强正相关的突触前和突触后的信号，而减弱负相关的
+突触前和突触后的信号。anti-Hebbian方式则与Hebbian相反。而non-Hebbian则不使用Hebbian方式。Hebbian的权值修正方式的一般形式为：</br>
+<center>$\Delta w_{kj}(n) = F(y_{k}(n),x_{j}(n))$.</center></br>
+其中$F(y,x)$是关于突触后($y$)和突触前($x$)的函数，对于标准的Hebbian学习规则，该函数为$\eta y_{k}(n)x_{j}(n)$；而对于协方差的Hebbian学习
+规则，该函数为$\eta [x_{j}(n)-m_{x}][y_{k}(n)-m_{y}]$。</p>
+
+
+
+
+<h4>2.4 Competitive Learning</h4>
+
+
+<p>竞争型学习规则是指网络的某神经元群体中所有神经元相互竞争对外界刺激模式响应的能力，竞争取胜的神经元的联接权变化向着对这一
+刺激模式竞争更为有力的方向进行。具体而言，就是任何时候输出层的神经元有且仅有一个(即输出最大的那个神经元)是激活的，这种学习
+规则比较适合于寻找分类任务的相关feature。</p>
+
+
+
+
+<h4>2.5 Boltzmann Learning</h4>
+
+
+<p>Boltzmann的学习方法是一种随机化的学习方法，它结合随机过程、概率和能量等概念来调整网络的变量，从而使网络的能量函数最小（或最大）。
+在学习过程中，网络变量的随机变化不是完全随机的，而是据能量函数的改变有指导的进行。网络的变量可以是联接权，也可以是神经元的状
+态。能量函数可定义为问题的目标函数或者网络输出的均方差函数。 基于Boltzmann的学习方法的NN称为Boltzmann机，关于Boltzmann机的更多
+详细内容将会在后续文章中深入讨论。</p>
+
+
+
+
+<h2>3.Learning Methodologies</h2>
+
+
+<h4>3.1 Credit-Assignment Problem</h4>
+
+
+<p>Credit Assignment(CA) Problem是指，一个learning machine的输出结果应该归功于或归咎于哪些内部或中间decision。在很多情况下，输出结果是由一些列的
+actions来决定的，也就是说，中间决策过程影响需要采取的特定的action，然后这些action而不是那些decision直接影响最终的输出的。在这种情况下，我们
+可以将这个CA问题分解为两个子问题：</br>
+1). The assignment of credit for outcomes to actions. This is called the <em>Temporal Credit-Assignment problem</em> in that it involves the 
+instants of time when the actions that deserve credit were actually taken.</br>
+2). The assignment of credit for actions to internal decisions. This is called the <em>Structural Credit-Assignment problem</em> in that it involves 
+assigning credit to the <em>internal strucures</em> of actions generated by the system.</br>
+结构型CA问题在多组件的learning machine中比较常见，我们需要知道哪些组件需要修改，以及修改后能够对最终结果有多大的改善。而时间型CA问题中，我们需要
+知道在某一时刻采取的多个action中，哪些action主要决定了最终的输出。</p>
+
+
+
+
+<p>当我们使用Error-Correction来训练一个多层的前向反馈神经网络时，就会出现CA问题。很显然，最终输出与隐层和输出层的神经元都是相关的，而权值的修正
+是通过当前输出自适应目标输出来实现的。</p>
+
+
+
+
+<p>PS：这一节看的云里雾里的，似懂非懂，感觉有点脱离NN的样子，但这ms是一个general的问题，所以其中的一些术语也是general的，比如decision，action，credit等，
+导致理解起来比较困难，:-( </p>
+
+
+
+
+<h4>3.2 Learning with a Teacher</h4>
+
+
+<p>Learning with a Teacher也就是supervised learning(监督学习)，Error-Correction的学习方法就属于这种。在监督学习中，对于分类或识别问题，输入数据
+不仅包含输入的feature，还包含它对应的label，即它所属的类别(也就是teacher提供的answer)。Error-Correction的学习方法的目标函数就是使NN的输出与Teacher的
+answer的差异最小，即均方误差最小。经过监督学习之后，NN应该能够在不需要Teacher的情况下对新数据进行处理(分类或识别等)。</p>
+
+
+
+
+<h4>3.3 Learning without a Teacher</h4>
+
+
+<p>Learning without a Teacher包含两种学习方法：非监督学习(Unsupervised Learning)和增强学习(Reinforcement Learning)。在非监督学习中，
+没有Teacher指导学习过程，也没有可用的critic，此时NN只能尝试着学习出数据中隐含的统计规律，例如用一个适合的线性模型来区分输入数据。
+Competitive Learning和Hebbian Learning都算是非监督型学习。经过非监督学习之后，NN可以对输入数据进行特征编码。</p>
+
+
+
+
+<p>而在增强学习中，用到了critic，它将从环境中获取的原始信号转换为更高质量的启发式的增强信号。系统从延迟的reinforcement中学习，
+这意味着系统观察到的是时序的状态向量，这最终将会产生启发式的增强信号。增强学习的目标是为了最小化一个cost-to-go-function，它的
+另一个任务是discover the actions determining the best overall behavior of the system。增强学习的过程与动态规划算法非常相似。</p>
+
+
+
+
+<h2>4.Learning Tasks</h2>
+
+
+<p>前文中主要讨论了一些Learning Algorithm和Learning Paradigm，在这一节主要介绍一些Learning的Task，对于一个特定的Learning Task，需要使用对应的
+学习算法。</p>
+
+
+
+
+<h4>4.1 Pattern Association</h4>
+
+
+<p><em>Associative Memory</em>是一种像大脑一样分布式的、learns by association的memory。Association是人类记忆的主要特点，它可以分为
+<em>autoassociation</em>和<em>heteroassociation</em>。在autoassociation中，NN需要通过不断的将patterns(vectors)呈现给NN来保存一个pattern集合，最后
+NN会呈现原始pattern的部分描述或包含噪声的version，而我们的任务就是要恢复这个特定的pattern。而在heteroassociation中，任意一个输入的pattern集与
+另外人一个输出的pattern集是成对的。Autoassociation使用非监督的学习方法，而heteroassociation使用监督学习的方法。</br>
+PS:这一段表示看不太懂，有些概念无法理解！</p>
+
+
+
+
+<h4>4.2 Pattern Recognition</h4>
+
+
+<p>模式识别如语音识别、人脸识别、物体识别等，在模式识别中，NN首先通过学习训练出网络的链接权重，然后对测试数据进行分类。一般输入数据为高维的
+特征向量(feature vector)，经过训练后，数据的决策空间根据特征的pattern被分割成了若干区域。在模式识别中NN起到两种角色：一方面在非监督NN中进行特征
+提取，另一方面在随后的监督学习中用于分类决策。在多层前向反馈网络中，隐层就可以看做是特征提取(往往是对特征进行了降维，即输入的维数大于隐层的
+神经元个数)的角色。</p>
+
+
+
+
+<h4>4.3 Function Approximation</h4>
+
+
+<p>设有一个非线性的输入输出映射$d = f(x)$，其中$x$为输入，$d$为输出，而映射函数$f(.)$是未知的，但我们知道的是一系列带label的样本</br>
+<center>$\mathscr{F} = $ { $(x_{1},d_{1}),(x_{2},d_{2}),&#8230;,(x_{N},d_{N})$ }.</center></br>
+那么NN的目标就是找到一个映射$F(.)$最大可能的接近$f(.)$。如果有足够的训练样本和free parameters，那个这个目标是可以实现的。</p>
+
+
+
+
+<h4>4.4 Control</h4>
+
+
+<p>NN也可以用于控制系统，例如用在误差反馈控制系统中。</p>
+
+
+
+
+<h4>4.5 Filtering</h4>
+
+
+<p>一个Filter可以从包含噪声的观察样本中获取一些有趣的性质，它可以用于Filtering、Smoothing以及Prediction等，例如它可以解决cocktail party problem(鸡尾
+酒会问题)，这是一个blind signal separation的问题，这可以通过independent的假设来解决。</p>
+
+
+
+
+<h2>5. Adaptation</h2>
+
+
+<p>在一个稳定的环境中，一个NN经过学习之后，就可以保持weight不变了，并将之应用在新数据上。但在实际应用中，环境是会随着时间而改变的，这就需要我们不断
+更新我们的NN模型，也就是要根据环境变化(输入数据的变化)来改变weight，这个过程称为Adaptation。在Adaptation中，线性的adaptation方法是最简单的，然而更多的
+可能是使用非线性的filter。在实际中，我们也可以在适当的时机重新训练NN。</p>
+
+
+
+
+<h2>推荐资料</h2>
+
+
+<p>Machine Learning Lecture by Andrew Ng, Stanford University</br>
+Lecture VIII: Neural Network - Representation</br>
+Lecture IX: Neural Network - Learning</br>
+Video courses on Coursera: https://class.coursera.org/ml-2012-002/lecture/index</br>
+Lecture homepage in Standford: http://cs229.stanford.edu/</p>
+
+
+
+
+<h2>参考文献</h2>
+
+
+<p>[1] Simon Haykin, “Neural Networks: a Comprehensive Foundation”, 2009 (3rd edition)</br>
+[2]<a href="http://www.cis.hut.fi/Opinnot/T-61.3030/schedule2007.shtml">T-61.3030 PRINCIPLES OF NEURAL COMPUTING (5 CP)</a></br>
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[神经网络模型分类]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/03/24/classes-of-neural-networks/"/>
+    <updated>2013-03-24T23:07:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/03/24/classes-of-neural-networks</id>
+    <content type="html"><![CDATA[<p>本文主要介绍一下几种不同类型的神经网络模型，主要有前馈神经网络，反馈神经网络，自组织神经网络，随机神经网络</p>
+
+
+
+
+<h2>1.前馈神经网络</h2>
+
+
+<h4>1)自适应线性神经网络(Adaline)</h4>
+
+
+<p>自适应线性神经网络（Adaptive Linear，简称Adaline) 是由威德罗（Widrow）和霍夫（Hoff）首先提出的。它与感知器的主要不同之处在于
+其神经元有一个线性激活函数，这允许输出可以是任意值，而不仅仅只是像感知器中那样只能取0或1。它采用的是W—H学习法则，也称最小均方差(LMS)
+规则对权值进行训练。自适应线性元件的主要用途是线性逼近一个函数式而进行模式联想。</p>
+
+
+
+
+<h4>2)单层感知器</h4>
+
+
+<p>单层感知器（Perceptron）是由美国计算机科学家罗森布拉特（F.Roseblatt）于1957年提出的。它是一个具有单层神经元的网络，由线性阈值
+逻辑单元所组成。它的输入可以是非离散量，而且可以通过学习而得到，这使单层感知器在神经网络研究中有着重要的意义和地位：它提出了自组织、
+自学习的思想，对能够解决的问题，有一个收敛的算法，并从数学上给出了严格的证明。</p>
+
+
+<!-- more -->
+
+
+
+
+<h4>3)多层感知器</h4>
+
+
+<p>单层感知器由于只有一个神经元，功能单一，只能完成线性决策或实现“与”、“或”、“非”等单一逻辑函数。多层感知器（Multilayer Perceptron）
+是在单层感知器的基础上发展起来的，它是一种在输入层与输出层之间含有一层或多层隐含结点的具有正向传播机制的神经网络模型。多层感知器克服了
+单层感知器的许多局限，它的性能主要来源于它的每层结点的非线性特性（节点输出函数的非线性特性）。如果每个结点是线性的，那么多层感知器的
+功能就和单层感知器一样。</p>
+
+
+
+
+<p>在人工神经网络中，应用最普遍的是多层前馈网络模型。在1986年，Rumelhant和McClelland提出了多层前馈网络的误差反向传播（Error Back Propagation）
+学习算法，简称BP算法，这是一种多层网络的逆推学习算法。由此采用BP算法的多层前馈网络也广泛被称为BP网络。</p>
+
+
+
+
+<h2>2.反馈神经网络</h2>
+
+
+<p>反馈神经网络模型可用一完备的无向图表示。从系统的观点看，反馈神经网络模型是一反馈动力学系统，它具有极复杂的动力学特性。在反馈神经网络模型中，
+我们关心的是其稳定性，稳定性是神经网络相联存储性质的体现，可以说稳定就意味着完成回忆。从计算的角度讲，反馈神经网络模型具有比前馈神经网络模型
+更强的计算能力，它包括Hopfield神经网络、海明神经网络和双向联想存储器。</p>
+
+
+
+
+<h4>1)Hopfield神经网络</h4>
+
+
+<p>1982年，美国神经网络学者霍普菲尔德（J.J.Hopfield）提出了反馈型的全连接神经网络，是一种对记忆功能的较好模拟。Hopfield神经网络的结构特点是：
+每一个神经元的输出信号通过其它神经元后，反馈到自己的输入端。这种反馈方式有利于通过联想记忆实现最优化，经过分析比较与判断确定最优解决问题的方法。
+网络状态的演变是一种非线性动力学系统的行为描述过程，作为一种非线性动力学系统，系统从初始化出发后，系统状态经过演变可能发生如下结果： </br>
+a) 渐进稳定形成稳定点，又称为吸引子。</br>
+b) 极限环状态。</br>
+c) 混沌状态。</br>
+d) 发散状态。</br>
+发散状态是不希望看到的。对于人工神经网络而言，由于选取网络的变换函数为一个有界函数，因此系统状态不会演变成发散。</p>
+
+
+
+
+<h4>2)海明神经网络(Hamming)</h4>
+
+
+<p>海明（Hamming）网络由匹配子网和竞争子网组成。匹配子网在学习阶段将若干类别的样本记忆存储在网络的连接权值中；在工作阶段（回忆阶段），
+该子网计算输入模式和各个样本模式的匹配程度，并将结果送入竞争子网中，由竞争子网选择出匹配子网中最大的输出。从而，实现了对离散输入模式
+进行在海明距离最小意义下的识别和分类。</p>
+
+
+
+
+<h4>3)双向联想存储器(BAM)</h4>
+
+
+<p>双向联想存储器（BAM）是由日本的Kosko提出的一种神经网络模型，它是ART网络模型的一种简化形式， 是一种异联想存储器。它能存储成对的
+模式$(A1，B1)， (A2 ,B2), ⋯,( AN, BN)$。Ai和Bi是不同向量空间中的向量。如果模式A输入到BAM，输出是模式B，且若A与iA最为接近，B就是在BAM所
+存储的向量iB。 BAM网络模型中的神经元为非线性单元，每个神经元的作用相当于一个非线性函数，这个函数一般取为S型函数：$y = \frac{1}{1+exp^{-x}}$.
+</p>
+
+
+
+
+<h2>3.自组织神经网络</h2>
+
+
+<h4>1)自适应谐振理论(ART)</h4>
+
+
+<p>自适应谐振理论（adaptive resonance theory，简称ART）的目的是为人类的心理和认知活动建立一个统一的数学理论。1976年，美国学者Carpenter
+和Grossberg提出了ART神经网络模型。它是利用生物神经细胞的自兴奋与侧抑制的原理来指导学习，让输入模式通过网络的双向连接权的作用来进行比较
+与识别，最后使网络对输入模式产生所谓的谐振，因此来完成对输入模式的记忆，并以同样的方式实现网络的回想。当网络已经存储了一定的内容之后，
+则可用它来进行识别。在识别过程中，如果输入是已记忆的或与已记忆的模式十分相似，则网络会把它回想出来。如果是没有记忆的新模式，则在不影响
+原有记忆的前提下，把它记忆下来，并用一个没用过的输出层神经元作为这一新模式的分类标志。<p>
+
+<p>ART网络主要有三种形式：ART1是处理双极型或二进制数据，即观察向量的每个分量是二值的，只能取0或1；ART2是用于处理连续型模拟信号，
+即观察向量的每个分量可取任意实数值，也可用于二进制输入；ART3是分级搜索模型，它兼容前两种结构的功能并将两层神经元网络扩大为任意
+多层神经元网络，并在神经元的运行模型中纳入人类神经元生物电—化学反应机制，因而具备了相当强的功能和扩展能力。</p>
+
+<h4>2)自组织映射神经网络模型(SOM)</h4>
+<p>在人的感觉通道上一个很重要的组织原理是神经元有序地排列着，并且往往可以反映出所感觉到外界刺激的某些物理特性。如在听觉通道的每一个层次上，
+其神经元与神经纤维在结构上的排列与外界刺激的频率关系十分密切，对于某个频率，相应的神经元具有最大的响应，这种听觉通道上的有序排列一直延续到
+听觉皮层，尽管许多低层次上的组织是预先排好的，但高层次上的神经组织则是通过学习自组织而形成的。由此生物背景，提出了自组织映射神经网络模型（SOM）。</p>
+
+<h4>3)对流神经网络模型(CPN)</h4>
+<p>CPN是由SOM模型和Grossberg外星网络组合而形成的一种神经网络模型。是由美国Hecht-Nielsen和Robert-Nielsen于1987年首先提出来的。一般认为，
+这种由两种或多种网络组合而成的新型网络往往具有比原网络模型更强的能力，它能够克服单个网络的缺陷，而且学习时间较短。</p>
+
+<h2>4.随机神经网络</h2>
+<h4>1) 模拟退火算法</h4>
+<p>在物理学中，对固体物质进行退火处理时，通常先将它加温溶化，使其中的粒子可自由地运动，然后随着物质温度的下降，粒子也形成了低能态的晶格。
+若在凝结点附近的温度下降速度足够慢，则固体物质一定会形成最低能量的基态。对于组合优化问题来说，它也有类似的过程，也就是说物理中固体物质的
+退火过程与组合优化问题具有相似性。组合优化问题也是在解空间寻求花费函数最小（或最大）的解。</p>
+
+<h4>2) Boltzmann机</h4>
+<p>Boltzmann机是由Hinton和Sejnowski提出来的一种统计神经网络模型，是在Hopfield网络基础之上引入了随机性机制而形成的。与Hopfield神经网络不同
+的是Boltzmann机具有学习能力，即其权值通过学习来调整，而不是预先设置。Boltzmann机是一种约束满足神经网络模型。</p>
+
+<p>基于模拟退火算法的波尔兹曼机训练的基本思想为：当神经网络中某个与温度对应的参数发生变化时，神经网络的兴奋模式也会如同物理上的热运动那
+样发生变化：当温度逐渐下降时，由决定函数判断神经元是否处于兴奋状态。在从高温到低温的退火(annealing)中，能量并不会停留在局部极小值上，
+而以最大的概率到达全局最小值。</p>
+
+<h3>推荐资料</h3>
+<p>Machine Learning Lecture by Andrew Ng, Stanford University</br>
+Lecture VIII: Neural Network - Representation</br>
+Lecture IX: Neural Network - Learning</br>
+Video courses on Coursera: https://class.coursera.org/ml-2012-002/lecture/index</br>
+Lecture homepage in Standford: http://cs229.stanford.edu/</p>
+
+<h3>参考文献</h3>
+<p>[1] Simon Haykin, “Neural Networks: a Comprehensive Foundation”, 2009 (3rd edition)</br>
+[2]T-61.3030 <a href="http://www.cis.hut.fi/Opinnot/T-61.3030/schedule2007.shtml">PRINCIPLES OF NEURAL COMPUTING</a> (5 CP)</br>
+[3]人工神经网络综述：<a href="http://ishare.iask.sina.com.cn/f/36537774.html">http://ishare.iask.sina.com.cn/f/36537774.html</a></br>
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[神经网络简介]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/03/20/basics-of-neural-networks/"/>
+    <updated>2013-03-20T23:21:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/03/20/basics-of-neural-networks</id>
+    <content type="html"><![CDATA[<p>Deep Learning的本质是多层的神经网络，因此在深入学习Deep Learning之前，有必要了解一些神经网络的基本知识。
+本文首先对神经网络的发展历史进行简要的介绍，然后给出神经元模型的形式化描述，接着是神经网络模型的定义、特性，
+最后是一些最新的进展等。关于神经网络的分类、学习方法、应用场景等将在后续文章中介绍。</p>
+
+
+
+
+<h2>1.发展简史</h2>
+
+
+<p>1943年，心理学家W.S.McCulloch和数理逻辑学家W.Pitts建立了神经网络和数学模型，称为MP模型。他们通过MP模型提出
+了神经元的形式化数学描述和网络结构方法，证明了单个神经元能执行逻辑功能，从而开创了人工神经网络研究的时代。</br>
+1945年，Von Neumann在成功的试制了存储程序式电子计算机后，他也对人脑的结构与存储式计算机进行的根本区别的比较，还提出了以简单神经元构成的自再生自动机网络结构。</br>
+1949年，心理学家D.O.Heb提出了突触联系强度可变的设想，并据此提出神经元的学习准则——Hebb规则，为神经网络的学习算法奠定了基础。</br>
+1958年，F.Rosenblatt提出了感知模型，该模型是由阈值神经元组成的，它试图模拟动物和人的感知和学习能力。</br>
+1962年Widrow提出了自适应线性元件，这是一种连续的取值的线性网络，主要用于自适应信号处理和自适应控制。</p>
+
+
+
+
+<!-- more -->
+
+
+<p>Minkey和Papert从数学上对感知机的功能及其局限性做了深入的分析，于1969年出版了《Perceptron（感知机）》一书，
+提出感知机不可能实现复杂的逻辑函数，他们认为感知机的功能是有限的，不能解决如XOR这样的基本问题，而且多层的
+网络还不能找到有效的计算方法，进而否定了这一模型。（其实在后来发现，加入隐藏层就可以解决XOR问题。）</br>
+虽然冯诺依曼结构和感知机结构大概是一个历史阶段的产物，由于《Perceptron》一书的悲观情绪和冯诺依曼机的快速发展，
+神经网络进入了低潮。直到1982年Hopfield提出了HNN模型，他引入了“计算能量函数”的概念，给出了网络稳定性的判据，
+推动了人工神经网络技术得以发展。特别是他提出的电子电路的实现为神经计算机的研究奠定的基础。</br>
+1986年，Rumelhart及LeCun等学者提出了多层感知器的反向传播算法，克服了当初阻碍感知机继续发展的重要障碍。
+与此同时，冯诺依曼机在处理视觉、听觉、联想记忆都方面都体现出了局限性，促使人们开始寻找更加接近人脑的
+计算模型，于是又产生了对神经网络研究的热潮。</br>
+目前，神经网络的发展非常迅速，从理论上对它的计算能力、对任意连续函数的逼近能力、学习理论以及动态网络的
+稳定性分析上都取得了丰硕的成果。特别是在应用上已迅速扩展到许多重要领域，如模式识别与图像处理中的手写体
+字符识别，语音识别，人脸识别，基因序列分析，控制及优化，；金融中的股票市场预测，借贷风险管理，信用卡欺骗检测等。
+</p>
+
+
+
+
+<h2>2 神经元模型</h2>
+
+
+<h3>2.1概述</h3>
+
+
+<p>神经网络的基本组成单元是神经元，在数学上的神经元模型是和在生物学上的神经细胞对应的，也就是说，人工神经网络理论是
+用神经元这种抽象的数学模型来描述客观世界的生物细胞的。因此，生物的神经细胞是神经网络理论诞生和形成的物质基础和源泉。
+这样，神经元的数学描述就必须以生物神经细胞的客观行为特性为依据。本节在介绍了生物神经元的基本结构的基础上，给出了神经元
+的数学模型和形式化表示。</p>
+
+
+
+
+<h3>2.2生物神经元</h3>
+
+
+<p>生物神经元是大脑处理信息的基本单元，人脑大约由1011个神经元组成，神经元互相连接成神经网络。神经元以细胞体为主体，
+由许多向周围延伸的不规则树枝状纤维构成的神经细胞，其形状很像一棵枯树的枝干。主要由细胞体、树突、轴突和突触(Synapse，
+又称神经键)组成，如图1所示。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013032001.png"></center>
+<center>图1. 生物神经元结构图</center></br>
+更多关于神经元的生物学解剖，信息的处理与传递方式以及工作特点等内容请参见[4]。</p>
+
+
+
+
+<h3>2.3人工神经元模型</h3>
+
+
+<p>神经元是神经网络中最基本的信息处理单元，其形式化表示如图2所示。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013032002.png"></center>
+<center>图2 神经元模型的形式化表示</center></p>
+
+
+
+
+<p>一个典型的神经元模型由以下3个部分组成：</br>
+1）突触集（a set ofsynapses）：用权重（weights）来表示。</br>
+2）加法器（adder）：将加权后的输入进行求和，即$\sum_{j=1}^{n} w_{kj} x_{j}$</br>
+3）激活函数（activation function）：也称为压缩函数（squashing function），作用于神经元的输出，一般是一个非线性函数，常见的有。
+另外，很多时候一个神经元还包含一个偏置项bk。
+可用用如下的数学表达式来刻画一个神经元：</p>
+
+
+<center>$u_{k} = \sum_{j=1}^{m} w_{kj} x_{j}$，</center>
+
+
+<center>$y_{k} = \varphi (u_{k} + b_{k})$.</center>
+
+
+<p>其中，$u_{k}$表示输入的线性加和，$\varphi (·)$表示激活函数，$y_{k}$表示神经元的输出，$x_{i}$表示输入信号，$w_{ki}$表示权重。
+很多时候，为了表示的简单，在输入中加入$x_{0}$项、权重中加入$w_{k0}$项，将偏置$b_{k}$表示为$x_{0} * w_{k0}$。</p>
+
+
+
+
+<h2>3. 神经网络模型及其特性</h2>
+
+
+<h3>3.1概念</h3>
+
+
+<p>神经网络（Neural Networks，NN）是由大量的、简单的处理单元（称为神经元）广泛地互相连接而形成的复杂网络系统，它反映了人脑功能的
+许多基本特征，是一个高度复杂的非线性动力学习系统。一个典型的神经网络结构如图3所示。这是一个多层的（包含两个隐层L2、L3）、包含两个
+输出单元的神经网络拓扑结构。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013032003.png"></center>
+<center>图3 一个典型的神经网络结构</center></p>
+
+
+
+
+<p>人工神经网络（Artificial Neural Network，ANN）结构和工作机理基本上是以人脑的组织结构（大脑神经元网络）和活动规律为背景的，
+它反映了人脑的某些基本特征，但并不是要对人脑部分的真实再现，可以说它是某种抽象、简化或模仿。</p>
+
+
+
+
+<h3>3.2基本特性</h3>
+
+
+<p>神经网络具有四个基本特征：</p>
+
+
+<h5>（1）非线性</h5>
+
+
+<p>非线性关系是自然界的普遍特性。大脑的智慧就是一种非线性现象。人工神经元处于激活或抑制二种不同的状态，这种行为在数学上表现
+为一种非线性关系。具有阈值的神经元构成的网络具有更好的性能，可以提高容错性和存储容量。</p>
+
+
+<h5>（2）非局限性</h5>
+
+
+<p>一个神经网络通常由多个神经元广泛连接而成。一个系统的整体行为不仅取决于单个神经元的特征，而且可能主要由单元之间的相互作用、
+相互连接所决定。通过单元之间的大量连接模拟大脑的非局限性。联想记忆是非局限性的典型例子。</p>
+
+
+<h5>（3）非常定性</h5>
+
+
+<p>人工神经网络具有自适应、自组织、自学习能力。神经网络不但处理的信息可以有各种变化，而且在处理信息的同时，非线性动力系统本身
+也在不断变化。经常采用迭代过程描写动力系统的演化过程。</p>
+
+
+<h5>（4）非凸性</h5>
+
+
+<p>一个系统的演化方向，在一定条件下将取决于某个特定的状态函数。例如能量函数，它的极值相应于系统比较稳定的状态。非凸性是指这种
+函数有多个极值，故系统具有多个较稳定的平衡态，这将导致系统演化的多样性。</p>
+
+
+
+
+<h2>4.近期进展</h2>
+
+
+<p>最近几年神经网络模型又成了研究热点，这是因为深层神经网络的学习方法取得了突破性的成就。2006年，以Hinton为首的研究人员在深度置信
+网络（Deep Belief Networks，DBNs）方面的划时代性的工作，极大的减小了深层神经网络的训练和测试误差，从此深度学习的方法一路所向披靡，
+在交通路标识别、字符识别、人脸识别、语音识别等方面的顶级Contest中都取得了最佳效果。</p>
+
+
+
+
+<p>值得一提的是，谷歌的“Google Brain”项目，使用16000个PC机，从YouTube视频中找到的1000万张数字照片作为训练数据集，
+用非监督学习的方法建立了一个拥有10亿多条连接的深层神经网络，最后成功的从中识别出猫咪的图片。</p>
+
+
+
+
+<h3>参考文献</h3>
+
+
+<p>[1] Simon Haykin, “Neural Networks: a Comprehensive Foundation”, 2009 (3rd edition)</br>
+[2]T-61.3030 <a href="http://www.cis.hut.fi/Opinnot/T-61.3030/schedule2007.shtml">PRINCIPLES OF NEURAL COMPUTING</a> (5 CP)</br>
+[3] Wiki - Neural network: http://en.wikipedia.org/wiki/Neural_network</br>
+[4] 百度百科-神经网络模型：http://baike.baidu.com/view/3406239.htm </br>
+[5] 人工神经网络综述：http://ishare.iask.sina.com.cn/f/36537774.html </br>
+[6] How bio-inspired deep learning keeps winning competitions：http://www.kurzweilai.net/how-bio-inspired-deep-learning-keeps-winning-competitions </br>
+[7] Google&#8217;s &#8216;brain simulator&#8217;: 16,000 computers to identify a cat：http://www.smh.com.au/technology/sci-tech/googles-brain-simulator-16000-computers-to-identify-a-cat-20120626-20zmd.html 
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深度学习简介]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/03/16/introduction-to-deep-learning/"/>
+    <updated>2013-03-16T21:36:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/03/16/introduction-to-deep-learning</id>
+    <content type="html"><![CDATA[<h2>0.概述</h2>
+
+<p>
+以下是Wiki上对深度学习的下的定义：</br>
+Deep learning refers to a sub-field of machine learning that is based on learning several levels of representations, 
+corresponding to a hierarchy of features or factors or concepts, where higher-level concepts are defined from lower-level ones, 
+and the same lower-level concepts can help to define many higher-level concepts.
+</p>
+
+
+<p>
+深度学习就是学习多个级别的表示和抽象，帮助理解数据，如图像、声音和文本。深度学习的概念源于人工神经网络的研究，
+含多隐层的多层感知器就是一种深度学习结构。那些涉及从输入产生输出的计算,我们可以用流程图来表示，
+流程图的一个特殊的概念就是它的深度: 从输入到输出的路径的最长长度。传统的前馈神经网络可以理解为
+深度等于层数(隐层数+1)的网络。深度学习通过组合低层特征形成更加抽象的高层表示（属性类别或特征），
+以发现数据的分布式特征表示。
+</p>
+
+
+<h2>1.深度学习产生的背景</h2>
+
+<h3>1.1深度不够的缺陷</h3>
+
+<p>
+在很多情况下，深度为2就已足以在给定精度范围内表示任何函数了，例如逻辑门、正常
+神经元、sigmoid-神经元、SVM中的RBF(Radial Basis Function)等，但这样也有一个代价：
+那就是图中需要的节点数会很多，这也就意味着当我们学习目标函数时，需要更多的计算
+单元和更多的参数。理论结果显示，对于某一类函数，需要的参数的个数与输入的大小是
+成指数关系的，逻辑门、正常神经元、RBF单元就属于这类。后来Hastad发现，当深度为d时，
+这类函数可以用O(n)个节点（输入为n个）的神经网络有效表示，但当深度被限制为d-1时，
+则需要有O(n2)个节点来表示。
+</p>
+
+
+
+
+<!-- more -->
+
+
+<p>
+我们可以讲深层结构看做是因子分解。大多数随机选择的函数，无论是用深层的结构还是用浅层结构，
+都是无法有效的表示的。但很多可以用深层结构有效表示的却无法用浅层的来有效表示（参见推荐
+阅读[5]中的polynomials example）。这种深层表示的现象表明，对于一些需要表示的函数，
+其中存在一些结构化的特性。如果其中没有结构化的东西，那么它将无法很好的泛化。
+</p>
+
+
+<h3>1.2大脑具有深层的结构</h3>
+
+<p>
+例如，被深入研究的视觉皮层（如下图（a）所示）包含一系列的区域，每个区域都有输入，
+信号流从一个区域到下一个区域（也有跳过连接或在某种程度上的并行路径，所以情况更复杂）。
+在这种功能层次结构中，每个层次上的输入代表了不同层次的抽象特征，越上层的特征，
+又越底层的信息表征，抽象性越高，如下图（c）所示。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013031601.png"></center>
+</p>
+
+
+<p>
+值得注意的是，大脑中的表示是介于密集分布和纯局部之间，也就意味着它们是稀疏的：大脑中大约1%的神经元是同时活动的。
+</p>
+
+
+<h3>1.3认知过程是深层次的</h3>
+
+<p>
+• 人们是使用层次化的方式来组织它们的想法和观念的；</br>
+• 人们首先是学习简单的概念，然后将它们组合起来以表示更加抽象的概念；</br>
+• 工程师们习惯于将解决问题的方案分解为多个层次的抽象和处理过程。
+</p>
+
+
+<p>如果能够像人一样学习到这些概念，那将会是非常棒的。知识工程（Knowledge Engineering）在这方面是失败的，
+但语言表达概念的内省的方法也表明了稀疏表示：对于一个特定的输入（就像一幅视觉的图像），
+仅仅只有一小部分的单词或概念是相关的。
+</p></p>
+
+<h2>2.深度学习的巨大突破</h2>
+
+<h3>2.1学术上的突破</h3>
+
+<p>
+在2006年以前，尝试训练一个深层的、监督的前馈神经网络往往会比浅层的（1~2个隐层）网络产生更糟糕的结果（无论是训练误差，还是测试误差）。
+但在2006年，以Hinton为首的研究人员在深度置信网络（Deep Belief Networks，DBNs）方面的划时代性的工作，将此终结。其代表性的论文是：</br>
+• Hinton, G. E., Osindero, S. and Teh, Y., <a href="http://www.cs.toronto.edu/~hinton/absps/fastnc.pdf" target="_blank">A fast learning algorithm for deep belief nets</a>. Neural Computation. 18:1527-1554, 2006</br>
+• Yoshua Bengio, Pascal Lamblin, Dan Popovici and Hugo Larochelle, <a href="http://www.iro.umontreal.ca/~lisa/publications2/index.php/publications/show/190" target="_blank">Greedy Layer-Wise Training of Deep Networks</a>, in J. Platt et al. (Eds), Advances in Neural Information Processing Systems 19 (NIPS 2006), pp. 153-160, MIT Press, 2007</br>
+• Marc’Aurelio Ranzato, Christopher Poultney, Sumit Chopra and Yann LeCun. <a href="http://yann.lecun.com/exdb/publis/pdf/ranzato-06.pdf" target="_blank">Efficient Learning of Sparse Representations with an Energy-Based Model</a>, in J. Platt et al. (Eds), Advances in Neural Information Processing Systems (NIPS 2006), MIT Press, 2007
+</p>
+
+
+<p>
+在这些论文中提出了以下几个非常关键的原则：</br>
+• 非监督学习被用来（预）训练各个层；</br>
+• 非监督学习在之前学习到的层次之上，一次只学习一个层次，每个层次学习到的结果将作为下一个层次的输入；</br>
+• 除了一些专门用于预测的层次外，用监督学习来调整层与层之间的权重。</br>
+这些DBNs用RBMs（Restricted Boltzmann Machines）来作为每个层的非监督学习，
+Bengio的paper研究并比较了RBMs和auto-encoders（通过瓶颈内部层的表示来预测它的输入的神经网络）。
+Ranzato的paper将稀疏的auto-encoder（与sparse coding相似）用在传统的神经网络结构中。
+关于auto-encoders和传统的神经网络结构将在后续的文章中讲解。
+</p>
+
+
+<h3>2.2学术中的研究和应用</h3>
+
+<h4>(1)计算机视觉</h4>
+
+<p>
+·ImageNet Classification with Deep Convolutional Neural Networks, Alex Krizhevsky, Ilya Sutskever, Geoffrey E Hinton, NIPS 2012.
+</br>
+·Learning Hierarchical Features for Scene Labeling, Clement Farabet, Camille Couprie, Laurent Najman and Yann LeCun, 
+IEEE Transactions on Pattern Analysis and Machine Intelligence, 2013.
+</br>
+·Learning Convolutional Feature Hierachies for Visual Recognition, Koray Kavukcuoglu, Pierre Sermanet, Y-Lan Boureau, 
+Karol Gregor, Micha&euml;l Mathieu and Yann LeCun, Advances in Neural Information Processing Systems (NIPS 2010), 23, 2010.
+</br>……</p>
+
+
+<h4>(2)语音识别</h4>
+
+<p>
+微软研究人员通过与hintion合作，首先将RBM和DBN引入到语音识别声学模型训练中，并且在大词汇量语音识别系统中获得巨大成功，使得语音识别的错误率相对减低30%。
+但是，DNN还没有有效的并行快速算法，目前，很多研究机构都是在利用大规模数据语料通过GPU平台提高DNN声学模型的训练效率。
+</br>
+在国际上，IBM、google等公司都快速进行了DNN语音识别的研究，并且速度飞快。
+</br>
+国内方面，科大讯飞、百度、中科院自动化所等公司或研究单位，也在进行深度学习在语音识别上的研究。
+</p>
+
+
+<h4>(3)自然语言处理等其他领域</h4>
+
+<p>
+很多机构在开展研究，但目前深度学习在自然语言处理方面还没有产生系统性的突破。
+</p>
+
+
+<h3>2.3工程中的应用</h3>
+
+<p>
+• 微软：2009年，首先将深度学习应用到语音识别；如今，已将深度学习融入到实际的产品当中，如Xbox。
+</br>
+• 谷歌：“Google Brain”项目，用1.6万台机器，从1000万张图像中识别出猫，这是完全的非监督学习
+（We never told it during the training, &#8216;This is a cat,&#8217; &#8230; It basically invented the concept of a cat.）。
+</br>
+• 百度：2012年夏开始从事深度学习方面的工作，在语音识别和图像识别中取得了巨大成功，
+目前也已初步融入到百度的产品当中，如百度语音助手、百度寻人等产品。
+</p>
+
+
+<h2>3构建深度学习的方法</h2>
+
+<p>
+深度学习的概念和思想很简单，然而如果构建一个合理的深度网络拓扑结构，如何学习网络中的信号传递权值，
+都是非常困难的问题。下面介绍几种非常perfect的方法。
+</p>
+
+
+<h3>3.1 Autoencoder[4]</h3>
+
+<p>
+最简单的一种方法是利用人工神经网络的特点，人工神经网络（ANN）本身就是具有层次结构的系统，
+如果给定一个神经网络，我们假设其输出与输入是相同的，然后训练调整其参数，得到每一层中的权重，
+自然地，我们就得到了输入I的几种不同表示（每一层代表一种表示），这些表示就是特征，在研究中可以发现，
+如果在原有的特征中加入这些自动学习得到的特征可以大大提高精确度，
+甚至在分类问题中比目前最好的分类算法效果还要好！这种方法称为AutoEncoder，如下图所示。</br>
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013031602.png"></center>
+</p>
+
+
+<p>
+当然，我们还可以继续加上一些约束条件得到新的Deep Learning方法，例如在AutoEncoder的基础上
+加上L1的Regularity限制（L1主要是约束每一层中的节点中大部分都要为0，只有少数不为0，
+这就是Sparse名字的来源），我们就可以得到Sparse AutoEncoder方法。
+</p>
+
+
+<h3>3.2 Sparse Coding[5]</h3>
+
+<p>
+Sparse Coding是一种利用非监督的方法来学习表示数据的过完备基的方法，它的目的就是为了找到一组基向量$\phi _{i}$，
+进而将输入向量$\mathbf{x}$表示为这组基向量的线性组合:</br>
+<center>$\mathbf{x} = \sum_{i=1}^{k}a _{i} \phi _{i}$.</center>
+</p>
+
+
+<p>
+主成分分析（Principal Component Analysis，PCA）是一种有效的学习一组完备的基向量的方法，
+而Sparse Coding则希望学习一组过完备的基向量。这样做的好处在于，过完备的基向量能够更好
+的捕获到输入数据当中的结构和模式。然而，使用过完备的基向量带来的一个问题是，
+该组基向量表示输入向量的结果不唯一，也就是说系数$a _{i}$是不唯一的。因此，在Sparse Coding当中，
+我们引入一些额外的准则，即稀疏性（sparsity），来解决这个问题。具体而言，这里的稀疏性是指，
+系数$a _{i}$中大多数都为零或接近为零，从优化问题的角度来讲，就是要使得系数中尽可能少的系数是
+尽可能的比零大，这样就可以得到输入的唯一标示。
+</p>
+
+
+<h3>3.3 Restricted Boltzmann Machine（RBM）</h3>
+
+<p>
+Boltzmann Machine其实是一种无向图，里面的节点是互相连接的，但不一定是全连接，也即不是每个节点都两两相连，
+连接着的两个节点之间就有一个权值。为理解方便就假设节点只能取值为0或者1，有些节点值是已知的，有些是未知的，
+把已知的节点集合记为V，未知的节点集合记为H，这样就把所有节点分成两个集合，其实集合V就可以认为是visible层，
+集合H就可以认为是hidden层。如果hidden层中的节点都不互相连接，visible层中的节点也都不互相连接，那么就成为了RBM模型。
+</p>
+
+
+<p>
+在神经网络中，两层神经网络(即一个hidden层和一个output层，visible层不算在内)的建模能力是很强的，
+但要求hidden层的节点数够多，但节点数太多就会导致计算量的复杂，矩阵的维护会相当大。
+一个很好想到的方法就是将层数加大，通过层数的增多来缓解单层中节点数过多的负担，
+比如设置两个hidden层，每层100个节点，就相当于单个hidden层100×100个节点的建模能力，
+同理三个hidden层，每层分别是100、200、300个节点，就相当于单层的100×200×300个节点的建模能力。
+然而这样做的问题在于，当层数大于2时，经典的训练方法效果会较差，因为参数的局部极小值太多，
+容易收敛到一个不好的极值。Hinton把RBM(Restricted Boltzmann Machine)层叠在一起，训练出权值，
+然后把这个权值当成是下一个RBM层的输入作为权值的初始值，利用传统的梯度下降法去训练网络，
+得到了更好的结果，也即在每个RBM层通过筛选得到较好的参数初始值，使得最后的结果更好。
+</p>
+
+
+<h2>4.小结</h2>
+
+<p>
+当前多数分类、回归等学习方法为浅层结构算法，其局限性在于有限样本和计算单元情况下对复杂函数的表示能力有限，
+针对复杂分类问题其泛化能力受到一定制约。深度学习可通过学习一种深层非线性网络结构，实现复杂函数逼近，
+表征输入数据分布式表示，并展现了强大的从少数样本集中学习数据集本质特征的能力。
+</p>
+
+
+<p>
+虽然距离深度学习的突破已经有六年多了，但它仍处于发展初期，大量工作还需要研究。
+模型方面是否有其他更为有效且有理论依据的深度模型学习算法，探索新的特征提取模型是值得深入研究的内容。
+此外有效的可并行训练算法也是值得研究的一个方向。当前基于最小批处理的随机梯度优化算法很难在多计算机中
+进行并行训练。通常办法是利用图形处理单元加速学习过程，然而单个机器GPU对大规模数据识别或相似任务数据集
+并不适用。在深度学习应用拓展方面， 如何充分合理地利用深度学习在增强传统学习算法的
+性能仍是目前各领域的研究重点。
+</p>
+
+
+<h2>参考文献</h2>
+
+<p>
+[1]<a href="http://www.iro.umontreal.ca/~pift6266/H10/notes/deepintro.html#introduction-to-deep-learning-algorithms" target="_blank">Introduction to Deep Learning Algorithms.</a></br>
+[2]<a href="http://bigeye.au.tsinghua.edu.cn/MLA12/program_files/MLA2012_%E4%BD%99%E5%87%AF.pdf" target="_blank">A tutorial on deep learning</a>，
+<a href="http://www.infoq.com/cn/presentations/deep-learning-and-application-to-multimedia#" target="_blank">Video</a>.</br>
+[3]<a href="http://wenku.baidu.com/view/6dcd1e3b5727a5e9856a6180.html " target="_blank">A Brief Introduction to Deep Learning</a></br>
+[4]<a href="http://deeplearning.stanford.edu/wiki/index.php/Autoencoders_and_Sparsity" target="_blank">Autoencoders and Sparsity</a></br>
+[5]<a href="http://deeplearning.stanford.edu/wiki/index.php/Sparse_Coding" target="_blank">Sparse Coding</a></br>
+[6]<a href="http://blog.sina.com.cn/s/blog_70a384770101f58p.html" target="_blank">关于深度学习(deep learning)</a></br>
+[7] 百度百科-<a href="http://baike.baidu.com/view/9964678.htm" target="_blank">深度学习</a></br>
+[8] 孙志军等，深度学习研究综述.</p>
+
+
+<h2>推荐阅读</h2>
+
+<p>
+[1] Chris Bishop, “<a href="http://research.microsoft.com/en-us/um/people/cmbishop/prml/" target="_blank">Pattern Recognition and Machine Learning</a>”, 2007</br>
+[2] Simon Haykin, “<a href="http://www.amazon.com/Neural-Networks-A-Comprehensive-Foundation/dp/B000O8QMAU" target="_blank">Neural Networks: a Comprehensive Foundation</a>”, 2009 (3rd edition)</br>
+[3] Richard O. Duda, Peter E. Hart and David G. Stork, “<a href="http://www.rii.ricoh.com/~stork/DHS.html" target="_blank">Pattern Classification</a>”, 2001 (2nd edition)</br>
+[4]Deep Learning Tutorial：<a href="http://deeplearning.net/tutorial/ " target="_blank">http://deeplearning.net/tutorial/</a></br>
+[5]Yoshua Bengio, <a href="http://www.iro.umontreal.ca/~lisa/publications2/index.php/publications/show/239" target="_blank">Learning Deep Architectures for AI</a>, Foundations & Trends in ML, 2(1), 2009</br>
+[6] Unsupervised Feature Learning and Deep Learning：<a href="http://deeplearning.stanford.edu/wiki/index.php/UFLDL_Tutorial" target="_blank">UFLDL Tutorial</a></br>
+[7] <a href="http://deeplearning.net/" target="_blank">http://deeplearning.net/</a></br>
+[8] 深度学习相关软件包（Matlab）: <a href="https://github.com/rasmusbergpalm/DeepLearnToolbox" target="_blank">https://github.com/rasmusbergpalm/DeepLearnToolbox</a>
+</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[2013年第一场雪]]></title>
@@ -26,101 +2311,1539 @@
 
 
 <p>出发了，在校门口拍了几张照。
-下面这张是正大门的全景：
-<img src="http://ibillxia.github.com/images/IMAG2013010401.jpg">
-大门口的雪松，传说中的BG树：
-<img src="http://ibillxia.github.com/images/IMAG2013010402.jpg">
-大门口左边的：
-<img src="http://ibillxia.github.com/images/IMAG2013010403.jpg">
-中午吃饭前在大草坪上拍的雪风中的毛像：
-<img src="http://ibillxia.github.com/images/IMAG2013010404.jpg">
-ZJG大草坪上的求是鹰：
-<img src="http://ibillxia.github.com/images/IMAG2013010405.jpg">
-出发时，曹东楼下看到的一个小型的新娘雪人：
-<img src="http://ibillxia.github.com/images/IMAG2013010406.jpg">
+下面这张是正大门的全景：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010401.jpg"></p>
+
+
+
+
+<!-- more -->
+
+
+<p>大门口的雪松，传说中的BG树：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010402.jpg">
+大门口左边的：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010403.jpg">
+中午吃饭前在大草坪上拍的雪风中的毛像：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010404.jpg">
+ZJG大草坪上的求是鹰：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010405.jpg">
+出发时，曹东楼下看到的一个小型的新娘雪人：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010406.jpg">
 </p>
 
 
 
 
 <p>
-我们是从黄龙洞、北山栖霞岭这边过去的，山下草坪处有人堆的一个雪人，是不是很滑稽，哈哈哈哈
-<img src="http://ibillxia.github.com/images/IMAG2013010407.jpg">
-雪中的“缘”字：
-<img src="http://ibillxia.github.com/images/IMAG2013010408.jpg">
-山间竹林：
-<img src="http://ibillxia.github.com/images/IMAG2013010409.jpg">
-雪压树枝：
-<img src="http://ibillxia.github.com/images/IMAG2013010410.jpg">
-不堪重压的弯竹：
-<img src="http://ibillxia.github.com/images/IMAG2013010411.jpg">
-雪地上涂鸦的201314（爱你一生一世），今天是2013年1月4日，一个很特殊的日子，据说今天结婚登记的人很多.
-<img src="http://ibillxia.github.com/images/IMAG2013010412.jpg">
+我们是从黄龙洞、北山栖霞岭这边过去的，山下草坪处有人堆的一个雪人，是不是很滑稽，哈哈哈哈</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010407.jpg">
+雪中的“缘”字：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010408.jpg">
+山间竹林：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010409.jpg">
+雪压树枝：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010410.jpg">
+不堪重压的弯竹：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010411.jpg">
+雪地上涂鸦的201314（爱你一生一世），今天是2013年1月4日，一个很特殊的日子，据说今天结婚登记的人很多.</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010412.jpg">
 </p>
 
 
 
 
 <p>
-雪下得有点大，山陡路滑，好不容易爬到山顶了。虽然天气冷，但爬山却感觉有点热。在宝石山山顶的一个平台上，有人堆了雪人，有位哥们给雪人点烟：
-<img src="http://ibillxia.github.com/images/IMAG2013010413.jpg">
-山顶俯视下的传说中的断桥残雪，看到的只是黑压压的一群人，传说的断桥残雪奇观好像得清早登山才能看得到。
-<img src="http://ibillxia.github.com/images/IMAG2013010414.jpg">
-山顶远眺保俶塔：
-<img src="http://ibillxia.github.com/images/IMAG2013010415.jpg">
+雪下得有点大，山陡路滑，好不容易爬到山顶了。虽然天气冷，但爬山却感觉有点热。
+在宝石山山顶的一个平台上，有人堆了雪人，有位哥们给雪人点烟：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010413.jpg">
+山顶俯视下的传说中的断桥残雪，看到的只是黑压压的一群人，传说的断桥残雪奇观好像得清早登山才能看得到。</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010414.jpg">
+山顶远眺保俶塔：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010415.jpg">
 </p>
 
 
 
 
-<p>下山了，石道很滑，我们只好绕道而行，从石阶下到了半山腰。在一个歇脚处的一个不起眼的桌子上有两个小小的雪人：
-<img src="http://ibillxia.github.com/images/IMAG2013010416.jpg">
-再稍往下走，在阶梯旁边有一个蛋糕+气球构成的雪人：
-<img src="http://ibillxia.github.com/images/IMAG2013010417.jpg">
+<p>下山了，石道很滑，我们只好绕道而行，从石阶下到了半山腰。在一个歇脚处的一个不起眼的桌子上有两个小小的雪人：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010416.jpg">
+再稍往下走，在阶梯旁边有一个蛋糕+气球构成的雪人：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010417.jpg">
 </p>
 
 
 
 
-<p>下山就到了白堤，再近看雪中的断桥：
-<img src="http://ibillxia.github.com/images/IMAG2013010418.jpg">
-再近一点：
-<img src="http://ibillxia.github.com/images/IMAG2013010419.jpg">
-过断桥沿西湖旁再往前，在一个石凳上有人堆的一个雪人头：
-<img src="http://ibillxia.github.com/images/IMAG2013010420.jpg">
+<p>下山就到了白堤，再近看雪中的断桥：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010418.jpg">
+再近一点：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010419.jpg">
+过断桥沿西湖旁再往前，在一个石凳上有人堆的一个雪人头：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010420.jpg">
 </p>
 
 
 
 
-<p>坐K16路公交回学校后，路过1舍时看到的自行车，积雪很厚了：
-<img src="http://ibillxia.github.com/images/IMAG2013010421.jpg">
-吃完晚饭回实验室，路旁又发现一个雪人，头上插了两个树枝，有点像兔子了：
-<img src="http://ibillxia.github.com/images/IMAG2013010422.jpg">
+<p>坐K16路公交回学校后，路过1舍时看到的自行车，积雪很厚了：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010421.jpg">
+吃完晚饭回实验室，路旁又发现一个雪人，头上插了两个树枝，有点像兔子了：</br>
+<img src="http://ibillxia.github.com/images/2013/IMAG2013010422.jpg">
 </p>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[关于我]]></title>
-    <link href="http://ibillxia.github.com/blog/2013/01/03/about-me/"/>
-    <updated>2013-01-03T00:00:00+08:00</updated>
-    <id>http://ibillxia.github.com/blog/2013/01/03/about-me</id>
-    <content type="html"><![CDATA[<p>I am a postgraduate student in Computer Science Department, Zhejiang University since Sep.6, 2012. 
-My mainly research interest is Biometric via Voice Print Recognition(VPR). This is a research area 
-related to machine learning, pattern recognition, etc. I also do some projects related to speech recognition. 
+    <title type="html"><![CDATA[AI 顶级会议列表]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/01/02/ai-top-conferences/"/>
+    <updated>2013-01-02T19:17:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/01/02/ai-top-conferences</id>
+    <content type="html"><![CDATA[<p>注: 本文为小百合BBS的daniel所写，稍有删改。</p>
+
+
+<p>tier-1的列得较全, tier-2的不太全, tier-3的很不全.同分的按字母序排列. 不很严谨地说, tier-1是可以令人羡慕的, tier-2是可以令人
+尊敬的,由于AI的相关会议非常多, 所以能列进tier-3的也是不错的。</p>
+
+
+
+
+<h3>The First Class</h3>
+
+
+<p>今天先谈谈AI里面tier-1的conferences, 其实基本上就是AI里面大家比较公认的top conference. 下面同分的按字母序排列.</p>
+
+
+
+
+<p>IJCAI (1+): AI最好的综合性会议, 1969年开始, 每两年开一次, 奇数年开. 因为AI实在太大, 所以虽然每届基本上能录100多篇（现在已经
+到200多篇了），但分到每个领域就没几篇 了，象machine learning、computer vision这么大的领域每次大概也就10篇左右, 所以难度很大. 
+不过从录用率上来看倒不太低,基本上20%左右, 因为内行人都会掂掂分量, 没希望的就别浪费reviewer的时间了. 最近中国大陆投往国际会议
+的文章象潮水一样, 而且因为国内很少有能自己把关的研究组, 所以很多会议都在complain说中国的低质量文章严重妨碍了PC的工作效
+率（囧o(╯□╰)o）. 在这种情况下, 估计这几年国际会议的录用率都会降下去. 另外, 以前的IJCAI是没有poster的, 03年开始, 为了减少
+被误杀的好人, 增加了2页纸的poster.值得一提的是, IJCAI是由貌似一个公司的&#8221;IJCAI Inc.&#8221;主办的(当然实际上并不是公司, 实际上是
+个基金会), 每次会议上要发几个奖, 其中最重要的两个是IJCAI Research Excellence Award 和 Computer& Thoughts Award, 前者是终身
+成就奖, 每次一个人, 基本上是AI的最高奖(有趣的是, 以AI为主业拿图灵奖的6位中, 有2位还没得到这个奖), 后者是奖给35岁以下的青年
+科学家,每次一个人. 这两个奖的获奖演说是每次IJCAI的一个重头戏.另外, IJCAI 的 PC member相当于其他会议的area chair, 权力很大, 
+因为是由PC member去找 reviewer 来审, 而不象一般会议的PC member其实就是 reviewer. 为了制约这种权力, IJCAI的审稿程序是每篇
+文章分配2位PC member, primary PC member去找3位reviewer, second PC member 找一位. （PS：一个非常好的消息是IJCAI-2013要来
+中国Beijing了，非常感谢王飞跃老师等的辛勤的申办！但愿能够亲临现场！）。IJCAI-2013的Important dates：</br>
+ Abstract submission: January 26, 2013 (11:59PM, UTC-12).</br>
+ Paper submission: January 31, 2013 (11:59PM, UTC- 12).</br>
+ Author feedback: March 4-6, 2013 (11:59PM, UTC-12).</br>
+ Notification of acceptance/rejection: April 2, 2013.</br>
+ Camera-ready copy due: Apr 23, 2013.</br>
+ Technical sessions: August 3-9, 2013.</p>
+
+
+
+
+<!-- more -->
+
+
+<p>AAAI (1): 美国人工智能学会AAAI的年会. 是一个很好的会议, 但其档次不稳定, 可以给到1+, 也可以给到1-或者2+, 总的来说我给它&#8221;1&#8221;. 
+这是因为它的开法完全受IJCAI制约: 每年开, 但如果这一年的IJCAI在北美举行, 那么就停开. 所以, 偶数年里因为没有IJCAI, 它就 是最好
+的AI综合性会议, 但因为号召力毕竟比IJCAI要小一些, 特别是欧洲人捧AAAI场的比IJCAI少得多(其实亚洲人也是), 所以比IJCAI还是要稍弱
+一点, 基本上在1和1+之间; 在奇数年, 如果IJCAI不在北美, AAAI自然就变成了比IJCAI低一级的会议(1-或2+), 例如2005年既有IJCAI又有AAAI, 
+两个会议就进行了协调, 使得IJCAI的录用通知时间比AAAI的deadline早那么几天, 这样IJCAI落选的文章可以投往AAAI.在审稿时IJCAI 的 
+PC chair也在一直催, 说大家一定要快, 因为AAAI那边一直在担心IJCAI的录用通知出晚了AAAI就麻烦了.（据吴飞老师说我浙CS历史上Accepted的
+才5篇左右，好难中啊！）</p>
+
+
+
+
+<p>COLT (1): 这是计算学习理论最好的会议, ACM主办, 每年举行. 计算学习理论基本上可以看成理论计算机科学和机器学习的交叉, 所以这个
+会被一些人看成是理论计算机科学的会而不是AI的会. 我一个朋友用一句话对它进行了精彩的刻画: &#8220;一小群数学家在开会&#8221;. 因为 COLT的领域
+比较小, 所以每年会议基本上都是那些人. 这里顺便提一件有趣的事, 因为最近国内搞的会议太多太滥, 而且很多会议都是LNCS/LNAI出论文集, 
+LNCS/LNAI基本上已经被搞臭了, 但很不幸的是,LNCS/LNAI中有一些很好的会议, 例如COLT.</p>
+
+
+
+
+<p>CVPR (1): 计算机视觉和模式识别方面最好的会议之一, IEEE主办, 每年举行. 虽然题目上有计算机视觉, 但个人认为它的模式识别味道更重
+一些. 事实上它应该是模式识别最好的会 议, 而在计算机视觉方面, 还有ICCV与之相当. IEEE一直有个倾向, 要把会办成&#8221;盛会&#8221;, 历史上已经有
+些会被它从quality很好的会办成&#8221;盛会&#8221;了. CVPR搞不好也要走这条路. 这几年录的文章已经不少了. 最近负责CVPR会议的TC的chair发信说, 对这
+个community来说, 让好人被误杀比被坏人漏网更糟糕, 所以我们是不是要减少好人被误杀的机会啊? 所以我估计明 年或者后年的CVPR就要扩招了.
+（YM我们实验室一位已经毕业的中过两篇CVPR的师兄！）</p>
+
+
+
+
+<p>ICCV (1): 介绍CVPR的时候说过了, 计算机视觉方面最好的会之一. IEEE主办, 每年举行.</p>
+
+
+
+
+<p>ICML (1): 机器学习方面最好的会议之一. 现在是IMLS主办, 每年举行. 参见关于NIPS的介绍.</p>
+
+
+
+
+<p>NIPS (1): 神经计算方面最好的会议之一, NIPS主办, 每年举行. 值得注意的是, 这个会每年的举办地都是一样的, 以前是美国丹佛, 现在是
+加拿大温哥华; 而且它是年底开会,会开完后第2年才出论文集, 也就是说, NIPS&#8217;05的论文集是06年出. 会议的名字是&#8221;Advances in Neural Information 
+Processing Systems&#8221;, 所以, 与ICML\ECML这样的&#8221;标准的&#8221;机器学习会议不同, NIPS里有相当一部分神经科学的内容, 和机器学习有一定的距离. 
+但由于会议的主体内容是机器学习, 或者说与机器学习关系紧密, 所以不少人把NIPS看成是机器学习方面最好的会议之一. 这个会议基本上控制
+在Michael Jordan的徒子徒孙手中, 所以对Jordan系的人来说, 发NIPS并不是难事, 一些未必很强的工作也能发上去, 但对这个圈子之外的人来说, 
+想发一篇实在很难, 因为留给&#8221;外人&#8221;的口子很小. 所以对Jordan系以外的人来说, 发NIPS的难度比ICML更大. 换句话说,ICML比较开放, 小圈子的
+影响不象NIPS那么大, 所以北美和欧洲人都认, 而NIPS则有些人( 特别是一些欧洲人, 包括一些大家)坚决不投稿. 这对会议本身当然并不是好事, 
+但因为Jordan系很强大, 所以它似乎也不太care. 最近IMLS(国际机器学习学会)改选理事, 有资格提名的人包括近三年在ICML\ECML\COLT发过文章
+的人, NIPS则被排除在外了. 无论如何, 这是一个非常好的会.</p>
+
+
+
+
+<p>ACL (1-): 计算语言学/自然语言处理方面最好的会议, ACL (Association of  Computational Linguistics) 主办, 每年开.</p>
+
+
+
+
+<p>KR (1-): 知识表示和推理方面最好的会议之一, 实际上也是传统AI(即基于逻辑的AI)最好的会议之一. KR Inc.主办, 现在是偶数昕?</p>
+
+
+
+
+<p>SIGIR (1-): 信息检索方面最好的会议, ACM主办, 每年开. 这个会现在小圈子气越来越重. 信息检索应该不算AI, 不过因为这里面用到机器
+学习越来越多, 最近几年甚至有点机器学习应用会议的味道了, 所以把它也列进来.</p>
+
+
+
+
+<p>SIGKDD (1-): 数据挖掘方面最好的会议, ACM主办, 每年开. 这个会议历史比较短, 毕竟,与其他领域相比,数据挖掘还只是个小弟弟甚至小侄儿. 
+在几年前还很难把它列在tier-1里面, 一方面是名声远不及其他的top conference响亮, 另一方面是相对容易被录用. 但现在它被列在tier-1应该是
+毫无疑问的事情了. 另: 参见sir和lucky的介绍.</p>
+
+
+
+
+<p>UAI (1-): 名字叫&#8221;人工智能中的不确定性&#8221;, 涉及表示\推理\学习等很多方面, AUAI(Association of UAI) 主办, 每年开.</p>
+
+
+
+
+<h3>The Second Class</h3>
+
+
+<p>tier-2的会议列得不全, 我熟悉的领域比较全一些.</p>
+
+
+<p>AAMAS (2+): agent方面最好的会议. 但是现在agent已经是一个一般性的概念, 几乎所有 AI有关的会议上都有这方面的内容, 所以AAMAS下降的趋势非常明显.</p>
+
+
+<p>ECCV (2+): 计算机视觉方面仅次于ICCV的会议, 因为这个领域发展很快, 有可能升级到1-去.</p>
+
+
+<p>ECML (2+): 机器学习方面仅次于ICML的会议, 欧洲人极力捧场, 一些人认为它已经是1-了. 我保守一点, 仍然把它放在2+. 因为机器学习发展很快, 这个会议的reputation上升非常明显.</p>
+
+
+<p>ICDM (2+): 数据挖掘方面仅次于SIGKDD的会议, 目前和SDM相当. 这个会只有5年历史, 上升速度之快非常惊人. 几年前ICDM还比不上PAKDD, 现在已经拉开很大距离了.</p>
+
+
+<p>SDM (2+): 数据挖掘方面仅次于SIGKDD的会议, 目前和ICDM相当. SIAM的底子很厚, 但在CS里面的影响比ACM和IEEE还是要小, SDM眼看着要被ICDM超过了, 但至少目前还是相当的.</p>
+
+
+<p>ICAPS (2): 人工智能规划方面最好的会议, 是由以前的国际和欧洲规划会议合并来的. 因为这个领域逐渐变冷清, 影响比以前已经小了.</p>
+
+
+<p>ICCBR (2): Case-Based Reasoning方面最好的会议. 因为领域不太大, 而且一直半冷不热,所以总是停留在2上.</p>
+
+
+<p>COLLING (2): 计算语言学/自然语言处理方面仅次于ACL的会, 但与ACL的差距比ICCV-ECCV 和ICML-ECML大得多.</p>
+
+
+<p>ECAI (2): 欧洲的人工智能综合型会议, 历史很久, 但因为有IJCAI/AAAI压着, 很难往上升.</p>
+
+
+<p>ALT (2-): 有点象COLT的tier-2版, 但因为搞计算学习理论的人没多少, 做得好的数来数去就那么些group, 基本上到COLT去了, 所以ALT里面有不少并非计算学习理论的内容.</p>
+
+
+<p>EMNLP (2-): 计算语言学/自然语言处理方面一个不错的会. 有些人认为与COLLING相当, 但我觉得它还是要弱一点.</p>
+
+
+<p>ILP (2-): 归纳逻辑程序设计方面最好的会议. 但因为很多其他会议里都有ILP方面的内容,所以它只能保住2-的位置了.</p>
+
+
+<p>PKDD (2-): 欧洲的数据挖掘会议, 目前在数据挖掘会议里面排第4. 欧洲人很想把它抬起来, 所以这些年一直和ECML一起捆绑着开, 
+希望能借ECML把它带起来. 但因为ICDM和SDM, 这已经不太可能了. 所以今年的PKDD和ECML虽然还是一起开, 但已经独立审稿了(以前
+是可以同时投两个会, 作者可以声明优先被哪个会考虑, 如果ECML中不了还可以被PKDD接受).</p>
+
+
+
+
+<h3>The Third Class</h3>
+
+
+<p>列得很不全. 另外, 因为AI的相关会议非常多, 所以能列在tier-3也算不错了, 基本上能进到所有AI会议中的前30%吧</p>
+
+
+<p>ACCV (3+): 亚洲的计算机视觉会议, 在亚太级别的会议里算很好的了.</p>
+
+
+<p>DS (3+): 日本人发起的一个接近数据挖掘的会议.</p>
+
+
+<p>ECIR (3+): 欧洲的信息检索会议, 前几年还只是英国的信息检索会议.</p>
+
+
+<p>ICTAI (3+): IEEE最主要的人工智能会议, 偏应用, 是被IEEE办烂的一个典型. 以前的quality还是不错的, 但是办得
+越久声誉反倒越差了, 糟糕的是似乎还在继续下滑, 现在其实3+已经不太呆得住了.</p>
+
+
+<p>PAKDD (3+): 亚太数据挖掘会议, 目前在数据挖掘会议里排第5.</p>
+
+
+<p>ICANN (3+): 欧洲的神经网络会议, 从quality来说是神经网络会议中最好的, 但这个领域的人不重视会议,在该领域它的重要性不如IJCNN.</p>
+
+
+<p>AJCAI (3): 澳大利亚的综合型人工智能会议, 在国家/地区级AI会议中算不错的了.</p>
+
+
+<p>CAI (3): 加拿大的综合型人工智能会议, 在国家/地区级AI会议中算不错的了.</p>
+
+
+<p>CEC (3): 进化计算方面最重要的会议之一, 盛会型. IJCNN/CEC/FUZZ-IEEE这三个会议是计算智能或者说软计算方面最重要的会议, 
+它们经常一起开, 这时就叫WCCI (World Congress on Computational Intelligence). 但这个领域和CS其他分支不太一样, 倒是和其他
+学科相似, 只重视journal, 不重视会议, 所以录用率经常在85%左右, 所录文章既有quality非常高的论文, 也有入门新手的习作.</p>
+
+
+<p>FUZZ-IEEE (3): 模糊方面最重要的会议, 盛会型, 参见CEC的介绍.</p>
+
+
+<p>GECCO (3): 进化计算方面最重要的会议之一, 与CEC相当，盛会型.</p>
+
+
+<p>ICASSP (3): 语音方面最重要的会议之一, 这个领域的人也不很care会议.（可怜我们做语音的啊！）</p>
+
+
+<p>ICIP (3): 图像处理方面最著名的会议之一, 盛会型.</p>
+
+
+<p>ICPR (3): 模式识别方面最著名的会议之一, 盛会型.</p>
+
+
+<p>IEA/AIE (3): 人工智能应用会议. 一般的会议提名优秀论文的通常只有几篇文章, 被提名就已经是很高的荣誉了, 这个会很有趣, 
+每次都搞1、20篇的优秀论文提名, 专门搞几个session做被提名论文报告, 倒是很热闹.</p>
+
+
+<p>IJCNN (3): 神经网络方面最重要的会议, 盛会型, 参见CEC的介绍.</p>
+
+
+<p>IJNLP (3): 计算语言学/自然语言处理方面比较著名的一个会议.</p>
+
+
+<p>PRICAI (3): 亚太综合型人工智能会议, 虽然历史不算短了, 但因为比它好或者相当的综合型会议太多, 所以很难上升.</p>
+
+
+
+
+<h3>Appendix - 英文缩写全称</h3>
+
+
+<h5>tier-1</h5>
+
+
+<p>IJCAI (1+): International Joint Conference on Artificial Intelligence</br>
+AAAI (1): National Conference on Artificial Intelligence</br>
+COLT (1): Annual Conference on Computational Learning Theory</br>
+CVPR (1): IEEE International Conference on Computer Vision and Pattern Recognition</br>
+ICCV (1): IEEE International Conference on Computer Vision</br>
+ICML (1): International Conference on Machine Learning</br>
+NIPS (1): Annual Conference on Neural Information Processing Systems</br>
+ACL (1-): Annual Meeting of the Association for Computational Linguistics</br>
+KR (1-): International Conference on Principles of Knowledge Representation and Reasoning</br>
+SIGIR (1-): Annual International ACM SIGIR Conference on Research and Development in Information Retrieval</br>
+SIGKDD (1-): ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</br>
+UAI (1-): International Conference on Uncertainty in Artificial Intelligence</p>
+
+
+
+
+<h5>tier-2</h5>
+
+
+<p>AAMAS (2+): International Joint Conference on Autonomous Agents and Multiagent Systems</br>
+ECCV (2+): European Conference on Computer Vision</br>
+ECML (2+): European Conference on Machine Learning</br>
+ICDM (2+): IEEE International Conference on Data Mining</br>
+SDM (2+): SIAM International Conference on Data Mining</br>
+ICAPS (2): International Conference on Automated Planning and Scheduling</br>
+ICCBR (2): International Conference on Case-Based Reasoning</br>
+COLLING (2): International Conference on Computational Linguistics</br>
+ECAI (2): European Conference on Artificial Intelligence</br>
+ALT (2-): International Conference on Algorithmic Learning Theory</br>
+EMNLP (2-): Conference on Empirical Methods in Natural Language Processing</br>
+ILP (2-): International Conference on Inductive Logic Programming</br>
+PKDD (2-): European Conference on Principles and Practice of Knowledge Discovery in Databases</p>
+
+
+
+
+<h5>tier-3</h5>
+
+
+<p>ACCV (3+): Asian Conference on Computer Vision</br>
+DS (3+): International Conference on Discovery Science</br>
+ECIR (3+): European Conference on IR Research</br>
+ICTAI (3+): IEEE International Conference on Tools with Artificial Intelligence</br>
+PAKDD (3+): Pacific-Asia Conference on Knowledge Discovery and Data Mining</br>
+ICANN (3+): International Conference on Artificial Neural Networks</br>
+AJCAI (3): Australian Joint Conference on Artificial Intelligence</br>
+CAI (3): Canadian Conference on Artificial Intelligence</br>
+CEC (3): IEEE Congress on Evolutionary Computation</br>
+FUZZ-IEEE (3): IEEE International Conference on Fu Systems</br>
+GECCO (3): Genetic and Evolutionary Computation Conference</br>
+ICASSP (3): International Conference on Acoustics, Speech, and Signal Processing</br>
+ICIP (3): International Conference on Image Processing</br>
+ICPR (3): International Conference on Pattern Recognition</br>
+IEA/AIE (3): International Conference on Industrial and Engineering Applications of Artificial Intelligence and Expert Systems</br>
+IJCNN (3): International Joint Conference on Neural Networks</br>
+IJNLP (3): International Joint Conference on Natural Language Processing</br>
+PRICAI (3): Pacific-Rim International Conference on Artificial Intelligence</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[人的听觉系统生理结构（2）——中枢部分]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/12/21/human-audio-system-neural-parts/"/>
+    <updated>2012-12-21T21:55:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/12/21/human-audio-system-neural-parts</id>
+    <content type="html"><![CDATA[<h2>0.概述</h2>
+
+
+<p>大脑中与听觉相关的部分称为听觉中枢，它纵跨脑干、中脑、丘脑的大脑皮层，是感觉系统中最长的中枢通路之一。自下向上，
+主要环节包括：蜗神经核、上橄榄核、外侧丘系核、下丘核、丘脑的内侧膝状体、大脑皮层颞叶的听觉皮层等，图1所示为听觉中枢
+的传导通路。由中枢系统的多层传导过程，可以很自然的联想到近两年很热门的Deep Learning的机器学习方法。
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122106.jpg"></center>
+<center>图 1 听觉中枢传导通路</center>
 </p>
 
-<p>我是浙大计算机学院2012级研究生，我的主要研究方向是基于声纹识别的生物认证，
-声纹识别是一个与机器学习、模式识别相关的研究领域。有时，我也做一些语音识别相关的项目。
+
+
+
+<h2>1蜗神经核</h2>
+
+
+<p>听神经纤维全部终止于蜗神经核，每条神经纤维可分为三个分支，分别支配耳蜗核的三个亚核，即背核、后腹核与前腹核。用微电极记录
+单细胞电活动的方法证实，每个亚核都有各自的声音频率代表区（或称音调定位组合），高频分布在各亚核的背侧，即耳蜗底部投射在各亚核
+的背上部；低频区分布在各亚核的腹侧，即耳蜗顶部投射在各亚核的腹下区。前腹侧核中的神经元主要是类本原神经元，它能够保存听觉神经
+纤维中的时间-位置编码；后腹侧核中主要是建立和振荡反应类型的神经元，它们能够保存听觉神经纤维中的发放率-位置编码；背侧核中主要
+是休止和累积反应类型的神经元，它们表现为非单调的发放率-强度关系。</p>
+
+
+
+
+<!-- more -->
+
+
+
+
+<h2>2上橄榄核</h2>
+
+
+<p>由5个亚核组成，即S形段（上橄榄核固有核或外侧上橄榄核）、副核（内侧上橄榄核）、内侧上橄榄周围核、外侧上橄榄周围核及斜方体核。
+斜方体核接受双侧来的纤维，但主要是来自对侧的交叉纤维。有关音调定位的结果不尽相同，其一，为每个亚核均有各自的音调定位组合规律；
+其二，是S形段与副核主要对1000Hz以下的低频敏感，斜方体核主要对高频纯音敏感。</p>
+
+
+
+
+<h2>3外侧丘系核</h2>
+
+
+<p>外侧丘系核为散在于外侧丘系纤维束内的细胞，它们除对声音信号起中转作用外，还是声—惊觉反射通路中的一个组成部分，与脊髓运动
+神经元有联系。</p>
+
+
+
+
+<h2>4下丘核</h2>
+
+
+<p>由占据下丘大部分空间的球形主核（中央核）及其周围带所组成，在周围带内有些散在的核团。近代对下丘的研究工作改变了过去认为
+它仅仅是听觉运动反射中枢的概念。实验证明，下丘核是重要的一级听觉中枢，在声音频率、强度、时间因素及声源定位的分析中均起一定
+的作用。核内存在着音调定位组合的神经原排列规律，位于此核头端的神经原对高频敏感，尾端对2000Hz以下的低频敏感。</p>
+
+
+
+
+<h2>5内侧膝状体核</h2>
+
+
+<p>大致可分为背侧与腹侧两部分，位于丘脑水平，属于较高位的听觉中枢。单个神经元诱发放电的潜伏期与下丘核类似，不同神经元可能与
+声音频率的综合分析有关。有些细胞表现出对声音时间因素进行分析的特性，有些则经证实存在着功能特性化的神经元。</p>
+
+
+
+
+<h2>6大脑皮层听区</h2>
+
+
+<p>为最高位的听觉中枢，人类的听觉Ⅰ区在颞横回、Brodmann41与42区，电刺激清醒人脑的这一区域可诱发对侧耳幻听。在听Ⅰ区与
+听Ⅱ区的音调定位组合正好相反：听Ⅰ区是高频在前、低频在后，二者之间中频依次排列；听Ⅱ区低频在前、高频在后。应当强调的是，
+听觉在大脑皮层的投射是双侧，一侧皮层听区接受双侧耳蜗的传入冲动，或者说是一侧耳蜗的传入冲动投射至双侧皮层，然而皮层对双侧
+传入冲动的敏感度不同，对侧比较敏感。</p>
+
+
+
+
+<h2>7听觉的形成</h2>
+
+
+<p>通过对人听觉系统的深入研究，可总结出听觉的形成机理。即外来声波首先通过外耳对声音的收集和放大，经由耳道传输至耳膜；
+然后经过中耳的阻抗匹配后传导至内耳的耳蜗，并通过在耳蜗基膜处产生振荡来激发与毛细胞相连的传出神经末梢产生脉冲；最后
+通过听觉神经将信号传达到大脑引起听觉。其中声波主要通过以下两种途径来形成听觉：</br>
+1)首先外界的声波振动鼓膜；其次鼓膜的运动又传递给中耳的听小骨，听小骨带动卵形窗运动，并引起耳蜗外淋巴液和内淋巴液的振动；
+再次这种振动通过刺激耳蜗内的毛细胞而令其兴奋；然后，将这种兴奋信号转换为神经冲动信号；最后由听神经传到大脑皮层的听觉中枢，
+形成听觉。</br>
+2)声波的另一种传递途经是骨传导，即声音通过耳蜗骨壁和颅骨的振动传到内耳。正是因为听自己说话时包含了骨传导部分的声音传递，
+所以与单纯的由鼓膜、听小骨和听神经传递的声音感觉有所差异。</p>
+
+
+
+
+<h2>8参考文献</h2>
+
+
+<p>[1] 张文娟. 基于听觉仿生的目标声音识别系统研究. [博]. 中科院.</br>
+[2] 中国数字科技馆-听觉：http://amuseum.cdstm.cn/AMuseum/perceptive/page_2.htm</br>
+[3] 百度百科-听觉中枢：http://baike.baidu.com.cn/view/1142958.htm</br>
+[4] 听觉中枢的生理活动：http://www.longrenwang.cn/yixuebaojian/erkezhishi/201211024861.html
 </p>
 
-<p>E-mail: ibillxia@gmail.com</p>
 
-<p>Weibo: <a href="weibo.com/ibillxia" target="_blank">weibo.com/ibillxia</a></p>
 
-<p>GitHub: <a href="https://www.github.com/ibillxia" target="_blank">github.com/ibillxia</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[人的听觉系统生理结构（1）——外周部分]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/12/21/human-audio-system-out-part/"/>
+    <updated>2012-12-21T21:43:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/12/21/human-audio-system-out-part</id>
+    <content type="html"><![CDATA[<h2>概述</h2>
+
+
+<p>人的听觉系统是一个十分巧妙的音频信号处理器，它具有良好的抗噪声识别能力，它对声音信号的处理能力就来源于其巧妙的生理结构。</p>
+
+
+
+
+<p>听觉系统可分为两大部分，即耳朵和听觉中枢。其中耳朵又分为外耳、中耳、内耳、听神经，听觉中枢则纵跨脑干、中脑、丘脑的大脑皮层，
+是感觉系统中最长的中枢通路之一。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122101.jpg"></center>
+<center>图 1 双耳听觉系统</center>
+</p>
+
+
+
+
+<!-- more -->
+
+
+<p><strong>耳朵(外围部分)</strong>
+耳朵包括整个的听觉周围系统，即外耳、中耳、内耳以及与脑部相连的听神经，如图2所示。
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122102.jpg"></center>
+<center>图2 人耳结构图</center>
+</p>
+
+
+<p><2>1.外耳</h2></p>
+
+<p>外耳是位于鼓膜以外的部分，由耳廓和外耳道组成。</p>
+
+
+
+
+<p>耳廓的形状有利于声波能量的聚集、收集声音，还可以判断声源的位置，同时又起到保护鼓膜的作用。耳廓除了耳垂外，其内部由软骨组成，
+具有一定的弹性。耳廓的后面平浅微凸，前面有些回旋凹陷，这些凹陷也起到聚焦和反射声波的作用。外耳道前有耳屏，在耳廓对应耳屏处也
+有凸起，称为对耳屏。耳屏和对耳屏几乎将外耳道遮蔽，可以防止异物、飞虫进入外耳道。</p>
+
+
+
+
+<p>外耳道是声波传导的通道，一端开口于耳廓中心，一端终止于鼓膜，外耳道形状弯曲，上皮组织有耳毛和耵聍腺分泌，有抗菌和阻止异物
+进入的作用，鼓膜在外耳道底可避免外界的直接损伤。外耳道是一个有效的共鸣腔，能使较弱的声波振动得到加强，即实现了声音的放大作用，
+并引起鼓膜振动。正常人外耳道的长度约为25mm，根据驻波原理可知，外耳道发生共振时的共振频率的基频为f1=3400Hz，因此外耳道对 3400Hz 
+左右的声音有较大的共振作用，这一频率范围的声音最易造成人耳声音损伤和听力缺损。</p>
+
+
+
+
+<h2>2.中耳</h2>
+
+
+<p>中耳包括鼓膜、鼓室、听小骨，如图3所示。有一个充满空气的空腔——鼓室，鼓室内有3个小听骨：槌骨、砧骨和镫骨，鼓室的外壁为鼓膜。
+槌骨有一个长柄，连接到可以移动的鼓膜；砧骨是锤骨和镫骨之间的桥梁；镫骨是人体最小的命名骨。三块骨头的排列，使鼓膜的震动引起的
+锤骨震动，再导致砧骨的震动，从而导致镫骨的震动，这个传递过程称为听骨链。推动卵圆窗的镫骨足板，它会导致耳蜗（内耳的一部份）
+内的流体运动。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122103.jpg"></center>
+<center>图3 中耳结构</center>
+</p>
+
+
+
+
+<p>鼓室居颞骨岩部内，前方借咽鼓管与鼻咽相通，后方借乳突窦与乳突小房通连。鼓室可分为上、下、前、后、外侧、内侧6壁，内有
+听小骨、韧带、肌、血管和神经等。</br>
+听小骨有3块，即锤骨、砧骨和镫骨。</br>>
+锤骨：形如鼓锤，有头、柄、外侧突和前突。锤骨头与砧骨体形成砧锤关节；柄附于鼓膜脐，其上端有鼓膜张肌附着；外侧突为鼓膜紧张部
+与松弛部分界标志；前突有韧带连于鼓室前壁。</br>
+砧骨：形如砧，分为体、长脚和短脚。体与锤骨头形成砧锤关节，长脚与镫骨头形成砧镫关节，短脚以韧带连于鼓室后壁。</br>
+镫骨：形似马镫，可分为头、颈、前脚、后脚和底。底借韧带连于前庭窗边缘，并封闭该窗。</p>
+
+
+
+
+<p>运动听小骨的肌：共有2条，即鼓膜张肌和镫骨肌。</br>
+鼓膜张肌：位于咽鼓管上方的鼓膜张肌半管内，止于锤骨柄上端，受下颌神经支配。收缩时可向内侧牵拉锤骨柄，使鼓膜内陷以紧张鼓膜。</br>
+镫骨肌：位于锥隆起内，止于镫骨颈，由面神经支配。收缩时向后拉镫骨以使镫骨底前部离开前庭窗，减低迷路内压；并解除鼓膜紧张状态，
+是鼓膜张肌的拮抗肌。</br>
+咽鼓管连通鼻咽部与鼓室，长3.5~4.0cm。其作用是使鼓室内气压与外界大气压相等，以保持鼓膜内、外两面的压力平衡。</p>
+
+
+
+
+<p>
+中耳主要具有以下四大作用：</br>
+传递声音：声音在外耳到达鼓膜前是靠空气传导，通过中耳到达内耳耳蜗后是在液体中传导。</br>
+声压放大：听骨链的 3 块听小骨相互连接组成了鼓膜至内耳卵形窗之间的机械链，构成了一个杠杆系统，砧骨柄与锤骨柄的杠杆力臂之比
+为1:1.3，鼓膜的振动面积与卵形窗的振动面积之比约为17:1，声音振动的压强将增大到原来的 17×1.3 倍，即声压增强了22倍。</br>
+保护内耳：由于中耳的特殊结构，其还具有保护内耳免受强声损害的作用，这是因为中耳内连接镫骨的一块肌肉和连接鼓膜的一块肌肉当遇到
+较响的声音时，能够起到反射作用，令听小骨所传导的信号减弱，其内部还有一块肌肉可以改变镫骨的轴向，起到减弱声音响度进而保护内耳
+的作用，这个反应称为减弱反射。减弱反射有一个 50-100ms 的延时，对突然出现的高声不具有保护作用，只能在一定程度上降低低频高强度
+的声音对内耳中耳蜗造成的损害。</br>
+阻抗匹配：通常情况下，声音通过阻抗较小的空气介质向阻抗较大的液体传导时，大部分能量将被反射而传递不到内耳，因而将会导致整个
+声波的传导效率降低。然而，中耳的生理结构正好弥补了这一点，它的机械阻抗匹配功能有效地补偿了能量的反射，提高了能量的传导效率。</br>
+中耳在声波的传输过程中起到关键作用，通过研究表明，中耳的传递函数相当于一个高通滤波器，它在很大程度上决定了人耳的低频听阈。
+另外，中耳与外界是相通的，但咽鼓管软骨部具有弹性．平时呈闭合状态，在正常状态下，只有需要调节鼓膜内、外侧压力和排泄中耳粘膜
+分泌物时，咽鼓管开放；多数为闭合，这是对中耳、内耳的保护。
+</p>
+
+
+
+
+<h2>3内耳</h2>
+
+
+<p>内耳位在耳朵之最深处，为颞骨包围着，包括由骨密质构成的一系列复杂的曲管，称骨迷路，及其内部的形态与骨迷路基本一致的膜性
+曲管，叫做膜迷路两部分构成。膜迷路内充以淋巴液，叫做内淋巴，膜迷路与骨迷路之间的间隙内也有淋巴液，叫做外淋巴。内、外淋巴液
+互不交通。</br>
+内耳从解剖学的角度可分成两个部分：一个叫做耳蜗是听觉器，另一个是包含前庭和半规管的平衡器。因此内耳又叫做平衡听觉器。
+支配它的神经叫做平衡听觉神经是为第八对脑神经。</br>
+平衡和听觉两个风牛马不相及的东西怎会凑在一起？在解剖学上，发现两者都浸泡在共通的内外淋巴液之中，因此在临床症状上就产生一些
+复杂的关系。平衡障碍可能会导致听觉症状，也就是可能会有听力障碍、耳鸣等症状。所以内耳兼有听觉和感受位置变动的双重功能。</p>
+
+
+
+
+<h4>3.1平衡器——前庭</h4>
+
+
+<p>前庭平衡器可分成两个部分：一部分是左右耳对称，主控制旋转平衡的三半规管。三个半规管相互垂直，三度空间可谓面面俱到，所以
+任凭你的身体或头部处于任何姿态，三半规管都可以管得到无任何死角。因此，可以维持任何姿势的平衡。另一部分是椭圆囊和球状囊，
+它是控制直线性平衡的，包括地心引力。</p>
+
+
+
+
+<h4>3.2听觉器——耳蜗</h4>
+
+
+<p>耳蜗位于骨前庭的前内侧，是一个外形呈蜗牛状卷曲的神经体，长约3.5cm，最宽处约0.32cm，呈螺旋状盘旋2.5～2.75圈，如图4所示。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122104.jpg"></center>
+<center>图4 耳蜗的结构</center>
+</p>
+
+
+
+
+<p>耳蜗由三个内部充满淋巴液的空腔组成，如图5所示。这三个空腔由上到下依次为：前庭阶，内含外淋巴液体；蜗管，内含内淋巴的盲管；
+鼓阶，内含外淋巴液体，鼓阶中的外淋巴在耳蜗顶部通过蜗孔与前庭阶中的外淋巴交通。赖斯纳氏膜（前庭膜）分隔前庭阶和蜗管，基底膜
+分隔蜗管和鼓阶。听觉转导器官柯蒂氏器坐落于基底膜之上、蜗管内部。听神经的纤维通过基底膜与内毛细胞和外毛细胞形成突触连接，其
+细胞体位于在耳蜗中心部的螺旋神经节。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012122105.jpg"></center>
+<center>图5 耳蜗横截面</center>
+</p>
+
+
+
+
+<p>耳蜗的作用是把传到耳蜗的机械振动转变成听神经纤维的神经冲动，并具有机械频率分析器的功能，能够将复杂的声波分解成一系列频率
+信号的组合，声音感觉的很多方面都起源于耳蜗的这种机械特性。在换能这一转变过程中，耳蜗基底膜的振动是一个关键因素，它的振动使
+位于它上面的毛细胞受到刺激，引起耳蜗内发生各种过渡性的电变化，最后引起位于毛细胞底部的传入神经纤维产生动作电位。</p>
+
+
+
+
+<h4>3.3基底膜的振动和行波理论</h4>
+
+
+<p>当声波振动通过听骨链到达卵圆窗膜时，压力变化立即传给耳蜗内液体和膜性结构；如果卵圆窗膜内移，前庭膜和基底膜也将下移，最后
+是鼓阶的外淋巴压迫圆窗膜外移；相反，当卵圆窗膜外移时，整个耳蜗内结构又作反方向的移动，于是形成振动。可以看出，在正常气传导的
+过程中，圆窗膜实际起着缓冲耳蜗内压力变化的作用，是耳蜗内结构发生振动的必要条件。</p>
+
+
+
+
+<p>有人用直接观察的方法，详细记录了声音刺激引起的基底膜振动的情况，这对于了解基底膜振动的形式，以及这种振动在耳蜗接受不同频率
+的声音刺激时有何差异，提供了可靠的依据。观察表明，基底膜的振动是以行波（traveling wave）的方式进行的，即内淋巴的振动首先在靠近
+卵圆窗处引起基底膜的振动，此波动再以行波的形式沿基底膜向耳蜗的顶部方向传播，就象人在抖动一条绸带时，有行波沿绸带向远端传播一样。
+进一步还证明，不同频率的声音引起的行波都从基底膜的底部，即靠近卵圆窗膜处开始，但频率不同时，行波传播的远近和最大行波的出现部位
+有所不同，这就是振动频率愈低，行波传播愈远，最大行波振幅出现的部位愈靠近基底膜顶部，而且在行波最大振幅出现后，行波很快消失，
+不再传播；相反地，高频率声音引起的基底膜振动，只局限于卵圆窗附近。</p>
+
+
+
+
+<p>不同频率的振动引起基底膜不同形式的行波传播，主要是由基底膜的某些物理性质决定的。基底膜的长度在人约为30mm，较耳蜗管略短，
+但宽度在靠近卵圆窗处只有0.04mm，以后逐渐加宽；与此相对应，基底膜上的螺旋器的高度和重量，也随着基底膜的加宽而变大。这些因素
+决定了基底膜愈靠近底部，共振频率愈高，愈靠近顶部，共振频率愈低；这就使得低频振动引起的行波在向顶部传播时阻力较小，而高频振动
+引起的行波只限局在底部附近。</p>
+
+
+
+
+<p>不同频率的声音引起的不同形式的基底膜的振动，被认为是耳蜗能区分不同声音频率的基础。破坏动物不同部位基底膜的实验和临床上
+不同性质耳聋原因的研究，都证明了这一结论，亦即耳蜗底部受损时主要影响高频听力，耳蜗顶部受损时主要影响低频听力。不难理解，
+既然每一种振动频率在基底膜上都有一个特定的行波传播范围和最大振幅区，与这些区域有关的毛细胞和听神经纤维就会受到最大的刺激，
+这样，来自基底膜不同区域的听神经纤维的神经冲动及其组合形式，传到听觉中枢的不同部位时，就可能引起不同音调（对应于声波的频率
+或波长）的感觉。</p>
+
+
+
+
+<p>基底膜的振动是怎样使毛细胞受到刺激的呢？毛细胞顶端的听毛有些埋在盖膜的胶状物中，有些是和盖膜的下面相接触；因盖膜和基底膜
+与蜗轴骨板的连接点不在同一水平，故当行波引起基底膜振动时，基底膜的振动轴和盖膜的振动轴不一致，于是两膜之间有一个横向的交错
+移动，使听毛受到一个切向力的作用而弯曲。毛细胞听纤毛的弯曲，是耳蜗中由机械能转为电变化的第一步。</p>
+
+
+
+
+<h2>4 位听神经</h2>
+
+
+<p>位听神经是12对脑神经当中的第8对，同时也称作前庭耳蜗神经。它是支配内耳的脑神经，其中又可分为掌管听力的耳蜗神经、掌管平衡的
+前庭神经。它在颞骨之内，自延髓延伸至内听道，与颜面神经位于在相同的位置。</p>
+
+
+
+
+<p>蜗神经的感觉神经元胞体位于内耳蜗轴内的螺旋神经节，为双极神经元，周围突分布于螺旋器的毛细胞，中枢突在内耳边聚成蜗神经，止于
+脑干的蜗神经前、后核，传入听觉冲动。前庭神经的感觉神经元胞体位于内耳道底的前庭神经节，是双极神经元，周围突分布于内耳的球囊斑、
+椭圆囊斑和壶腹嵴的毛细胞，中枢突聚成前庭神经。止于脑干的前庭核群及小脑，传入平衡觉冲动。</p>
+
+
+
+
+<p>位听神经将内耳中的感觉细胞（毛细胞）的讯息传递到大脑。一方面由耳蜗神经所构成，负责传递听觉的讯息；另一方面则是前庭神经，
+传递平衡的讯息。听神经受损会导致耳聋及平衡失调。</p>
+
+
+
+
+<h2>5.参考文献</h2>
+
+
+<p>[1] 张文娟. 基于听觉仿生的目标声音识别系统研究. [博]. 中科院.</br>
+[2] 中国数字科技馆-听觉：http://amuseum.cdstm.cn/AMuseum/perceptive/page_2.htm</br>
+[3] 维基百科-耳：http://zh.wikipedia.org/wiki/%E8%80%B3</br>
+[4] 百度百科-外耳：http://baike.baidu.com.cn/view/236771.htm</br>
+[5] 百度百科-中耳：http://baike.baidu.com.cn/view/395983.htm</br>
+[6] 百度百科-内耳：http://baike.baidu.com.cn/view/236772.htm</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[几个常见的语音交互平台的简介和比较]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/11/24/several-plantforms-on-audio-and-speech-signal-processing/"/>
+    <updated>2012-11-24T18:54:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/11/24/several-plantforms-on-audio-and-speech-signal-processing</id>
+    <content type="html"><![CDATA[<h2>1.概述</h2>
+
+
+<p>最近做了两个与语音识别相关的项目，两个项目的主要任务虽然都是语音识别，或者更确切的说是关键字识别，但开发的平台不同，
+一个是windows下的，另一个是android平台的，于是也就选用了不同的语音识别平台，前者选的是微软的Speech API开发的，后者则选用
+的是CMU的pocketsphinx，本文主要将一些常见的语音交互平台进行简单的介绍和对比。</p>
+
+
+
+
+<p>这里所说的语音交互包含语音识别（Speech Recognition，SR，也称为自动语音识别，Automatic Speech Recognition，ASR）和语音
+合成（Speech Synthesis，SS，也称为Text-To-Speech，简记为TTS）两种技术，另外还会提到声纹识别（Voice Print Recognition，
+简记为VPR）技术。</p>
+
+
+
+
+<p>语音识别技术是将计算机接收、识别和理解语音信号转变为相应的文本文件或者命令的技术。它是一门涉及到语音语言学、信号处理、
+模式识别、概率论和信息论、发声机理和听觉机理、人工智能的交叉学科。在语音识别系统的帮助下，即使用户不懂电脑或者无法使用
+电脑，都可以通过语音识别系统对电脑进行操作。</p>
+
+
+
+
+<p>语音合成，又称文语转换（Text to Speech）技术，能将任意文字信息实时转化为标准流畅的语音朗读出来，相当于给机器装上了人工
+嘴巴。它涉及声学、语言学、数字信号处理、计算机科学等多个学科技术，是中文信息处理领域的一项前沿技术，解决的主要问题就是如何
+将文字信息转化为可听的声音信息，也即让机器像人一样开口说话。</p>
+
+
+
+
+<p>下面按平台是否开源来介绍几种常见的语音交互平台，关于语音识别和语音合成技术的相关原理请参见我接下来的其他文章。</p>
+
+
+
+
+<!-- more -->
+
+
+<h2>2.商业化的语音交互平台</h2>
+
+
+<h3>1)微软Speech API</h3>
+
+
+<p>微软的Speech API（简称为SAPI）是微软推出的包含语音识别（SR）和语音合成（SS）引擎的应用编程接口（API），在Windows下应用
+广泛。目前，微软已发布了多个SAPI版本（最新的是SAPI 5.4版），这些版本要么作为于Speech SDK开发包发布，要么直接被包含在windows
+操作系统中发布。SAPI支持多种语言的识别和朗读，包括英文、中文、日文等。SAPI的版本分为两个家族，1-4为一个家族，这四个版本彼此
+相似，只是稍微添加了一些新的功能；第二个家族是SAPI5，这个系列的版本是全新的，与前四个版本截然不同。</p>
+
+
+
+
+<p>最早的SAPI 1.0于1995年发布，支持Windows 95和Windows NT 3.51。这个版本的SAPI包含比较初级的直接语音识别和直接语音合成的API，
+应用程序可以直接控制识别或合成引擎，并简化更高层次的语音命令和语音通话的API。SAPI3.0于97年发布，它添加了听写语音识别（非连续
+语音识别）和一些应用程序实例。98年微软发布了SAPI4.0，这个版本不仅包含了核心的COM API，用C++类封装，使得用C++来编程更容易，
+而且还有ActiveX控件，这个控件可以再VB中拖放。这个版本的SS引擎随Windows2000一起发布，而SR引擎和SS引擎又一起以SDK的形式发布。</p>
+
+
+
+
+<p>SAPI5.0 于2000年发布，新的版本将严格将应用与引擎分离的理念体现得更为充分，所有的调用都是通过动态调用sapi.dll来实现的，
+这样做的目的是使得API更为引擎独立化，防止应用依赖于某个具有特定特征的引擎，这种改变也意图通过将一些配置和初始化的代码放
+到运行时来使得应用程序的开发更为容易。</p>
+
+
+
+
+<h3>2).IBM viaVoice</h3>
+
+
+<p>IBM是较早开始语音识别方面的研究的机构之一，早在20世纪50年代末期，IBM就开始了语音识别的研究，计算机被设计用来检测特定的语言
+模式并得出声音和它对应的文字之间的统计相关性。在1964年的世界博览会上，IBM向世人展示了数字语音识别的“shoe box recognizer”。
+1984年，IBM发布的语音识别系统在5000个词汇量级上达到了95%的识别率。</p>
+
+
+
+
+<p>1992年，IBM引入了它的第一个听写系统，称为“IBM Speech Server Series (ISSS)”。1996年发布了新版的听写系统，成为“VoiceType3.0”，
+这是viaVoice的原型，这个版本的语音识别系统不需要训练，可以实现孤立单词的听写和连续命令的识别。VoiceType3.0支持Windows95系统，
+并被集成到了OS/2 WARP系统之中。与此同时，IBM还发布了世界上首个连续听写系统“MedSpeak Radiology”。最后，IBM及时的在假日购物季节
+发布了大众化的实用的“VoiceType Simply Speaking”系统，它是世界上首个消费版的听写产品(the world&#8217;s first consumer dictation product).</p>
+
+
+
+
+<p>1999年，IBM发布了VoiceType的一个免费版。2003年，IBM授权ScanSoft公司拥有基于ViaVoice的桌面产品的全球独家经销权，而ScanSoft公司
+拥有颇具竞争力的产品“Dragon NaturallySpeaking”。两年后，ScanSoft与Nuance合并，并宣布公司正式更名为Nuance Communications，Inc。
+现在很难找到IBM viaVoice SDK的下载地址了，它已淡出人们的视线，取而代之的是Nuance。</p>
+
+
+
+
+<h3>3）Nuance</h3>
+
+
+<p>Nuance通讯是一家跨国计算机软件技术公司，总部设在美国马萨诸塞州伯灵顿，主要提供语音和图像方面的解决方案和应用。目前的业务集中
+在服务器和嵌入式语音识别，电话转向系统，自动电话目录服务，医疗转录软件与系统，光学字符识别软件，和台式机的成像软件等。</p>
+
+
+
+
+<p>Nuance语音技术除了语音识别技术外，还包扩语音合成、声纹识别等技术。世界语音技术市场，有超过80%的语音识别是采用Nuance识别引擎技术，
+其名下有超过1000个专利技术，公司研发的语音产品可以支持超过50种语言，在全球拥有超过20亿用户。据传，苹果的iPhone 4S的Siri语音识别中
+应用了Nuance的语音识别服务。另外，据Nuance公司宣布的重磅消息，其汽车级龙驱动器Dragon Drive将在新奥迪A3上提供一个免提通讯接口，
+可以实现信息的听说获取和传递。</p>
+
+
+
+
+<p>Nuance Voice Platform(NVP)是Nuance公司推出的语音互联网平台。Nuance公司的NVP平台由三个功能块组成：Nuance Conversation Server
+对话服务器，Nuance Application Environment （NAE）应用环境及Nuance Management Station管理站。Nuance Conversation Server对话服务
+器包括了与Nuance语音识别模块集成在一起的VoiceXML解释器，文语转换器（TTS）以及声纹鉴别软件。NAE应用环境包括绘图式的开发工具，
+使得语音应用的设计变得和应用框架的设计一样便利。Nuance Management Station管理站提供了非常强大的系统管理和分析能力，它们是为了
+满足语音服务的独特需要而设计的。</p>
+
+
+
+
+<h3>4）科大讯飞——讯飞语音</h3>
+
+
+<p>提到科大讯飞，大家都不陌生，其全称是“安徽科大讯飞信息科技股份有限公司”，它的前身是安徽中科大讯飞信息科技有限公司，成立于99
+年12月，07年变更为安徽科大讯飞信息科技股份有限公司，现在是一家专业从事智能语音及语音技术研究、软件及芯片产品开发、语音信息服务
+的企业，在中国语音技术领域可谓独占鳌头，在世界范围内也具有相当的影响力。</p>
+
+
+
+
+<p>科大讯飞作为中国最大的智能语音技术提供商，在智能语音技术领域有着长期的研究积累，并在中文语音合成、语音识别、口语评测等多项
+技术上拥有国际领先的成果。03年，科大讯飞获迄今中国语音产业唯一的“国家科技进步奖（二等）”，05年获中国信息产业自主创新最高荣誉
+“信息产业重大技术发明奖”。06年至11年，连续六届英文语音合成国际大赛（Blizzard Challenge）荣获第一名。08年获国际说话人识别评测
+大赛（美国国家标准技术研究院—NIST 2008）桂冠，09年获得国际语种识别评测大赛（NIST 2009）高难度混淆方言测试指标冠军、通用测试
+指标亚军。</p>
+
+
+
+
+<p>科大讯飞提供语音识别、语音合成、声纹识别等全方位的语音交互平台。拥有自主知识产权的智能语音技术，科大讯飞已推出从大型电信级
+应用到小型嵌入式应用，从电信、金融等行业到企业和家庭用户，从PC到手机到MP3/MP4/PMP和玩具，能够满足不同应用环境的多种产品，科大
+讯飞占有中文语音技术市场60%以上市场份额，语音合成产品市场份额达到70%以上。</p>
+
+
+
+
+<h3>5）其他</h3>
+
+
+<p>其他的影响力较大商用语音交互平台有谷歌的语音搜索（Google Voice Search），百度和搜狗的语音输入法等等，这些平台相对于以上的4个
+语音交互平台，应用范围相对较为局限，影响力也没有那么强，这里就不详细介绍了。</p>
+
+
+
+
+<h2>3.开源的语音交互平台</h2>
+
+
+<h3>1）CMU-Sphinx</h3>
+
+
+<p>CMU-Sphinx也简称为Sphinx（狮身人面像），是卡内基 - 梅隆大学（ Carnegie Mellon University，CMU）开发的一款开源的语音识别系统，
+它包括一系列的语音识别器和声学模型训练工具。</p>
+
+
+
+
+<p>Sphinx有多个版本，其中Sphinx1~3是C语言版本的，而Sphinx4是Java版的，另外还有针对嵌入式设备的精简优化版PocketSphinx。Sphinx-I
+由李开复（Kai-Fu Lee）于1987年左右开发，使用了固定的HMM模型（含3个大小为256的codebook），它被号称为第一个高性能的连续语音识别
+系统（在Resource Management数据库上准确率达到了90%+）。Sphinx-II由Xuedong Huang于1992年左右开发，使用了半连续的HMM模型，
+其HMM模型是一个包含了5个状态的拓扑结构，并使用了N-gram的语言模型，使用了Fast lextree作为实时的解码器，在WSJ数据集上的识别率
+也达到了90%+。</p>
+
+
+
+
+<p>Sphinx-III主要由Eric Thayer 和Mosur Ravishankar于1996年左右开发，使用了完全连续的（也支持半连续的）HMM模型，具有灵活
+的feature vector和灵活的HMM拓扑结构，包含可选的两种解码器：较慢的Flat search和较快的Lextree search。该版本在BN（98的测评数据
+集）上的WER（word error ratio）为19%。Sphinx-III的最初版还有很多limitations，诸如只支持三音素文本、只支持Ngram模型（不
+支持CFG/FSA/SCFG）、对所有的sound unit其HMM拓扑结构都是相同的、声学模型也是uniform的。Sphinx-III的最新版是09年初发布的0.8版，
+在这些方面有很多的改进。</p>
+
+
+
+
+<p>最新的Sphinx语音识别系统包含如下软件包：</br>
+ Pocketsphinx — recognizer library written in C.</br>
+ Sphinxbase — support library required by Pocketsphinx</br>
+ Sphinx4 — adjustable, modifiable recognizer written in Java</br>
+ CMUclmtk — language model tools</br>
+ Sphinxtrain — acoustic model training tools</br>
+这些软件包的可执行文件和源代码在sourceforge上都可以免费下载得到。</p>
+
+
+
+
+<h3>2）HTK</h3>
+
+
+<p>HTK是Hidden Markov Model Toolkit（隐马尔科夫模型工具包）的简称，HTK主要用于语音识别研究，现在已经被用于很多其他方面的研究，
+包括语音合成、字符识别和DNA测序等。</p>
+
+
+
+
+<p>HTK最初是由剑桥大学工程学院（Cambridge University Engineering Department ，CUED）的机器智能实验室（前语音视觉及机器人组）
+于1989年开发的，它被用来构建CUED的大词汇量的语音识别系统。93年Entropic Research Laboratory Inc.获得了出售HTK的权利，并在95年
+全部转让给了刚成立的Entropic Cambridge Research Laboratory Ltd，Entropic一直销售着HTK，直到99年微软收购了Entropic，微软重新
+将HTK的版权授予CUED，并给CUED提供支持，这样CUED重新发布了HTK，并在网络上提供开发支持。</p>
+
+
+
+
+<p>HTK的最新版本是09年发布的3.4.1版，关于HTK的实现原理和各个工具的使用方法可以参看HTK的文档HTKBook。</p>
+
+
+
+
+<h3>3）Julius</h3>
+
+
+<p>Julius是一个高性能、双通道的大词汇量连续语音识别（large vocabulary continues speech recognition，LVCSR）的开源项目，
+适合于广大的研究人员和开发人员。它使用3-gram及上下文相关的HMM，在当前的PC机上能够实现实时的语音识别，单词量达到60k个。</p>
+
+
+
+
+<p>Julius整合了主要的搜索算法，高度的模块化使得它的结构模型更加独立，它同时支持多种HMM模型（如shared-state triphones 和
+tied-mixture models等），支持多种麦克风通道，支持多种模型和结构的组合。它采用标准的格式，这使得和其他工具箱交叉使用变得
+更容易。它主要支持的平台包括Linux和其他类Unix系统，也适用于Windows。它是开源的，并使用BSD许可协议。</p>
+
+
+
+
+<p>自97年后，Julius作为日本LVCSR研究的一个自由软件工具包的一部分而延续下来，后在2000年转由日本连续语音识别联盟(CSRC)经营。
+从3.4版起，引入了被称为“Julian”的基于语法的识别解析器，Julian是一个改自Julius的以手工设计的DFA作为语言模型的版本，它可以
+用来构建小词汇量的命令识别系统或语音对话系统。</p>
+
+
+
+
+<h3>4）RWTH ASR</h3>
+
+
+<p>该工具箱包含最新的自动语音识别技术的算法实现，它由 RWTH Aachen 大学的Human Language Technology and Pattern Recognition Group
+开发。</p>
+
+
+
+
+<p>RWTH ASR工具箱包括声学模型的构建、解析器等重要部分，还包括说话人自适应组件、说话人自适应训练组件、非监督训练组件、个性化
+训练和单词词根处理组件等，它支持Linux和Mac OS等操作系统，其项目网站上有比较全面的文档和实例，还提供了现成的用于研究目的的
+模型等。</p>
+
+
+
+
+<p>该工具箱遵从一种从QPL发展而来的开源协议，只允许用于非商业用途。</p>
+
+
+
+
+<h3>5）其他</h3>
+
+
+<p>上面提到的开源工具箱主要都是用于语音识别的，其他的开源语音识别项目还有Kaldi 、simon 、iATROS-speech 、SHoUT 、
+Zanzibar OpenIVR 等。</p>
+
+
+
+
+<p>常见的语音合成的开源工具箱有MARY、SpeakRight、Festival 、FreeTTS 、Festvox 、eSpeak 、Flite 等。</p>
+
+
+
+
+<p>常见的声纹识别的开源工具箱有Alize、openVP等。</p>
+
+
+
+
+<h2>4.小结</h2>
+
+
+<p>本文介绍了几种常见的语音交互平台，主要是语音识别、语音合成的软件或工具包，还顺便提到了声纹识别的内容，
+下面做一个简单的总结：</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012112401.jpg"></center>
+以上总结的表格希望对读者有用！</p>
+
+
+
+
+<h2>参考文献</h2>
+
+
+<p>
+[1]语音识别-维基百科：http://zh.wikipedia.org/wiki/语音识别 </br>
+[2]语音合成-百度百科：http://baike.baidu.com/view/549184.htm </br>
+[3] Microsoft Speech API：http://en.wikipedia.org/wiki/Speech_Application_Programming_Interface#SAPI_1 </br>
+[4] MSDN-SAPI：http://msdn.microsoft.com/zh-cn/library/ms723627.aspx </br>
+[5] 微软语音技术 Windows 语音编程初步：http://blog.csdn.net/yincheng01/article/details/3511525 </br>
+[6]IBM Human Language Technologies History：http://www.research.ibm.com/hlt/html/history.html </br>
+[7] Nuance: http://en.wikipedia.org/wiki/Nuance_Communications </br>
+[8] 科大讯飞：http://baike.baidu.com/view/362434.htm </br>
+[9] CMU-Sphinx: http://en.wikipedia.org/wiki/CMU_Sphinx </br>
+[10] CMU Sphinx homepage：http://cmusphinx.sourceforge.net/wiki/ </br>
+[11] HTK Toolkit：http://htk.eng.cam.ac.uk/ </br>
+[12] Julius：http://en.wikipedia.org/wiki/Julius_(software) </br>
+[13] RWTH ASR：http://en.wikipedia.org/wiki/RWTH_ASR </br>
+[14] List of speech recognition software: http://en.wikipedia.org/wiki/List_of_speech_recognition_software </br>
+[15] Speech recognition: http://en.wikipedia.org/wiki/Speech_recognition </br>
+[16] Speech synthesis: http://en.wikipedia.org/wiki/Speech_synthesis </br>
+[17] Speaker recognition: http://en.wikipedia.org/wiki/Speaker_recognition
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[为什么酸痛感出现在运动后的两天?]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/11/20/why-ache-appears-two-days-after-sports/"/>
+    <updated>2012-11-20T13:00:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/11/20/why-ache-appears-two-days-after-sports</id>
+    <content type="html"><![CDATA[<p>经常打羽毛球的人可能会很少有肌肉突然剧烈酸疼的感觉，反而是那些平时不太打球，突然打那么一两次的人，常常会出现肌肉酸痛。
+肌肉酸痛往往不是锻炼后即刻出现，而是在第二或第三天出现，持续2-3天后才逐渐缓解。这都是为什么呢？如果说，肌肉酸痛是由于
+运动时乳酸积累所致，那么，应该在运动时或运动后即刻达到高峰，怎么会在第二天以后才出现呢？</p>
+
+
+
+
+<p>在运动医学上，把这种一般在24小时候才出现的肌肉酸痛称之为&#8221;延迟性肌肉酸痛症&#8221;。锻炼后24-72小时酸痛达到顶点，5-7天后的疼痛基本消失。
+除酸痛外，还有肌肉僵硬，轻者仅有压疼，重者肌肉肿胀，妨碍活动。任何骨骼肌在激烈运动后均可发生延迟性肌肉酸痛，尤其长距离跑后更易
+出现。长跑者可出现髋部、大腿部和小腿部前侧伸肌和后侧屈肌的疼痛，在肌肉远端和肌腱连接处症状更显。在炎热夏天进行极量运动后，除
+肌肉疼痛外，还可出现脱水、低钙、低蛋白等症状。</p>
+
+
+
+
+<p>赛跑是一种反常的运动，就是说肌肉在试图收缩的时候其实是被迫拉长。拉长或不寻常的运动经常会导致肌肉在数小时后甚至数天后出现疼痛，
+而且一碰就痛还变硬。这种现象被称为迟发性肌肉酸痛，发生非常普遍。肌肉肿胀和僵硬的感觉通常出现在运动后大约24小时，在大约2天时达到
+高峰，然后逐渐消退，因为肌肉酸痛是延迟一段时间才发作的，所以不能把它归为是过度运动的结果。事实上，真正的原因是肌肉纤维膜和蛋白
+丝体出现小的撕裂，造成局部的肌肉损伤。</p>
+
+
+
+
+<p>所以，迟发性肌肉酸痛是肌肉产生太多撕裂伤的结果。当我们运动时，为了加快速度，我们需要不断让肌肉接受挑战，希望它们达到我们想要的速度。
+这种渐进的超负荷会导致肌肉纤维的撕裂。在这个过程中，我们会在一天后出现中度的酸痛感。</p>
+
+
+
+
+<p>另外，运动后肌肉血流增加也会导致组织肿胀，这样的肿胀会增加对周围的组织结构的压迫。肌肉中的神经一感觉到压迫，就把疼痛信号传递到大脑，
+这样，你就会在运动完后的第二天早晨感觉到疼痛。</p>
+
+
+
+
+<p>运动过后肌肉纤维在消耗能量后需要补充蛋白质，特别是平时不运动的突然运动后都会出现肌肉酸痛。一定要是酸痛，有酸涨感的，如是疼痛，
+针刺感的是受伤产生的，要休息一旦时间才能好，严重的要去医院。</p>
+
+
+
+
+<p>两个办法缓解：1、休息，酸痛会在一周内缓解并消失。2、继续保持运动，但运动量不要大，一般腿酸就慢跑，每次跑到酸痛感渐渐减弱到很小
+时停止。坚持2-4天就好了。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于BCI的动物机器人研究分析与展望]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/10/22/BCI-based-animal-robot-summarize/"/>
+    <updated>2012-10-22T23:09:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/10/22/BCI-based-animal-robot-summarize</id>
+    <content type="html"><![CDATA[<h3>摘  要</h3>
+
+
+<p>动物机器人已经成为机器人技术领域的重要研究方向之一，动物运动制导是当今神经、信息和机器人等科学交叉研究的一个热点。
+本文结合基于BCI的大鼠动物机器人的实例来介绍有关动物机器人的研究进展、研究方法，并对其发展前景进行展望。</p>
+
+
+
+
+<h3>关键字</h3>
+
+
+<p>脑机接口；动物机器人；大鼠</p>
+
+
+
+
+<h3>0 前言</h3>
+
+
+<p>在科技日益发达的现代信息社会，我们对机器人已经不再陌生，比如：科幻片中的高级智能化的机器人、自动化生产线上的工业
+机器人、大型展馆里的导航服务机器人、太空中火星上的“勇气号”探险机器人等等。然而，它们的任何一个动作都是由电脑程序来
+完成的，而且所有动作都是程序固定的，不能够灵活，而且一旦能量耗尽将会滞留原地，进退维谷，可谓“出师未捷身先死”，在很多
+方面都不如动物灵活、敏捷，而且所消耗的能量也不能靠自身解决。</p>
+
+
+
+
+<p>回眸历史，人类利用动物来替代自己进行艰苦的工作，甚至人力所不能及的工作，己经有近万年了。在这近万年的历史里，产生了战马、
+耕牛、狩猎犬和信鸽等执行特殊任务的动物。但这些动物所执行的任务较为单一，智力含量较为低下，若是动物能够完全受控于人类，
+将是非常完美的设想。</p>
+
+
+
+
+<p>基于BCI (Brain-Computer Interface，脑-机接口)的动物机器人既很好地解决了微型机器人携带能量不足的问题，同时可以通过
+人工控制来执行一些特殊的、复杂的任务，还具有人类赋予的智能。</p>
+
+
+
+
+<!-- more -->
+
+
+<h3>1 研究现状</h3>
+
+
+<p>此类研究虽仅始于上世纪末，但其潜在的科研价值已举世公认，各国政府也给予了很大的支持。1995年，日本政府就投入500万美元
+资助东京大学的Iaso Shmiyoama教授研究嶂螂的生物控制技术。美国国防部国防预先研究计划局(DARPA)出于军事目的投入巨资研究BCI，
+从而进一步推动了BCI的研究热潮。</p>
+
+
+
+
+<p>目前，在世界范围内已有多个研究组织和机构开展了针对BCI研究和开发，并己经取得了一些突破性进展。外部刺激向神经系统的直接
+输入已经成为可能，迄今已经有超过十万的患者通过植入电子耳蜗恢复或改善了听觉；深部脑刺激(DBS)技术，为超过三万五千多名帕金森
+和其他运动机能紊乱的患者减轻了痛苦和不便。</p>
+
+
+
+
+<p>在动物实验方面，2000年Nature发表了“Real Braining for Real Robots”一文，报道了从猴子大脑皮层获取的神经信号实时控制千里
+之外的一个机器人。2002年，Nature上报道了美国纽约州立大学有关遥控大鼠的研究工作，给人们展现了生物机器人(Bio&#8211;robot)的应用
+前景。美国DARPA称，该部门的专家正在研究用电子装置培训诸如嶂螂等动物的计划，将各种形形色色的动物训练成武器，以打造出一批
+全新的“生物士兵”。</p>
+
+
+
+
+<p>另一方面，Wadsworth、Graz等大学的研究小组用EEG信号实现了让残疾人用意识输入字符、操作计算机、控制机械装置等初步实用目标。
+在医学上与功能性电刺激相结合，进行了辅助瘫痪治疗的尝试。</p>
+
+
+
+
+<h3>2 基于BCI的大鼠动物机器人</h3>
+
+
+<p>2002年，Nature杂志报道，美国纽约州立大学的Talwar博士领导的科研小组成功实现了人工诱导老鼠的各种运动行为。科研人员通过
+刺激感觉皮层和边缘系统的一个“奖赏中枢”制导老鼠运动，他们在大白鼠脑内植入了三对刺激微电极，其中两对电极植入接受左右胡须
+输入的体感运动皮层区(somatosensory cortex, SI)，对其刺激用作左右胡须的虚拟的触觉信号，另一对电极植入内侧前脑束(medial 
+for brain bundle, MFB)，用作老鼠服从命令的奖赏强化。三对电极连同大鼠背负的多通道遥控导航系统相连，如图1所示。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012102201.jpg"></center></br>
+<center>图1 大鼠遥控导航系统</center>
+</p>
+
+
+
+
+<p>他们的实验分成四个阶段：</br>
+第一阶段，先在8字形的迷宫内对大鼠进行训练，先单独刺激MFB，作为前进运动的强化(即使老鼠将单独的MFB刺激解释为前进)；
+当所有实验大鼠学会在单独MFB刺激时持续前进时，就进入下一阶段；</br>
+第二阶段，通过左右SI电极的刺激训练老鼠左右转弯，方向转对时就刺激 MFB，以强化老鼠对虚拟胡须触觉的条件反射；</br>
+第三阶段，在实验室内将训练任务由平面线路过渡到三维复杂路线，如图2所示；</br>
+第四阶段，经过训练的大鼠可以在实验室外执行具体任务：实验人员通过遥控导航系统的遥控500m外可遥控大鼠完成转弯、前行、爬树
+以及跳跃等动作，甚至可以控制老鼠执行违背其自然习性的运动，比如在光线充足的广阔的室外场地执行任务。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012102202.jpg"></center></br>
+<center>图2 大鼠遥控导航路线</center>
+</p>
+
+
+
+
+<p>实验过程中，大鼠可以平均0.3m/s的速度进行长达一小时的实验。这些大鼠能用于现代机器人无法胜任的各种搜救任务中。</br>
+基于上述成功范例，另据2004年《新科学家》报道，在美国 DARPA的资助下，美国佛罗里达大学的研究人员又在纽约州立大学大鼠
+机器人的基础之上，开始训练大鼠，探索将其用于爆炸物的搜寻工作之中。</br>
+研究者分别在实验大鼠的三个脑区(嗅皮层、运动皮层和奖赏中枢)植入微电极阵列，首先对大鼠进行训练，当大鼠正确找出目标气味时
+便刺激奖赏中枢。老鼠训练成功之后，在搜寻特定的气味的同时电极会记录下相应脑区的神经信号，研究人员籍此辨别老鼠在找到特定
+气味时出现的神经放电模式。通过训练的老鼠可以嗅出TNT及RDX等炸药的味道，在恐怖分子攻击行动过后，建筑物内可能仍藏有未爆炸弹，
+所以这项能力变得极为重要。
+</p>
+
+
+
+
+<h3>3 关键技术分析</h3>
+
+
+<p>BCI技术是一种不依赖于正常的由外围神经和肌肉组成的输出通路的通讯系统。该技术能够在脑与计算机或其它设备之间建立直接的
+双向交流和控制通道，可以实现外部电子设备对脑功能的弥补和脑部疾病的治疗，甚至达到调控其思想和行为的目的，这也是动物机器人
+研究的理论依据。</br>
+BCI技术包括微电极系统、神经信号的记录分析及特征识别系统、神经信号的模拟重构系统、外部设备以及反馈系统等等。其中神经信号
+的记录分析及特征识别系统是BCI技术最主要的研究内容，主要包括：源信号的检测、信号的预处理(除噪滤波)、特征提取，以及正向BCI的
+特征分类识别和反向BCI的神经电信号的模拟重构。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012102203.jpg"></center></br>
+<center>图3  BCI系统框架</center>
+</p>
+
+
+
+
+<p>BCI技术的目的就是脑-机交互，亦即：用模拟重构的电信号对神经系统的正确激活达到对思维及行为的调控，以及实现机器对神经信号
+的理解与执行。该技术在脑科学与现代信息科学之间架设了一座桥梁：有助于对大脑认知模式、思维模型、意识形成和对肢体控制方式的
+深入理解。</p>
+
+
+
+
+<h3>4 实现方案</h3>
+
+
+<p>基于BCI的生物机器人是基于反向的BCI系统的基本原理，它由信息终端、无线通讯模块、信号刺激器和信号采集器等组成，如图4所示。
+刺激/采集器主要负责解码控制命令，产生刺激脉冲，后续采集大鼠神经电信号。无线通讯设备负责传输远程控制台和刺激采集器的通讯传输。
+基于PC实现的信息终端主要负责控制命令的输入和采集大鼠神经电信号的存储和处理。</br>
+<center><img src="http://ibillxia.github.com/images/2012/IMAG2012102204.jpg"></center></br>
+<center>图4 基于BCI的动物机器人系统结构图</center>
+</p>
+
+
+
+
+<p>系统的控制流程如下：脑微刺激遥控导航系统产生并发送一组特定的参数叨刺激脉冲，该刺激信号经过颅顶的处理芯片和植入到脑部的
+四对电极引入大鼠脑部海马区的相应神经元节点；在电脉冲的微刺激作用下，模拟胡须区的信号，利用大鼠自身的条件反射，诱发大鼠产生
+希望的动作，比如向左，向右，向前等动作。</p>
+
+
+
+
+<h3>5 展望未来</h3>
+
+
+<p>尽管目前的动物机器人研究还处于起步阶段，还不成熟，但是，在科技日新月异的今天，随着各门相关的科学与技术的发展与进步，
+动物机器人的研究将更加深入和成熟，也将会使BCI技术发展更迅猛、性能更优越、应用更广泛、前景更光明，动物机器人也必将成为一种
+更为实用的机器人，应用于人类现实生活中的更多领域。<p>
+
+<p>或许电影“豚鼠特工队”中那样高度智能化的、无比完美的动物机器人在不久的将来会成为现实。</p>
+
+<h3>参考文献</h3>
+<p>
+[1] 王勇．基于BCI技术的动物机器人的研究［硕］．2006，5</br>
+[2] 杨雪．基于动物实验的脑－机接口的研究［硕］．2007，5</br>
+[3] 金林．基于BCI的生物机器人研究［硕］．2007，5</br>
+[4] 王文波，戴振东．动物机器人的研究现状与发展．</br>
+[5] 王永玲，原魁，李剑锋等．一种新型的动物机器人遥控训练系统．高技术通讯，2007，17(7) : 698 -702</br>
+[6] Talwar S K，Xu S H，Hawley E S，etal．Behavi oral neuro science：rat navigation guided by remote control [ J ]. Nature，2002，417(6884): 37 -38．
+</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[凸优化简介]]></title>
+    <link href="http://ibillxia.github.com/blog/2012/09/26/convex-optimization-overview/"/>
+    <updated>2012-09-26T23:03:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2012/09/26/convex-optimization-overview</id>
+    <content type="html"><![CDATA[<p>在machine learning 的很多问题中，我们最终往往要求解某个函数的最优值。用数学术语表示就是，
+给定一个函数 $f: R<sup>{n}</sup> \rightarrow R$，求 $ x \in R<sup>{n}</sup> $使得$f(x)$ 取得最小（大）值。例如least-square,
+logistic regression, linear regression, svm, etc. 这类问题统称为优化问题。</p>
+
+<h2>1.引言</h2>
+
+
+<p>在一般情况下，求解任意一个函数的全局最优值是很困难的。但是对于一种特定类型的函数——凸函数（convex function），
+我们可以很有效的求解其全局最优值。这里的“有效”是指在实际问题求解中，能在多项式复杂度的时间里求解。
+人们将这类函数的最值问题称为凸优化问题（Convex Optimal Problem）。下面我从凸集和凸函数讲起，然后
+介绍凸优化的一般描述和典型问题举例。</p>
+
+
+
+
+<h2>2.凸集及其实例</h2>
+
+
+<p><strong>凸集的定义</strong>：一个集合$C$是凸集，当且仅当对任意$x,y\in C$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
+<center>$\theta x + (1-\theta)y \in C$.</center>
+其几何意义在于，在集合C中任取两个点，连接两点的直线段上的任一点也在集合C中。下图是凸集和非凸集的例子：</br>
+<img src="http://ibillxia.github.com/images/201209026/IMAG20120902601.jpg">
+</p>
+
+
+
+
+<!-- more -->
+
+
+<p><strong>凸集的实例</strong>：
+以下列举几个简单的凸集实例</br>
+（1）所有Rn。很显然，对任意给定的$x,y\in R^{n}$ 都有 $\theta x + (1-\theta)y \in R^{n}$。
+（2）非负卦限，R^{n}_{+}。很显然也符合定义。</br>
+（3）单位球。设$\parallel . \parallel$为$R^{n}$上的模（例如欧几里得空间的模为$\parallel x\parallel = sqrt(sum(x_{i}^{2}))$.）,
+那么集合${x|\parallel x\parallel \leq 1}$是一个凸集。
+</p>
+
+
+
+
+<h2>3.凸函数及判定和Jensen不等式</h2>
+
+
+<p>凸优化中的一个核心概念就是凸函数。</br>
+<strong>凸函数定义</strong>：一个函数$f: R^{n} → R$是凸函数当且仅当其定义域（设为$D(f)$）是凸集，
+且对任意的$x,y\in D(f)$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
+<center>$f(\theta x + (1-\theta)y \leq \theta f(x) + (1-\theta) f(y))$.</center>
+设$f(x)$为一元函数，那么上式的几何意义在于，曲线上任意两点处的割线在函数曲线的上方，如下图所示：</br>
+<img src="http://ibillxia.github.com/images/2012/IMAG20120902602.jpg">
+</p>
+
+
+
+
+<p>常见的凸函数有指数函数（$f(x) = a^{x}，a>1$）、负对数函数（$f(x)=-log_{a}x，a>1，x>0$）、开口向上的二次函数等。</p>
+
+
+
+
+<p><strong>凸函数第一判定定理</strong>：设函数$f: R^{n} → R$是一阶可导的，那么$f$是凸函数当且仅当对任意的$x,y \in D(f)$都有：
+<center>$f(y) \geq f(x) + f&#8217;(x)(y-x)$</center>
+其中$f(x) + f&#8217;(x)(y-x)$称为$f(x)$在$x$处的一阶近似。</p>
+
+
+
+
+<p><strong>凸函数第二判定定理</strong>：设函数$f: R^{n} → R$是二阶可导的，那么$f$是凸函数当且仅当对任意的$x\in D(f)$都有：</p>
+
+
+<center>$f&#8221;(x)  \succeq 0$.</center>
+
+
+<p>其中，当$f&#8221;(x)$是矩阵时，符号‘$ \succeq $’表示半正定，而非一个个的不等式（在一维的情况下，相当于&#8217;$\geq$&#8217;；
+在二维情况下，不是表示对所有的$i$和$j$都有$X_{ij} \geq 0$，而是表示$X$为半正定矩阵）。
+</p></p>
+
+<p><strong>Jensen不等式</strong>：我们先看凸函数的定义中的不等式:</br>
+<center>$f(\theta x+(1-\theta y)) \leq \theta f(x) + (1-\theta)f(y), for 0\leq \theta \leq 1$.</center>
+类似的可以将其推广到多个点的情况：</br>
+<center>$f(\sum_{i=1}^{k}\theta_{i}x_{i}) \leq \sum_{i=1}{k}\theta_{i}f(x_{i}), for \sum_{i=1}^{k}\theta_{i} = 1, \theta_{i} \geq 0 \forall i$.</center>
+因为上式中的和为1，可以将其看作为是概率密度，则上式又可写为：</br>
+<center>$f(E[x]) \leq E[f(x)]$.</center>
+这个不等式称为Jensen不等式。
+</p>
+
+
+
+
+<h2>4.凸优化问题举例</h2>
+
+
+<p>有了凸集和凸函数的定义，现在我们重点讨论凸优化问题的求解方法。凸优化的一般描述为：</br>
+<center>$minimize f(x)$,</center>
+<center>$subject to x \in C$.</center>
+其中$f(x)$为凸函数，$C$是一个凸集，这是不带约束条件的情况下的凸优化问题。对于带约束条件的问题而言，其一般描述为：</br>
+<center>$minimize f(x)$,</center>
+<center>$subject to g_{i}(x) \leq 0, i=1,2,&#8230;,m; h_{j}(x) = 0, j=1,2,&#8230;,p$.</center>
+其中$f(x)$为凸函数，$g_{i}(x)$对所有的$i$均为凸函数，$h_{j}(x)$均为仿射函数。注意$g_{i}(x)$不等式中不等号的方向。
+</p>
+
+
+
+
+<p>凸问题中的全局优化：首先要分清楚什么是局部最优，什么是全局最优。局部最优是指在该最优值附近的点对应的函数值
+都比该最优值大，而全局最优是指对可行域里所有点，其函数值都比该最优值大。对于凸优化问题，它具有一个很重要的特性，
+那就是所有的局部最优值都是全局最优的（关于其证明这里就不讲了，感兴趣的可以自行查查资料或后文中的参考文献）。</p>
+
+
+
+
+<h4>几类特殊的凸优化问题：</h4>
+
+
+<p>（1）线性规划（Linear Programing, LP）: 目标函数和约束条件函数都是线性函数的情况，一般形式如下：</br>
+<center>$minimize c^{T}x +d$,</center>
+<center>$subject to Gx \preceq h; Ax = b$.</center>
+</p>
+
+
+
+
+<p>（2）二次规划（Quadratic Programing, QP）: 目标函数为二次函数，约束条件为线性函数，一般形式为：</br>
+<center>$minimize 1/2 x^{T}Px + c^{T}x +d$,</center>
+<center>$subject to Gx \preceq h; Ax = b$.</center>
+LP可以看做是QP的特例，QP包含LP。
+</p>
+
+
+
+
+<p>（3）二次约束的二次规划（Quadratically Constrained Quadratic Programming, QCQP）: 目标函数和约束条件均为
+二次函数的情况，一般形式为：</br>
+<center>$minimize 1/2 x^{T}Px + c^{T}x +d$,</center>
+<center>$subject to 1/2 x^{T}Qx + r^{T}x + s \preceq h, i=1,2,&#8230;,m; Ax = b$.</center>
+QP可以看做是QCQP的特例，QCQP包含QP。
+</p>
+
+
+
+
+<p>半正定规划（Semideﬁnite Programming，SDP）: 其一般形式为：</br>
+<center>$minimize tr(CX)$,</center>
+<center>$subject to tr(A_{i}X) = b_{i},i=1,2,&#8230;,p; 0 \preceq X$.</center>
+其中对称矩阵$X\inS^{n}$为决策变量，矩阵$C$，$A_{i}$均为对称矩阵，条件$0 \preceq X$的作用为约束$X$为半正定的。
+QCQP可以看做是SDP的特例，SDP包含QCQP。SDP在machine learning中有非常广泛的应用。
+</p>
+
+
+
+
+<h2>5.凸优化应用举例</h2>
+
+
+<p>下面我们来看几个实例。</br>
+（1）支持向量机（Support Vector Machines，SVM）：凸优化在machine learning中的一个典型的应用就是基于支持向量机分类器，
+它可以用如下优化问题表示：</br>
+<center>$minimize 1/2 \parallel x \parallel ^{2} + C \xi _{i}$,</center>
+<center>$subject to y^{(i)}(w^{T}x^{(i)}+b) \geq 1 - \xi _{i}, \xi_{i} \geq 0, i = 1,2,&#8230;,m$.</center>
+其中决策变量$w\in R^{n}, \xi \in R^{n}, b \in R$. $C\in R, x(i), y(i), i=1,2, &#8230; , m$由
+具体问题定义。可以看出，这是一个典型的QP问题。
+</p>
+
+
+
+
+<p>（2）带约束的least squares问题：其一般描述为</br>
+<center>$minimize 1/2\parallel Ax-b \parallel ^{2} $,</center>
+<center>$subject to l \preceq x \preceq u$.</center>
+这也是一个很典型的QP问题。
+</p>
+
+
+
+
+<p>（3）Maximum Likelihood for Logistic Regression：该问题的目标函数为:</br>
+<center>$l (\theta) = \sum_{i=1}^{n}[y^{(i)}ln g(\theta^{T}x^{(i)}) + (1-y^{(i)})ln(1-g(\theta^{T}x^{(i)}))]$</center>
+其中$g(z)$为Sigmoid函数，关于Logistic Regression请参见Andrew Ng的Machine Learning的第6讲。
+</p>
+
+
+
+
+<h2>6.凸优化问题求解简介</h2>
+
+
+<p>上文中提到了几类特殊的凸优化问题，并举了几个应用实例，但并没有给出解法。对于凸优化问题，目前没有一个通用的解析式的
+解决方案，但是我们仍然可以用非解析的方法来有效的求解很多问题。内点法（后续文章中会详细介绍）被证明是很好的解决方案，
+特别具有实用性，在某些问题中，能够在多项式时间复杂度下，将解精确到指定精度。</p>
+
+
+
+
+<p>我们将会看到，经过10到100次的迭代，内点法可以解决一般的凸优化问题，其中每次迭代的时间复杂度为</br>
+<center>$max{n^{3},n^{2}m,F}$.</center>
+其中$F$为计算目标函数和约束条件函数的一阶、二阶导数的总时间代价。如同用解析法求解线性规划问题，内点法也是非常可靠的，
+在一般的PC机上，它可以在几十秒的时间内求解含有上百个变量、上千个约束条件的凸优化问题。对于一些特殊的结构（如稀疏的），
+内点法可以求解包含上千个变量和约束条件的凸优化问题。
+</p>
+
+
+
+
+<p>对于一般的凸优化问题的求解，还没有像求解最小二乘和线性规划那么成熟的技术，基于内点法的一般凸优化问题求解依然是
+当前的一个研究热点。虽然目前还没有公认的最好的解决方案，但我们有理由相信，在不久的将来，内点法求解一般的凸优化问题
+是一项技术。事实上，对于一些特定的凸优化问题，如二次锥规划和几何规划问题（后续文章将会介绍），内点法在向一项技术迈进。</p>
+
+
+
+
+<h2>参考文献</h2>
+
+
+<p>
+[1]Book: Stephen Boyd and Lieven Vandenberghe. Convex Optimization. Cambridge University Press, 2004</br>
+[2]Slide: Zico Kolter (updated by Honglak Lee). Convex Optimization Overview. October 17, 2008</br>
+[3]Standford Convex Optimization Course I：http://www.stanford.edu/class/ee364a/lectures.html
+</p>
+
+
+
 ]]></content>
   </entry>
   
