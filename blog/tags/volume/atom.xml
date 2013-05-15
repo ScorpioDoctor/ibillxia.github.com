@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Volume | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/volume/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-05-15T19:51:12+08:00</updated>
+  <updated>2013-05-15T21:45:14+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<h2>1.概述（Introduction）</h2>
 
 
-<p>本文主要介绍语音信号时域的4个基本特征及其Python实现，这4个基本特征是：</br>
+<p>本系列文主要介绍语音信号时域的4个基本特征及其Python实现，这4个基本特征是：</br>
 (1)音量（Volume）；</br>
 (2)过零率（Zero-Crossing-Rate）；</br>
 (3)音高（Pitch）；</br>
@@ -86,9 +86,7 @@
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
 <span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import math
+</pre></td><td class='code'><pre><code class=''><span class='line'>import math
 </span><span class='line'>import numpy as np&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>definition 1&lt;/h1>

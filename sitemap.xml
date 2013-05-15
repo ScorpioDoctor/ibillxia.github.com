@@ -336,7 +336,13 @@
         <loc>
             http://ibillxia.github.com/blog/2013/05/15/audio-signal-process-time-domain-volume-python-realization/
         </loc>
-        <lastmod>2013-05-15T19:41:28+08:00</lastmod>
+        <lastmod>2013-05-15T21:42:11+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ibillxia.github.com/blog/2013/05/15/audio-signal-processing-time-domain-ZeroCR-python-realization/
+        </loc>
+        <lastmod>2013-05-15T21:44:57+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.com/about/</loc>
@@ -344,11 +350,11 @@
     </url>
     <url>
         <loc>http://ibillxia.github.com/blog/archives/</loc>
-        <lastmod>2013-05-15T19:41:28+08:00</lastmod>
+        <lastmod>2013-05-15T21:44:57+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.com/</loc>
-        <lastmod>2013-05-15T19:41:28+08:00</lastmod>
+        <lastmod>2013-05-15T21:44:57+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.com/robots.txt</loc>
