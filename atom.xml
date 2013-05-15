@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-05-08T23:14:53+08:00</updated>
+  <updated>2013-05-15T19:51:12+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,206 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[语音信号处理之时域分析-音量及其Python实现]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/05/15/audio-signal-process-time-domain-volume-python-realization/"/>
+    <updated>2013-05-15T19:36:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/05/15/audio-signal-process-time-domain-volume-python-realization</id>
+    <content type="html"><![CDATA[<h2>1.概述（Introduction）</h2>
+
+
+<p>本文主要介绍语音信号时域的4个基本特征及其Python实现，这4个基本特征是：</br>
+(1)音量（Volume）；</br>
+(2)过零率（Zero-Crossing-Rate）；</br>
+(3)音高（Pitch）；</br>
+(4)音色（Timbre）。
+</p>
+
+
+
+
+<h2>2.音量（Volume）</h2>
+
+
+<p>音量代表声音的强度，可由一个窗口或一帧内信号振幅的大小来衡量，一般有两种度量方法：</br>
+（1）每个帧的振幅的绝对值的总和：
+<center>$volume = \sum_{i=1}^{n}|s_{i}|$.</center>
+其中$s_{i}$为第该帧的$i$个采样点，$n$为该帧总的采样点数。这种度量方法的计算量小，但不太符合人的听觉感受。</br>
+（2）幅值平方和的常数对数的10倍：
+<center>$volume = 10 * log_{10}\sum_{i=1}^{n}s_{i}^{2}$.</center>
+它的单位是分贝（Decibels），是一个对数强度值，比较符合人耳对声音大小的感觉，但计算量稍复杂。
+</p>
+
+
+<!--more-->
+
+
+<p>音量计算的Python实现如下：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
+</span><span class='line'>import math
+</span><span class='line'>import numpy as np
+</span><span class='line'>
+</span><span class='line'># definition 1
+</span><span class='line'>def calVolume(waveData, frameSize, overLap):
+</span><span class='line'>    wlen = len(waveData)
+</span><span class='line'>    step = frameSize - overLap
+</span><span class='line'>    frameNum = math.ceil(wlen/step)
+</span><span class='line'>    volume = np.zeros((frameNum,1))
+</span><span class='line'>    for i in range(frameNum):
+</span><span class='line'>        curFrame = waveData[np.arange(i*step,min(i*step+frameSize,wlen))]
+</span><span class='line'>        curFrame = curFrame - curFrame.mean() # zero-justified
+</span><span class='line'>        volume[i] = sum(abs(curFrame))
+</span><span class='line'>    return volume
+</span><span class='line'>
+</span><span class='line'># definition 2
+</span><span class='line'>def calVolumeDB(waveData, frameSize, overLap):
+</span><span class='line'>    wlen = len(waveData)
+</span><span class='line'>    step = frameSize - overLap
+</span><span class='line'>    frameNum = math.ceil(wlen/step)
+</span><span class='line'>    volume = np.zeros((frameNum,1))
+</span><span class='line'>    for i in range(frameNum):
+</span><span class='line'>        curFrame = waveData[np.arange(i*step,min(i*step+frameSize,wlen))]
+</span><span class='line'>        curFrame = curFrame - curFrame.mean() # zero-justified
+</span><span class='line'>        curFrame.shape = -1
+</span><span class='line'>        sumFrame = np.dot(curFrame,curFrame)
+</span><span class='line'>        volume[i] = 10*np.log10(sumFrame)
+</span><span class='line'>    return volume</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>对于给定语音文件aeiou.wav，利用上面的函数计算音量曲线的代码如下：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
+</span><span class='line'>import math
+</span><span class='line'>import pylab as pl
+</span><span class='line'>import numpy as np
+</span><span class='line'>
+</span><span class='line'># ============ test the algorithm =============
+</span><span class='line'># read wave file and get parameters.
+</span><span class='line'>fw = wave.open('aeiou.wav','rb')
+</span><span class='line'>params = fw.getparams()
+</span><span class='line'>print(params)
+</span><span class='line'>nchannels, sampwidth, framerate, nframes = params[:4]
+</span><span class='line'>str_data = fw.readframes(nframes)
+</span><span class='line'>wave_data = np.fromstring(str_data, dtype=np.short)
+</span><span class='line'>wave_data.shape = -1, 1
+</span><span class='line'>#wave_data = wave_data.T
+</span><span class='line'>fw.close()
+</span><span class='line'>
+</span><span class='line'># calculate volume
+</span><span class='line'>frameSize = 256
+</span><span class='line'>overLap = 128
+</span><span class='line'>volume11 = calVolume(wave_data,frameSize,overLap)
+</span><span class='line'>volume12 = calVolumeDB(wave_data,frameSize,overLap)
+</span><span class='line'>
+</span><span class='line'># plot the wave
+</span><span class='line'>time = np.arange(0, nframes) * (1.0 / framerate)
+</span><span class='line'>time2 = np.arange(0, len(volume11)) * (1.0 / framerate)
+</span><span class='line'>pl.subplot(311)
+</span><span class='line'>pl.plot(time, wave_data)
+</span><span class='line'>pl.ylabel("Amplitude")
+</span><span class='line'>pl.subplot(312)
+</span><span class='line'>pl.plot(time2, volume11)
+</span><span class='line'>pl.ylabel("adsSum")
+</span><span class='line'>pl.subplot(313)
+</span><span class='line'>pl.plot(time2, volume12, c="g")
+</span><span class='line'>pl.ylabel("Decibel")
+</span><span class='line'>pl.xlabel("time (seconds)")
+</span><span class='line'>pl.show()</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>运行以上程序得到下图：
+<center><img src="http://ibillxia.github.com/images/2013/IMAG2013051501.png"></center>
+</p>
+
+
+
+
+<h2>参考（References）</h2>
+
+
+<p>[1]Volume (音量):http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/basicFeatureVolume.asp?title=5-2%20Volume%20(%AD%B5%B6q)</br>
+[2]用Python做科学计算-声音的输入输出:http://hyry.dip.jp:8000/pydoc/wave_pyaudio.html</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[语音信号处理基础学习笔记之时域处理]]></title>
@@ -3512,58 +3712,6 @@ Zanzibar OpenIVR 等。</p>
 [16] Speech synthesis: http://en.wikipedia.org/wiki/Speech_synthesis </br>
 [17] Speaker recognition: http://en.wikipedia.org/wiki/Speaker_recognition
 </p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[为什么酸痛感出现在运动后的两天?]]></title>
-    <link href="http://ibillxia.github.com/blog/2012/11/20/why-ache-appears-two-days-after-sports/"/>
-    <updated>2012-11-20T13:00:00+08:00</updated>
-    <id>http://ibillxia.github.com/blog/2012/11/20/why-ache-appears-two-days-after-sports</id>
-    <content type="html"><![CDATA[<p>经常打羽毛球的人可能会很少有肌肉突然剧烈酸疼的感觉，反而是那些平时不太打球，突然打那么一两次的人，常常会出现肌肉酸痛。
-肌肉酸痛往往不是锻炼后即刻出现，而是在第二或第三天出现，持续2-3天后才逐渐缓解。这都是为什么呢？如果说，肌肉酸痛是由于
-运动时乳酸积累所致，那么，应该在运动时或运动后即刻达到高峰，怎么会在第二天以后才出现呢？</p>
-
-
-
-
-<p>在运动医学上，把这种一般在24小时候才出现的肌肉酸痛称之为&#8221;延迟性肌肉酸痛症&#8221;。锻炼后24-72小时酸痛达到顶点，5-7天后的疼痛基本消失。
-除酸痛外，还有肌肉僵硬，轻者仅有压疼，重者肌肉肿胀，妨碍活动。任何骨骼肌在激烈运动后均可发生延迟性肌肉酸痛，尤其长距离跑后更易
-出现。长跑者可出现髋部、大腿部和小腿部前侧伸肌和后侧屈肌的疼痛，在肌肉远端和肌腱连接处症状更显。在炎热夏天进行极量运动后，除
-肌肉疼痛外，还可出现脱水、低钙、低蛋白等症状。</p>
-
-
-
-
-<p>赛跑是一种反常的运动，就是说肌肉在试图收缩的时候其实是被迫拉长。拉长或不寻常的运动经常会导致肌肉在数小时后甚至数天后出现疼痛，
-而且一碰就痛还变硬。这种现象被称为迟发性肌肉酸痛，发生非常普遍。肌肉肿胀和僵硬的感觉通常出现在运动后大约24小时，在大约2天时达到
-高峰，然后逐渐消退，因为肌肉酸痛是延迟一段时间才发作的，所以不能把它归为是过度运动的结果。事实上，真正的原因是肌肉纤维膜和蛋白
-丝体出现小的撕裂，造成局部的肌肉损伤。</p>
-
-
-
-
-<p>所以，迟发性肌肉酸痛是肌肉产生太多撕裂伤的结果。当我们运动时，为了加快速度，我们需要不断让肌肉接受挑战，希望它们达到我们想要的速度。
-这种渐进的超负荷会导致肌肉纤维的撕裂。在这个过程中，我们会在一天后出现中度的酸痛感。</p>
-
-
-
-
-<p>另外，运动后肌肉血流增加也会导致组织肿胀，这样的肿胀会增加对周围的组织结构的压迫。肌肉中的神经一感觉到压迫，就把疼痛信号传递到大脑，
-这样，你就会在运动完后的第二天早晨感觉到疼痛。</p>
-
-
-
-
-<p>运动过后肌肉纤维在消耗能量后需要补充蛋白质，特别是平时不运动的突然运动后都会出现肌肉酸痛。一定要是酸痛，有酸涨感的，如是疼痛，
-针刺感的是受伤产生的，要休息一旦时间才能好，严重的要去医院。</p>
-
-
-
-
-<p>两个办法缓解：1、休息，酸痛会在一周内缓解并消失。2、继续保持运动，但运动量不要大，一般腿酸就慢跑，每次跑到酸痛感渐渐减弱到很小
-时停止。坚持2-4天就好了。</p>
 
 ]]></content>
   </entry>
