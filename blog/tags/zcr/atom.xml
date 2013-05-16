@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ZCR | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/zcr/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-05-15T21:45:14+08:00</updated>
+  <updated>2013-05-16T23:12:14+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -28,8 +28,8 @@
 
 
 <p>ZCR的数学形式化定义为：
-<center>$zcr = \frac{1}{T-1}\sum_{t=1}^{T-1}\pi{s_{t}s_{t-1}<0}$.</center>
-其中$s$是采样点的值，$T$为帧长，函数$\pi{A}$在A为真是值为1，否则为0.
+<center>$zcr = \frac{1}{T-1}\sum_{t=1}^{T-1}\pi\{s_{t}s_{t-1}<0\}$.</center>
+其中$s$是采样点的值，$T$为帧长，函数$\pi\{A\}$在A为真是值为1，否则为0.
 </p>
 
 
