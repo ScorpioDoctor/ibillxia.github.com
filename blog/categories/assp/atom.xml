@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ASSP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/categories/assp/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-05-18T22:32:33+08:00</updated>
+  <updated>2013-05-21T22:43:10+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -81,6 +81,7 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
+<span class='line-number'>21</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>import wave
 </span><span class='line'>import numpy as np
 </span><span class='line'>import matplotlib.pyplot as mpp
@@ -98,9 +99,10 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 </span><span class='line'>
 </span><span class='line'>mpp.subplot(212)
 </span><span class='line'>mpp.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
-</span><span class='line'>mpp.show()
+</span><span class='line'>#mpp.show()
 </span><span class='line'>mpp.ylabel('Frequency')
-</span><span class='line'>mpp.xlabel('time(seconds)')</span></code></pre></td></tr></table></div></figure></notextile></div>
+</span><span class='line'>mpp.xlabel('time(seconds)')
+</span><span class='line'>mpp.show()</span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
@@ -108,7 +110,8 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 
 <p>程序运行的效果如下图：
 <center><img src="/images/2013/IMAG2013051801.png"></center>
-虽然程序简单，但还有一些小bug，比如subplot(212)的xlabel和ylabel无法显示，这个问题暂时还没有解决。</p>
+虽然程序简单，但还有一些小bug，比如subplot(212)的xlabel和ylabel无法显示，这个问题暂时还没有解决。（更新：这个问题已解决，把mpp.show()放到
+最后一行就可以了，顺便图也更新了）</p>
 
 
 
