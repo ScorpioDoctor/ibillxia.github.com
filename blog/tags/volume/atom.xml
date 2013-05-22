@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Volume | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/volume/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-05-21T22:43:10+08:00</updated>
+  <updated>2013-05-22T23:11:25+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -84,40 +84,36 @@
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>import math
 </span><span class='line'>import numpy as np&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;h1>definition 1&lt;/h1>
+</span><span class='line'>&lt;h1>method 1: absSum&lt;/h1>
 </span><span class='line'>
 </span><span class='line'>&lt;p>def calVolume(waveData, frameSize, overLap):&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;pre>&lt;code>wlen = len(waveData)
 </span><span class='line'>step = frameSize - overLap
-</span><span class='line'>frameNum = math.ceil(wlen/step)
+</span><span class='line'>frameNum = int(math.ceil(wlen*1.0/step))
 </span><span class='line'>volume = np.zeros((frameNum,1))
 </span><span class='line'>for i in range(frameNum):
 </span><span class='line'>    curFrame = waveData[np.arange(i*step,min(i*step+frameSize,wlen))]
-</span><span class='line'>    curFrame = curFrame - curFrame.mean() # zero-justified
-</span><span class='line'>    volume[i] = sum(abs(curFrame))
+</span><span class='line'>    curFrame = curFrame - np.median(curFrame) # zero-justified
+</span><span class='line'>    volume[i] = np.sum(np.abs(curFrame))
 </span><span class='line'>return volume
 </span><span class='line'>&lt;/code>&lt;/pre>
 </span><span class='line'>
-</span><span class='line'>&lt;h1>definition 2&lt;/h1>
+</span><span class='line'>&lt;h1>method 2: 10 times log10 of square sum&lt;/h1>
 </span><span class='line'>
 </span><span class='line'>&lt;p>def calVolumeDB(waveData, frameSize, overLap):&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;pre>&lt;code>wlen = len(waveData)
 </span><span class='line'>step = frameSize - overLap
-</span><span class='line'>frameNum = math.ceil(wlen/step)
+</span><span class='line'>frameNum = int(math.ceil(wlen*1.0/step))
 </span><span class='line'>volume = np.zeros((frameNum,1))
 </span><span class='line'>for i in range(frameNum):
 </span><span class='line'>    curFrame = waveData[np.arange(i*step,min(i*step+frameSize,wlen))]
-</span><span class='line'>    curFrame = curFrame - curFrame.mean() # zero-justified
-</span><span class='line'>    curFrame.shape = -1
-</span><span class='line'>    sumFrame = np.dot(curFrame,curFrame)
-</span><span class='line'>    volume[i] = 10*np.log10(sumFrame)
+</span><span class='line'>    curFrame = curFrame - np.mean(curFrame) # zero-justified
+</span><span class='line'>    volume[i] = 10*np.log10(np.sum(curFrame*curFrame))
 </span><span class='line'>return volume
 </span><span class='line'>&lt;/code>&lt;/pre>
 </span><span class='line'>
@@ -166,50 +162,44 @@
 <span class='line-number'>38</span>
 <span class='line-number'>39</span>
 <span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import math
 </span><span class='line'>import pylab as pl
-</span><span class='line'>import numpy as np&lt;/p>
+</span><span class='line'>import numpy as np
+</span><span class='line'>import Volume as vp&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>============ test the algorithm =============&lt;/h1>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>read wave file and get parameters.&lt;/h1>
 </span><span class='line'>
-</span><span class='line'>&lt;p>fw = wave.open('aeiou.wav','rb')
+</span><span class='line'>&lt;p>fw = wave.open('aeiou.wav','r')
 </span><span class='line'>params = fw.getparams()
 </span><span class='line'>print(params)
 </span><span class='line'>nchannels, sampwidth, framerate, nframes = params[:4]
-</span><span class='line'>str_data = fw.readframes(nframes)
-</span><span class='line'>wave_data = np.fromstring(str_data, dtype=np.short)
-</span><span class='line'>wave_data.shape = -1, 1&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>wave_data = wave_data.T&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;p>fw.close()&lt;/p>
+</span><span class='line'>strData = fw.readframes(nframes)
+</span><span class='line'>waveData = np.fromstring(strData, dtype=np.int16)
+</span><span class='line'>waveData = waveData*1.0/max(abs(waveData))  # normalization
+</span><span class='line'>fw.close()&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>calculate volume&lt;/h1>
 </span><span class='line'>
 </span><span class='line'>&lt;p>frameSize = 256
 </span><span class='line'>overLap = 128
-</span><span class='line'>volume11 = calVolume(wave_data,frameSize,overLap)
-</span><span class='line'>volume12 = calVolumeDB(wave_data,frameSize,overLap)&lt;/p>
+</span><span class='line'>volume11 = vp.calVolume(waveData,frameSize,overLap)
+</span><span class='line'>volume12 = vp.calVolumeDB(waveData,frameSize,overLap)&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>plot the wave&lt;/h1>
 </span><span class='line'>
-</span><span class='line'>&lt;p>time = np.arange(0, nframes) * (1.0 / framerate)
-</span><span class='line'>time2 = np.arange(0, len(volume11)) * (1.0 / framerate)
+</span><span class='line'>&lt;p>time = np.arange(0, nframes)&lt;em>(1.0/framerate)
+</span><span class='line'>time2 = np.arange(0, len(volume11))&lt;/em>(frameSize-overLap)*1.0/framerate
 </span><span class='line'>pl.subplot(311)
-</span><span class='line'>pl.plot(time, wave_data)
+</span><span class='line'>pl.plot(time, waveData)
 </span><span class='line'>pl.ylabel("Amplitude")
 </span><span class='line'>pl.subplot(312)
 </span><span class='line'>pl.plot(time2, volume11)
-</span><span class='line'>pl.ylabel("adsSum")
+</span><span class='line'>pl.ylabel("absSum")
 </span><span class='line'>pl.subplot(313)
 </span><span class='line'>pl.plot(time2, volume12, c="g")
-</span><span class='line'>pl.ylabel("Decibel")
+</span><span class='line'>pl.ylabel("Decibel(dB)")
 </span><span class='line'>pl.xlabel("time (seconds)")
 </span><span class='line'>pl.show()</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
