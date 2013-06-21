@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Python | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/python/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-06-13T21:48:43+08:00</updated>
+  <updated>2013-06-21T22:28:14+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -53,7 +53,7 @@
 
 
 
-<p>在切音框的过程中，我们允许左右音框的重叠，因此??我们定义「音框率」（Frame Rate）是每秒钟所出现的音框个数，如果取样频率是11025，音框长度是256 点，
+<p>在切音框的过程中，我们允许左右音框的重叠，因此，我们定义「音框率」（Frame Rate）是每秒钟所出现的音框个数，如果取样频率是11025，音框长度是256 点，
 重叠点数是84，那么音框率就是11025/(256-84) = 64，换句话说，我们的电脑要能够每秒钟处理64 个音框，才能达到实时处理的要求。如下图所示：
 <center><img src="/images/2013/IMAG2013052901.png"></center>
 </p>
