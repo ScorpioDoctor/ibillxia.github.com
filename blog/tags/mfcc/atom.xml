@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: MFCC | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/mfcc/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-06-21T22:28:14+08:00</updated>
+  <updated>2013-06-28T22:05:21+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[MMFCC参数提取及Matalab实现]]></title>
+    <title type="html"><![CDATA[MFCC参数提取及Matalab实现]]></title>
     <link href="http://ibillxia.github.com/blog/2012/07/18/MFCC-feature-extraction/"/>
     <updated>2012-07-18T20:10:00+08:00</updated>
     <id>http://ibillxia.github.com/blog/2012/07/18/MFCC-feature-extraction</id>
@@ -72,7 +72,7 @@
 <h4>(4) 加窗(hamming window)</h4>
 <p>语音在长范围内是不停变动的，没有固定的特性无法做处理，所以将每一帧代入窗函数，窗外的值设定为0，其目的是消除各个
 帧两端可能会造成的信号不连续性。常用的窗函数有方窗、汉明窗和汉宁窗等，根据窗函数的频域特性，常采用汉明窗。公式是在
-加窗范围内，$w(n)=0.54-0.46*cos(2* \pi * \frac{n}{n-1})$。</p>
+加窗范围内，$w(i)=0.54-0.46*cos(2* \pi * \frac{i}{n-1}), i \in [0,n-1]$。</p>
 
 <h4>(5) 快速傅立叶变换(FFT transform)</h4>
 <p>由于语音信号在时域上的变化快速而不稳定，所以通常都将它转换到频域上来观察，此时它的频谱会随着时间作缓慢的变化。
