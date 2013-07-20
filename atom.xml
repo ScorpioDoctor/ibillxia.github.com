@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-06-30T11:16:56+08:00</updated>
+  <updated>2013-07-20T21:47:23+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,261 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PCM WAVE格式详解及用C语言实现wave文件的读取]]></title>
+    <link href="http://ibillxia.github.com/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/"/>
+    <updated>2013-07-20T20:07:00+08:00</updated>
+    <id>http://ibillxia.github.com/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language</id>
+    <content type="html"><![CDATA[<h2>1.PCM Wave格式详解</h2>
+
+
+<p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
+一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个&#8221;fmt&#8221;子数据块和一个“data”子
+数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
+<center><img src="http://ibillxia.github.com/images/20130720/IMAG2013072001.gif"></center>
+</p>
+
+
+<!--more-->
+
+
+<p>每个字段的涵义如下：
+ChunkID: 占4个字节，内容为“RIFF”的ASCII码(0x52494646)，以大端存储。</br>
+ChunkSize: 4字节，存储整个文件的字节数（不包含ChunkID和ChunkSize这8个字节），以小端方式存储。</br>
+Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储。</br>
+</p>
+
+
+
+
+<p>&#8220;WAVE&#8221;格式由两个子数据块构成：“fmt”块和“data”块，其中“fmt”块的详细解释如下：
+Subchunk1ID: 占4个字节，内容为“fmt ”的ASCII码(0x666d7420)，以大端存储。</br>
+Subchunk1Size: 占4个字节，存储该子块的字节数（不含前面的Subchunk1ID和Subchunk1Size这8个字节），以小端方式存储。</br>
+AudioFormat：占2个字节，以小端方式存储，存储音频文件的编码格式，例如若为PCM则其存储值为1，若为其他非PCM格式的则有一定的压缩。</br>
+NumChannels: 占2个字节，以小端方式存储，通道数，单通道(Mono)值为1，双通道(Stereo)值为2，等等。</br>
+SampleRate: 占4个字节，以小端方式存储，采样率，如8k，44.1k等。</br>
+ByteRate: 占4个字节，以小端方式存储，每秒存储的bit数，其值=SampleRate * NumChannels * BitsPerSample/8</br>
+BlockAlign: 占2个字节，以小端方式存储，块对齐大小，其值=NumChannels * BitsPerSample/8</br>
+BitsPerSample: 占2个字节，以小端方式存储，每个采样点的bit数，一般为8,16等。</br>
+接下来是两个可选的扩展参数：</br>
+ExtraParamSize: 占2个字节，表示扩展段的大小。</br>
+ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由前一个字段给定。
+</p>
+
+
+
+
+<p>&#8220;WAVE&#8221;格式文件的第二个子数据块是“data”，其个字段的详细解释如下：</br>
+Subchunk2ID: 占4个字节，内容为“data”的ASCII码(0x64617461)，以大端存储。</br>
+Subchunk2Size: 占4个字节，内容为接下来的正式的数据部分的字节数，其值=NumSamples * NumChannels * BitsPerSample/8</br>
+Data: 真正的语音数据部分。</br>
+</p>
+
+
+
+
+<h2>一个Wave文件头的实例</h2>
+
+
+<p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
+</span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
+</span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure>
+
+则其个字段的解析如下图：
+<center><img src="http://ibillxia.github.com/images/20130720/IMAG2013072002.gif"></center>
+</p>
+
+
+
+
+<h2>C语言实现wave文件的读取</h2>
+
+
+<p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
+</span><span class='line'>#include &lt;stdlib.h>
+</span><span class='line'>#include &lt;string.h>
+</span><span class='line'>
+</span><span class='line'>// define Wave format structure
+</span><span class='line'>typedef struct tWAVEFORMATEX
+</span><span class='line'>{
+</span><span class='line'>    short wFormatTag;         /* format type */
+</span><span class='line'>    short nChannels;          /* number of channels (i.e. mono, stereo...) */
+</span><span class='line'>    unsigned int nSamplesPerSec;     /* sample rate */
+</span><span class='line'>    unsigned int nAvgBytesPerSec;    /* for buffer estimation */
+</span><span class='line'>    short nBlockAlign;        /* block size of data */
+</span><span class='line'>    short wBitsPerSample;     /* number of bits per sample of mono data */
+</span><span class='line'>    short cbSize;             /* the count in bytes of the size of */
+</span><span class='line'>                                    /* extra information (after cbSize) */
+</span><span class='line'>} WAVEFORMATEX, *PWAVEFORMATEX;
+</span><span class='line'>
+</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf);
+</span><span class='line'>
+</span><span class='line'>int main(){
+</span><span class='line'>  char fname = "test.wav";
+</span><span class='line'>  char *speech;
+</span><span class='line'>  WAVEFORMATEX wf;
+</span><span class='line'>  
+</span><span class='line'>  speech = wavread(fname, &wf);
+</span><span class='line'>  // afterward processing...
+</span><span class='line'>  
+</span><span class='line'>  return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>// read wave file
+</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf){
+</span><span class='line'>  FILE* fp;
+</span><span class='line'>  char str[32];
+</span><span class='line'>  char *speech;
+</span><span class='line'>  unsigned int subchunk1size; // head size
+</span><span class='line'>  unsigned int subchunk2size; // speech data size
+</span><span class='line'>
+</span><span class='line'>  // check format type
+</span><span class='line'>  fp = fopen(fname,"r");
+</span><span class='line'>  if(!fp){
+</span><span class='line'>      fprintf(stderr,"Can not open the wave file: %s.\n",fname);
+</span><span class='line'>      return NULL;
+</span><span class='line'>  }
+</span><span class='line'>  fseek(fp, 8, SEEK_SET);
+</span><span class='line'>  fread(str, sizeof(char), 7, fp);
+</span><span class='line'>  str[7] = '\0';
+</span><span class='line'>  if(strcmp(str,"WAVEfmt")){
+</span><span class='line'>      fprintf(stderr,"The file is not in WAVE format!\n");
+</span><span class='line'>      return NULL;
+</span><span class='line'>  }
+</span><span class='line'>  
+</span><span class='line'>  // read format header
+</span><span class='line'>  fseek(fp, 16, SEEK_SET);
+</span><span class='line'>  fread((unsigned int*)(&subchunk1size),4,1,fp);
+</span><span class='line'>  fseek(fp, 20, SEEK_SET);
+</span><span class='line'>  fread(wf, subchunk1size, 1, fp);
+</span><span class='line'>  
+</span><span class='line'>  // read wave data
+</span><span class='line'>  fseek(fp, 20+subchunk1size, SEEK_SET);
+</span><span class='line'>  fread(str, 1, 4, fp);
+</span><span class='line'>  str[4] = '\0';
+</span><span class='line'>  if(strcmp(str,"data")){
+</span><span class='line'>      fprintf(stderr,"Locating data start point failed!\n");
+</span><span class='line'>      return NULL;
+</span><span class='line'>  }
+</span><span class='line'>  fseek(fp, 20+subchunk1size+4, SEEK_SET);
+</span><span class='line'>  fread((unsigned int*)(&subchunk2size), 4, 1, fp);
+</span><span class='line'>  wavlen = subchunk2size;
+</span><span class='line'>  speech = (char*)malloc(sizeof(char)*subchunk2size);
+</span><span class='line'>  if(!speech){
+</span><span class='line'>      fprintf(stderr, "Memory alloc failed!\n");
+</span><span class='line'>      return NULL;
+</span><span class='line'>  }
+</span><span class='line'>  fseek(fp, 20+subchunk1size+8, SEEK_SET);
+</span><span class='line'>  fread(speech, 1, subchunk2size, fp);
+</span><span class='line'>
+</span><span class='line'>  fclose(fp);
+</span><span class='line'>  return speech;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<h2>参考</h2>
+
+
+<p>
+[1]WAVE PCM soundfile format: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ </br>
+[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[给Octpress博客添加返回顶部按钮]]></title>
@@ -3289,194 +3544,6 @@ Lagrange, 1736-1813)和拉普拉斯(Pierre Simon de Laplace, 1749-1827)，当拉
 可能在一段时间内他将重复某一段波形很多次，但不会在整个无限长时间范围都如此。我们找到一个周期信号的傅立叶级数，然后让这个信号的基波周期趋于无限，就
 完成了从傅立叶级数到傅立叶变换的演变过程。因为当周期信号的基波周期趋于无限时，它的波形在有限长时间内都不会重复，这时它就不具有周期性啦！也就是说，
 说一个信号具有无限长的周期和说它是一个非周期信号实际上是一回事！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[反向传播(BP)神经网络]]></title>
-    <link href="http://ibillxia.github.com/blog/2013/03/30/back-propagation-neural-networks/"/>
-    <updated>2013-03-30T21:37:00+08:00</updated>
-    <id>http://ibillxia.github.com/blog/2013/03/30/back-propagation-neural-networks</id>
-    <content type="html"><![CDATA[<p>前面几篇文章中对神经网络和深度学习进行一些简介，包括神经网络的发展历史、基本概念和常见的几种神经网络以及神经网络的学习方法等，
-本文具体来介绍一下一种非常常见的神经网络模型——反向传播(Back Propagation)神经网络。</p>
-
-
-
-
-<h2>1.概述</h2>
-
-
-<p>BP（Back Propagation）神经网络是1986年由Rumelhart和McCelland为首的科研小组提出，参见他们发表在Nature上的论文
-<em><a href="http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf">Learning representations by back-propagating errors</a></em>
-值得一提的是，该文的第三作者Geoffrey E. Hinton就是在深度学习邻域率先取得突破的神犇。
-</p>
-
-
-
-
-<p>BP神经网络是一种按误差逆传播算法训练的多层前馈网络，是目前应用最广泛的神经网络模型之一。BP网络能学习和存贮大量的
-输入-输出模式映射关系，而无需事前揭示描述这种映射关系的数学方程。它的学习规则是使用最速下降法，通过反向传播来不断
-调整网络的权值和阈值，使网络的误差平方和最小。</p>
-
-
-
-
-<!-- more -->
-
-
-
-
-<h2>2.BP网络模型</h2>
-
-
-<p>一个典型的BP神经网络模型如图1所示。</br>
-<center><img src="http://ibillxia.github.com/images/2013/IMAG2013033001.jpg"></center>
-<center>图1 典型的BP神经网络模型</center></p>
-
-
-
-
-<p>BP神经网络与其他神经网络模型类似，不同的是，BP神经元的传输函数为非线性函数(而在感知机中为阶跃函数，在线性神经网络中为线性函数)，最常用的
-是log-sigmoid函数或tan-sigmoid函数。BP神经网络(BPNN)一般为多层神经网络，图1中所示的BP神经网络的隐层的传输函数即为非线性函数，隐层可以有多层，
-而输出层的传输函数为线性函数，当然也可以是非线性函数，只不过线性函数的输出结果取值范围较大，而非线性函数则限制在较小范围（如logsig函数输出
-取值在(0,1)区间）。图1所示的神经网络的输入输出关系如下：</br>
-1)输入层与隐层的关系：</br>
-<center>$\boldsymbol{h} = \mathit{f_{1}} (\boldsymbol{W^{(1)}x}+\boldsymbol{b^{(1)}})$.</center>
-其中$\boldsymbol{x}$为$m$维特征向量(列向量)，$\boldsymbol{W^{(1)}}$为$n × m$维权值矩阵，$\boldsymbol{b^{(1)}}$为$n$维的偏置(bias)向量(列向量)。</br>
-2)隐层与输出层的关系：</br>
-<center>$\boldsymbol{y} = \mathit{f_{2}} (\boldsymbol{W^{(2)}h}+\boldsymbol{b^{(2)}})$.</center>
-</p>
-
-
-
-
-<h2>3.BP网络的学习方法</h2>
-
-
-<p>神经网络的关键之一是权值的确定，也即神经网络的学习，下面主要讨论一下BP神经网络的学习方法，它是一种监督学习的方法。</br>
-假定我们有$q$个带label的样本(即输入)$p_{1},p_{2},&#8230;,p_{q}$，对应的label(即期望输出Target)为$T_{1},T_{2},&#8230;,T_{q}$，神经网络的实际输出
-为$a2_{1},a2_{2},&#8230;,a2_{q}$，隐层的输出为$a1[.]$那么可以定义误差函数：</br>
-<center>$\boldsymbol{E(W,B)} = \frac{1}{2}\sum_{k=1}^{n}(t_{k} - a2_{k})^{2} $.</center>
-BP算法的目标是使得实际输出approximate期望输出，即使得训练误差最小化。BP算法利用梯度下降(Gradient Descent)法来求权值的变化及
-误差的反向传播。对于图1中的BP神经网络，我们首先计算输出层的权值的变化量，从第$i$个输入到第$k$个输出的权值改变为：</br>
-<center>$\Delta w2_{ki} = - \eta \frac{\partial E}{\partial w2_{ki}} &#92;
-= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial w2_{ki}} &#92;
-= \eta (t_{k}-a2_{k})f_{2}&#8217;a1_{i} = \eta \delta_{ki}a1_{i}$.</center>
-其中$\eta$为学习速率。同理可得：</br>
-<center>$\Delta b2_{ki} = - \eta \frac{\partial E}{\partial b2_{ki}} 
-= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial b2_{ki}}
-= \eta (t_{k}-a2_{k})f_{2}&#8217; = \eta \delta_{ki}$.</center>
-而隐层的权值变化为：</br>
-<center>$\Delta w1_{ij} = - \eta \frac{\partial E}{\partial w1_{ij}} 
-= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial a1_{i}} \frac{\partial a1_{i}}{\partial w1_{ij}}
-= \eta \sum_{k=1}^{n}(t_{k}-a2_{k})f_{2}&#8217;w2_{ki}f_{1}&#8217;p_{j} = \eta \delta_{ij}p_{j}$.</center>
-其中，$\delta_{ij} = e_{i}f_{1}&#8217;, e_{i} = \sum_{k=1}^{n}\delta_{ki}w2_{ki}$</br>
-同理可得，$\Delta b1_{i} = \eta \delta_{ij}$。</br>
-这里我们注意到，输出层的误差为$e_{j},j=1..n$，隐层的误差为$e_{i},i=1..m$，其中$e_{i}$可以认为是$e_{j}$的加权组合，由于作用函数的
-存在，$e_{j}$的等效作用为$\delta_{ji} = e_{j}f&#8217;()$。
-</p>
-
-
-
-
-<h2>4.BP网络的设计</h2>
-
-
-<p>在进行BP网络的设计是，一般应从网络的层数、每层中的神经元个数和激活函数、初始值以及学习速率等几个方面来进行考虑，下面是一些选取的原则。</p>
-
-
-
-
-<p><strong>1.网络的层数</strong></br>
-理论已经证明，具有偏差和至少一个S型隐层加上一个线性输出层的网络，能够逼近任何有理函数，增加层数可以进一步降低误差，提高精度，但同时也是网络
-复杂化。另外不能用仅具有非线性激活函数的单层网络来解决问题，因为能用单层网络解决的问题，用自适应线性网络也一定能解决，而且自适应线性网络的
-运算速度更快，而对于只能用非线性函数解决的问题，单层精度又不够高，也只有增加层数才能达到期望的结果。
-</p>
-
-
-
-
-<p><strong>2.隐层神经元的个数</strong></br>
-网络训练精度的提高，可以通过采用一个隐含层，而增加其神经元个数的方法来获得，这在结构实现上要比增加网络层数简单得多。一般而言，我们用精度和
-训练网络的时间来恒量一个神经网络设计的好坏：</br>
-（1）神经元数太少时，网络不能很好的学习，训练迭代的次数也比较多，训练精度也不高。</br>
-（2）神经元数太多时，网络的功能越强大，精确度也更高，训练迭代的次数也大，可能会出现过拟合(over fitting)现象。</br>
-由此，我们得到神经网络隐层神经元个数的选取原则是：在能够解决问题的前提下，再加上一两个神经元，以加快误差下降速度即可。
-</p>
-
-
-
-
-<p><strong>3.初始权值的选取</strong></br>
-一般初始权值是取值在$(-1,1)$之间的随机数。另外威得罗等人在分析了两层网络是如何对一个函数进行训练后，提出选择初始权值量级为$\sqrt[r]{s}$的策略，
-其中$r$为输入个数，$s$为第一层神经元个数。
-</p>
-
-
-
-
-<p><strong>4.学习速率</strong></br>
-学习速率一般选取为$0.01 - 0.8$，大的学习速率可能导致系统的不稳定，但小的学习速率导致收敛太慢，需要较长的训练时间。对于较复杂的网络，
-在误差曲面的不同位置可能需要不同的学习速率，为了减少寻找学习速率的训练次数及时间，比较合适的方法是采用变化的自适应学习速率，使网络在
-不同的阶段设置不同大小的学习速率。
-</p>
-
-
-
-
-<p><strong>5.期望误差的选取</strong></br>
-在设计网络的过程中，期望误差值也应当通过对比训练后确定一个合适的值，这个合适的值是相对于所需要的隐层节点数来确定的。一般情况下，可以同时对两个不同
-的期望误差值的网络进行训练，最后通过综合因素来确定其中一个网络。
-</p>
-
-
-
-
-<h2>5.BP网络的局限性</h2>
-
-
-<p>BP网络具有以下的几个问题：</br>
-<strong>(1)需要较长的训练时间</strong>：这主要是由于学习速率太小所造成的，可采用变化的或自适应的学习速率来加以改进。</br>
-<strong>(2)完全不能训练</strong>：这主要表现在网络的麻痹上，通常为了避免这种情况的产生，一是选取较小的初始权值，而是采用较小的学习速率。</br>
-<strong>(3)局部最小值</strong>：这里采用的梯度下降法可能收敛到局部最小值，采用多层网络或较多的神经元，有可能得到更好的结果。
-</p>
-
-
-
-
-<h2>6.BP网络的改进</h2>
-
-
-<p>BP算法改进的主要目标是加快训练速度，避免陷入局部极小值等，常见的改进方法有带动量因子算法、自适应学习速率、变化的学习速率以及作用函数后缩法等。
-动量因子法的基本思想是在反向传播的基础上，在每一个权值的变化上加上一项正比于前次权值变化的值，并根据反向传播法来产生新的权值变化。而自适应学习
-速率的方法则是针对一些特定的问题的。改变学习速率的方法的原则是，若连续几次迭代中，若目标函数对某个权倒数的符号相同，则这个权的学习速率增加，
-反之若符号相反则减小它的学习速率。而作用函数后缩法则是将作用函数进行平移，即加上一个常数。</p>
-
-
-
-
-<h2>7.BP网络实现异或</h2>
-
-
-<p>见参考文献[7]或Andrew Ng. 的ML公开课的第8讲。</p>
-
-
-<p>另外BP算法的讲解及C++实现参见[4]。</p>
-
-
-
-
-<h2>参考文献</h2>
-
-
-<p>[1]An Introduction to Back-Propagation Neural Networks: http://www.seattlerobotics.org/encoder/nov98/neural.html</br>
-[2]Wiki - Backpropagation: http://en.wikipedia.org/wiki/Backpropagation</br>
-[3]Chapter 7 The backpropagation algorithm of Neural Networks - A Systematic Introduction by Raúl Rojas: http://page.mi.fu-berlin.de/rojas/neural/chapter/K7.pdf</br>
-[4]Back-propagation Neural Net - C++ 实现: http://www.codeproject.com/Articles/13582/Back-propagation-Neural-Net</br>
-[5]《Visual C++数字图像模式识别技术及工程实践》(第3章)，求实科技 张宏林</br>
-[6]《Matlab神经网络设置及应用》(第5章)，周品，清华大学出版社
-</p>
 
 ]]></content>
   </entry>
