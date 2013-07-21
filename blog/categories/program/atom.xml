@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-07-20T21:52:44+08:00</updated>
+  <updated>2013-07-21T12:44:41+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
 一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
 数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center>{% img /images/20130720/IMAG2013072001.gif %}</center>
+<center><img src="/images/20130720/IMAG2013072001.gif"></center>
 </p>
 
 
@@ -70,13 +70,14 @@ Data: 真正的语音数据部分。</br>
 
 
 <p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-{% codeblock %}
-52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
-{% endcodeblock %}
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
+</span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
+</span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure></notextile></div>
 则其个字段的解析如下图：
-<center>{% img /images/20130720/IMAG2013072002.gif %}</center>
+<center><img src="/images/20130720/IMAG2013072002.gif"></center>
 </p>
 
 
@@ -88,107 +89,200 @@ Data: 真正的语音数据部分。</br>
 <p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
 
 
-<p>{% codeblock %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;stdlib.h></h1>
-
-<h1>include &lt;string.h></h1>
-
-<p>// define Wave format structure
-typedef struct tWAVEFORMATEX
-{</p>
-
-<pre><code>short wFormatTag;         /* format type */
-short nChannels;          /* number of channels (i.e. mono, stereo...) */
-unsigned int nSamplesPerSec;     /* sample rate */
-unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-short nBlockAlign;        /* block size of data */
-short wBitsPerSample;     /* number of bits per sample of mono data */
-short cbSize;             /* the count in bytes of the size of */
-                                /* extra information (after cbSize) */
-</code></pre>
-
-<p>} WAVEFORMATEX, *PWAVEFORMATEX;</p>
-
-<p>char<em> wavread(char </em>fname, WAVEFORMATEX *wf);</p>
-
-<p>int main(){</p>
-
-<pre><code>char fname = "test.wav";
-char *speech;
-WAVEFORMATEX wf;
-
-speech = wavread(fname, &amp;wf);
-// afterward processing...
-
-return 0;
-</code></pre>
-
-<p>}</p>
-
-<p>// read wave file
-char<em> wavread(char </em>fname, WAVEFORMATEX *wf){</p>
-
-<pre><code>FILE* fp;
-char str[32];
-char *speech;
-unsigned int subchunk1size; // head size
-unsigned int subchunk2size; // speech data size
-
-// check format type
-fp = fopen(fname,"r");
-if(!fp){
-    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-    return NULL;
-}
-fseek(fp, 8, SEEK_SET);
-fread(str, sizeof(char), 7, fp);
-str[7] = '\0';
-if(strcmp(str,"WAVEfmt")){
-    fprintf(stderr,"The file is not in WAVE format!\n");
-    return NULL;
-}
-
-// read format header
-fseek(fp, 16, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
-fseek(fp, 20, SEEK_SET);
-fread(wf, subchunk1size, 1, fp);
-
-// read wave data
-fseek(fp, 20+subchunk1size, SEEK_SET);
-fread(str, 1, 4, fp);
-str[4] = '\0';
-if(strcmp(str,"data")){
-    fprintf(stderr,"Locating data start point failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+4, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
-wavlen = subchunk2size;
-speech = (char*)malloc(sizeof(char)*subchunk2size);
-if(!speech){
-    fprintf(stderr, "Memory alloc failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+8, SEEK_SET);
-fread(speech, 1, subchunk2size, fp);
-
-fclose(fp);
-return speech;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdlib.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;string.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// define Wave format structure
+</span><span class='line'>typedef struct tWAVEFORMATEX
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>short wFormatTag;         /* format type */
+</span><span class='line'>short nChannels;          /* number of channels (i.e. mono, stereo...) */
+</span><span class='line'>unsigned int nSamplesPerSec;     /* sample rate */
+</span><span class='line'>unsigned int nAvgBytesPerSec;    /* for buffer estimation */
+</span><span class='line'>short nBlockAlign;        /* block size of data */
+</span><span class='line'>short wBitsPerSample;     /* number of bits per sample of mono data */
+</span><span class='line'>short cbSize;             /* the count in bytes of the size of */
+</span><span class='line'>                                /* extra information (after cbSize) */
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>} WAVEFORMATEX, *PWAVEFORMATEX;&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>char&lt;em> wavread(char &lt;/em>fname, WAVEFORMATEX *wf);&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>int main(){&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>char fname = "test.wav";
+</span><span class='line'>char *speech;
+</span><span class='line'>WAVEFORMATEX wf;
+</span><span class='line'>
+</span><span class='line'>speech = wavread(fname, &amp;wf);
+</span><span class='line'>// afterward processing...
+</span><span class='line'>
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// read wave file
+</span><span class='line'>char&lt;em> wavread(char &lt;/em>fname, WAVEFORMATEX *wf){&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>FILE* fp;
+</span><span class='line'>char str[32];
+</span><span class='line'>char *speech;
+</span><span class='line'>unsigned int subchunk1size; // head size
+</span><span class='line'>unsigned int subchunk2size; // speech data size
+</span><span class='line'>
+</span><span class='line'>// check format type
+</span><span class='line'>fp = fopen(fname,"r");
+</span><span class='line'>if(!fp){
+</span><span class='line'>    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
+</span><span class='line'>    return NULL;
+</span><span class='line'>}
+</span><span class='line'>fseek(fp, 8, SEEK_SET);
+</span><span class='line'>fread(str, sizeof(char), 7, fp);
+</span><span class='line'>str[7] = '\0';
+</span><span class='line'>if(strcmp(str,"WAVEfmt")){
+</span><span class='line'>    fprintf(stderr,"The file is not in WAVE format!\n");
+</span><span class='line'>    return NULL;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>// read format header
+</span><span class='line'>fseek(fp, 16, SEEK_SET);
+</span><span class='line'>fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
+</span><span class='line'>fseek(fp, 20, SEEK_SET);
+</span><span class='line'>fread(wf, subchunk1size, 1, fp);
+</span><span class='line'>
+</span><span class='line'>// read wave data
+</span><span class='line'>fseek(fp, 20+subchunk1size, SEEK_SET);
+</span><span class='line'>fread(str, 1, 4, fp);
+</span><span class='line'>str[4] = '\0';
+</span><span class='line'>if(strcmp(str,"data")){
+</span><span class='line'>    fprintf(stderr,"Locating data start point failed!\n");
+</span><span class='line'>    return NULL;
+</span><span class='line'>}
+</span><span class='line'>fseek(fp, 20+subchunk1size+4, SEEK_SET);
+</span><span class='line'>fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
+</span><span class='line'>wavlen = subchunk2size;
+</span><span class='line'>speech = (char*)malloc(sizeof(char)*subchunk2size);
+</span><span class='line'>if(!speech){
+</span><span class='line'>    fprintf(stderr, "Memory alloc failed!\n");
+</span><span class='line'>    return NULL;
+</span><span class='line'>}
+</span><span class='line'>fseek(fp, 20+subchunk1size+8, SEEK_SET);
+</span><span class='line'>fread(speech, 1, subchunk2size, fp);
+</span><span class='line'>
+</span><span class='line'>fclose(fp);
+</span><span class='line'>return speech;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>参考</h2>
 
 
 <p>
 [1]WAVE PCM soundfile format: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ </br>
-[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format </br>
+[3]基于Visual C++6.0的声音文件操作: http://www.yesky.com/20030414/1663116_1.shtml
 </p>
 
 ]]></content>
@@ -215,11 +309,12 @@ return speech;
 
 
 <p>相关的HTML代码很简单，在source/_include/custom/footer.html中添加如下代码：
-{% codeblock %}
-    <p id = "back-top">
-        <a href="#top"><span></span>Back to Top</a>
-    </p>
-{% endcodeblock %}
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;p id = "back-top">
+</span><span class='line'>        &lt;a href="#top">&lt;span>&lt;/span>Back to Top&lt;/a>
+</span><span class='line'>    &lt;/p></span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
@@ -231,64 +326,111 @@ return speech;
 
 
 <p>对应的CSS样式的设置如下：（这段代码同样的放在source/_include/custom/footer.html文件中）
-{% codeblock %}
-<style type="text/css">
-#back-top {
-    position: fixed;
-    bottom: 50px;
-    right: 100px;
-}
-
-#back-top a {
-    width: 80px;
-    display: block;
-    text-align: center;
-    font: 11px/100% Arial, Helvetica, sans-serif;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #bbb;
-
-    /* transition */
-    -webkit-transition: 1s;
-    -moz-transition: 1s;
-    transition: 1s;
-}
-#back-top a:hover {
-    color: #000;
-}
-
-/* arrow icon (span tag) */
-#back-top span {
-    width: 80px;
-    height: 80px;
-    display: block;
-    margin-bottom: 7px;
-    background: #ddd url(../../images/up-arrow.png) no-repeat center center;
-
-    /* rounded corners */
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
-
-    /* transition */
-    -webkit-transition: 1s;
-    -moz-transition: 1s;
-    transition: 1s;
-}
-/*
-#back-top a:hover span {
-    background-color: #888;
-}
-*/
-</style>
-{% endcodeblock %}
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;style type="text/css">
+</span><span class='line'>#back-top {
+</span><span class='line'>    position: fixed;
+</span><span class='line'>    bottom: 50px;
+</span><span class='line'>    right: 100px;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>#back-top a {
+</span><span class='line'>    width: 80px;
+</span><span class='line'>    display: block;
+</span><span class='line'>    text-align: center;
+</span><span class='line'>    font: 11px/100% Arial, Helvetica, sans-serif;
+</span><span class='line'>    text-transform: uppercase;
+</span><span class='line'>    text-decoration: none;
+</span><span class='line'>    color: #bbb;
+</span><span class='line'>
+</span><span class='line'>    /* transition */
+</span><span class='line'>    -webkit-transition: 1s;
+</span><span class='line'>    -moz-transition: 1s;
+</span><span class='line'>    transition: 1s;
+</span><span class='line'>}
+</span><span class='line'>#back-top a:hover {
+</span><span class='line'>    color: #000;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>/* arrow icon (span tag) */
+</span><span class='line'>#back-top span {
+</span><span class='line'>    width: 80px;
+</span><span class='line'>    height: 80px;
+</span><span class='line'>    display: block;
+</span><span class='line'>    margin-bottom: 7px;
+</span><span class='line'>    background: #ddd url(../../images/up-arrow.png) no-repeat center center;
+</span><span class='line'>
+</span><span class='line'>    /* rounded corners */
+</span><span class='line'>    -webkit-border-radius: 15px;
+</span><span class='line'>    -moz-border-radius: 15px;
+</span><span class='line'>    border-radius: 15px;
+</span><span class='line'>
+</span><span class='line'>    /* transition */
+</span><span class='line'>    -webkit-transition: 1s;
+</span><span class='line'>    -moz-transition: 1s;
+</span><span class='line'>    transition: 1s;
+</span><span class='line'>}
+</span><span class='line'>/*
+</span><span class='line'>#back-top a:hover span {
+</span><span class='line'>    background-color: #888;
+</span><span class='line'>}
+</span><span class='line'>*/
+</span><span class='line'>&lt;/style></span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
 
 
 <p>上面的css中用到了一张图片up-arrow.png，放在source/images/目录下，图片如下：
-<center>{% img /images/up-arrow.png %}</center>
+<center><img src="/images/up-arrow.png"></center>
 这是从google image里面随便找的一个，你也可以找一个自己喜欢的图片。
 </p>
 
@@ -299,36 +441,62 @@ return speech;
 
 
 <p>HTML和CSS样式设置好了之后，最后就是添加JavaScript事件响应代码了，这里是基于jQuery实现的。代码如下：（这段代码还是放在source/_include/custom/footer.html文件中）
-{% codeblock %}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-
-    // hide #back-top first
-    $("#back-top").hide();
-    
-    // fade in #back-top
-    $(function () {
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 100) {
-                $('#back-top').fadeIn();
-            } else {
-                $('#back-top').fadeOut();
-            }
-        });
-
-        // scroll body to 0px on click
-        $('#back-top a').click(function () {
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
-    });
-
-});
-</script>
-{% endcodeblock %}
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js">&lt;/script>
+</span><span class='line'>&lt;script type="text/javascript">
+</span><span class='line'>$(document).ready(function(){
+</span><span class='line'>
+</span><span class='line'>    // hide #back-top first
+</span><span class='line'>    $("#back-top").hide();
+</span><span class='line'>    
+</span><span class='line'>    // fade in #back-top
+</span><span class='line'>    $(function () {
+</span><span class='line'>        $(window).scroll(function () {
+</span><span class='line'>            if ($(this).scrollTop() > 100) {
+</span><span class='line'>                $('#back-top').fadeIn();
+</span><span class='line'>            } else {
+</span><span class='line'>                $('#back-top').fadeOut();
+</span><span class='line'>            }
+</span><span class='line'>        });
+</span><span class='line'>
+</span><span class='line'>        // scroll body to 0px on click
+</span><span class='line'>        $('#back-top a').click(function () {
+</span><span class='line'>            $('body,html').animate({
+</span><span class='line'>                scrollTop: 0
+</span><span class='line'>            }, 800);
+</span><span class='line'>            return false;
+</span><span class='line'>        });
+</span><span class='line'>    });
+</span><span class='line'>
+</span><span class='line'>});
+</span><span class='line'>&lt;/script></span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
@@ -365,208 +533,406 @@ $(document).ready(function(){
 <p>实例程序</p>
 
 
-<p>{% codeblock %}
-// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> FileName: WinMain.cpp </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>**********
-// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
-// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;atlstr.h></h1>
-
-<h1>include &lt;windows.h></h1>
-
-<h1>include &lt;Mmsystem.h></h1>
-
-<h1>pragma comment(lib,"Winmm.lib")</h1>
-
-<p>char lpTemp[256];</p>
-
-<p>DWORD FCC(LPSTR lpStr)
-{</p>
-
-<pre><code>DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
-return Number;
-</code></pre>
-
-<p>}</p>
-
-<p>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-{</p>
-
-<pre><code>DWORD datasize = 48000;
-
-// 设置录音采样参数
-WAVEFORMATEX waveformat;
-waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
-waveformat.nChannels=1;
-waveformat.nSamplesPerSec=8000;
-waveformat.nBlockAlign=1;
-waveformat.wBitsPerSample=8;
-waveformat.cbSize=0;
-waveformat.nAvgBytesPerSec=waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
-
-sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-
-HWAVEIN m_hWaveIn;
-if ( !waveInGetNumDevs() )
-{
-    MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
-    return 0;
-}
-
-// 打开录音设备
-int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
-if ( res != MMSYSERR_NOERROR )
-{
-   sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
-   MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-   return 0;
-}
-
-WAVEHDR m_pWaveHdr;
-m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
-memset(m_pWaveHdr.lpData, 0, datasize );
-m_pWaveHdr.dwBufferLength = datasize;
-m_pWaveHdr.dwBytesRecorded = 0;
-m_pWaveHdr.dwUser = 0;
-m_pWaveHdr.dwFlags = 0;
-m_pWaveHdr.dwLoops = 0;
-sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-
-// 准备内存块录音
-int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
-if ( resPrepare != MMSYSERR_NOERROR) 
-{
-    sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
-    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-    return 0;
-}
-
-resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
-if ( resPrepare != MMSYSERR_NOERROR) 
-{
-    sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
-    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (! waveInStart(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
-    return 0;
-}
-Sleep(30000);
-
-MMTIME mmt;
-mmt.wType = TIME_BYTES;
-sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-
-if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
-{
-    MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (mmt.wType != TIME_BYTES) 
-{
-    MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (! waveInStop(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
-}
-else  
-{
-    MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
-}
-
-if ( waveInReset(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
-    return 0;
-}
-
-m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
-DWORD NumToWrite=0;
-DWORD dwNumber = 0;
-HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
-    FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-// memset(m_pWaveHdr.lpData, 0, datasize);
-dwNumber = FCC("RIFF");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = FCC("WAVE");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = FCC("fmt ");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = 18L;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
-dwNumber = FCC("data");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = m_pWaveHdr.dwBytesRecorded;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
-SetEndOfFile(FileHandle);
-CloseHandle( FileHandle );  
-FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
-MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
-
-if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
-{
-    MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
-{
-    MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (res == MMSYSERR_NOERROR ) // 关闭录音设备
-{
-    if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
-    {
-        MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
-    }
-    else
-    {
-        MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
-        return 0;
-    }
-}
-
-return 0;
-</code></pre>
-
-<p>}
-// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> End of File </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>*****
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// &lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;em> FileName: WinMain.cpp &lt;/em>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>**********
+</span><span class='line'>// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
+</span><span class='line'>// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;atlstr.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;windows.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;Mmsystem.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>pragma comment(lib,"Winmm.lib")&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>char lpTemp[256];&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>DWORD FCC(LPSTR lpStr)
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
+</span><span class='line'>return Number;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>DWORD datasize = 48000;
+</span><span class='line'>
+</span><span class='line'>// 设置录音采样参数
+</span><span class='line'>WAVEFORMATEX waveformat;
+</span><span class='line'>waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
+</span><span class='line'>waveformat.nChannels=1;
+</span><span class='line'>waveformat.nSamplesPerSec=8000;
+</span><span class='line'>waveformat.nBlockAlign=1;
+</span><span class='line'>waveformat.wBitsPerSample=8;
+</span><span class='line'>waveformat.cbSize=0;
+</span><span class='line'>waveformat.nAvgBytesPerSec=waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
+</span><span class='line'>
+</span><span class='line'>sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
+</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>
+</span><span class='line'>HWAVEIN m_hWaveIn;
+</span><span class='line'>if ( !waveInGetNumDevs() )
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>// 打开录音设备
+</span><span class='line'>int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
+</span><span class='line'>if ( res != MMSYSERR_NOERROR )
+</span><span class='line'>{
+</span><span class='line'>   sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
+</span><span class='line'>   MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>   return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>WAVEHDR m_pWaveHdr;
+</span><span class='line'>m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
+</span><span class='line'>memset(m_pWaveHdr.lpData, 0, datasize );
+</span><span class='line'>m_pWaveHdr.dwBufferLength = datasize;
+</span><span class='line'>m_pWaveHdr.dwBytesRecorded = 0;
+</span><span class='line'>m_pWaveHdr.dwUser = 0;
+</span><span class='line'>m_pWaveHdr.dwFlags = 0;
+</span><span class='line'>m_pWaveHdr.dwLoops = 0;
+</span><span class='line'>sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
+</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>
+</span><span class='line'>// 准备内存块录音
+</span><span class='line'>int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
+</span><span class='line'>if ( resPrepare != MMSYSERR_NOERROR) 
+</span><span class='line'>{
+</span><span class='line'>    sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
+</span><span class='line'>    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
+</span><span class='line'>if ( resPrepare != MMSYSERR_NOERROR) 
+</span><span class='line'>{
+</span><span class='line'>    sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
+</span><span class='line'>    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if (! waveInStart(m_hWaveIn) ) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>else 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>Sleep(30000);
+</span><span class='line'>
+</span><span class='line'>MMTIME mmt;
+</span><span class='line'>mmt.wType = TIME_BYTES;
+</span><span class='line'>sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
+</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>
+</span><span class='line'>if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>else 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if (mmt.wType != TIME_BYTES) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if (! waveInStop(m_hWaveIn) ) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>else  
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if ( waveInReset(m_hWaveIn) ) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
+</span><span class='line'>DWORD NumToWrite=0;
+</span><span class='line'>DWORD dwNumber = 0;
+</span><span class='line'>HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
+</span><span class='line'>    FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+</span><span class='line'>
+</span><span class='line'>// memset(m_pWaveHdr.lpData, 0, datasize);
+</span><span class='line'>dwNumber = FCC("RIFF");
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = FCC("WAVE");
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = FCC("fmt ");
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = 18L;
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = FCC("data");
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>dwNumber = m_pWaveHdr.dwBytesRecorded;
+</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+</span><span class='line'>WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
+</span><span class='line'>SetEndOfFile(FileHandle);
+</span><span class='line'>CloseHandle( FileHandle );  
+</span><span class='line'>FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
+</span><span class='line'>MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
+</span><span class='line'>
+</span><span class='line'>if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>else 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
+</span><span class='line'>}
+</span><span class='line'>else 
+</span><span class='line'>{
+</span><span class='line'>    MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if (res == MMSYSERR_NOERROR ) // 关闭录音设备
+</span><span class='line'>{
+</span><span class='line'>    if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
+</span><span class='line'>    {
+</span><span class='line'>        MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
+</span><span class='line'>        return 0;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}
+</span><span class='line'>// &lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;em> End of File &lt;/em>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>*****</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
 
@@ -647,43 +1013,79 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 <p>水题</p>
 
 
-<p>{% codeblock Problem A %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<p>int m,n,a[10][10],b[10][10];
-int main()
-{</p>
-
-<pre><code>int i,j,cnt;
-while(scanf("%d",&amp;m)&amp;&amp;m&gt;0){
-    scanf("%d",&amp;n);
-    for(i=0;i&lt;m;i++)
-        for(j=0;j&lt;n;j++)
-            scanf("%d",a[i]+j);
-    for(i=0;i&lt;m;i++)
-        for(j=0;j&lt;n;j++){
-            scanf("%d",b[i]+j);
-            a[i][j]+=b[i][j];
-        }
-    cnt=0;
-    for(i=0;i&lt;m;i++){
-        for(j=0;j&lt;n;j++)
-            if(a[i][j])break;
-        if(j==n)cnt++;
-    }
-    for(i=0;i&lt;n;i++){
-        for(j=0;j&lt;m;j++)
-            if(a[j][i])break;
-        if(j==m)cnt++;
-    }
-    printf("%d\n",cnt);
-}
-return 0;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Problem A </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>int m,n,a[10][10],b[10][10];
+</span><span class='line'>int main()
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>int i,j,cnt;
+</span><span class='line'>while(scanf("%d",&amp;m)&amp;&amp;m&gt;0){
+</span><span class='line'>    scanf("%d",&amp;n);
+</span><span class='line'>    for(i=0;i&lt;m;i++)
+</span><span class='line'>        for(j=0;j&lt;n;j++)
+</span><span class='line'>            scanf("%d",a[i]+j);
+</span><span class='line'>    for(i=0;i&lt;m;i++)
+</span><span class='line'>        for(j=0;j&lt;n;j++){
+</span><span class='line'>            scanf("%d",b[i]+j);
+</span><span class='line'>            a[i][j]+=b[i][j];
+</span><span class='line'>        }
+</span><span class='line'>    cnt=0;
+</span><span class='line'>    for(i=0;i&lt;m;i++){
+</span><span class='line'>        for(j=0;j&lt;n;j++)
+</span><span class='line'>            if(a[i][j])break;
+</span><span class='line'>        if(j==n)cnt++;
+</span><span class='line'>    }
+</span><span class='line'>    for(i=0;i&lt;n;i++){
+</span><span class='line'>        for(j=0;j&lt;m;j++)
+</span><span class='line'>            if(a[j][i])break;
+</span><span class='line'>        if(j==m)cnt++;
+</span><span class='line'>    }
+</span><span class='line'>    printf("%d\n",cnt);
+</span><span class='line'>}
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <!-- more -->
 
@@ -694,33 +1096,59 @@ return 0;
 <p>继续水题！</p>
 
 
-<p>{% codeblock Problem B %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<p>int main()
-{</p>
-
-<pre><code>int p,t,g1,g2,g3,gj,t1,t2;
-while(scanf("%d %d %d %d %d %d",&amp;p,&amp;t,&amp;g1,&amp;g2,&amp;g3,&amp;gj)!=EOF){
-    if(g1-g2&lt;=t&amp;&amp;g2-g1&lt;=t){printf("%.1f\n",(g1+g2)/2.0);continue;}
-    t1=g3&gt;g1 ? g3-g1 : g1-g3;
-    t2=g3&gt;g2 ? g3-g2 : g2-g3;
-    if(t1&gt;t&amp;&amp;t2&gt;t){printf("%.1f\n",(float)gj);continue;}
-    if(t1&lt;=t&amp;&amp;t2&lt;=t) {
-        if(g1&lt;g2)g1=g2;
-        if(g1&lt;g3)g1=g3;
-        printf("%.1f\n",(float)g1);
-        continue;
-    }
-    if(t1&gt;t2)printf("%.1f\n",(g2+g3)/2.0);
-    else printf("%.1f\n",(g1+g3)/2.0);
-}
-return 0;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Problem B </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>int main()
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>int p,t,g1,g2,g3,gj,t1,t2;
+</span><span class='line'>while(scanf("%d %d %d %d %d %d",&amp;p,&amp;t,&amp;g1,&amp;g2,&amp;g3,&amp;gj)!=EOF){
+</span><span class='line'>    if(g1-g2&lt;=t&amp;&amp;g2-g1&lt;=t){printf("%.1f\n",(g1+g2)/2.0);continue;}
+</span><span class='line'>    t1=g3&gt;g1 ? g3-g1 : g1-g3;
+</span><span class='line'>    t2=g3&gt;g2 ? g3-g2 : g2-g3;
+</span><span class='line'>    if(t1&gt;t&amp;&amp;t2&gt;t){printf("%.1f\n",(float)gj);continue;}
+</span><span class='line'>    if(t1&lt;=t&amp;&amp;t2&lt;=t) {
+</span><span class='line'>        if(g1&lt;g2)g1=g2;
+</span><span class='line'>        if(g1&lt;g3)g1=g3;
+</span><span class='line'>        printf("%.1f\n",(float)g1);
+</span><span class='line'>        continue;
+</span><span class='line'>    }
+</span><span class='line'>    if(t1&gt;t2)printf("%.1f\n",(g2+g3)/2.0);
+</span><span class='line'>    else printf("%.1f\n",(g1+g3)/2.0);
+</span><span class='line'>}
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>C题：Median（ 九度 1004）</h3>
 
@@ -728,39 +1156,71 @@ return 0;
 <p>再继续水题！</p>
 
 
-<p>{% codeblock Problem C %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<p>long m,n,a[1000000],b[1000000];
-int main()
-{</p>
-
-<pre><code>int i,j,k,t,mid;
-while(scanf("%d",&amp;m)!=EOF){
-    for(i=0;i&lt;m;i++)scanf("%d",a+i);
-    scanf("%d",&amp;n);
-    for(i=0;i&lt;n;i++)scanf("%d",b+i);
-    i=j=k=0;t=(m+n+1)/2;
-    while(i&lt;m&amp;&amp;j&lt;n&amp;&amp;k&lt;t){
-        if(a[i]&gt;b[j]){mid=b[j];j++;}
-        else {mid=a[i];i++;}
-        k++;
-    }
-    if(i==m&amp;&amp;k&lt;t){
-        while(k&lt;t){j++;k++;}
-        mid=b[j-1];
-    }else if(j==n&amp;&amp;k&lt;t){
-        while(k&lt;t){i++;k++;}
-        mid=a[i-1];
-    }
-    printf("%d\n",mid);
-}
-return 0;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Problem C </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>long m,n,a[1000000],b[1000000];
+</span><span class='line'>int main()
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>int i,j,k,t,mid;
+</span><span class='line'>while(scanf("%d",&amp;m)!=EOF){
+</span><span class='line'>    for(i=0;i&lt;m;i++)scanf("%d",a+i);
+</span><span class='line'>    scanf("%d",&amp;n);
+</span><span class='line'>    for(i=0;i&lt;n;i++)scanf("%d",b+i);
+</span><span class='line'>    i=j=k=0;t=(m+n+1)/2;
+</span><span class='line'>    while(i&lt;m&amp;&amp;j&lt;n&amp;&amp;k&lt;t){
+</span><span class='line'>        if(a[i]&gt;b[j]){mid=b[j];j++;}
+</span><span class='line'>        else {mid=a[i];i++;}
+</span><span class='line'>        k++;
+</span><span class='line'>    }
+</span><span class='line'>    if(i==m&amp;&amp;k&lt;t){
+</span><span class='line'>        while(k&lt;t){j++;k++;}
+</span><span class='line'>        mid=b[j-1];
+</span><span class='line'>    }else if(j==n&amp;&amp;k&lt;t){
+</span><span class='line'>        while(k&lt;t){i++;k++;}
+</span><span class='line'>        mid=a[i-1];
+</span><span class='line'>    }
+</span><span class='line'>    printf("%d\n",mid);
+</span><span class='line'>}
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h3>D题：Graduate Admission（ 九度 1005）</h3>
 
@@ -768,85 +1228,163 @@ return 0;
 <p>有点麻烦，要细心！</p>
 
 
-<p>{% codeblock Problem D %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;stdlib.h></h1>
-
-<h1>include &lt;memory.h></h1>
-
-<p>//m为学校数，n为学生数，k为学生填报的志愿数
-//mq[i][0]为学校i计划招生数，mq[i][1]为学校实际招生数，
-//mq[i][2] ~ mq[i][mq[i][1]+1]为招收的学生的学号
-//ng[i][0]为学生学号，ng[i][1]为学生总成绩，ng[i][2]为学生面试成绩，
-//ng[i][2]后面的k个数据是填报的志愿
-int m,n,k,mq[100][1000],ng[40000][8];
-int cmp1(const void<em>a,const void</em>b){</p>
-
-<pre><code>int *t1,*t2;
-t1=(int*)a;t2=(int*)b;
-if(t1[1]!=t2[1])return t2[1]-t1[1];
-else return t1[2]-t2[2];  //总分相同时，面试成绩高的笔试成绩低
-</code></pre>
-
-<p>}
-int cmp2(const void<em>a,const void</em>b){return <em>(int</em>)a-<em>(int</em>)b;}
-int main()
-{</p>
-
-<pre><code>int i,j,t,p,q;
-//freopen("in.txt","r",stdin);
-//freopen("out.txt","w+",stdout);
-while(scanf("%d %d %d",&amp;n,&amp;m,&amp;k)!=EOF){
-    memset(mq,0,sizeof(mq));
-    memset(ng,0,sizeof(ng));
-    //输入部分
-    for(i=0;i&lt;m;i++)scanf("%d",mq+i);
-    for(i=0;i&lt;n;i++){
-        ng[i][0]=i;
-        for(j=1;j&lt;k+3;j++)
-            scanf("%d",ng[i]+j);
-        ng[i][1]=ng[i][1]+ng[i][2];
-    }
-    //处理部分
-    qsort(ng,n,sizeof(ng[0]),cmp1);  //将考生按分数排名
-    //debug:输出排名
-    //for(i=0;i&lt;n;i++)printf("%2d:%2d %d %d %d\n",i,ng[i][0],ng[i][3],ng[i][4],ng[i][5]);
-    for(i=0;i&lt;n;i++){  //将考生按名次分配给各学校
-        for(j=3;j&lt;k+3;j++){ //从考生第一志愿开始选学校
-            t=ng[i][j];  //排名为i的考生报考的第j-3个学校，学校编号为t
-            if(mq[t][0]&gt;0){
-                if(mq[t][0]&gt;mq[t][1]){   //在学校招生名额范围内
-                    mq[t][1]++;
-                    mq[t][mq[t][1]+1]=ng[i][0];  //学校t招收学生ng[i][0]
-                    break;
-                } else{   //招生名额范围外，排名相同的考生
-                    p=mq[t][mq[t][1]+1];  //p为已招收的最后一个考生的学号
-                    for(q=0;q&lt;i;q++)   //查找学号为p的考生排名后的位置k
-                        if(ng[q][0]==p){p=q;break;}
-                        if(ng[p][1]==ng[i][1]&amp;&amp;ng[p][2]==ng[i][2]){  //判断排名是否相同
-                        mq[t][1]++;
-                        mq[t][mq[t][1]+1]=ng[i][0];   //录取排名相同的考生
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    //输出部分
-    for(i=0;i&lt;m;i++){ //分配给每个学校的学生，先按学号排序，再输出
-        qsort(mq[i]+2,mq[i][1],sizeof(mq[i][2]),cmp2);
-        if(mq[i][1]&gt;0)printf("%d",mq[i][2]);
-        for(j=3;j&lt;mq[i][1]+2;j++)printf(" %d",mq[i][j]);
-        printf("\n");
-    }
-}
-return 0;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Problem D </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;stdlib.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>include &lt;memory.h>&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>//m为学校数，n为学生数，k为学生填报的志愿数
+</span><span class='line'>//mq[i][0]为学校i计划招生数，mq[i][1]为学校实际招生数，
+</span><span class='line'>//mq[i][2] ~ mq[i][mq[i][1]+1]为招收的学生的学号
+</span><span class='line'>//ng[i][0]为学生学号，ng[i][1]为学生总成绩，ng[i][2]为学生面试成绩，
+</span><span class='line'>//ng[i][2]后面的k个数据是填报的志愿
+</span><span class='line'>int m,n,k,mq[100][1000],ng[40000][8];
+</span><span class='line'>int cmp1(const void&lt;em>a,const void&lt;/em>b){&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>int *t1,*t2;
+</span><span class='line'>t1=(int*)a;t2=(int*)b;
+</span><span class='line'>if(t1[1]!=t2[1])return t2[1]-t1[1];
+</span><span class='line'>else return t1[2]-t2[2];  //总分相同时，面试成绩高的笔试成绩低
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}
+</span><span class='line'>int cmp2(const void&lt;em>a,const void&lt;/em>b){return &lt;em>(int&lt;/em>)a-&lt;em>(int&lt;/em>)b;}
+</span><span class='line'>int main()
+</span><span class='line'>{&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>int i,j,t,p,q;
+</span><span class='line'>//freopen("in.txt","r",stdin);
+</span><span class='line'>//freopen("out.txt","w+",stdout);
+</span><span class='line'>while(scanf("%d %d %d",&amp;n,&amp;m,&amp;k)!=EOF){
+</span><span class='line'>    memset(mq,0,sizeof(mq));
+</span><span class='line'>    memset(ng,0,sizeof(ng));
+</span><span class='line'>    //输入部分
+</span><span class='line'>    for(i=0;i&lt;m;i++)scanf("%d",mq+i);
+</span><span class='line'>    for(i=0;i&lt;n;i++){
+</span><span class='line'>        ng[i][0]=i;
+</span><span class='line'>        for(j=1;j&lt;k+3;j++)
+</span><span class='line'>            scanf("%d",ng[i]+j);
+</span><span class='line'>        ng[i][1]=ng[i][1]+ng[i][2];
+</span><span class='line'>    }
+</span><span class='line'>    //处理部分
+</span><span class='line'>    qsort(ng,n,sizeof(ng[0]),cmp1);  //将考生按分数排名
+</span><span class='line'>    //debug:输出排名
+</span><span class='line'>    //for(i=0;i&lt;n;i++)printf("%2d:%2d %d %d %d\n",i,ng[i][0],ng[i][3],ng[i][4],ng[i][5]);
+</span><span class='line'>    for(i=0;i&lt;n;i++){  //将考生按名次分配给各学校
+</span><span class='line'>        for(j=3;j&lt;k+3;j++){ //从考生第一志愿开始选学校
+</span><span class='line'>            t=ng[i][j];  //排名为i的考生报考的第j-3个学校，学校编号为t
+</span><span class='line'>            if(mq[t][0]&gt;0){
+</span><span class='line'>                if(mq[t][0]&gt;mq[t][1]){   //在学校招生名额范围内
+</span><span class='line'>                    mq[t][1]++;
+</span><span class='line'>                    mq[t][mq[t][1]+1]=ng[i][0];  //学校t招收学生ng[i][0]
+</span><span class='line'>                    break;
+</span><span class='line'>                } else{   //招生名额范围外，排名相同的考生
+</span><span class='line'>                    p=mq[t][mq[t][1]+1];  //p为已招收的最后一个考生的学号
+</span><span class='line'>                    for(q=0;q&lt;i;q++)   //查找学号为p的考生排名后的位置k
+</span><span class='line'>                        if(ng[q][0]==p){p=q;break;}
+</span><span class='line'>                        if(ng[p][1]==ng[i][1]&amp;&amp;ng[p][2]==ng[i][2]){  //判断排名是否相同
+</span><span class='line'>                        mq[t][1]++;
+</span><span class='line'>                        mq[t][mq[t][1]+1]=ng[i][0];   //录取排名相同的考生
+</span><span class='line'>                        break;
+</span><span class='line'>                    }
+</span><span class='line'>                }
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    //输出部分
+</span><span class='line'>    for(i=0;i&lt;m;i++){ //分配给每个学校的学生，先按学号排序，再输出
+</span><span class='line'>        qsort(mq[i]+2,mq[i][1],sizeof(mq[i][2]),cmp2);
+</span><span class='line'>        if(mq[i][1]&gt;0)printf("%d",mq[i][2]);
+</span><span class='line'>        for(j=3;j&lt;mq[i][1]+2;j++)printf(" %d",mq[i][j]);
+</span><span class='line'>        printf("\n");
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>return 0;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>总体来说，这套题比较简单！</p>
 

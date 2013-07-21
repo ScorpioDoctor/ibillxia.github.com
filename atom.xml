@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-07-20T21:47:23+08:00</updated>
+  <updated>2013-07-21T12:44:41+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -262,7 +262,8 @@ Data: 真正的语音数据部分。</br>
 
 <p>
 [1]WAVE PCM soundfile format: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ </br>
-[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format
+[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format </br>
+[3]基于Visual C++6.0的声音文件操作: http://www.yesky.com/20030414/1663116_1.shtml
 </p>
 
 ]]></content>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technics | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/categories/technics/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-07-20T21:52:44+08:00</updated>
+  <updated>2013-07-21T12:44:41+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -51,7 +51,7 @@
 <p>EFI是一种个人电脑系统规格，用来定义操作系统与系统固件之间的软件界面，为替代BIOS的升级方案。可扩展固件接口（EFI）负责
 加电自检（POST）、连系操作系统以及提供连接操作系统与硬件的接口。UEFI在EFI基础上增加与改进了加密编码（cryptography）、
 网络认证（network authentication）与用户界面架构（User Interface Architecture）等方面的内容。EFI在软件层次中的位置如下图</br>
-{% img /images/2012/IMAG2012092301.png %}
+<img src="/images/2012/IMAG2012092301.png">
 </p>
 
 
@@ -136,7 +136,7 @@ EFI系统不提供复杂的缓存器保护功能，它只具备简单的缓存�
 好准备，所以最终失败。</p>
 
 
-<center>{% img /images/2011/IMAG2011050701.jpg %}</center>
+<center><img src="/images/2011/IMAG2011050701.jpg"></center>
 
 
 <p>同类型的公司在数年后取得辉煌成绩，产生数亿美元价值，曾经创立这10大创业公司的企业家难免懊恼不已，因为这些创意和产品都是他们曾
@@ -253,7 +253,7 @@ EFI系统不提供复杂的缓存器保护功能，它只具备简单的缓存�
     <content type="html"><![CDATA[<h3>微博首先是媒体</h3>
 
 
-<center>{% img /images/2011/IMAG2011041701.jpg %}</center>
+<center><img src="/images/2011/IMAG2011041701.jpg"></center>
 
 
 <p>但更确切点说，它是自媒体。它即是名人、权威们的自媒体，也是草根们的自媒体。在中国，草根现在靠着微薄，也有了些话语权，但声音还比较稚嫩，
