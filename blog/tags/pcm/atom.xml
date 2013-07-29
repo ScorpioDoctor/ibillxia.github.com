@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: PCM | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/pcm/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-07-21T12:44:41+08:00</updated>
+  <updated>2013-07-29T22:47:47+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
 一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
 数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center><img src="/images/20130720/IMAG2013072001.gif"></center>
+<center><img src="/images/2013/IMAG2013072001.gif"></center>
 </p>
 
 
@@ -32,9 +32,52 @@
 
 
 <p>每个字段的涵义如下：
-ChunkID: 占4个字节，内容为“RIFF”的ASCII码(0x52494646)，以大端存储。</br>
-ChunkSize: 4字节，存储整个文件的字节数（不包含ChunkID和ChunkSize这8个字节），以小端方式存储。</br>
+ChunkID: 占4个字节，内容为“RIFF”的ASCII码(0x52494646)，以大端（big endian）存储。</br>
+ChunkSize: 4字节，存储整个文件的字节数（不包含ChunkID和ChunkSize这8个字节），以小端（little endian）方式存储。</br>
 Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储。</br>
+</p>
+
+
+
+
+<p>
+其中bigendian 主要有一个特征，在内存中对操作数的存储方式和从高字节到低字节。例如：0x1234，这样一个数，存储为:</br>
+0x4000:   0x12</br>
+0x4001:   0x34</br>
+而小尾端littleendian是：</br>
+0x4000:   0x34</br>
+0x4001:   0x12</br>
+用程序在区别的话，可以考虑：
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
+</span><span class='line'>#include &lt;stdlib.h>
+</span><span class='line'>int main(int argc, char *argv[])
+</span><span class='line'>{
+</span><span class='line'>       union w
+</span><span class='line'>      {
+</span><span class='line'>       short int a;
+</span><span class='line'>       char b;
+</span><span class='line'>      }c;
+</span><span class='line'>      c.a=1;
+</span><span class='line'>      if( c.b==1 )  printf("little endian\n");
+</span><span class='line'>      else printf("big endian\n");
+</span><span class='line'>      system("PAUSE"); 
+</span><span class='line'>      return 0;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
@@ -48,10 +91,36 @@ NumChannels: 占2个字节，以小端方式存储，通道数，单通道(Mono)
 SampleRate: 占4个字节，以小端方式存储，采样率，如8k，44.1k等。</br>
 ByteRate: 占4个字节，以小端方式存储，每秒存储的bit数，其值=SampleRate * NumChannels * BitsPerSample/8</br>
 BlockAlign: 占2个字节，以小端方式存储，块对齐大小，其值=NumChannels * BitsPerSample/8</br>
-BitsPerSample: 占2个字节，以小端方式存储，每个采样点的bit数，一般为8,16等。</br>
+BitsPerSample: 占2个字节，以小端方式存储，每个采样点的bit数，一般为8,16,32等。</br>
 接下来是两个可选的扩展参数：</br>
 ExtraParamSize: 占2个字节，表示扩展段的大小。</br>
 ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由前一个字段给定。
+</p>
+
+
+
+
+<p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// data 为读取到的采样点的值，speech为原始数据流，
+</span><span class='line'>//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
+</span><span class='line'>for(i=0;i&lt;NumSample;i++){
+</span><span class='line'>    if(BitsPerSample==8)
+</span><span class='line'>        data[i] = (int)*((char*)speech+i);
+</span><span class='line'>    else if(BitsPerSample==16)
+</span><span class='line'>        data[i] = (int)*((short*)speech+i);
+</span><span class='line'>    else if(BitsPerSample==32)
+</span><span class='line'>        data[i] = (int)*((int*)speech+i);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure></notextile></div>
 </p>
 
 
@@ -77,7 +146,7 @@ Data: 真正的语音数据部分。</br>
 </span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
 </span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure></notextile></div>
 则其个字段的解析如下图：
-<center><img src="/images/20130720/IMAG2013072002.gif"></center>
+<center><img src="/images/2013/IMAG2013072002.gif"></center>
 </p>
 
 
