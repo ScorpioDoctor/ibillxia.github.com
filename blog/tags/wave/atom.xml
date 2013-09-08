@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Wave | Bill's Blog]]></title>
   <link href="http://ibillxia.github.com/blog/tags/wave/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.com/"/>
-  <updated>2013-07-29T22:47:47+08:00</updated>
+  <updated>2013-09-08T21:33:03+08:00</updated>
   <id>http://ibillxia.github.com/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -250,7 +250,6 @@ Data: 真正的语音数据部分。</br>
 <span class='line-number'>90</span>
 <span class='line-number'>91</span>
 <span class='line-number'>92</span>
-<span class='line-number'>93</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
@@ -330,7 +329,6 @@ Data: 真正的语音数据部分。</br>
 </span><span class='line'>}
 </span><span class='line'>fseek(fp, 20+subchunk1size+4, SEEK_SET);
 </span><span class='line'>fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
-</span><span class='line'>wavlen = subchunk2size;
 </span><span class='line'>speech = (char*)malloc(sizeof(char)*subchunk2size);
 </span><span class='line'>if(!speech){
 </span><span class='line'>    fprintf(stderr, "Memory alloc failed!\n");
