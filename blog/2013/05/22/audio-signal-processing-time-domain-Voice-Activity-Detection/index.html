@@ -9,8 +9,7 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="端点检测 端点检测（End-Point Detection，EPD）的目标是要决定信号的语音开始和结束的位置，所以又可以称为Speech Detection或Voice Activity Detection（VAD）。
-端点检测在语音预处理中扮演着一个非常重要的角色。 &hellip;">
+  <meta name="description" content="语音信号处理之时域分析-端点检测及Python实现 May 22nd, 2013 | Comments 端点检测 端点检测（End-Point Detection，EPD）的目标是要决定信号的语音开始和结束的位置，所以又可以称为Speech Detection或Voice Activity &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +24,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2013/05/22/audio-signal-processing-time-domain-Voice-Activity-Detection/";
+    var wumiiTitle = "语音信号处理之时域分析-端点检测及Python实现";
+    var wumiiTags = "PythonVAD";
+    var wumiiCategories = [ASSP];
+    var wumiiSitePrefix = "http://ibillxia.github.com";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -343,6 +356,9 @@ http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/paper/endPointDete
 </div>
 
 
+<section>
+	<script type="text/javascript" id="wumiiRelatedItems"></script>
+</section>
   <footer>
     <p class="meta">
       

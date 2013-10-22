@@ -9,10 +9,9 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="0.内容摘要 C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，
+  <meta name="description" content="C语言编译过程全解析 May 28th, 2009 | Comments 0.内容摘要 C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，
 深入了解整个编译过程对工程师理解应用程序的编写是有很大帮助的，希望大家可以多了解一些，
-在遇到问题时多思考、多实践。 一般情况下，我们只需要知道分成编译和连接两个阶段:
-&nbsp;& &hellip;">
+在遇到问题时多思考、多实践 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -27,7 +26,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/";
+    var wumiiTitle = "C语言编译过程全解析";
+    var wumiiTags = "CCompileLink";
+    var wumiiCategories = [Program];
+    var wumiiSitePrefix = "http://ibillxia.github.com";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -273,6 +286,9 @@ UNIX环境下主要有三种类型的目标文件：</br>
 </div>
 
 
+<section>
+	<script type="text/javascript" id="wumiiRelatedItems"></script>
+</section>
   <footer>
     <p class="meta">
       

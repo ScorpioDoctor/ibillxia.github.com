@@ -9,8 +9,7 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="入侵者使用假IP地址发送包，利用基于IP地址证实的应用程序。其结果是未授权的远端用户进入带有防火墙的主机系统。 假设有两台主机A、B和入侵者控制的主机X。假设B授予A某些特权，使得A能够获得B所执行的一些操作。X的目标就是得到与B相同的权利。
-为了实现该目标，X必须执行两步操作：首先， &hellip;">
+  <meta name="description" content="伪造IP地址的原理 Aug 31st, 2010 | Comments 入侵者使用假IP地址发送包，利用基于IP地址证实的应用程序。其结果是未授权的远端用户进入带有防火墙的主机系统。 假设有两台主机A、B和入侵者控制的主机X。假设B授予A某些特权，使得A能够获得B所执行的一些操作。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +24,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2010/08/31/the-elements-of-ip-faking/";
+    var wumiiTitle = "伪造IP地址的原理";
+    var wumiiTags = "IP";
+    var wumiiCategories = [Technics];
+    var wumiiSitePrefix = "http://ibillxia.github.com";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -197,6 +210,9 @@
 </div>
 
 
+<section>
+	<script type="text/javascript" id="wumiiRelatedItems"></script>
+</section>
   <footer>
     <p class="meta">
       

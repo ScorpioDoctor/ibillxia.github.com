@@ -9,9 +9,8 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="1.概述 在音高及其Python实现一文
-中，我们使用了简单的“观察法”来计算音高，这并不太难，但这并不有好而且费时费力，那么我们就想，如何通过分析和计算，使用算法来自动计算音高呢？
-用算法让计算机自动抓取音高的过程，称为音高追踪(Pitch Tracking)。所得到的音高信息有如下一些应用 &hellip;">
+  <meta name="description" content="语音信号处理之时域分析-音高追踪及其Python实现 May 29th, 2013 | Comments 1.概述 在音高及其Python实现一文
+中，我们使用了简单的“观察法”来计算音高，这并不太难，但这并不有好而且费时费力，那么我们就想，如何通过分析和计算，使用算法来自动计算音高呢？ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,7 +25,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2013/05/29/audio-signal-processing-time-domain-pitch-tracking-and-python-realization/";
+    var wumiiTitle = "语音信号处理之时域分析-音高追踪及其Python实现";
+    var wumiiTags = "ACFPitchPitchTrackingPython";
+    var wumiiCategories = [ASSP];
+    var wumiiSitePrefix = "http://ibillxia.github.com";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -378,6 +391,9 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
 </div>
 
 
+<section>
+	<script type="text/javascript" id="wumiiRelatedItems"></script>
+</section>
   <footer>
     <p class="meta">
       

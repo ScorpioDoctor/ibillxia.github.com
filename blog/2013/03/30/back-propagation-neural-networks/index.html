@@ -9,8 +9,8 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="前面几篇文章中对神经网络和深度学习进行一些简介，包括神经网络的发展历史、基本概念和常见的几种神经网络以及神经网络的学习方法等，
-本文具体来介绍一下一种非常常见的神经网络模型——反向传播(Back Propagation)神经网络。 1.概述 BP（Back Propagation） &hellip;">
+  <meta name="description" content="反向传播(BP)神经网络 Mar 30th, 2013 | Comments 前面几篇文章中对神经网络和深度学习进行一些简介，包括神经网络的发展历史、基本概念和常见的几种神经网络以及神经网络的学习方法等，
+本文具体来介绍一下一种非常常见的神经网络模型——反向传播(Back Propagation &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +25,21 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2013/03/30/back-propagation-neural-networks/";
+    var wumiiTitle = "反向传播(BP)神经网络";
+    var wumiiTags = "BPNNGradientDescentNeuralNetworks";
+    var wumiiCategories = [PRML];
+    var wumiiSitePrefix = "http://ibillxia.github.com";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -322,6 +336,9 @@ BP算法的目标是使得实际输出approximate期望输出，即使得训练�
 </div>
 
 
+<section>
+	<script type="text/javascript" id="wumiiRelatedItems"></script>
+</section>
   <footer>
     <p class="meta">
       
