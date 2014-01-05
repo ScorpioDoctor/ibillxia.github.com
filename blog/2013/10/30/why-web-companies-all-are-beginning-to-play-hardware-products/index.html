@@ -28,30 +28,21 @@
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
-
+  
   <!-- Wumii Scripts Start -->
   <script type="text/javascript">
     var wumiiPermaLink = "/blog/2013/10/30/why-web-companies-all-are-beginning-to-play-hardware-products/";
     var wumiiTitle = "互联网公司为什么都在玩硬件？";
 	var wumiiTags = new Array();
 	
-	  
-		wumiiTags.push( "Hardware" );
-	  
-		wumiiTags.push( "Product" );
-	  
-		wumiiTags.push( "Wearable" );
-	  
-		wumiiTags.push( "Web" );
-	  
-	
+	wumiiTags.push( "Hardware" ); wumiiTags.push( "Product" ); wumiiTags.push( "Wearable" ); wumiiTags.push( "Web" ); 
 	
 	var wumiiCategories = new Array();
 	
-	  
-		wumiiTags.push( "View" );
-	  
+	wumiiCategories.push( "View" ); 
 	
+	wumiiTags = JSON.stringify(wumiiTags);
+	wumiiCategories = JSON.stringify(wumiiCategories);
     var wumiiSitePrefix = "http://ibillxia.github.io";
     var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
   </script>
@@ -369,7 +360,7 @@ inWatch智能腕表：提供时间、音乐、上网、拨打电话等功能，�
       
   
 
-<span class="byline author vcard">Posted by <span class="fn">Bill Xia</span></span>
+<span class="byline author vcard">Posted by <span class="fn"><a href="/about">Bill Xia</a></span></span>
 
       
 
@@ -529,8 +520,8 @@ inWatch智能腕表：提供时间、音乐、上网、拨打电话等功能，�
 
     </div>
   </div>
-  <footer role="contentinfo"><p id="footer">
-   <span class="credit" style="text-align: left;">Copyright &copy; 2009 - 2014 - Bill Xia -
+  <footer role="contentinfo"><p id="footer" style="margin-bottom: 0em ">
+   <span class="credit" style="text-align: left;">Copyright &copy; 2009 - 2014   <a href="/about">Bill Xia</a>  
 	Powered by <a href="http://octopress.org">Octopress</a></span>
   
   <span style="float:right;">
