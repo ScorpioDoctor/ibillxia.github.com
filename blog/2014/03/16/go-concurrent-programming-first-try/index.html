@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Go并发编程初探 - Bill's Blog</title>
+  <meta name="author" content="Bill Xia">
+
+  
+  <meta name="description" content="概述 最近在做的一个项目，需要对大量数据进行一些基本的统计和处理，整个程序的思路很简单，但处理起来却很慢，特别是有二重循环的地方，龟速前进，眼看着16核32线程
+的服务器只有一个线程被利用，束手无策。之前一直听说Go是一门对并发编程有很好的支持的语言，七牛的许牛大力推崇Go语言， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="wumiiVerification" content="9662b89d-2629-4073-b85d-0966259c0ee1" />
+
+  
+  <link rel="canonical" href="http://ibillxia.github.io/blog/2014/03/16/go-concurrent-programming-first-try/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">  
+  
+  <!-- Wumii Scripts Start -->
+  <script type="text/javascript">
+    var wumiiPermaLink = "/blog/2014/03/16/go-concurrent-programming-first-try/";
+    var wumiiTitle = "Go并发编程初探";
+	var wumiiTags = new Array();
+	
+	wumiiTags.push( "Concurrent" ); wumiiTags.push( "Go" ); wumiiTags.push( "goroutine" ); 
+	
+	var wumiiCategories = new Array();
+	
+	wumiiCategories.push( "Program" ); 
+	
+	wumiiTags = JSON.stringify(wumiiTags);
+	wumiiCategories = JSON.stringify(wumiiCategories);
+    var wumiiSitePrefix = "http://ibillxia.github.io";
+    var wumiiParams = "&num=5&mode=3&pf=JAVASCRIPT";
+  </script>
+  <script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script>
+  <a href="http://www.wumii.com/widget/relatedItems" style="border:0;">
+	<img src="http://static.wumii.cn/images/pixel.png" alt="wumii recommendation" style="border:0;padding:0;margin:0;" />
+  </a>
+  <!-- Wumii Scripts End -->
+  
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Bill's Blog</a></h1>
+  
+    <h2>Program Hard, Play Hard, Live Crazy!</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://www.google.com/" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:ibillxia.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+<!--   <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/blog/tags">Tags</a></li> -->
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+<header>
+    
+      <h1 class="entry-title">Go并发编程初探</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-16T23:35:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+</header>
+
+
+
+  <div class="entry-content"><h2>概述</h2>
+
+
+<p>最近在做的一个项目，需要对大量数据进行一些基本的统计和处理，整个程序的思路很简单，但处理起来却很慢，特别是有二重循环的地方，龟速前进，眼看着16核32线程
+的服务器只有一个线程被利用，束手无策。之前一直听说Go是一门对并发编程有很好的支持的语言，七牛的许牛大力推崇Go语言，于是就开始了对Go并行编程的探索之旅。</p>
+
+
+<center><img src="/images/2014/IMAG2014031601.jpg"></center>
+
+
+
+
+<!--more-->
+
+
+
+
+<h2>一些准备工作</h2>
+
+
+<p>在正式开始Go并行编程之前，首先我们需要准备Go的编程开发环境：Go编译器、Go编辑器。</br>
+在<a href="http://golang.org/">golang的官网</a>上有go的下载链接：</br>
+<a href="http://code.google.com/p/go/downloads/list">http://code.google.com/p/go/downloads/list</a></br>
+我选择的是go1.2.1.windows-amd64.msi安装包，下载完后直接点击该安装包，按照默认选项安装即可。安装完后，可以在命令行中查看go版本以检查是否安装成功：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C:\Users\Bill>go version
+</span><span class='line'>go version go1.2.1 windows/amd64</span></code></pre></td></tr></table></div></figure>
+
+然后，我们需要安装一个用于Go开发的IDE。当然也可以用通用的文本编辑器就可以，比如notepad、vi等，但这都是一些轻量级的，对于初学者来说还是不太合适的。
+网上有很多推荐的IDE，主要有LiteIDE、Eclipse+Goclipse、GoIde等，以及vim/emacs搭配go插件等，这里我选择的是LiteIDE，下载地址：</br>
+<a href="http://sourceforge.net/projects/liteide/files/x21/">http://sourceforge.net/projects/liteide/files/x21/</a></br>
+下载安装后，我们就可以开始go编程了。可以先运行一个Hello world程序，这里就不演示了，具体见：<a href="http://tour.golangtc.com/#1">Go 指南</a>
+</p>
+
+
+
+
+<p>关于Go的一些特性的介绍这里也不讲了，有兴趣的可以移步酷壳的这两篇文章<a href="http://coolshell.cn/articles/8460.html">Go 语言简介（上）— 语法</a> 
+和 <a href="http://coolshell.cn/articles/8489.html">Go 语言简介（下）— 特性</a>。下面我们直接进入Go并发编程。</p>
+
+
+
+
+<h2>Go并发编程</h2>
+
+
+<h4>#0x01.goroutine</h4>
+
+
+<p>优雅的并发编程范式，完善的并发支持，出色的并发性能是Go语言区别于其他语言的一大特色。在Go中，通过一种叫做goroutine的go协程这种轻量级线程来支持
+并发编程范式。协程是比进程和线程更轻量级的线程，go语言标准库提供的所有系统调用操作都会出让CPU给其他goroutine，协程的切换管理不依赖于系统的线程和
+进程，也不依赖于CPU的核心数量。下面我们来看一个简单的goroutine的实例。
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</span><span class='line'>
+</span><span class='line'>import "fmt"
+</span><span class='line'>
+</span><span class='line'>func main() {
+</span><span class='line'>  arr := [10]int{}
+</span><span class='line'>  for i := 0; i &lt; 10; i++ {
+</span><span class='line'>      fmt.Print("Result of ", i, ":")
+</span><span class='line'>      go func() {
+</span><span class='line'>          arr[i] = i + i*i
+</span><span class='line'>          fmt.Println(arr[i])
+</span><span class='line'>      }()
+</span><span class='line'>  }
+</span><span class='line'>  fmt.Println("Done")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+Go从main package的main()函数开始执行，这段代码的功能是计算arr[i]=i+i*i，其中i取值从0到9，每一个i计算完后立即输出。其中go为golang的关键字，启动
+一个协程（goroutine）。程序的运行的结果是什么呢？我们期望的结果应该是这样的吧：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:0
+</span><span class='line'>Result of 1:2
+</span><span class='line'>Result of 2:6
+</span><span class='line'>Result of 3:12
+</span><span class='line'>Result of 4:20
+</span><span class='line'>Result of 5:30
+</span><span class='line'>Result of 6:42
+</span><span class='line'>Result of 7:56
+</span><span class='line'>Result of 8:72
+</span><span class='line'>Result of 9:90
+</span><span class='line'>Done</span></code></pre></td></tr></table></div></figure>
+
+可是在LiteIDE中运行后，却会发现结果是这样子的：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:Result of 1:Result of 2:Result of 3:Result of 4:Result of 5:Result of 6:Result of 7:Result of 8:Result of 9:Done</span></code></pre></td></tr></table></div></figure>
+
+这是为神马捏？怎么第9~12行的go func(){&#8230;}() 这段代码好像更笨就没有执行嘛？！莫非这是golang的bug？</p>
+
+
+
+
+<p>其实，这与golang的程序执行顺序有关。go程序从初始化main package并执行main()函数开始，当main()函数返回时，程序退出，且程序并不等待其他goroutine
+（非主goroutine）结束。于是上面的程序中，主函数虽然启动了10gegoroutine，但都没来得及执行，程序就已经退出了。那么怎么解决这个问题捏？很显然，我们
+在退出程序之前，需要判断这些创建的goroutine执行完了没。我们可以用一个全局变量来计数执行了的协程数，如果计数变量小于10，我们就等待或sleep。</p>
+
+
+
+
+<h4>#0x02.并发通讯</h4>
+
+
+<p>等一等，多个协程读写同一个变量，我们是不是需要对这个变量枷锁呀？答案是肯定的，我们可以采用类似与C/C++的线程通讯、数据共享的思路来实现，如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</span><span class='line'>
+</span><span class='line'>import (
+</span><span class='line'>  "fmt"
+</span><span class='line'>  "runtime"
+</span><span class='line'>  "sync"
+</span><span class='line'>)
+</span><span class='line'>
+</span><span class='line'>func main() {
+</span><span class='line'>  var cnt int = 0  // 全局计数器
+</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
+</span><span class='line'>  arr := [10]int{}
+</span><span class='line'>  for i := 0; i &lt; 10; i++ {
+</span><span class='line'>      fmt.Print("Result of ", i, ":")
+</span><span class='line'>      go func() {
+</span><span class='line'>          arr[i] = i + i*i
+</span><span class='line'>          fmt.Println(arr[i])
+</span><span class='line'>          mylock.Lock() // 写之前枷锁
+</span><span class='line'>          cnt++
+</span><span class='line'>          mylock.Unlock() // 写之后释放锁
+</span><span class='line'>      }()
+</span><span class='line'>  }
+</span><span class='line'>  for {
+</span><span class='line'>      mylock.Lock() // 读之前枷锁
+</span><span class='line'>      temp := cnt
+</span><span class='line'>      mylock.Unlock() // 读之后释放锁
+</span><span class='line'>      runtime.Gosched() // 协程切换
+</span><span class='line'>      if temp >= 10 {
+</span><span class='line'>          break
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'>  fmt.Println("Done")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+执行以上程序，应该能够得到我们之前预期的那样的结果吧？可以运行之后，我们发现，结果却是这样的：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:Result of 1:Result of 2:Result of 3:Result of 4:Result of 5:Result of 6:Result of 7:Result of 8:Result of 9:panic: runtime error: index out of range
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+出现了运行时错误，数组下表越界了？！第17行还是没有输出？！经过一番修改，得到如下代码：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</span><span class='line'>
+</span><span class='line'>import (
+</span><span class='line'>  "fmt"
+</span><span class='line'>  "runtime"
+</span><span class='line'>  "sync"
+</span><span class='line'>)
+</span><span class='line'>
+</span><span class='line'>func main() {
+</span><span class='line'>  var cnt int = 0  // 全局计数器
+</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
+</span><span class='line'>  arr := [11]int{}
+</span><span class='line'>  for i := 0; i &lt; 10; i++ {
+</span><span class='line'>      go func() {
+</span><span class='line'>          arr[i] = i + i*i
+</span><span class='line'>          mylock.Lock() // 写之前枷锁
+</span><span class='line'>          cnt++
+</span><span class='line'>          mylock.Unlock() // 写之后释放锁
+</span><span class='line'>      }()
+</span><span class='line'>  }
+</span><span class='line'>  for {
+</span><span class='line'>      mylock.Lock() // 读之前枷锁
+</span><span class='line'>      temp := cnt
+</span><span class='line'>      mylock.Unlock() // 读之后释放锁
+</span><span class='line'>      runtime.Gosched() // 协程切换
+</span><span class='line'>      if temp >= 10 {
+</span><span class='line'>          break
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'>  for i := 0; i &lt; 11; i++ {
+</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
+</span><span class='line'>  }
+</span><span class='line'>  fmt.Println("Done")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+这下应该能得到预期的结果了吧。可以运行程序后，有傻眼了，结果是：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Result of  0 : 0
+</span><span class='line'>Result of  1 : 0
+</span><span class='line'>Result of  2 : 0
+</span><span class='line'>Result of  3 : 0
+</span><span class='line'>Result of  4 : 0
+</span><span class='line'>Result of  5 : 0
+</span><span class='line'>Result of  6 : 0
+</span><span class='line'>Result of  7 : 0
+</span><span class='line'>Result of  8 : 0
+</span><span class='line'>Result of  9 : 0
+</span><span class='line'>Result of  10 : 110
+</span><span class='line'>Done</span></code></pre></td></tr></table></div></figure>
+
+神马？arr[0]~arr[9]肿么都是0，肿么会冒出一个arr[10]=110？！即使把第15、16行顺序互换，得到的结果还是一样！！！这真是一场噩梦啊！！！仔细对比许书上的例子，
+我们发现，这里使用的是匿名函数创建协程，匿名函数中使用了全局的变量，而每次使用go关键字创建协程后，程序不是继续往下执行，而是继续返回到for这一行来执行，首先i++，
+然后判断i<10，成立就继续执行并创建协程，10个协程创建完了之后，才真正开始匿名函数的执行，而此时i已经是10了，对于每一个协程i都是10，因此最终只计算了一个arr[10]=110，
+这也是为什么申请10个单位的数组时会出现运行时错误。而这完全不是我们所要的结果，那么怎么办呢？我们不妨用带参数的匿名函数来试试？如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</span><span class='line'>
+</span><span class='line'>import (
+</span><span class='line'>  "fmt"
+</span><span class='line'>  "runtime"
+</span><span class='line'>  "sync"
+</span><span class='line'>)
+</span><span class='line'>
+</span><span class='line'>func main() {
+</span><span class='line'>  var cnt int = 0  // 全局计数器
+</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
+</span><span class='line'>  arr := [11]int{}
+</span><span class='line'>  for i := 0; i &lt; 10; i++ {
+</span><span class='line'>      go func(i int) { // 这里的i是形参
+</span><span class='line'>          arr[i] = i + i*i
+</span><span class='line'>          mylock.Lock() // 写之前枷锁
+</span><span class='line'>          cnt++
+</span><span class='line'>          mylock.Unlock() // 写之后释放锁
+</span><span class='line'>      }(i) // 这里的i是实参
+</span><span class='line'>  }
+</span><span class='line'>  for {
+</span><span class='line'>      mylock.Lock() // 读之前枷锁
+</span><span class='line'>      temp := cnt
+</span><span class='line'>      mylock.Unlock() // 读之后释放锁
+</span><span class='line'>      runtime.Gosched() // 协程切换
+</span><span class='line'>      if temp >= 10 {
+</span><span class='line'>          break
+</span><span class='line'>      }
+</span><span class='line'>  }
+</span><span class='line'>  for i := 0; i &lt; 11; i++ {
+</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
+</span><span class='line'>  }
+</span><span class='line'>  fmt.Println("Done")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+终于，我们总算得到了想要的结果了，经过不懈努力终于大功告成。这里没创建一个协程，都有一个实参值传给形参，在匿名函数中就不存在共享的全局变量i了。
+然而，在让我们回头看看我们的代码，却会发现，这与一般的多线程程序有什么区别的，而且写起来会感觉更麻烦，有过之而无不及啊！</p>
+
+
+
+
+<p>想象一下，在一个大的系统中具有无数的锁、无数的共享变量、无数的业务逻辑与错误处理分支，那将是一场噩梦。这噩梦就是众多C/C++开发者正在经历的，其实Java和C#开发
+者也好不到哪里去。Go语言既然以并发编程作为语言的最核心优势，当然不至于将这样的问题用这么无奈的方式来解决。Go语言提供的是另一种通信模型，即以消息机制而非共享
+内存作为通信方式。</p>
+
+
+
+
+<h4>#0x03.channel</h4>
+
+
+<p>Go语言提供的消息通信机制被称为channel，接下来我们将详细介绍channel。现在，让我们用Go语言社区的那句著名的口号来开始这一小节： </br>
+<blockquote><p>不要通过共享内存来通信，而应该通过通信来共享内存。</p></blockquote>
+channel是Go语言在语言级别提供的goroutine间的通信方式，可以使用channel在两个或多个goroutine之间传递消息。channel是进程内的通信方式，因此通过channel传递
+对象的过程和调用函数时的参数传递行为比较一致，比如也可以传递指针等。如果需要跨进程通信，建议用分布式系统的方法来解决，比如使用Socket或者HTTP等通信协议。
+channel是类型相关的。也就是说，一个channel只能传递一种类型的值，这个类型需要在声明channel时指定。我们先看下用channel的方式重写上面的例子是什么样子的
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</span><span class='line'>
+</span><span class='line'>import "fmt"
+</span><span class='line'>
+</span><span class='line'>func main() {
+</span><span class='line'>  chs := make([]chan int, 10) // 申请一个10维的channel数组
+</span><span class='line'>  arr := [11]int{}
+</span><span class='line'>  for i := 0; i &lt; 10; i++ {
+</span><span class='line'>      chs[i] = make(chan int) // 对每个channel初始化
+</span><span class='line'>      go func(ch chan int, i int) {
+</span><span class='line'>          arr[i] = i + i*i
+</span><span class='line'>          ch &lt;- 1  // 写channel，应该在函数体的最后一行，许书（P94，代码清单4-4）上有bug
+</span><span class='line'>      }(chs[i], i)
+</span><span class='line'>  }
+</span><span class='line'>  for _, ch := range chs {
+</span><span class='line'>      &lt;-ch // 读channel
+</span><span class='line'>  }
+</span><span class='line'>  for i := 0; i &lt; 11; i++ {
+</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
+</span><span class='line'>  }
+</span><span class='line'>  fmt.Println("Done")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+在这段代码中，我们给每个goroutine分配了一个channel，在每个goroutine执行完时对该goroutine的channel进行写操作，而在第16行进行读操作，对于每个channel，
+只有完成了写操作之后，才可以进行读取，否则会处于阻塞状态。因此在10个goroutine没有执行完之前，main函数是不会退出的。这样是不是比共享内存的方式更简单
+而优雅呢？其实，我们还可以对代码继续进行简化，可以将匿名函数的传递的channel参数省去，而在匿名函数内部直接使用全局的chs[i]，匿名函数可以修改为如下：
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>go func(i int) {
+</span><span class='line'>  arr[i] = i + i*i
+</span><span class='line'>  chs[i] &lt;- 1  // 写channel
+</span><span class='line'>}(i)</span></code></pre></td></tr></table></div></figure>
+
+</p>
+
+
+
+
+<p>到这里，go的并行编程基本已经入门了，关于channel的更多详细的用法可以参见参考资料。</p>
+
+
+
+
+<h2>参考资料</h2>
+
+
+<p>[1] golang 官方主页：<a href="http://golang.org/">http://golang.org/</a></br>
+[2] go语言编程，许世伟
+</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn"><a href="/about">Bill Xia</a></span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-16T23:35:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2014</time>
+      Category: 
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/program/'>Program</a>
+  
+</span>
+
+
+      Tags: 
+
+<span class="tags">
+  
+    <a class='category' href='/blog/tags/concurrent/'>Concurrent</a>, <a class='category' href='/blog/tags/go/'>Go</a>, <a class='category' href='/blog/tags/goroutine/'>goroutine</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank">More</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/03/10/top-10-open-source-recommendation-systems/" title="Previous Post: TOP 10开源的推荐系统简介">&laquo; TOP 10开源的推荐系统简介</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (26)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li></ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><embed type='application/x-shockwave-flash' src='/javascripts/tagcloud.swf'width='100%' height='250' bgcolor='#ffffff' id='tagcloudflash' name='tagcloudflash' quality='high' allowscriptaccess='always'flashvars="tcolor=0x333333&amp;tcolor2=0x333333&amp;hicolor=0x000000&amp;tspeed=100&amp;distr=true&amp;mode=tags&amp;tagcloud=%3Ctags%3E%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F36kr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E36Kr%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F3dprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E3DPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F8-queen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E8-Queen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Facf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EACF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fai%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falize%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EAlize%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falsa%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EALSA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EANN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fasr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EASR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fassert%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eassert%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Faudio%27+style%3D%27font-size%3A+21.333333333333336%25%27%3EAudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fautoencoder%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAutoEncoder%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbaochutower%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBaochuTower%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbci%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBCI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbios%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBIOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbiovision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBioVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fboltzmann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBoltzmann%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbpnn%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EBPNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbsd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBSD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbuffer%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Ebuffer%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fc%27+style%3D%27font-size%3A+23.0%25%27%3EC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcalm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECalm%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcloud%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECloud%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcnn%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcochlea%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECochlea%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompany%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompany%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompile%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompile%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconcurrent%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EConcurrent%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconference%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EConference%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconvex%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EConvex%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcorrelation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECorrelation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcovariance%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECovariance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrawler%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ECrawler%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrowdfunding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECrowdfunding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Edebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdeeplearning%27+style%3D%27font-size%3A+18.0%25%27%3EDeepLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdevice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDevice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdfs%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDFS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdiy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDIY%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdp%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EDP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdragon%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDragon%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Febm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fefi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEFI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Femail%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEmail%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Feulercircuit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEulerCircuit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fexception%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EException%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffflush%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Efflush%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffft%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFFT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffleaphp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFleaPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffourier%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFourier%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffunction%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFunction%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgmm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGMM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgo%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGo%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoogle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGoogle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoroutine%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Egoroutine%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Egoto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgradientdescent%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGradientDescent%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhardware%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHardware%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhealth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHealth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fheritrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHeritrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhiking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHiking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhopfield%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHopfield%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtk%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EHTK%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtml%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHTML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIDF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eidle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fifly%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EiFly%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finequality%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInequality%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finnovation%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EInnovation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fintelligence%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIntelligence%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finternet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInternet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIO%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fip%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjensen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJensen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjulius%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJulius%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fkdd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKDD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fkernel%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKernel%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fknowledge%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKnowledge%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flenet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELeNet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flife%27+style%3D%27font-size%3A+23.0%25%27%3ELife%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flink%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELink%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinkedin%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELinkedin%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinux%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELinux%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flongjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Elongjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flove%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELove%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flucene%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELucene%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmachinelearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMachineLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmagicsquare%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMagicSquare%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmaker%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMaker%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmanagement%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EManagement%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatlab%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMatlab%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMatrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmfcc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMFCC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmicroblog%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMicroBlog%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmis%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMIS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmotto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMotto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnap%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENAP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneural%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENeural%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneuralnetworks%27+style%3D%27font-size%3A+26.333333333333336%25%27%3ENeuralNetworks%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnuance%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ENuance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnutch%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENutch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foctpress%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOctpress%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fonline%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOnline%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foptimization%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOptimization%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fos%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foss%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOSS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpagerank%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPageRank%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpain%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPain%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fparser%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EParser%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpca%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpcm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fperceptron%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPerceptron%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fphp%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitch%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPitch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitchtracking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPitchTracking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprim%27+style%3D%27font-size%3A+18.0%25%27%3EPrim%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprintf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eprintf%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fproduct%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProduct%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprofit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProfit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprograming%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPrograming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprogramtest%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EProgramTest%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpython%27+style%3D%27font-size%3A+23.0%25%27%3EPython%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquery%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EQuery%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquicksort%27+style%3D%27font-size%3A+19.666666666666668%25%27%3EQuickSort%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frat%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erat%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fratbot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERatbot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frbm%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ERBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frecommendation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERecommendation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frecord%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERecord%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frepresentation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERepresentation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frobot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erobot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frwth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERWTH%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsafety%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESafety%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fselect%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESELECT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsetjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Esetjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsignalprocess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESignalProcess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnoopy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnoopy%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnow%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnow%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsns%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESNS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsparsecoding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESparseCoding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeakerrecognition%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESpeakerRecognition%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspectrogram%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpectrogram%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeech%27+style%3D%27font-size%3A+18.0%25%27%3ESpeech%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsphinx%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESphinx%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspider%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpider%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsports%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESports%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspro%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESPro%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsql%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESQL%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstack%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EStack%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstartup%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStartUp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstory%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStory%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstring%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EString%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsuccess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESuccess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsvd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESVD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsvm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESVM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fswimming%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESwimming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnic%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnic%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnics%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnics%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftimbre%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETimbre%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftruth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETruth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftts%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETTS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fucenter%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUCenter%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fui%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fuml%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funicode%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnicode%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funionfindset%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUnionFindSet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Futf8%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUTF8%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fva-arg%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eva_arg%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvad%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVAD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvalse%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVALSE%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fviavoice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EviaVoice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvisualstudio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVisualStudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvolume%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVolume%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvpr%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EVPR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwave%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWave%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwearable%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWearable%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fweb%27+style%3D%27font-size%3A+18.0%25%27%3EWeb%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwestlake%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWestLake%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwindows%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWindows%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fyouth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EYouth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzcr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EZCR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzju%27+style%3D%27font-size%3A+28.0%25%27%3EZJU%3C%2Fa%3E+%3C%2Ftags%3E"></span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/16/go-concurrent-programming-first-try/">Go并发编程初探</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/10/top-10-open-source-recommendation-systems/">TOP 10开源的推荐系统简介</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/01/koding-an-amazing-online-development-environment/">Koding——一个惊艳的在线编程开发平台</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/23/makers-the-new-industrial-evolution/">互联网引发的制造业革命——读《创客》</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/24/if-giraffe-cried-would-it-choking-so-long/">如果长颈鹿哭了，它会不会要哽咽好久</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/11/36kr-open-day-hangzhou-station-review-and-summary/">36氪开放日杭州站回顾与总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/30/why-web-companies-all-are-beginning-to-play-hardware-products/">互联网公司为什么都在玩硬件？</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/08/brief-introduction-of-alsa-and-oss-and-it%27s-comparision/">Linux的OSS和ALSA声音系统简介及其比较</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/">PCM WAVE格式详解及用C语言实现wave文件的读取</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/30/add-a-back-to-top-button-on-ur-octpress-blog/">给Octpress博客添加返回顶部按钮</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Comments</h1>
+  <script type="text/javascript" src="http://ibillxia.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=20"></script><a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+
+<section>
+  <h1>Sina Weibo</h1>
+  <ul id="weibo">
+    <li>
+		<iframe 
+			width="100%" 
+			height="550" 
+			class="share_self"  
+			frameborder="0" 
+			scrolling="no" 
+			src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=2704795533&verifier=9551ab13&dpc=1">
+		</iframe>
+	</li>
+  </ul>
+</section>
+
+<section>
+	<h2>Reading List</h2>
+	<div>
+		<script type="text/javascript" src="http://www.douban.com/service/badge/65527470/?show=collection&amp;n=16&amp;columns=4" ></script>
+	</div>
+</section>
+<section>
+  <h1>CC License</h1>
+  <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"></a></p>
+  <p>Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p id="footer" style="margin-bottom: 0em ">
+   <span class="credit" style="text-align: left;">Copyright &copy; 2009 - 2014   <a href="/about">Bill Xia</a>  
+	Powered by <a href="http://octopress.org">Octopress</a></span>
+  
+  <span style="float:right;">
+	  <a href="/">Home</a> | 
+	  <a href="/blog/archives">Archives</a> | 
+	  <a href="/about">About</a>
+  </span>
+</p>
+
+<p id = "back-top">
+	<a href="#top"><span></span>Back to Top</a>
+</p>
+
+<style type="text/css">
+#back-top {
+	position: fixed;
+	bottom: 50px;
+	right: 100px;
+}
+
+#back-top a {
+	width: 80px;
+	display: block;
+	text-align: center;
+	font: 11px/100% Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #bbb;
+
+	/* transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+#back-top a:hover {
+	color: #000;
+}
+
+/* arrow icon (span tag) */
+#back-top span {
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin-bottom: 7px;
+	background: #ddd url(http://ibillxia.github.com/images/up-arrow.png) no-repeat center center;
+
+	/* rounded corners */
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+
+	/* transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+
+#back-top a:hover span {
+	background-color: #888;
+}
+
+</style>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	// hide #back-top first
+	$("#back-top").hide();
+	
+	// fade in #back-top
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+
+		// scroll body to 0px on click
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 800);
+			return false;
+		});
+	});
+
+});
+</script>
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ibillxia';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ibillxia.github.io/blog/2014/03/16/go-concurrent-programming-first-try/';
+        var disqus_url = 'http://ibillxia.github.io/blog/2014/03/16/go-concurrent-programming-first-try/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

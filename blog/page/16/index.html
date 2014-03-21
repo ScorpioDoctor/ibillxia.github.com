@@ -9,8 +9,18 @@
   <meta name="author" content="Bill Xia">
 
   
-  <meta name="description" content="UC同步登陆机制 以用户登录为例介绍UC的同步机制，其它注销，改密码，消息，头像，好友均类同。UC同步登陆的过程如下： 1.从用户xxx在某一应用程序的login.php，输入用户名，密码讲起。
-先用uc_user_login函数到uc server验证此用户和密码，如正确，则写入session, &hellip;">
+  <meta name="description" content="call_user_func函数类似于一种特别的调用函数的方法，使用方法如下： 1
+2
+3
+4
+5
+6
+7
+8
+function a($b,$c) { echo $b; echo $c;
+}
+call_user_func('a', "111","222");
+call_user_func('a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -138,6 +148,160 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+<header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail/">PHP函数call_user_func和call_user_func_array详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T21:38:00+08:00" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail/#disqus_thread">Comments</a>
+        
+      </p>
+    
+</header>
+
+
+
+  <div class="entry-content"><p>call_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function a($b,$c) 
+</span><span class='line'>{
+</span><span class='line'>  echo $b;
+</span><span class='line'>  echo $c;
+</span><span class='line'>}
+</span><span class='line'>call_user_func('a', "111","222");
+</span><span class='line'>call_user_func('a', "333","444");
+</span><span class='line'>//显示 111 222 333 444</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+<header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/21/php-send-email/">PHP发送邮件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-21T10:05:00+08:00" pubdate data-updated="true">Jul 21<span>st</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/21/php-send-email/#disqus_thread">Comments</a>
+        
+      </p>
+    
+</header>
+
+
+
+  <div class="entry-content"><p>现在很多主机空间都是IIS上执行PHP程序，大多不能直接用mail()发送邮件，有了这个类只要你有注册过邮箱，
+就可以随意的发送邮件，速度也不慢哦。</p>
+
+
+
+
+<p>先给一个具体的使用示例：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
+</span><span class='line'>require (FILE_DIR."smtp.php"); 
+</span><span class='line'>$smtpserver = "smtp.xxx.com";//SMTP服务器 
+</span><span class='line'>$smtpserverport =25;//SMTP服务器端口 
+</span><span class='line'>$smtpusermail = "xxxxx@xxx.com";//SMTP服务器的用户邮箱 
+</span><span class='line'>$smtpemailto = "aaaaa@xxx.com";//发送给谁 
+</span><span class='line'>$smtpuser = "xxxxx";//SMTP服务器的用户帐号 
+</span><span class='line'>$smtppass = "xxxxx";//SMTP服务器的用户密码 
+</span><span class='line'>$mailsubject = "Test Subject";//邮件主题 
+</span><span class='line'>$mailbody = "&lt;h1>This is a test mail&lt;/h1>";//邮件内容 
+</span><span class='line'>$mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件 
+</span><span class='line'>$smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证. 
+</span><span class='line'>$smtp->debug = TRUE;//是否显示发送的调试信息 
+</span><span class='line'>$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype); 
+</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/07/21/php-send-email/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -360,203 +524,6 @@
 
     </article>
   
-  
-    <article>
-      
-<header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/10/10-stories-in-management/">管理的十个寓言故事</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-10T12:36:00+08:00" pubdate data-updated="true">Apr 10<span>th</span>, 2010</time>
-        
-         | <a href="/blog/2010/04/10/10-stories-in-management/#disqus_thread">Comments</a>
-        
-      </p>
-    
-</header>
-
-
-
-  <div class="entry-content"><h2>▲ (一)相信自己是一只雄鹰 ▲</h2>
-
-
-<p>一个人在高山之巅的鹰巢里，抓到了一只幼鹰，他把幼鹰带回家，养在鸡笼里。这只幼鹰和鸡一起啄食、嬉闹和休息。它以为自己是一只鸡。 
-这只鹰渐渐长大，羽翼丰满了，主人想把它训练成猎鹰，可是由于终日和鸡混在一起，它已经变得和鸡完全一样，根本没有飞的愿望了。 主人试了
-各种办法，都毫无效果，最后把它带到山顶上，一把将它扔了出去。这只鹰像块石头似的，直掉下去，慌乱之中它拼命地扑打翅膀，就这样，它
-终于飞了起来！ </p>
-
-
-
-
-<p><strong>秘诀1：磨练召唤成功的力量。</strong></p>
-
-
-
-
-<h2>▲ (二)五枚金币 ▲</h2>
-
-
-<p>有个叫阿巴格的人生活在内蒙古草原上。有一次，年少的阿巴格和他爸爸在草原上迷了路，阿巴格又累又怕，到最后快走不动了。爸爸就从兜里
-掏出５枚硬币，把一枚硬币埋在草地里，把其余４枚放在阿巴格的手上，说：“人生有５枚金币，童年、少年、青年、中年、老年各有一枚，你现在
-才用了一枚，就是埋在草地里的那一枚，你不能把５枚都扔在草原里，你要一点点地用，每一次都用出不同来，这样才不枉人生一世。今天我们一定
-要走出草原，你将来也一定要走出草原。世界很大，人活着，就要多走些地方，多看看，不要让你的金币没有用就扔掉。”在父亲的鼓励下，那天阿巴格
-走出了草原。长大后，阿巴格离开了家乡，成了一名优秀的船长。 </p>
-
-
-
-
-<p><strong>秘诀2：珍惜生命，就能走出挫折的沼泽地。</strong></p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2010/04/10/10-stories-in-management/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-<header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/01/21/a-love-program/">一个爱情程序</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-21T22:13:00+08:00" pubdate data-updated="true">Jan 21<span>st</span>, 2010</time>
-        
-         | <a href="/blog/2010/01/21/a-love-program/#disqus_thread">Comments</a>
-        
-      </p>
-    
-</header>
-
-
-
-  <div class="entry-content"><p>一个很有趣的爱情程序</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RESULT   love(boy,   girl)     
-</span><span class='line'>  {     
-</span><span class='line'>  　　if(   boy.有房()   AND   boy.有车()   )     
-</span><span class='line'>  　　{     
-</span><span class='line'>  　　　boy.Set(Nothing);     
-</span><span class='line'>  　　　return   girl.嫁给(boy);     
-</span><span class='line'>  　　}     
-</span><span class='line'>  　　else   if(   girl.愿意等()   )     
-</span><span class='line'>  　　{     
-</span><span class='line'>  　　　next_year:     
-</span><span class='line'>  　　　for(   day=1;   day&lt;=365;   day++)     
-</span><span class='line'>  　　　{     
-</span><span class='line'>  　　　　if(   day   ==   情人节   )     
-</span><span class='line'>  　　　　　if(   boy.GiveGirl(玫瑰)   )     
-</span><span class='line'>  　　　　　　girl.感情++;     
-</span><span class='line'>  　　　　　else     
-</span><span class='line'>  　　　　　　girl.感情--;     
-</span><span class='line'>  　　　　if(   day   ==   girl.生日)     
-</span><span class='line'>  　　　　　if(   boy.GiveGirl(玫瑰)   )     
-</span><span class='line'>  　　　　　　girl.感情++;     
-</span><span class='line'>  　　　　　else     
-</span><span class='line'>  　　　　　　girl.感情--;     
-</span><span class='line'>  　　　　boy.拼命赚钱();     
-</span><span class='line'>  　　　}     
-</span><span class='line'>  　　　年龄++;     
-</span><span class='line'>  　　　girl.感情--;     
-</span><span class='line'>  　　　if(   boy.有房()   AND   boy.有车()   )     
-</span><span class='line'>  　　　{     
-</span><span class='line'>  　　　　boy.Set(Nothing);     
-</span><span class='line'>  　　　　return   girl.嫁给(boy);     
-</span><span class='line'>  　　　}     
-</span><span class='line'>  　　　else   if(   boy.赚钱   >   100,000   AND   girl.感情   >   8   )     
-</span><span class='line'>  　　　　goto   next_year;     
-</span><span class='line'>  　　　else     
-</span><span class='line'>  　　　　return   girl.goto(   another_boy);     
-</span><span class='line'>  　　}     
-</span><span class='line'>  　　return   girl.goto(   another_boy);
-</span><span class='line'>  }
-</span><span class='line'>//有看懂吗，看懂了就很有意思。看不懂就加油！！</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/17/">&larr; Older</a>
@@ -571,11 +538,11 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (11)</a></li><li><a href='/blog/categories/program'>Program (25)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (26)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li></ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><embed type='application/x-shockwave-flash' src='/javascripts/tagcloud.swf'width='100%' height='250' bgcolor='#ffffff' id='tagcloudflash' name='tagcloudflash' quality='high' allowscriptaccess='always'flashvars="tcolor=0x333333&amp;tcolor2=0x333333&amp;hicolor=0x000000&amp;tspeed=100&amp;distr=true&amp;mode=tags&amp;tagcloud=%3Ctags%3E%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F36kr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E36Kr%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F3dprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E3DPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F8-queen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E8-Queen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Facf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EACF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fai%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falize%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EAlize%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falsa%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EALSA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EANN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fasr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EASR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fassert%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eassert%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Faudio%27+style%3D%27font-size%3A+21.333333333333336%25%27%3EAudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fautoencoder%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAutoEncoder%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbaochutower%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBaochuTower%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbci%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBCI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbios%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBIOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbiovision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBioVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fboltzmann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBoltzmann%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbpnn%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EBPNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbsd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBSD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbuffer%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Ebuffer%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fc%27+style%3D%27font-size%3A+23.0%25%27%3EC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcalm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECalm%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcloud%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECloud%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcnn%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcochlea%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECochlea%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompany%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompany%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompile%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompile%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconference%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EConference%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconvex%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EConvex%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcorrelation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECorrelation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcovariance%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECovariance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrawler%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ECrawler%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrowdfunding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECrowdfunding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Edebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdeeplearning%27+style%3D%27font-size%3A+18.0%25%27%3EDeepLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdevice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDevice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdfs%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDFS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdiy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDIY%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdp%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EDP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdragon%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDragon%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Febm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fefi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEFI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Femail%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEmail%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Feulercircuit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEulerCircuit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fexception%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EException%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffflush%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Efflush%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffft%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFFT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffleaphp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFleaPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffourier%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFourier%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffunction%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFunction%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgmm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGMM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoogle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGoogle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Egoto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgradientdescent%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGradientDescent%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhardware%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHardware%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhealth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHealth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fheritrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHeritrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhiking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHiking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhopfield%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHopfield%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtk%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EHTK%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtml%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHTML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIDF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eidle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fifly%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EiFly%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finequality%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInequality%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finnovation%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EInnovation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fintelligence%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIntelligence%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finternet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInternet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIO%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fip%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjensen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJensen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjulius%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJulius%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fkernel%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKernel%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fknowledge%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKnowledge%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flenet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELeNet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flife%27+style%3D%27font-size%3A+23.0%25%27%3ELife%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flink%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELink%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinkedin%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELinkedin%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinux%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELinux%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flongjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Elongjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flove%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELove%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flucene%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELucene%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmachinelearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMachineLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmagicsquare%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMagicSquare%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmaker%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMaker%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmanagement%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EManagement%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatlab%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMatlab%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMatrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmfcc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMFCC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmicroblog%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMicroBlog%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmis%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMIS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmotto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMotto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnap%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENAP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneural%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENeural%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneuralnetworks%27+style%3D%27font-size%3A+26.333333333333336%25%27%3ENeuralNetworks%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnuance%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ENuance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnutch%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENutch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foctpress%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOctpress%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fonline%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOnline%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foptimization%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOptimization%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fos%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foss%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOSS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpagerank%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPageRank%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpain%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPain%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fparser%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EParser%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpca%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpcm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fperceptron%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPerceptron%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fphp%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitch%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPitch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitchtracking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPitchTracking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprim%27+style%3D%27font-size%3A+18.0%25%27%3EPrim%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprintf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eprintf%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fproduct%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProduct%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprofit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProfit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprograming%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPrograming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprogramtest%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EProgramTest%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpython%27+style%3D%27font-size%3A+23.0%25%27%3EPython%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquery%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EQuery%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquicksort%27+style%3D%27font-size%3A+19.666666666666668%25%27%3EQuickSort%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frat%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erat%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fratbot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERatbot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frbm%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ERBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frecord%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERecord%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frepresentation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERepresentation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frobot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erobot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frwth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERWTH%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsafety%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESafety%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fselect%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESELECT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsetjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Esetjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsignalprocess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESignalProcess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnoopy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnoopy%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnow%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnow%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsns%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESNS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsparsecoding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESparseCoding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeakerrecognition%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESpeakerRecognition%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspectrogram%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpectrogram%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeech%27+style%3D%27font-size%3A+18.0%25%27%3ESpeech%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsphinx%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESphinx%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspider%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpider%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsports%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESports%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspro%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESPro%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsql%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESQL%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstack%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EStack%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstartup%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStartUp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstory%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStory%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstring%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EString%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsuccess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESuccess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsvm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESVM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fswimming%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESwimming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnic%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnic%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnics%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnics%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftimbre%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETimbre%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftruth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETruth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftts%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETTS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fucenter%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUCenter%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fui%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fuml%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funicode%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnicode%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funionfindset%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUnionFindSet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Futf8%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUTF8%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fva-arg%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eva_arg%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvad%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVAD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvalse%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVALSE%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fviavoice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EviaVoice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvisualstudio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVisualStudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvolume%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVolume%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvpr%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EVPR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwave%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWave%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwearable%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWearable%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fweb%27+style%3D%27font-size%3A+18.0%25%27%3EWeb%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwestlake%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWestLake%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwindows%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWindows%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fyouth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EYouth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzcr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EZCR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzju%27+style%3D%27font-size%3A+28.0%25%27%3EZJU%3C%2Fa%3E+%3C%2Ftags%3E"></span>
+    <span id="tag-cloud"><embed type='application/x-shockwave-flash' src='/javascripts/tagcloud.swf'width='100%' height='250' bgcolor='#ffffff' id='tagcloudflash' name='tagcloudflash' quality='high' allowscriptaccess='always'flashvars="tcolor=0x333333&amp;tcolor2=0x333333&amp;hicolor=0x000000&amp;tspeed=100&amp;distr=true&amp;mode=tags&amp;tagcloud=%3Ctags%3E%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F36kr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E36Kr%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F3dprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E3DPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2F8-queen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3E8-Queen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Facf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EACF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fai%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falize%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EAlize%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Falsa%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EALSA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EANN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fasr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EASR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fassert%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eassert%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Faudio%27+style%3D%27font-size%3A+21.333333333333336%25%27%3EAudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fautoencoder%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EAutoEncoder%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbaochutower%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBaochuTower%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbci%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBCI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbios%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBIOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbiovision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBioVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fboltzmann%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBoltzmann%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbpnn%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EBPNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbsd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EBSD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fbuffer%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Ebuffer%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fc%27+style%3D%27font-size%3A+23.0%25%27%3EC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcalm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECalm%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcloud%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECloud%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcnn%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECNN%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcochlea%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECochlea%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompany%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompany%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcompile%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECompile%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconcurrent%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EConcurrent%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconference%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EConference%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fconvex%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EConvex%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcorrelation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECorrelation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcovariance%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECovariance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrawler%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ECrawler%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fcrowdfunding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ECrowdfunding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdebug%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Edebug%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdeeplearning%27+style%3D%27font-size%3A+18.0%25%27%3EDeepLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdevice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDevice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdfs%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDFS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdiy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDIY%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdom%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDOM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdp%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EDP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fdragon%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EDragon%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Febm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fefi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEFI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Femail%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEmail%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Feulercircuit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EEulerCircuit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fexception%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EException%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffflush%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Efflush%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffft%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFFT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffleaphp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFleaPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffourier%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFourier%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ffunction%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EFunction%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgmm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGMM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgo%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGo%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoogle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGoogle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoroutine%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Egoroutine%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgoto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Egoto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fgradientdescent%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EGradientDescent%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhardware%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHardware%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhealth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHealth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fheritrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHeritrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhiking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHiking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhopfield%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHopfield%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtk%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EHTK%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fhtml%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EHTML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIDF%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fidle%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eidle%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fifly%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EiFly%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finequality%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInequality%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finnovation%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EInnovation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fintelligence%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIntelligence%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Finternet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EInternet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIO%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fip%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EIT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjensen%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJensen%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fjulius%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EJulius%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fkdd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKDD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fkernel%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKernel%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fknowledge%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EKnowledge%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flenet%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELeNet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flife%27+style%3D%27font-size%3A+23.0%25%27%3ELife%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flink%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELink%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinkedin%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELinkedin%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flinux%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELinux%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flongjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Elongjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flove%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ELove%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Flucene%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ELucene%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmachinelearning%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMachineLearning%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmagicsquare%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMagicSquare%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmaker%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMaker%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmanagement%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EManagement%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatlab%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EMatlab%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmatrix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMatrix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmfcc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMFCC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmicroblog%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMicroBlog%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmis%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMIS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fmotto%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EMotto%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnap%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENAP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneural%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENeural%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fneuralnetworks%27+style%3D%27font-size%3A+26.333333333333336%25%27%3ENeuralNetworks%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnuance%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ENuance%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fnutch%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ENutch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foctpress%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOctpress%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fonline%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOnline%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foptimization%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOptimization%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fos%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Foss%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EOSS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpagerank%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPageRank%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpain%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPain%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fparser%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EParser%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpca%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCA%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpcm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPCM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fperceptron%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPerceptron%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fphp%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EPHP%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitch%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPitch%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpitchtracking%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPitchTracking%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprim%27+style%3D%27font-size%3A+18.0%25%27%3EPrim%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprint%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EPrint%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprintf%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eprintf%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fproduct%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProduct%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprofit%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EProfit%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprograming%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EPrograming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fprogramtest%27+style%3D%27font-size%3A+24.666666666666664%25%27%3EProgramTest%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fpython%27+style%3D%27font-size%3A+23.0%25%27%3EPython%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquery%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EQuery%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fquicksort%27+style%3D%27font-size%3A+19.666666666666668%25%27%3EQuickSort%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frat%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erat%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fratbot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERatbot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frbm%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ERBM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frecommendation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERecommendation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frecord%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERecord%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frepresentation%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERepresentation%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frobot%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Erobot%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Frwth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ERWTH%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsafety%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESafety%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsapi%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESAPI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fselect%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESELECT%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsetjmp%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Esetjmp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsignalprocess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESignalProcess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnoopy%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnoopy%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsnow%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESnow%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsns%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESNS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsparsecoding%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESparseCoding%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeakerrecognition%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESpeakerRecognition%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspectrogram%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpectrogram%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspeech%27+style%3D%27font-size%3A+18.0%25%27%3ESpeech%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsphinx%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESphinx%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspider%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESpider%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsports%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESports%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fspro%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESPro%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsql%27+style%3D%27font-size%3A+16.333333333333332%25%27%3ESQL%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstack%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EStack%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstartup%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStartUp%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstory%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EStory%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fstring%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EString%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsuccess%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESuccess%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsvd%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESVD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fsvm%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESVM%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fswimming%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ESwimming%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnic%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnic%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftechnics%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETechnics%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftimbre%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETimbre%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftruth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETruth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Ftts%27+style%3D%27font-size%3A+14.666666666666666%25%27%3ETTS%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fucenter%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUCenter%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fui%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUI%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fuml%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUML%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funicode%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnicode%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funionfindset%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EUnionFindSet%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Funix%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUnix%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Futf8%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EUTF8%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fva-arg%27+style%3D%27font-size%3A+14.666666666666666%25%27%3Eva_arg%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvad%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVAD%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvalse%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVALSE%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvc%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVC%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fviavoice%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EviaVoice%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvision%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVision%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvisualstudio%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVisualStudio%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvolume%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EVolume%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fvpr%27+style%3D%27font-size%3A+16.333333333333332%25%27%3EVPR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwave%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWave%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwearable%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWearable%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fweb%27+style%3D%27font-size%3A+18.0%25%27%3EWeb%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwestlake%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWestLake%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fwindows%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EWindows%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fyouth%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EYouth%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzcr%27+style%3D%27font-size%3A+14.666666666666666%25%27%3EZCR%3C%2Fa%3E+%3Ca+href%3D%27http%3A%2F%2Fibillxia.github.io%2Fblog%2Ftags%2Fzju%27+style%3D%27font-size%3A+28.0%25%27%3EZJU%3C%2Fa%3E+%3C%2Ftags%3E"></span>
 </section>
 <section>
   <h1>Recent Comments</h1>
