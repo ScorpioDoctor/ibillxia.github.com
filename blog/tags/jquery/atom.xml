@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: jQuery | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/jquery/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-05-04T18:26:38+08:00</updated>
+  <updated>2014-05-04T18:33:44+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[给Octpress博客添加返回顶部按钮]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octopress-blog/"/>
+    <link href="http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octpress-blog/"/>
     <updated>2013-06-30T10:47:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octopress-blog</id>
+    <id>http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octpress-blog</id>
     <content type="html"><![CDATA[<p>有时候，博客文章太长，需要返回顶部时，需要用鼠标拖着滚动条向上好半天，这里提供一个用 jQuery 来实现的动态上滚的示例。这个示例完全参考和翻译自 webdesignerwall 的 blog：<a href="http://webdesignerwall.com/tutorials/animated-scroll-to-top">http://webdesignerwall.com/tutorials/animated-scroll-to-top</a>，其中有部分删改，并在本人的 blog 上实现。</p>
 
 <p>主要包含HTML和CSS的设计，基于jQuery的JS的设计。另外还有一点小trick</p>
