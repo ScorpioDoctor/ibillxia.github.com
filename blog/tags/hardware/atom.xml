@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Hardware | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/hardware/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-04-28T23:13:20+08:00</updated>
+  <updated>2014-05-04T18:26:38+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -25,7 +25,7 @@
 
 
 
-<center>{% img /images/2013/IMAG2013103001.jpeg %}</center>
+<center><img src="/images/2013/IMAG2013103001.jpeg"></center>
 
 
 
