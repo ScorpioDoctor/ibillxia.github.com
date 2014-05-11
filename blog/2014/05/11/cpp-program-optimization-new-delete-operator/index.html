@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>C++ 应用程序性能优化之 new/delete 操作符 - Bill's Blog</title>
+  <meta name="author" content="Bill Xia">
+
+  
+  <meta name="description" content="Yesterday is History, Tomorrow a Mystery, Today is a Gift, Thats why it's called the Present！">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/style.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      padding-bottom: 40px;
+    }
+    h1 {
+      margin-bottom: 15px;
+    }
+    img {
+      max-width: 100%;
+    }
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
+    }
+    .page-footer p {
+      text-align: center;
+    }
+  </style>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Bill's Blog" type="application/atom+xml">
+  <script type="text/javascript">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+</script>
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+	// hide #back-top first
+	$("#back-top").hide();
+	
+	// fade in #back-top
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+
+		// scroll body to 0px on click
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 800);
+			return false;
+		});
+	});
+
+});
+</script>
+
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <nav role="navigation"><div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" href="/">Bill's Blog</a>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/tags">Tags</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://www.google.com/" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:ibillxia.github.io" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
+  <div class="container">
+    <div class="row-fluid">
+      
+<article class="hentry span9" role="article">
+
+  
+  <header class="page-header">
+    
+      <h1 class="entry-title">C++ 应用程序性能优化之 New/delete 操作符</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>1.概述</h2>
+
+<p>C++ 程序的存储空间可以分为静态/全局存储区、栈区和堆区。下图展示了一个典型的Linux C/C++ 程序内存空间布局：</p>
+
+<center><img src="/images/2014/IMAG2014051101.png"></center>
+
+
+<p>其中，每一部分的具体涵义如下：<br/>
+- <strong>代码段（.text）</strong>：这里存放的是CPU要执行的指令。代码段是可共享的，相同的代码在内存中只会有一个拷贝，同时这个段是<strong>只读</strong>的，防止程序由于错误而修改自身的指令。<br/>
+- <strong>初始化数据段（.data）</strong>：这里存放的是程序中需要明确赋初始值的变量，例如位于所有函数之外的全局变量：<code>int val=100;</code> 。 需要强调的是，以上两段都是位于程序的可执行文件中，内核在调用 exec 函数启动该程序时从源程序文件中读入。<br/>
+- <strong>未初始化数据段（.bss）</strong>：位于这一段中的数据，内核在执行该程序前，将其初始化为0或者null。例如出现在任何函数之外的全局变量：<code>int sum;</code><br/>
+- <strong>堆（Heap）</strong>：这个段用于在程序中进行动态内存申请，例如经常用到的 malloc，new 系列函数就是从这个段中申请内存。<br/>
+- <strong>栈（Stack）</strong>：函数中的局部变量以及在函数调用过程中产生的临时变量都保存在此段中。<br/>
+静态/全局存储区和栈区一般在程序编译阶段决定；而堆区则随着程序的运行而动态变化，每一次程序运行都会有不同的行为，因此动态内存管理对于一个程序在运行过程中占用的内存大小及程序运行性能有非常重要的影响。 本文主要探讨在C++中如何管理动态内存，以及如何使用 C++ 的语言特性来提高动态内存的管理效率，减少错误的发生。</p>
+
+<!-- more -->
+
+
+<h2>2. new/delete 操作符</h2>
+
+<p>一般来说 C++ 的运行库提供了默认的全局 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的实现，程序也可以用自定义的实现来取代运行库的实现。 下面是 C++ 标准中定义的 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的声明（位于 <code>include/c++/new</code> 文件中）：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>namespace std {
+</span><span class='line'>  class bad_alloc : public exception {
+</span><span class='line'>    public:
+</span><span class='line'>      bad_alloc() throw() { }
+</span><span class='line'>      virtual ~bad_alloc() throw();
+</span><span class='line'>      virtual const char* what() const throw();
+</span><span class='line'>  };
+</span><span class='line'>  struct nothrow_t { };
+</span><span class='line'>  extern const nothrow_t nothrow;
+</span><span class='line'>  typedef void (*new_handler)();
+</span><span class='line'>  new_handler set_new_handler(new_handler) throw();
+</span><span class='line'>} // namespace std
+</span><span class='line'>
+</span><span class='line'>void* operator new(std::size_t) throw (std::bad_alloc);  // (1)
+</span><span class='line'>void* operator new[](std::size_t) throw (std::bad_alloc);
+</span><span class='line'>void operator delete(void*) throw();
+</span><span class='line'>void operator delete[](void*) throw();
+</span><span class='line'>void* operator new(std::size_t, const std::nothrow_t&) throw();  // (2)
+</span><span class='line'>void* operator new[](std::size_t, const std::nothrow_t&) throw();
+</span><span class='line'>void operator delete(void*, const std::nothrow_t&) throw();
+</span><span class='line'>void operator delete[](void*, const std::nothrow_t&) throw();
+</span><span class='line'>// Default placement versions of operator new.
+</span><span class='line'>inline void* operator new(std::size_t, void* __p) throw() { return __p; }  // (3)
+</span><span class='line'>inline void* operator new[](std::size_t, void* __p) throw() { return __p; }
+</span><span class='line'>// Default placement versions of operator delete.
+</span><span class='line'>inline void  operator delete  (void*, void*) throw() { }
+</span><span class='line'>inline void  operator delete[](void*, void*) throw() { }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中最后的 <code>inline</code> 函数是 <code>placement</code> 版本的 new/delete 操作，其特点在于分配的内存块的起始地址由用户给定（通过参数 <code>void* __p</code>）。 而前面两种 <code>new/delete</code> （(1)和(2)处）是系统决定待分配内存块的起始地址，区别在于：第一个在分配失败是会抛出 <code>bad_alloc</code> 异常（这是C++标准要求的）；而第二个则不抛出异常，返回0。 很多应用程序都没有处理内存分配的失败情况，但相对于一个需要长期稳定运行的系统来说，这种处理是必不可少的。 应用程序可以通过捕获 <code>bad_alloc</code> 异常或者检查返回值来检查内存分配是否成功，而更好的方法是使用C++中的 <code>new_handler()</code> 函数。 C++规定 <code>new_handler</code> 要执行如下操作中的一种：</p>
+
+<ul>
+<li>使 <code>new</code> 有更多的内存可用，然后返回</li>
+<li>抛出一个 <code>bad_alloc</code> 或其派生类的异常</li>
+<li>调用 <code>abort()</code> 或者 <code>exit()</code> 退出</li>
+</ul>
+
+
+<p>下面看一个例子，看看如何使用 <code>new_handler</code> 处理内存分配失败的情况：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;new&gt;
+</span><span class='line'>#include&lt;cstdio&gt;
+</span><span class='line'>using namespace std;
+</span><span class='line'>char *gPool = NULL;
+</span><span class='line'>void my_new_handler();
+</span><span class='line'>
+</span><span class='line'>int main(){
+</span><span class='line'>    set_new_handler(my_new_handler);
+</span><span class='line'>    gPool = new char[100*1024*1024];
+</span><span class='line'>    if(gPool!=NULL){
+</span><span class='line'>        printf("Preserve 100MB memory at %x.\n",gPool);
+</span><span class='line'>    }
+</span><span class='line'>    char *p = NULL;
+</span><span class='line'>    for(int i=0;i&lt;20;i++){
+</span><span class='line'>        p = new char[100*1024*1024];
+</span><span class='line'>        printf("%d * 100M, p = %x\n",i+1,p);
+</span><span class='line'>    }
+</span><span class='line'>    printf("Done.\n");
+</span><span class='line'>    return 0;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>void my_new_handler(){
+</span><span class='line'>    if(gPool!=NULL){
+</span><span class='line'>        printf("try to get more memory...\n");
+</span><span class='line'>        delete[] gPool;
+</span><span class='line'>        gPool = NULL;
+</span><span class='line'>        return;
+</span><span class='line'>    }else{
+</span><span class='line'>        printf("I can not help...\n");
+</span><span class='line'>        throw bad_alloc();
+</span><span class='line'>    }
+</span><span class='line'>    return;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 Windows 上编译并运行，得到如下输出：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Preserve 100MB memory at 980020.
+</span><span class='line'>1 * 100M, p = 6d90020
+</span><span class='line'>2 * 100M, p = d1a0020
+</span><span class='line'>3 * 100M, p = 135b0020
+</span><span class='line'>4 * 100M, p = 199c0020
+</span><span class='line'>5 * 100M, p = 1fdd0020
+</span><span class='line'>6 * 100M, p = 261e0020
+</span><span class='line'>7 * 100M, p = 2c5f0020
+</span><span class='line'>8 * 100M, p = 32a00020
+</span><span class='line'>9 * 100M, p = 38e10020
+</span><span class='line'>10 * 100M, p = 3f220020
+</span><span class='line'>11 * 100M, p = 45630020
+</span><span class='line'>12 * 100M, p = 4ba40020
+</span><span class='line'>13 * 100M, p = 51e50020
+</span><span class='line'>14 * 100M, p = 58260020
+</span><span class='line'>15 * 100M, p = 5e670020
+</span><span class='line'>16 * 100M, p = 64a80020
+</span><span class='line'>17 * 100M, p = 776c0020
+</span><span class='line'>try to get more memory...
+</span><span class='line'>18 * 100M, p = 980020
+</span><span class='line'>I can not help...
+</span><span class='line'>terminate called after throwing an instance of 'std::bad_alloc'
+</span><span class='line'>  what():  std::bad_alloc
+</span><span class='line'>
+</span><span class='line'>This application has requested the Runtime to terminate it in an unusual way.
+</span><span class='line'>Please contact the application's support team for more information.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 Windows 的 win32 程序中，一个进程可以访问的内存空间是 4GB，但可以用来动态分配的最大内存是 2GB，因而上面的程序执行到第18次（为神马不是第19次？）动态内存分配时由于内存不够，调用了 <code>my_new_handler</code> 获得了内存，而当执行第19次内存分配时，<code>gPool</code> 已被分配，于是 <code>my_new_handler</code> 中抛出了 <code>bad_alloc</code> 异常，导致程序退出。</p>
+</div>
+<div id="copyleft" class="well" >
+	<span>Original Link: <a rel="full-article" href="">http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/</a></br>
+	Attribution - NON-Commercial - ShareAlike - Copyright &copy; <a href="http://about.me/ibillxia">Bill Xia</a> <span>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn"><a href="http://about.me/ibillxia">Bill Xia</a></span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time>
+		
+		
+		
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		
+		
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/memory/'>Memory</a>, <a class='tag' href='/blog/tags/optimization/'>Optimization</a>, <a class='tag' href='/blog/tags/pointer/'>Pointer</a></span>
+		
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+	 <ul class="pager">
+      
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2014/05/04/android-ndk-development/" title="Previous Post:
+        Ubuntu 下 Android NDK 开发入门">&laquo; Ubuntu 下 Android NDK 开发入门</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+    </ul>
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+   
+  </footer>
+</article>
+
+<aside class="sidebar-nav span3">
+  
+    <section>
+  <h2>Categories</h2>
+    <ul id="category-list">
+		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (31)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
+	</ul>
+</section>
+<section>
+  <h2>Tags</h2>
+  <ul class="tag-cloud">
+	<a style="font-size: 93%" href="/blog/tags/alize/">Alize</a>
+<a style="font-size: 137%" href="/blog/tags/audio/">Audio</a>
+<a style="font-size: 146%" href="/blog/tags/c/">C</a>
+<a style="font-size: 93%" href="/blog/tags/convex/">Convex</a>
+<a style="font-size: 112%" href="/blog/tags/deeplearning/">DeepLearning</a>
+<a style="font-size: 93%" href="/blog/tags/htk/">HTK</a>
+<a style="font-size: 146%" href="/blog/tags/life/">Life</a>
+<a style="font-size: 93%" href="/blog/tags/love/">Love</a>
+<a style="font-size: 93%" href="/blog/tags/machinelearning/">MachineLearning</a>
+<a style="font-size: 159%" href="/blog/tags/neuralnetworks/">NeuralNetworks</a>
+<a style="font-size: 93%" href="/blog/tags/nuance/">Nuance</a>
+<a style="font-size: 93%" href="/blog/tags/optimization/">Optimization</a>
+<a style="font-size: 153%" href="/blog/tags/php/">PHP</a>
+<a style="font-size: 112%" href="/blog/tags/prim/">Prim</a>
+<a style="font-size: 153%" href="/blog/tags/programtest/">ProgramTest</a>
+<a style="font-size: 93%" href="/blog/tags/programing/">Programing</a>
+<a style="font-size: 146%" href="/blog/tags/python/">Python</a>
+<a style="font-size: 126%" href="/blog/tags/quicksort/">QuickSort</a>
+<a style="font-size: 93%" href="/blog/tags/rbm/">RBM</a>
+<a style="font-size: 93%" href="/blog/tags/speakerrecognition/">SpeakerRecognition</a>
+<a style="font-size: 112%" href="/blog/tags/speech/">Speech</a>
+<a style="font-size: 93%" href="/blog/tags/uml/">UML</a>
+<a style="font-size: 93%" href="/blog/tags/vpr/">VPR</a>
+<a style="font-size: 112%" href="/blog/tags/web/">Web</a>
+<a style="font-size: 165%" href="/blog/tags/zju/">ZJU</a>
+
+  </ul>
+</section><section>
+    <h2>Recent Posts</h2>
+	<ul>
+    
+      <li class="post">
+        <a href="/blog/2014/05/11/cpp-program-optimization-new-delete-operator/">C++ 应用程序性能优化之 new/delete 操作符</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/04/android-ndk-development/">Ubuntu 下 Android NDK 开发入门</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/28/configure-twitter-bootstrap-theme-in-octopress/">给Octopress博客配置Twitter Bootstrap主题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">全排列及某排列的后继的求解及其STL实现的分析</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/11/swap-two-variables-in-place/">原地交换两个变量的值</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/16/go-concurrent-programming-first-try/">Go并发编程初探</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/10/top-10-open-source-recommendation-systems/">TOP 10开源的推荐系统简介</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/01/koding-an-amazing-online-development-environment/">Koding——一个惊艳的在线编程开发平台</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/23/makers-the-new-industrial-evolution/">互联网引发的制造业革命——读《创客》</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/24/if-giraffe-cried-would-it-choking-so-long/">如果长颈鹿哭了，它会不会要哽咽好久</a>
+      </li>
+    
+	</ul>
+</section>
+<section>
+  <h2>Recent Comments</h2>
+  <script type="text/javascript" src="http://ibillxia.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=22"></script>
+  <a href="http://disqus.com/">Powered by Disqus</a>
+</section>
+
+<section>
+  <h2>Sina Weibo</h2>
+  <ul id="weibo">
+	<iframe 
+		width="100%" 
+		height="550" 
+		class="share_self"  
+		frameborder="0" 
+		scrolling="no" 
+		src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=2704795533&verifier=9551ab13&dpc=1">
+	</iframe>
+  </ul>
+</section>
+
+<section>
+	<h2>Reading List</h2>
+	<ul>
+		<script type="text/javascript" src="http://www.douban.com/service/badge/65527470/?show=collection&amp;n=12&amp;columns=3" ></script>
+	</ul>
+</section>
+<section>
+  <h2>Copyleft</h2>
+  <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"></a></p>
+  <p>Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></p>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="page-footer"><p id = "back-top">
+	<a href="#top"><span></span>Back to Top</a>
+</p>
+<hr>
+<p>
+  Copyright &copy; 2009 - 2014 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> </span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'ibillxia';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/';
+        var disqus_url = 'http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
