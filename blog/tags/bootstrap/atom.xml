@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Bootstrap | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/bootstrap/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-05-04T18:33:44+08:00</updated>
+  <updated>2014-05-11T23:47:42+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -99,7 +99,7 @@ tag_dir: blog/tags
 
 <p>至此，已经配置完成了 ^_^ 可以运行 rake generate 和 rake preview 来看看最终效果了。</p>
 
-<p>PS：本博客的主题及插件相关文件和代码可以看我的 GitHub Repo：<a href="https://github.com/ibillxia/xoctopress">xoctopress</a>. 如有问题，可以参考这些代码。</p>
+<p>PS：本博客的主题及插件相关文件和代码可以看我的 GitHub Repo：<a href="https://github.com/ibillxia/xoctopress/tree/master">xoctopress</a>. 如有问题，可以参考这些代码。</p>
 ]]></content>
   </entry>
   
