@@ -461,6 +461,8 @@ $(document).ready(function(){
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
 </span><span class='line'>#include&lt;new&gt;
 </span><span class='line'>using namespace std;
@@ -472,6 +474,7 @@ $(document).ready(function(){
 </span><span class='line'>    return ::operator new(n);
 </span><span class='line'>}
 </span><span class='line'>// 自定义 delete 操作符
+</span><span class='line'>// void operator delete(void *p,const char *file, int line){
 </span><span class='line'>void operator delete[](void *p,const char *file, int line){
 </span><span class='line'>    printf("delete at file %s, in line %d\n",file,line);
 </span><span class='line'>    ::operator delete(p);
@@ -479,17 +482,74 @@ $(document).ready(function(){
 </span><span class='line'>}
 </span><span class='line'>// 宏定义，必须放在重载函数之后
 </span><span class='line'>#define new new(__FILE__, __LINE__)
-</span><span class='line'>//#define delete delete(__FILE__, __LINE__)
+</span><span class='line'>#define delete delete(__FILE__, __LINE__)
 </span><span class='line'>#endif
 </span><span class='line'>int main(){
 </span><span class='line'>    char *p = new char[10];
-</span><span class='line'>    delete p;  // delete 的重载还有问题 "error: type 'int' argument given to 'delete', expected pointer"
+</span><span class='line'>    //delete p;  // delete 的重载还有问题 "error: type 'int' argument given to 'delete', expected pointer"
+</span><span class='line'>    delete[] p;  // 直接报语法错误，"error: expected primary-expression before ']' token"
 </span><span class='line'>    return 0;
 </span><span class='line'>}
 </span><span class='line'>// output: Alloc size: 10 at file D:\Programs\test\main.cpp, in line 22</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这在 <code>DEBUG</code> 模式下非常好使。</p>
+
+<p>更新：关于 <code>placement new</code> 的 demo 改为如下代码后就没问题了：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
+</span><span class='line'>#include&lt;new&gt;
+</span><span class='line'>using namespace std;
+</span><span class='line'>#define DEBUG
+</span><span class='line'>#ifdef DEBUG
+</span><span class='line'>// 自定义 new 操作符
+</span><span class='line'>void *operator new[](unsigned int n, const char* file, int line){
+</span><span class='line'>    printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
+</span><span class='line'>    return ::operator new(n);
+</span><span class='line'>}
+</span><span class='line'>// 自定义 delete 操作符
+</span><span class='line'>void operator delete(void *p,char *file, int line){
+</span><span class='line'>    printf("Delete at file %s, in line %d\n",file,line);
+</span><span class='line'>    ::operator delete(p);
+</span><span class='line'>    return;
+</span><span class='line'>}
+</span><span class='line'>// 宏定义，必须放在重载函数之后
+</span><span class='line'>#define new new(__FILE__, __LINE__)
+</span><span class='line'>#define delete(ptr) delete(ptr,__FILE__, __LINE__)
+</span><span class='line'>#endif
+</span><span class='line'>int main(){
+</span><span class='line'>    char *p = new char[10];
+</span><span class='line'>    operator delete(p);
+</span><span class='line'>    return 0;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是还是不知道之前的代码为什么会出现这个错误，已在 StackOverFlow 上提问，希望能得到满意的答案。</p>
 </div>
 <div id="copyleft" class="well" >
 	<span>Original Link: <a rel="full-article" href="">http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/</a></br>
