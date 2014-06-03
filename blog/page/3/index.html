@@ -704,40 +704,42 @@ $(document).ready(function(){
 
 
   <div class="entry-content"><p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
-开学后不久抽时间写了一个Demo，并上传到了GitHub：https://github.com/ibillxia/VoicePrintReco/tree/master/Demo</p>
+开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>.</p>
 
+<p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</p>
 
+<h4>1.Features extraction 特征提取</h4>
 
+<p>sfbcep.exe（MFCC）或slpcep.exe（LPCC）</p>
 
-<p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</br>
-1.Features extraction 特征提取</br>
-sfbcep.exe（MFCC）或slpcep.exe（LPCC）</br>
+<h4>2.Silence removal 静音检测和去除</h4>
 
-2.Silence removal 静音检测和去除</br>
-NormFeat.exe 先能量规整</br>
-EnergyDetector.exe 基于能量检测的静音去除</br>
+<p>NormFeat.exe 先能量规整<br/>
+EnergyDetector.exe 基于能量检测的静音去除</p>
 
-3.Features Normalization 特征规整</br>
-NormFeat.exe 再使用这个工具进行特征规整</br>
+<h4>3.Features Normalization 特征规整</h4>
 
-4.World model training</br>
-TrainWorld.exe 训练UBM</br>
+<p>NormFeat.exe 再使用这个工具进行特征规整</br></p>
 
-5.Target model training</br>
-TrainWorld.exe 在训练好UBM的基础上训练training set和testing set的GMM</br>
+<h4>4.World model training</h4>
 
-6.Testing</br>
-ComputeTest.exe 将testing set 的GMM在training set的GMM上进行测试和打分</br>
+<p>TrainWorld.exe 训练UBM</br></p>
 
-7.Score Normalization</br>
-ComputeNorm.exe 将得分进行规整</br>
+<h4>5.Target model training</h4>
 
-8. Compute EER 计算等错误率</br>
-你可以查查计算EER的matlab代码，NIST SRE的官网上有下载（http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm）。</br>
-</p>
+<p>TrainWorld.exe 在训练好UBM的基础上训练training set和testing set的GMM</br></p>
 
+<h4>6.Testing</h4>
 
+<p>ComputeTest.exe 将testing set 的GMM在training set的GMM上进行测试和打分</br></p>
 
+<h4>7.Score Normalization</h4>
+
+<p>ComputeNorm.exe 将得分进行规整</br></p>
+
+<h4>8. Compute EER 计算等错误率</h4>
+
+<p>你可以查查计算EER的matlab代码，NIST SRE的官网上有下载<a href="http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm">DETware_v2.1.tar.gz</a> 。</p>
 
 </div>
   

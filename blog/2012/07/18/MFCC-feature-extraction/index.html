@@ -350,14 +350,14 @@ $(document).ready(function(){
 </span><span class='line'>%
 </span><span class='line'>% Output: r contains the transformed signal
 </span><span class='line'>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-</span><span class='line'>m = 256;  % 帧长
-</span><span class='line'>n = 100;  % 帧移
+</span><span class='line'>n = 256;  % 帧长
+</span><span class='line'>m = 100;  % 帧移
 </span><span class='line'>l = length(s);  % 信号总长度
 </span><span class='line'>nbFrame = floor((l - n) / m) + 1;  % 信号总帧数
 </span><span class='line'>for i = 1:n
-</span><span class='line'>for j = 1:nbFrame
-</span><span class='line'>M(i, j) = s(((j - 1) * m) + i);  % 分帧
-</span><span class='line'>end
+</span><span class='line'>  for j = 1:nbFrame
+</span><span class='line'>      M(i, j) = s(((j - 1) * m) + i);  % 分帧
+</span><span class='line'>  end
 </span><span class='line'>end
 </span><span class='line'>h = hamming(n);  % Hamming窗w = 0.54 - 0.46*cos(2*pi*x);
 </span><span class='line'>M2 = diag(h) * M;  % 对M加窗，形成对角矩阵M2
