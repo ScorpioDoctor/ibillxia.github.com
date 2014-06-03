@@ -453,7 +453,7 @@ Data: 真正的语音数据部分。</br>
 </span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf);
 </span><span class='line'>
 </span><span class='line'>int main(){
-</span><span class='line'>  char fname = "test.wav";
+</span><span class='line'>  char fname[] = "test.wav";
 </span><span class='line'>  char *speech;
 </span><span class='line'>  WAVEFORMATEX wf;
 </span><span class='line'>  

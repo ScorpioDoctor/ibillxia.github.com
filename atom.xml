@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-03T12:57:03+08:00</updated>
+  <updated>2014-06-03T18:07:01+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -4047,7 +4047,7 @@ Data: 真正的语音数据部分。</br>
 </span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf);
 </span><span class='line'>
 </span><span class='line'>int main(){
-</span><span class='line'>  char fname = "test.wav";
+</span><span class='line'>  char fname[] = "test.wav";
 </span><span class='line'>  char *speech;
 </span><span class='line'>  WAVEFORMATEX wf;
 </span><span class='line'>  
