@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ASSP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/assp/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-03T18:07:01+08:00</updated>
+  <updated>2014-06-08T21:48:22+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
 一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
 数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center><img src="/images/2013/IMAG2013072001.gif"></center>
+<center>{% img /images/2013/IMAG2013072001.gif %}</center>
 </p>
 
 
@@ -48,36 +48,23 @@ Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储�
 0x4000:   0x34</br>
 0x4001:   0x12</br>
 用程序在区别的话，可以考虑：
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;stdlib.h>
-</span><span class='line'>int main(int argc, char *argv[])
-</span><span class='line'>{
-</span><span class='line'>       union w
-</span><span class='line'>      {
-</span><span class='line'>       short int a;
-</span><span class='line'>       char b;
-</span><span class='line'>      }c;
-</span><span class='line'>      c.a=1;
-</span><span class='line'>      if( c.b==1 )  printf("little endian\n");
-</span><span class='line'>      else printf("big endian\n");
-</span><span class='line'>      system("PAUSE"); 
-</span><span class='line'>      return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char *argv[])
+{
+       union w
+      {
+       short int a;
+       char b;
+      }c;
+      c.a=1;
+      if( c.b==1 )  printf("little endian\n");
+      else printf("big endian\n");
+      system("PAUSE"); 
+      return 0;
+}
+{% endcodeblock %}
 </p>
 
 
@@ -101,26 +88,18 @@ ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由�
 
 
 <p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// data 为读取到的采样点的值，speech为原始数据流，
-</span><span class='line'>//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
-</span><span class='line'>for(i=0;i&lt;NumSample;i++){
-</span><span class='line'>    if(BitsPerSample==8)
-</span><span class='line'>        data[i] = (int)*((char*)speech+i);
-</span><span class='line'>    else if(BitsPerSample==16)
-</span><span class='line'>        data[i] = (int)*((short*)speech+i);
-</span><span class='line'>    else if(BitsPerSample==32)
-</span><span class='line'>        data[i] = (int)*((int*)speech+i);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+// data 为读取到的采样点的值，speech为原始数据流，
+//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
+for(i=0;i<NumSample;i++){
+    if(BitsPerSample==8)
+        data[i] = (int)*((char*)speech+i);
+    else if(BitsPerSample==16)
+        data[i] = (int)*((short*)speech+i);
+    else if(BitsPerSample==32)
+        data[i] = (int)*((int*)speech+i);
+}
+{% endcodeblock %}
 </p>
 
 
@@ -139,14 +118,13 @@ Data: 真正的语音数据部分。</br>
 
 
 <p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-</span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-</span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
+22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
+24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
+{% endcodeblock %}
 则其个字段的解析如下图：
-<center><img src="/images/2013/IMAG2013072002.gif"></center>
+<center>{% img /images/2013/IMAG2013072002.gif %}</center>
 </p>
 
 
@@ -158,190 +136,99 @@ Data: 真正的语音数据部分。</br>
 <p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;stdlib.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;string.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;p>// define Wave format structure
-</span><span class='line'>typedef struct tWAVEFORMATEX
-</span><span class='line'>{&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>short wFormatTag;         /* format type */
-</span><span class='line'>short nChannels;          /* number of channels (i.e. mono, stereo...) */
-</span><span class='line'>unsigned int nSamplesPerSec;     /* sample rate */
-</span><span class='line'>unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-</span><span class='line'>short nBlockAlign;        /* block size of data */
-</span><span class='line'>short wBitsPerSample;     /* number of bits per sample of mono data */
-</span><span class='line'>short cbSize;             /* the count in bytes of the size of */
-</span><span class='line'>                                /* extra information (after cbSize) */
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>} WAVEFORMATEX, *PWAVEFORMATEX;&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>char&lt;em> wavread(char &lt;/em>fname, WAVEFORMATEX *wf);&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>int main(){&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>char fname[] = "test.wav";
-</span><span class='line'>char *speech;
-</span><span class='line'>WAVEFORMATEX wf;
-</span><span class='line'>
-</span><span class='line'>speech = wavread(fname, &amp;wf);
-</span><span class='line'>// afterward processing...
-</span><span class='line'>
-</span><span class='line'>return 0;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>// read wave file
-</span><span class='line'>char&lt;em> wavread(char &lt;/em>fname, WAVEFORMATEX *wf){&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>FILE* fp;
-</span><span class='line'>char str[32];
-</span><span class='line'>char *speech;
-</span><span class='line'>unsigned int subchunk1size; // head size
-</span><span class='line'>unsigned int subchunk2size; // speech data size
-</span><span class='line'>
-</span><span class='line'>// check format type
-</span><span class='line'>fp = fopen(fname,"r");
-</span><span class='line'>if(!fp){
-</span><span class='line'>    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-</span><span class='line'>    return NULL;
-</span><span class='line'>}
-</span><span class='line'>fseek(fp, 8, SEEK_SET);
-</span><span class='line'>fread(str, sizeof(char), 7, fp);
-</span><span class='line'>str[7] = '\0';
-</span><span class='line'>if(strcmp(str,"WAVEfmt")){
-</span><span class='line'>    fprintf(stderr,"The file is not in WAVE format!\n");
-</span><span class='line'>    return NULL;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>// read format header
-</span><span class='line'>fseek(fp, 16, SEEK_SET);
-</span><span class='line'>fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
-</span><span class='line'>fseek(fp, 20, SEEK_SET);
-</span><span class='line'>fread(wf, subchunk1size, 1, fp);
-</span><span class='line'>
-</span><span class='line'>// read wave data
-</span><span class='line'>fseek(fp, 20+subchunk1size, SEEK_SET);
-</span><span class='line'>fread(str, 1, 4, fp);
-</span><span class='line'>str[4] = '\0';
-</span><span class='line'>if(strcmp(str,"data")){
-</span><span class='line'>    fprintf(stderr,"Locating data start point failed!\n");
-</span><span class='line'>    return NULL;
-</span><span class='line'>}
-</span><span class='line'>fseek(fp, 20+subchunk1size+4, SEEK_SET);
-</span><span class='line'>fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
-</span><span class='line'>speech = (char*)malloc(sizeof(char)*subchunk2size);
-</span><span class='line'>if(!speech){
-</span><span class='line'>    fprintf(stderr, "Memory alloc failed!\n");
-</span><span class='line'>    return NULL;
-</span><span class='line'>}
-</span><span class='line'>fseek(fp, 20+subchunk1size+8, SEEK_SET);
-</span><span class='line'>fread(speech, 1, subchunk2size, fp);
-</span><span class='line'>
-</span><span class='line'>fclose(fp);
-</span><span class='line'>return speech;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<h1>include &lt;stdio.h></h1>
+
+<h1>include &lt;stdlib.h></h1>
+
+<h1>include &lt;string.h></h1>
+
+<p>// define Wave format structure
+typedef struct tWAVEFORMATEX
+{</p>
+
+<pre><code>short wFormatTag;         /* format type */
+short nChannels;          /* number of channels (i.e. mono, stereo...) */
+unsigned int nSamplesPerSec;     /* sample rate */
+unsigned int nAvgBytesPerSec;    /* for buffer estimation */
+short nBlockAlign;        /* block size of data */
+short wBitsPerSample;     /* number of bits per sample of mono data */
+short cbSize;             /* the count in bytes of the size of */
+                                /* extra information (after cbSize) */
+</code></pre>
+
+<p>} WAVEFORMATEX, *PWAVEFORMATEX;</p>
+
+<p>char<em> wavread(char </em>fname, WAVEFORMATEX *wf);</p>
+
+<p>int main(){</p>
+
+<pre><code>char fname[] = "test.wav";
+char *speech;
+WAVEFORMATEX wf;
+
+speech = wavread(fname, &amp;wf);
+// afterward processing...
+
+return 0;
+</code></pre>
+
+<p>}</p>
+
+<p>// read wave file
+char<em> wavread(char </em>fname, WAVEFORMATEX *wf){</p>
+
+<pre><code>FILE* fp;
+char str[32];
+char *speech;
+unsigned int subchunk1size; // head size
+unsigned int subchunk2size; // speech data size
+
+// check format type
+fp = fopen(fname,"r");
+if(!fp){
+    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
+    return NULL;
+}
+fseek(fp, 8, SEEK_SET);
+fread(str, sizeof(char), 7, fp);
+str[7] = '\0';
+if(strcmp(str,"WAVEfmt")){
+    fprintf(stderr,"The file is not in WAVE format!\n");
+    return NULL;
+}
+
+// read format header
+fseek(fp, 16, SEEK_SET);
+fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
+fseek(fp, 20, SEEK_SET);
+fread(wf, subchunk1size, 1, fp);
+
+// read wave data
+fseek(fp, 20+subchunk1size, SEEK_SET);
+fread(str, 1, 4, fp);
+str[4] = '\0';
+if(strcmp(str,"data")){
+    fprintf(stderr,"Locating data start point failed!\n");
+    return NULL;
+}
+fseek(fp, 20+subchunk1size+4, SEEK_SET);
+fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
+speech = (char*)malloc(sizeof(char)*subchunk2size);
+if(!speech){
+    fprintf(stderr, "Memory alloc failed!\n");
+    return NULL;
+}
+fseek(fp, 20+subchunk1size+8, SEEK_SET);
+fread(speech, 1, subchunk2size, fp);
+
+fclose(fp);
+return speech;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <h2>参考</h2>
 
@@ -375,406 +262,208 @@ Data: 真正的语音数据部分。</br>
 <p>实例程序</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-<span class='line-number'>124</span>
-<span class='line-number'>125</span>
-<span class='line-number'>126</span>
-<span class='line-number'>127</span>
-<span class='line-number'>128</span>
-<span class='line-number'>129</span>
-<span class='line-number'>130</span>
-<span class='line-number'>131</span>
-<span class='line-number'>132</span>
-<span class='line-number'>133</span>
-<span class='line-number'>134</span>
-<span class='line-number'>135</span>
-<span class='line-number'>136</span>
-<span class='line-number'>137</span>
-<span class='line-number'>138</span>
-<span class='line-number'>139</span>
-<span class='line-number'>140</span>
-<span class='line-number'>141</span>
-<span class='line-number'>142</span>
-<span class='line-number'>143</span>
-<span class='line-number'>144</span>
-<span class='line-number'>145</span>
-<span class='line-number'>146</span>
-<span class='line-number'>147</span>
-<span class='line-number'>148</span>
-<span class='line-number'>149</span>
-<span class='line-number'>150</span>
-<span class='line-number'>151</span>
-<span class='line-number'>152</span>
-<span class='line-number'>153</span>
-<span class='line-number'>154</span>
-<span class='line-number'>155</span>
-<span class='line-number'>156</span>
-<span class='line-number'>157</span>
-<span class='line-number'>158</span>
-<span class='line-number'>159</span>
-<span class='line-number'>160</span>
-<span class='line-number'>161</span>
-<span class='line-number'>162</span>
-<span class='line-number'>163</span>
-<span class='line-number'>164</span>
-<span class='line-number'>165</span>
-<span class='line-number'>166</span>
-<span class='line-number'>167</span>
-<span class='line-number'>168</span>
-<span class='line-number'>169</span>
-<span class='line-number'>170</span>
-<span class='line-number'>171</span>
-<span class='line-number'>172</span>
-<span class='line-number'>173</span>
-<span class='line-number'>174</span>
-<span class='line-number'>175</span>
-<span class='line-number'>176</span>
-<span class='line-number'>177</span>
-<span class='line-number'>178</span>
-<span class='line-number'>179</span>
-<span class='line-number'>180</span>
-<span class='line-number'>181</span>
-<span class='line-number'>182</span>
-<span class='line-number'>183</span>
-<span class='line-number'>184</span>
-<span class='line-number'>185</span>
-<span class='line-number'>186</span>
-<span class='line-number'>187</span>
-<span class='line-number'>188</span>
-<span class='line-number'>189</span>
-<span class='line-number'>190</span>
-<span class='line-number'>191</span>
-<span class='line-number'>192</span>
-<span class='line-number'>193</span>
-<span class='line-number'>194</span>
-<span class='line-number'>195</span>
-<span class='line-number'>196</span>
-<span class='line-number'>197</span>
-<span class='line-number'>198</span>
-<span class='line-number'>199</span>
-<span class='line-number'>200</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// &lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;em> FileName: WinMain.cpp &lt;/em>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>**********
-</span><span class='line'>// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
-</span><span class='line'>// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;stdio.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;atlstr.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;windows.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>include &lt;Mmsystem.h>&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>pragma comment(lib,"Winmm.lib")&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;p>char lpTemp[256];&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>DWORD FCC(LPSTR lpStr)
-</span><span class='line'>{&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
-</span><span class='line'>return Number;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-</span><span class='line'>{&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>DWORD datasize = 48000;
-</span><span class='line'>
-</span><span class='line'>// 设置录音采样参数
-</span><span class='line'>WAVEFORMATEX waveformat;
-</span><span class='line'>waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
-</span><span class='line'>waveformat.nChannels=1;
-</span><span class='line'>waveformat.nSamplesPerSec=8000;
-</span><span class='line'>waveformat.nBlockAlign=1;
-</span><span class='line'>waveformat.wBitsPerSample=8;
-</span><span class='line'>waveformat.cbSize=0;
-</span><span class='line'>waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
-</span><span class='line'>
-</span><span class='line'>sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
-</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>HWAVEIN m_hWaveIn;
-</span><span class='line'>if ( !waveInGetNumDevs() )
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>// 打开录音设备
-</span><span class='line'>int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
-</span><span class='line'>if ( res != MMSYSERR_NOERROR )
-</span><span class='line'>{
-</span><span class='line'>   sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
-</span><span class='line'>   MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>   return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>WAVEHDR m_pWaveHdr;
-</span><span class='line'>m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
-</span><span class='line'>memset(m_pWaveHdr.lpData, 0, datasize );
-</span><span class='line'>m_pWaveHdr.dwBufferLength = datasize;
-</span><span class='line'>m_pWaveHdr.dwBytesRecorded = 0;
-</span><span class='line'>m_pWaveHdr.dwUser = 0;
-</span><span class='line'>m_pWaveHdr.dwFlags = 0;
-</span><span class='line'>m_pWaveHdr.dwLoops = 0;
-</span><span class='line'>sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
-</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>// 准备内存块录音
-</span><span class='line'>int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
-</span><span class='line'>if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>{
-</span><span class='line'>    sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
-</span><span class='line'>if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>{
-</span><span class='line'>    sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if (! waveInStart(m_hWaveIn) ) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>else 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>Sleep(30000);
-</span><span class='line'>
-</span><span class='line'>MMTIME mmt;
-</span><span class='line'>mmt.wType = TIME_BYTES;
-</span><span class='line'>sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
-</span><span class='line'>MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>else 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if (mmt.wType != TIME_BYTES) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if (! waveInStop(m_hWaveIn) ) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>else  
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if ( waveInReset(m_hWaveIn) ) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
-</span><span class='line'>DWORD NumToWrite=0;
-</span><span class='line'>DWORD dwNumber = 0;
-</span><span class='line'>HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
-</span><span class='line'>    FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-</span><span class='line'>
-</span><span class='line'>// memset(m_pWaveHdr.lpData, 0, datasize);
-</span><span class='line'>dwNumber = FCC("RIFF");
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = FCC("WAVE");
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = FCC("fmt ");
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = 18L;
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = FCC("data");
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>dwNumber = m_pWaveHdr.dwBytesRecorded;
-</span><span class='line'>WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-</span><span class='line'>WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
-</span><span class='line'>SetEndOfFile(FileHandle);
-</span><span class='line'>CloseHandle( FileHandle );  
-</span><span class='line'>FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
-</span><span class='line'>MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>else 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
-</span><span class='line'>}
-</span><span class='line'>else 
-</span><span class='line'>{
-</span><span class='line'>    MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>if (res == MMSYSERR_NOERROR ) // 关闭录音设备
-</span><span class='line'>{
-</span><span class='line'>    if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
-</span><span class='line'>    {
-</span><span class='line'>        MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>    }
-</span><span class='line'>    else
-</span><span class='line'>    {
-</span><span class='line'>        MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>        return 0;
-</span><span class='line'>    }
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>return 0;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>// &lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;strong>&lt;em> End of File &lt;/em>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>&lt;/strong>*****</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}
+// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> FileName: WinMain.cpp </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>**********
+// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
+// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</p>
+
+<h1>include &lt;stdio.h></h1>
+
+<h1>include &lt;atlstr.h></h1>
+
+<h1>include &lt;windows.h></h1>
+
+<h1>include &lt;Mmsystem.h></h1>
+
+<h1>pragma comment(lib,"Winmm.lib")</h1>
+
+<p>char lpTemp[256];</p>
+
+<p>DWORD FCC(LPSTR lpStr)
+{</p>
+
+<pre><code>DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
+return Number;
+</code></pre>
+
+<p>}</p>
+
+<p>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{</p>
+
+<pre><code>DWORD datasize = 48000;
+
+// 设置录音采样参数
+WAVEFORMATEX waveformat;
+waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
+waveformat.nChannels=1;
+waveformat.nSamplesPerSec=8000;
+waveformat.nBlockAlign=1;
+waveformat.wBitsPerSample=8;
+waveformat.cbSize=0;
+waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
+
+sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
+MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+
+HWAVEIN m_hWaveIn;
+if ( !waveInGetNumDevs() )
+{
+    MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
+    return 0;
+}
+
+// 打开录音设备
+int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
+if ( res != MMSYSERR_NOERROR )
+{
+   sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
+   MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+   return 0;
+}
+
+WAVEHDR m_pWaveHdr;
+m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
+memset(m_pWaveHdr.lpData, 0, datasize );
+m_pWaveHdr.dwBufferLength = datasize;
+m_pWaveHdr.dwBytesRecorded = 0;
+m_pWaveHdr.dwUser = 0;
+m_pWaveHdr.dwFlags = 0;
+m_pWaveHdr.dwLoops = 0;
+sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
+MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+
+// 准备内存块录音
+int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
+if ( resPrepare != MMSYSERR_NOERROR) 
+{
+    sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
+    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+    return 0;
+}
+
+resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
+if ( resPrepare != MMSYSERR_NOERROR) 
+{
+    sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
+    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+    return 0;
+}
+
+if (! waveInStart(m_hWaveIn) ) 
+{
+    MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
+}
+else 
+{
+    MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
+    return 0;
+}
+Sleep(30000);
+
+MMTIME mmt;
+mmt.wType = TIME_BYTES;
+sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
+MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+
+if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
+{
+    MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
+}
+else 
+{
+    MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
+    return 0;
+}
+
+if (mmt.wType != TIME_BYTES) 
+{
+    MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
+    return 0;
+}
+
+if (! waveInStop(m_hWaveIn) ) 
+{
+    MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
+}
+else  
+{
+    MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
+}
+
+if ( waveInReset(m_hWaveIn) ) 
+{
+    MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
+    return 0;
+}
+
+m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
+DWORD NumToWrite=0;
+DWORD dwNumber = 0;
+HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
+    FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+// memset(m_pWaveHdr.lpData, 0, datasize);
+dwNumber = FCC("RIFF");
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+dwNumber = FCC("WAVE");
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+dwNumber = FCC("fmt ");
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+dwNumber = 18L;
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
+dwNumber = FCC("data");
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+dwNumber = m_pWaveHdr.dwBytesRecorded;
+WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
+SetEndOfFile(FileHandle);
+CloseHandle( FileHandle );  
+FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
+MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
+
+if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
+{
+    MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
+}
+else 
+{
+    MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
+    return 0;
+}
+
+if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
+{
+    MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
+}
+else 
+{
+    MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
+    return 0;
+}
+
+if (res == MMSYSERR_NOERROR ) // 关闭录音设备
+{
+    if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
+    {
+        MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
+    }
+    else
+    {
+        MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
+        return 0;
+    }
+}
+
+return 0;
+</code></pre>
+
+<p>}
+// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> End of File </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>*****
+{% endcodeblock %}</p>
 
 <p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
 
@@ -831,7 +520,7 @@ Data: 真正的语音数据部分。</br>
 
 <p>在切音框的过程中，我们允许左右音框的重叠，因此，我们定义「音框率」（Frame Rate）是每秒钟所出现的音框个数，如果取样频率是11025，音框长度是256 点，
 重叠点数是84，那么音框率就是11025/(256-84) = 64，换句话说，我们的电脑要能够每秒钟处理64 个音框，才能达到实时处理的要求。如下图所示：
-<center><img src="/images/2013/IMAG2013052901.png"></center>
+<center>{% img /images/2013/IMAG2013052901.png %}</center>
 </p>
 
 
@@ -874,116 +563,65 @@ Data: 真正的语音数据部分。</br>
 帧与它的下一帧的相似性，其定义如下：
 <center>$acf(\tau) = \sum_{i=0}^{n-1-\tau}s(i)s(i+\tau)$</center>
 其中$\tau$是一个延迟的时间间隔。在某个区间使得$acf(\tau)$取得最大值的那个$\tau$值就选为pitch的起止点，如下图所示：
-<center><img src="/images/2013/IMAG2013052902.png"></center>
+<center>{% img /images/2013/IMAG2013052902.png %}</center>
 也就是说，我们将原始语音信号与其平移延迟信号的重叠（时间上重叠）部分进行内积运算，从而得到ACF。下面看一个具体的实例，其代码如下：
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import numpy as np
-</span><span class='line'>import pylab as pl
-</span><span class='line'>
-</span><span class='line'>def ACF(frame):
-</span><span class='line'>    flen = len(frame)
-</span><span class='line'>    acf = np.zeros(flen)
-</span><span class='line'>    for i in range(flen):
-</span><span class='line'>        acf[i] = np.sum(frame[i:flen]*frame[0:flen-i])
-</span><span class='line'>    return acf
-</span><span class='line'>
-</span><span class='line'># ============ test the algorithm =============
-</span><span class='line'># read wave file and get parameters.
-</span><span class='line'>fw = wave.open('a.wav','rb')
-</span><span class='line'>params = fw.getparams()
-</span><span class='line'>print(params)
-</span><span class='line'>nchannels, sampwidth, framerate, nframes = params[:4]
-</span><span class='line'>strData = fw.readframes(nframes)
-</span><span class='line'>waveData = np.fromstring(strData, dtype=np.int16)
-</span><span class='line'>waveData = waveData*1.0/max(abs(waveData))  # normalization
-</span><span class='line'>fw.close()
-</span><span class='line'>
-</span><span class='line'># plot the wave
-</span><span class='line'>time = np.arange(0, len(waveData)) * (1.0 / framerate)
-</span><span class='line'>
-</span><span class='line'>frameSize = 512
-</span><span class='line'>idx1 = 10000
-</span><span class='line'>idx2 = idx1+frameSize
-</span><span class='line'>index1 = idx1*1.0 / framerate
-</span><span class='line'>index2 = idx2*1.0 / framerate
-</span><span class='line'>acf = ACF(waveData[idx1:idx2])
-</span><span class='line'>#acf[0:10] = -acf[0]
-</span><span class='line'>#acfmax = np.argmax(acf)
-</span><span class='line'>#print(acfmax)
-</span><span class='line'>#print(framerate*1.0/acfmax)
-</span><span class='line'>
-</span><span class='line'>pl.subplot(311)
-</span><span class='line'>pl.plot(time, waveData)
-</span><span class='line'>pl.plot([index1,index1],[-1,1],'r')
-</span><span class='line'>pl.plot([index2,index2],[-1,1],'r')
-</span><span class='line'>pl.xlabel("time (seconds)")
-</span><span class='line'>pl.ylabel("Amplitude")
-</span><span class='line'>
-</span><span class='line'>pl.subplot(312)
-</span><span class='line'>pl.plot(np.arange(frameSize),waveData[idx1:idx2],'r')
-</span><span class='line'>pl.xlabel("index in 1 frame")
-</span><span class='line'>pl.ylabel("Amplitude")
-</span><span class='line'>
-</span><span class='line'>pl.subplot(313)
-</span><span class='line'>pl.plot(np.arange(frameSize),acf,'g')
-</span><span class='line'>pl.xlabel("index in 1 frame")
-</span><span class='line'>pl.ylabel("ACF")
-</span><span class='line'>pl.show()</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+import wave
+import numpy as np
+import pylab as pl
+
+def ACF(frame):
+    flen = len(frame)
+    acf = np.zeros(flen)
+    for i in range(flen):
+        acf[i] = np.sum(frame[i:flen]*frame[0:flen-i])
+    return acf
+
+# ============ test the algorithm =============
+# read wave file and get parameters.
+fw = wave.open('a.wav','rb')
+params = fw.getparams()
+print(params)
+nchannels, sampwidth, framerate, nframes = params[:4]
+strData = fw.readframes(nframes)
+waveData = np.fromstring(strData, dtype=np.int16)
+waveData = waveData*1.0/max(abs(waveData))  # normalization
+fw.close()
+
+# plot the wave
+time = np.arange(0, len(waveData)) * (1.0 / framerate)
+
+frameSize = 512
+idx1 = 10000
+idx2 = idx1+frameSize
+index1 = idx1*1.0 / framerate
+index2 = idx2*1.0 / framerate
+acf = ACF(waveData[idx1:idx2])
+#acf[0:10] = -acf[0]
+#acfmax = np.argmax(acf)
+#print(acfmax)
+#print(framerate*1.0/acfmax)
+
+pl.subplot(311)
+pl.plot(time, waveData)
+pl.plot([index1,index1],[-1,1],'r')
+pl.plot([index2,index2],[-1,1],'r')
+pl.xlabel("time (seconds)")
+pl.ylabel("Amplitude")
+
+pl.subplot(312)
+pl.plot(np.arange(frameSize),waveData[idx1:idx2],'r')
+pl.xlabel("index in 1 frame")
+pl.ylabel("Amplitude")
+
+pl.subplot(313)
+pl.plot(np.arange(frameSize),acf,'g')
+pl.xlabel("index in 1 frame")
+pl.ylabel("ACF")
+pl.show()
+{% endcodeblock %}
 程序运行结果如下图所示：
-<center><img src="/images/2013/IMAG2013052903.png"></center>
+<center>{% img /images/2013/IMAG2013052903.png %}</center>
 </p>
 
 
@@ -1076,115 +714,64 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
 
 
 <p>下面我们来看看最简单的、不需要训练的方法，其代码如下：
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import numpy as np
-</span><span class='line'>import matplotlib.pyplot as plt
-</span><span class='line'>import Volume as vp
-</span><span class='line'>
-</span><span class='line'>def findIndex(vol,thres):
-</span><span class='line'>    l = len(vol)
-</span><span class='line'>    ii = 0
-</span><span class='line'>    index = np.zeros(4,dtype=np.int16)
-</span><span class='line'>    for i in range(l-1):
-</span><span class='line'>        if((vol[i]-thres)*(vol[i+1]-thres)&lt;0):
-</span><span class='line'>            index[ii]=i
-</span><span class='line'>            ii = ii+1
-</span><span class='line'>    return index[[0,-1]]
-</span><span class='line'>
-</span><span class='line'>fw = wave.open('sunday.wav','r')
-</span><span class='line'>params = fw.getparams()
-</span><span class='line'>nchannels, sampwidth, framerate, nframes = params[:4]
-</span><span class='line'>strData = fw.readframes(nframes)
-</span><span class='line'>waveData = np.fromstring(strData, dtype=np.int16)
-</span><span class='line'>waveData = waveData*1.0/max(abs(waveData))  # normalization
-</span><span class='line'>fw.close()
-</span><span class='line'>
-</span><span class='line'>frameSize = 256
-</span><span class='line'>overLap = 128
-</span><span class='line'>vol = vp.calVolume(waveData,frameSize,overLap)
-</span><span class='line'>threshold1 = max(vol)*0.10
-</span><span class='line'>threshold2 = min(vol)*10.0
-</span><span class='line'>threshold3 = max(vol)*0.05+min(vol)*5.0
-</span><span class='line'>
-</span><span class='line'>time = np.arange(0,nframes) * (1.0/framerate)
-</span><span class='line'>frame = np.arange(0,len(vol)) * (nframes*1.0/len(vol)/framerate)
-</span><span class='line'>index1 = findIndex(vol,threshold1)*(nframes*1.0/len(vol)/framerate)
-</span><span class='line'>index2 = findIndex(vol,threshold2)*(nframes*1.0/len(vol)/framerate)
-</span><span class='line'>index3 = findIndex(vol,threshold3)*(nframes*1.0/len(vol)/framerate)
-</span><span class='line'>end = nframes * (1.0/framerate)
-</span><span class='line'>
-</span><span class='line'>plt.subplot(211)
-</span><span class='line'>plt.plot(time,waveData,color="black")
-</span><span class='line'>plt.plot([index1,index1],[-1,1],'-r')
-</span><span class='line'>plt.plot([index2,index2],[-1,1],'-g')
-</span><span class='line'>plt.plot([index3,index3],[-1,1],'-b')
-</span><span class='line'>plt.ylabel('Amplitude')
-</span><span class='line'>
-</span><span class='line'>plt.subplot(212)
-</span><span class='line'>plt.plot(frame,vol,color="black")
-</span><span class='line'>plt.plot([0,end],[threshold1,threshold1],'-r', label="threshold 1")
-</span><span class='line'>plt.plot([0,end],[threshold2,threshold2],'-g', label="threshold 2")
-</span><span class='line'>plt.plot([0,end],[threshold3,threshold3],'-b', label="threshold 3")
-</span><span class='line'>plt.legend()
-</span><span class='line'>plt.ylabel('Volume(absSum)')
-</span><span class='line'>plt.xlabel('time(seconds)')
-</span><span class='line'>plt.show()</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+import wave
+import numpy as np
+import matplotlib.pyplot as plt
+import Volume as vp
+
+def findIndex(vol,thres):
+    l = len(vol)
+    ii = 0
+    index = np.zeros(4,dtype=np.int16)
+    for i in range(l-1):
+        if((vol[i]-thres)*(vol[i+1]-thres)<0):
+            index[ii]=i
+            ii = ii+1
+    return index[[0,-1]]
+
+fw = wave.open('sunday.wav','r')
+params = fw.getparams()
+nchannels, sampwidth, framerate, nframes = params[:4]
+strData = fw.readframes(nframes)
+waveData = np.fromstring(strData, dtype=np.int16)
+waveData = waveData*1.0/max(abs(waveData))  # normalization
+fw.close()
+
+frameSize = 256
+overLap = 128
+vol = vp.calVolume(waveData,frameSize,overLap)
+threshold1 = max(vol)*0.10
+threshold2 = min(vol)*10.0
+threshold3 = max(vol)*0.05+min(vol)*5.0
+
+time = np.arange(0,nframes) * (1.0/framerate)
+frame = np.arange(0,len(vol)) * (nframes*1.0/len(vol)/framerate)
+index1 = findIndex(vol,threshold1)*(nframes*1.0/len(vol)/framerate)
+index2 = findIndex(vol,threshold2)*(nframes*1.0/len(vol)/framerate)
+index3 = findIndex(vol,threshold3)*(nframes*1.0/len(vol)/framerate)
+end = nframes * (1.0/framerate)
+
+plt.subplot(211)
+plt.plot(time,waveData,color="black")
+plt.plot([index1,index1],[-1,1],'-r')
+plt.plot([index2,index2],[-1,1],'-g')
+plt.plot([index3,index3],[-1,1],'-b')
+plt.ylabel('Amplitude')
+
+plt.subplot(212)
+plt.plot(frame,vol,color="black")
+plt.plot([0,end],[threshold1,threshold1],'-r', label="threshold 1")
+plt.plot([0,end],[threshold2,threshold2],'-g', label="threshold 2")
+plt.plot([0,end],[threshold3,threshold3],'-b', label="threshold 3")
+plt.legend()
+plt.ylabel('Volume(absSum)')
+plt.xlabel('time(seconds)')
+plt.show()
+{% endcodeblock %}
 其中计算音量的函数calVolume参见<a href="http://ibillxia.github.io/blog/2013/05/15/audio-signal-process-time-domain-volume-python-realization/">
 音量及其Python实现</a>一文。程序的运行结果如下图：
-<center><img src="/images/2013/IMAG2013052201.png"></center>
+<center>{% img /images/2013/IMAG2013052201.png %}</center>
 </p>
 
 
@@ -1197,9 +784,9 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
 （2）将端点前后延伸到低音量阈值($\tau _{l}$)处；</br>
 （3）再将端点前后延伸到过零率阈值($\tau _{zc}$)处，以包含语音中清音的部分。</br>
 这种方法需要确定三个阈值($\tau _{u}$,$\tau _{l}$,$\tau _{zc}$)，可以用各种搜寻方法来调整这三个参数。其示意图(参考[1])如下：
-<center><img src="/images/2013/IMAG2013052202.png"></center>
+<center>{% img /images/2013/IMAG2013052202.png %}</center>
 我们在同一个图中绘制出音量和过零率的阈值图如下：
-<center><img src="/images/2013/IMAG2013052203.png"></center>
+<center>{% img /images/2013/IMAG2013052203.png %}</center>
 可以看到我们可以通过过零率的阈值来把错分的清音加入到语音部分来。上图使用到的阈值还是和音量的阈值选取方法相同，比较简单直接。
 </p>
 
@@ -1285,53 +872,35 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 
 <p>
 闲话少说了，上代码吧，其实看看这代码也挺简单的，就调一个matplotlib.pyplot.specgram()就可以了。
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import numpy as np
-</span><span class='line'>import matplotlib.pyplot as plt
-</span><span class='line'>
-</span><span class='line'>fw = wave.open('aeiou.wav','r')
-</span><span class='line'>soundInfo = fw.readframes(-1)
-</span><span class='line'>soundInfo = np.fromstring(soundInfo,np.int16)
-</span><span class='line'>f = fw.getframerate()
-</span><span class='line'>fw.close()
-</span><span class='line'>
-</span><span class='line'>plt.subplot(211)
-</span><span class='line'>plt.plot(soundInfo)
-</span><span class='line'>plt.ylabel('Amplitude')
-</span><span class='line'>plt.title('Wave from and spectrogram of aeiou.wav')
-</span><span class='line'>
-</span><span class='line'>plt.subplot(212)
-</span><span class='line'>plt.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
-</span><span class='line'>plt.ylabel('Frequency')
-</span><span class='line'>plt.xlabel('time(seconds)')
-</span><span class='line'>plt.show()</span></code></pre></td></tr></table></div></figure></notextile></div>
+{% codeblock %}
+import wave
+import numpy as np
+import matplotlib.pyplot as plt
+
+fw = wave.open('aeiou.wav','r')
+soundInfo = fw.readframes(-1)
+soundInfo = np.fromstring(soundInfo,np.int16)
+f = fw.getframerate()
+fw.close()
+
+plt.subplot(211)
+plt.plot(soundInfo)
+plt.ylabel('Amplitude')
+plt.title('Wave from and spectrogram of aeiou.wav')
+
+plt.subplot(212)
+plt.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
+plt.ylabel('Frequency')
+plt.xlabel('time(seconds)')
+plt.show()
+{% endcodeblock %}
 </p>
 
 
 
 
 <p>程序运行的效果如下图：
-<center><img src="/images/2013/IMAG2013051801.png"></center>
+<center>{% img /images/2013/IMAG2013051801.png %}</center>
 虽然程序简单，但还有一些小bug，比如subplot(212)的xlabel和ylabel无法显示，这个问题暂时还没有解决。（更新：这个问题已解决，把mpp.show()放到
 最后一行就可以了，顺便图也更新了）</p>
 

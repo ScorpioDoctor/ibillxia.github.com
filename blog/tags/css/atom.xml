@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: CSS | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/css/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-03T18:07:01+08:00</updated>
+  <updated>2014-06-08T21:48:22+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -48,7 +48,7 @@
 
 <p>上面的 css 中用到了一张图片up-arrow.png，放在source/images/目录下，图片如下：</p>
 
-<center><img src="/images/up-arrow.png"></center>
+<center>{% img /images/up-arrow.png %}</center>
 
 
 <p>这是从google image里面随便找的一个，你也可以找一个自己喜欢的图片。</p>

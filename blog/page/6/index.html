@@ -183,6 +183,76 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/08/14/the-log-sum-inequanlity/">The Log Sum Inequality</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T21:42:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/14/the-log-sum-inequanlity/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In  mathematics, the log sum inequality is very useful for proving several theorems in information theory.</p>
+
+
+
+
+<h2>1.Statements</h2>
+
+
+<p>Suppose ai and bi are nonnegative numbers. The log sum inequality states that</br>
+<center>$\sum_{i=1}^{n}a_{i}log \frac{a_{i}}{b_{i}} \seq a log \frac{a}{b}$,</center>
+where $a=\sum a_{i}$ and $b=\sum b_{i}$. The equality established if and only if $a_{i}/b{i}$ are equal for all $i$.
+</p>
+
+
+
+
+<h2>2.Proof</h2>
+
+
+<h3>(1)Convex functioin</h3>
+
+
+<p>In mathematics, a real-valued function F(x) defined on an interval is called convex (or convex downward or concave 
+upward) if the graph of the function lies below the line segment joining any two points of the graph. Equivalently, a 
+function is convex if its epigraph (the set of points on or above the graph of the function) is a convex set.</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/14/the-log-sum-inequanlity/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/">GMM-SVM-NAP Method in Speaker Recognition</a></h1>
     
     
@@ -918,109 +988,6 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/04/08-zju-program-test-solution/">08年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-04T22:42:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/04/08-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-08年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：又一版A+B（hdoj1877）（九度1026）</h3>
-
-
-<p>水题，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>char out[34];
-</span><span class='line'>unsigned int m,a,b,c;
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int i;
-</span><span class='line'>    while(scanf("%d",&m)&&m!=0){
-</span><span class='line'>        scanf("%d %d",&a,&b);
-</span><span class='line'>        c=a+b;
-</span><span class='line'>        if(c==0){printf("0\n");continue;}
-</span><span class='line'>        i=0;
-</span><span class='line'>        while(c){
-</span><span class='line'>            out[i++]=c%m;
-</span><span class='line'>            c/=m;
-</span><span class='line'>        }
-</span><span class='line'>        while(i)
-</span><span class='line'>            printf("%d",out[--i]);
-</span><span class='line'>        printf("\n");
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/04/08-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/7/">&larr; Older</a></li>
@@ -1036,15 +1003,15 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
     <section>
   <h2>Categories</h2>
     <ul id="category-list">
-		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (33)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
+		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (34)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
 	</ul>
 </section>
 <section>
   <h2>Tags</h2>
   <ul class="tag-cloud">
 	<a style="font-size: 137%" href="/blog/tags/audio/">Audio</a>
-<a style="font-size: 93%" href="/blog/tags/bpnn/">BPNN</a>
 <a style="font-size: 159%" href="/blog/tags/c/">C</a>
+<a style="font-size: 112%" href="/blog/tags/c-plus-plus/">C++</a>
 <a style="font-size: 93%" href="/blog/tags/convex/">Convex</a>
 <a style="font-size: 112%" href="/blog/tags/deeplearning/">DeepLearning</a>
 <a style="font-size: 93%" href="/blog/tags/htk/">HTK</a>
@@ -1055,13 +1022,13 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 <a style="font-size: 93%" href="/blog/tags/nuance/">Nuance</a>
 <a style="font-size: 93%" href="/blog/tags/optimization/">Optimization</a>
 <a style="font-size: 153%" href="/blog/tags/php/">PHP</a>
-<a style="font-size: 93%" href="/blog/tags/perceptron/">Perceptron</a>
 <a style="font-size: 112%" href="/blog/tags/prim/">Prim</a>
 <a style="font-size: 153%" href="/blog/tags/programtest/">ProgramTest</a>
 <a style="font-size: 93%" href="/blog/tags/programing/">Programing</a>
 <a style="font-size: 146%" href="/blog/tags/python/">Python</a>
 <a style="font-size: 126%" href="/blog/tags/quicksort/">QuickSort</a>
 <a style="font-size: 93%" href="/blog/tags/rbm/">RBM</a>
+<a style="font-size: 112%" href="/blog/tags/stl/">STL</a>
 <a style="font-size: 112%" href="/blog/tags/speech/">Speech</a>
 <a style="font-size: 93%" href="/blog/tags/uml/">UML</a>
 <a style="font-size: 93%" href="/blog/tags/vpr/">VPR</a>
