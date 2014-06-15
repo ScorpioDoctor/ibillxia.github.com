@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-13T23:38:26+08:00</updated>
+  <updated>2014-06-15T16:26:25+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,282 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(1) 空间配置器(allocator)]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/"/>
+    <updated>2014-06-13T22:04:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator</id>
+    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。</p>
+
+<p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：
+<code>
+class Foo { ... };
+Foo* pf = new Foo;
+...
+delete pf;
+</code>
+Allocator 的作用相当于operator new 和operator delete的功能，只是它考虑得更加细致周全。SGI STL 中考虑到了内存分配失败的异常处理，内置轻量级内存池（主要用于处理小块内存的分配，应对内存碎片问题）实现， 多线程中的内存分配处理（主要是针对内存池的互斥访问）等，本文就主要分析 SGI STL 中在这三个方面是如何处理的。在介绍着三个方面之前，我们先来看看 Allocator的标准接口。</p>
+
+<!-- more -->
+
+
+<h2>1. Allocator 的标准接口</h2>
+
+<p>在 SGI STL 中，Allocator的实现主要在文件<code>alloc.h</code> 和 <code>stl_alloc.h</code> 文件中。根据 STL 规范，Allocator 需提供如下的一些接口（见 <code>stl_alloc.h</code> 文件的第588行开始的class template allocator）：<br/>
+```
+// 标识数据类型的成员变量，关于中间的6个变量的涵义见后续文章（关于Traits编程技巧）
+typedef alloc <em>Alloc;
+typedef size_t     size_type;
+typedef ptrdiff_t  difference_type;
+typedef </em>Tp<em>       pointer;
+typedef const _Tp</em> const_pointer;
+typedef <em>Tp&amp;       reference;
+typedef const </em>Tp&amp; const_reference;
+typedef _Tp        value_type;
+template <class _Tp1> struct rebind {</p>
+
+<pre><code>typedef allocator&lt;_Tp1&gt; other;
+</code></pre>
+
+<p>}; // 一个嵌套的class template，仅包含一个成员变量 other
+// 成员函数
+allocator() <strong>STL_NOTHROW {}  // 默认构造函数，其中</strong>STL_NOTHROW 在 stl_config.h中定义，要么为空，要么为 throw()
+allocator(const allocator&amp;) <strong>STL_NOTHROW {}  // 拷贝构造函数
+template <class _Tp1> allocator(const allocator<_Tp1>&amp;) </strong>STL_NOTHROW {} // 泛化的拷贝构造函数
+~allocator() <strong>STL_NOTHROW {} // 析构函数
+pointer address(reference </strong>x) const { return &amp;<strong>x; } // 返回对象的地址
+const_pointer address(const_reference </strong>x) const { return &amp;<strong>x; }  // 返回const对象的地址
+_Tp* allocate(size_type </strong>n, const void* = 0) {</p>
+
+<pre><code>return __n != 0 ? static_cast&lt;_Tp*&gt;(_Alloc::allocate(__n * sizeof(_Tp))) : 0; 
+// 配置空间，如果申请的空间块数不为0，那么调用 _Alloc 也即 alloc 的 allocate 函数来分配内存，
+</code></pre>
+
+<p>} //这里的 alloc 在 SGI STL 中默认使用的是<strong>default_alloc_template&lt;</strong>NODE_ALLOCATOR_THREADS, 0>这个实现（见第402行）
+void deallocate(pointer <strong>p, size_type </strong>n) { <em>Alloc::deallocate(<strong>p, </strong>n * sizeof(</em>Tp)); } // 释放空间
+size_type max_size() const __STL_NOTHROW  // max_size() 函数，返回可成功配置的最大值</p>
+
+<pre><code>{ return size_t(-1) / sizeof(_Tp); }  //这里没看懂，这里的size_t(-1)是什么意思？
+</code></pre>
+
+<p>void construct(pointer <strong>p, const _Tp&amp; </strong>val) { new(<strong>p) _Tp(</strong>val); } // 调用 new 来给新变量分配空间并赋值
+void destroy(pointer <strong>p) { </strong>p->~<em>Tp(); } // 调用 </em>Tp 的析构函数来释放空间
+<code>
+在SGI STL中设计了如下几个空间分配的 class template：  
+</code>
+template <int __inst> class <strong>malloc_alloc_template // Malloc-based allocator.  Typically slower than default alloc
+typedef </strong>malloc_alloc_template<0> malloc_alloc
+template<class _Tp, class _Alloc> class simple_alloc
+template <class _Alloc> class debug_alloc
+template <bool threads, int inst> class <strong>default_alloc_template // Default node allocator.
+typedef </strong>default_alloc_template&lt;<strong>NODE_ALLOCATOR_THREADS, 0> alloc
+typedef </strong>default_alloc_template&lt;false, 0> single_client_alloc
+template <class _Tp>class allocator
+template&lt;>class allocator<void>
+template <class _Tp, class _Alloc>struct <strong>allocator
+template <class _Alloc>class </strong>allocator&lt;void, <em>Alloc>
+<code>``
+其中</code>simple_alloc<code>,</code>debug_alloc<code>,</code>allocator<code>和</code>__allocator<code> 的实现都比较简单，都是对其他适配器的一个简单封装（因为实际上还是调用其他配置器的方法，如</code></em>Alloc::allocate<code>）。而真正内容比较充实的是</code><strong>malloc_alloc_template<code>和</code></strong>default_alloc_template<code>这两个配置器，这两个配置器就是 SGI STL 配置器的精华所在。其中</code><strong>malloc_alloc_template<code>是SGI STL 的第一层配置器，只是对系统的</code>malloc<code>,</code>realloc<code>函数的一个简单封装，并考虑到了分配失败后的异常处理。而</code></strong>default_alloc_template` 是SGI STL 的第二层配置器，在第一层配置器的基础上还考虑了内存碎片的问题，通过内置一个轻量级的内存池。下文将先介绍第一级配置器的异常处理机制，然后介绍第二级配置器的内存池实现，及在多线程环境下内存池互斥访问的机制。</p>
+
+<h2>2. SGI STL 内存分配失败的异常处理</h2>
+
+<p>内存分配失败一般是由于out-of-memory(oom)，SGI STL 本身并不会去处理oom问题，而只是提供一个 private 的函数指针成员和一个 public 的设置该函数指针的方法，让用户来自定义异常处理逻辑：
+```
+private:</p>
+
+<h1>ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG</h1>
+
+<p>  static void (* __malloc_alloc_oom_handler)();  // 函数指针</p>
+
+<h1>endif</h1>
+
+<p>public:
+  static void (<em> __set_malloc_handler(void (</em>__f)()))() // 设置函数指针的public方法
+  {</p>
+
+<pre><code>void (* __old)() = __malloc_alloc_oom_handler;
+__malloc_alloc_oom_handler = __f;
+return(__old);
+</code></pre>
+
+<p>  }
+<code>
+如果用户没有调用该方法来设置异常处理函数，那么就不做任何异常处理，仅仅是想标准错误流输出一句out of memory并退出程序（对于使用new和C++特性的情况而言，则是抛出一个`std::bad_alloc()`异常）， 因为该函数指针的缺省值为0，此时对应的异常处理是 `__THROW_BAD_ALLOC`：
+</code>
+// line 152 ~ 155</p>
+
+<h1>ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG</h1>
+
+<p>template <int __inst>
+void (* <strong>malloc_alloc_template<__inst>::</strong>malloc_alloc_oom_handler)() = 0;</p>
+
+<h1>endif</h1>
+
+<p>// in <em>S_oom_malloc and </em>S_oom_realloc
+<strong>my_malloc_handler = </strong>malloc_alloc_oom_handler;
+if (0 == <strong>my_malloc_handler) { </strong>THROW_BAD_ALLOC; }
+// in preprocess, line 41 ~ 50</p>
+
+<h1>ifndef __THROW_BAD_ALLOC</h1>
+
+<h1>if defined(<strong>STL_NO_BAD_ALLOC) || !defined(</strong>STL_USE_EXCEPTIONS)</h1>
+
+<h1>include &lt;stdio.h></h1>
+
+<h1>include &lt;stdlib.h></h1>
+
+<h1>define __THROW_BAD_ALLOC fprintf(stderr, "out of memory\n"); exit(1)</h1>
+
+<h1>else /<em> Standard conforming out-of-memory handling </em>/</h1>
+
+<h1>include <new></h1>
+
+<h1>define __THROW_BAD_ALLOC throw std::bad_alloc()</h1>
+
+<h1>endif</h1>
+
+<h1>endif</h1>
+
+<p>```
+SGI STL 内存配置失败的异常处理机制就是这样子了，提供一个默认的处理方法，也留有一个用户自定义处理异常的接口。</p>
+
+<h2>3. SGI STL 内置轻量级内存池的实现</h2>
+
+<p>第一级配置器 <code>__malloc_alloc_template</code> 仅仅只是对 <code>malloc</code> 的一层封装，没有考虑可能出现的内存碎片化问题。内存碎片化问题在大量申请小块内存是可能非常严重，最终导致碎片化的空闲内存无法充分利用。SGI 于是在第二级配置器 <code>__default_alloc_template</code> 中 内置了一个轻量级的内存池。 对于小内存块的申请，从内置的内存池中分配。然后维护一些空闲内存块的链表（简记为空闲链表，free list），小块内存使用完后都回收到空闲链表中，这样如果新来一个小内存块申请，如果对应的空闲链表不为空，就可以从空闲链表中分配空间给用户。具体而言SGI默认最大的小块内存大小为128bytes，并设置了128/8=16 个free list，每个list 分别维护大小为 8, 16, 24, ..., 128bytes 的空间内存块（均为8的整数倍），如果用户申请的空间大小不足8的倍数，则向上取整。</p>
+
+<p>SGI STL内置内存池的实现请看 <code>__default_alloc_template</code> 中被定义为 private 的这些成员变量和方法（去掉了部分预处理代码和互斥处理的代码）：
+```
+private:</p>
+
+<h1>if ! (defined(<strong>SUNPRO_CC) || defined(</strong>GNUC__))</h1>
+
+<pre><code>enum {_ALIGN = 8}; // 对齐大小
+enum {_MAX_BYTES = 128}; // 最大有内置内存池来分配的内存大小
+enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
+</code></pre>
+
+<h1>endif</h1>
+
+<p>  static size_t  _S_round_up(size_t __bytes) // 不是8的倍数，向上取整</p>
+
+<pre><code>{ return (((__bytes) + (size_t) _ALIGN-1) &amp; ~((size_t) _ALIGN - 1)); }
+</code></pre>
+
+<p><em>_PRIVATE:
+  union </em>Obj { // 空闲链表的每个node的定义</p>
+
+<pre><code>    union _Obj* _M_free_list_link;
+    char _M_client_data[1];   };
+</code></pre>
+
+<p>  static <em>Obj* __STL_VOLATILE </em>S_free_list[]; // 空闲链表数组
+  static size_t _S_freelist_index(size_t <strong>bytes) { // </strong>bytes 对应的free list的index</p>
+
+<pre><code>    return (((__bytes) + (size_t)_ALIGN-1)/(size_t)_ALIGN - 1);
+</code></pre>
+
+<p>  }
+  static void<em> _S_refill(size_t __n); // 从内存池中申请空间并构建free list，然后从free list中分配空间给用户
+  static char</em> <em>S_chunk_alloc(size_t <strong>size, int&amp; </strong>nobjs); // 从内存池中分配空间
+  static char* </em>S_start_free;  // 内存池空闲部分的起始地址
+  static char* <em>S_end_free; // 内存池结束地址
+  static size_t </em>S_heap_size; // 内存池堆大小，主要用于配置内存池的大小
+<code>``
+其中</code><em>S_refill<code>和</code></em>S_chunk_alloc<code>这两个函数是该内存池机制的核心。</code><em>_default_alloc_template<code>对外提供的 public 的接口有</code>allocate<code>,</code>deallocate<code>和</code>reallocate<code>这三个，其中涉及内存分配的</code>allocate<code>和</code>reallocate<code>的逻辑思路是，首先看申请的size（已round up）对应的free list是否为空，如果为空，则调用</code></em>S_refill<code>来分配，否则直接从对应的free list中分配。而</code>deallocate` 的逻辑是直接将空间插入到相应free list的最前面。</p>
+
+<p>函数 <code>_S_refill</code> 的逻辑是，先调用 <code>_S_chunk_alloc</code> 从内存池中分配20块小内存（而不是用户申请的1块），将这20块中的第一块返回给用户，而将剩下的19块依次链接，构建一个free list。这样下次再申请同样大小的内存就不用再从内存池中取了。有了 <code>_S_refill</code> ，用户申请空间时，就不是直接从内存池中取了，而是从 free list 中取。因此 <code>allocate</code> 和 <code>reallocate</code> 在相应的free list为空时都只需直接调用 <code>_S_refill</code> 就行了。</p>
+
+<p>这里默认是依次申请20块，但如果内存池空间不足以分配20块时，会尽量分配足够多的块，这些处理都在 <code>_S_chunk_alloc</code> 函数中。该函数的处理逻辑如下（源代码这里就不贴了）：</p>
+
+<blockquote><p>1) 能够分配20块</p>
+
+<blockquote><p>从内存池分配20块出来，改变 <code>_S_start_free</code> 的值，返回分配出来的内存的起始地址</p></blockquote>
+
+<p>2) 不足以分配20块，但至少能分配一块</p>
+
+<blockquote><p>分配经量多的块数，改变 <code>_S_start_free</code> 的值，返回分配出来的内存的起始地址</p></blockquote>
+
+<p>3) 一块也分配不了</p>
+
+<blockquote><p>首先计算新内存池大小 <code>size_t __bytes_to_get = 2 * __total_bytes + _S_round_up(_S_heap_size &gt;&gt; 4)</code><br/>
+将现在内存池中剩余空间插入到适当的free list中<br/>
+调用 <code>malloc</code> 来获取一大片空间作为新的内存池：<br/>
+-- 如果分配成功，则调整 <code>_S_end_free</code> 和 <code>_S_heap_size</code> 的值，并重新调用自身，从新的内存池中给用户分配空间；
+-- 否则，分配失败，考虑从比当前申请的空间大的free list中分配空间，如果无法找不到这样的非空free list，则调用第一级配置器的allocate，看oom机制能否解决问题</p></blockquote></blockquote>
+
+<p>SGI STL的轻量级内存池的实现就是酱紫了，其实并不复杂。</p>
+
+<h2>4. SGI STL 内存池在多线程下的互斥访问</h2>
+
+<p>最后，我们来看看SGI STL中如何处理多线程下对内存池互斥访问的（实际上是对相应的free list进行互斥访问，这里访问是只需要对free list进行修改的访问操作）。在SGI的第二级配置器中与内存池互斥访问相关的就是 <code>_Lock</code> 这个类了，它仅仅只包含一个构造函数和一个析构函数，但这两个函数足够了。在构造函数中对内存池加锁，在析构函数中对内存池解锁：
+```
+//// in __default_alloc_template</p>
+
+<h1>ifdef __STL_THREADS</h1>
+
+<pre><code>static _STL_mutex_lock _S_node_allocator_lock; // 互斥锁变量
+</code></pre>
+
+<h1>endif</h1>
+
+<p>class _Lock {</p>
+
+<pre><code>public:
+    _Lock() { __NODE_ALLOCATOR_LOCK; }
+    ~_Lock() { __NODE_ALLOCATOR_UNLOCK; }
+</code></pre>
+
+<p>};
+//// in preprocess</p>
+
+<h1>ifdef __STL_THREADS</h1>
+
+<h1>include &lt;stl_threads.h> // stl 的线程，只是对linux或windows线程的一个封装</h1>
+
+<h1>define __NODE_ALLOCATOR_THREADS true</h1>
+
+<h1>ifdef __STL_SGI_THREADS</h1>
+
+<h1>define <strong>NODE_ALLOCATOR_LOCK if (threads &amp;&amp; </strong>us_rsthread_malloc) \</h1>
+
+<pre><code>            { _S_node_allocator_lock._M_acquire_lock(); }  // 获取锁
+</code></pre>
+
+<h1>define <strong>NODE_ALLOCATOR_UNLOCK if (threads &amp;&amp; </strong>us_rsthread_malloc) \</h1>
+
+<pre><code>            { _S_node_allocator_lock._M_release_lock(); }  // 释放锁
+</code></pre>
+
+<h1>else /<em> !__STL_SGI_THREADS </em>/</h1>
+
+<h1>define __NODE_ALLOCATOR_LOCK \</h1>
+
+<pre><code>    { if (threads) _S_node_allocator_lock._M_acquire_lock(); }
+</code></pre>
+
+<h1>define __NODE_ALLOCATOR_UNLOCK \</h1>
+
+<pre><code>    { if (threads) _S_node_allocator_lock._M_release_lock(); }
+</code></pre>
+
+<h1>endif</h1>
+
+<h1>else /<em> !__STL_THREADS </em>/</h1>
+
+<h1>define __NODE_ALLOCATOR_LOCK</h1>
+
+<h1>define __NODE_ALLOCATOR_UNLOCK</h1>
+
+<h1>define __NODE_ALLOCATOR_THREADS false</h1>
+
+<h1>endif</h1>
+
+<p>```</p>
+
+<p>由于在 <code>__default_alloc_template</code> 的对外接口中，只有 <code>allocate</code> 和 <code>deallocate</code> 中直接涉及到对free list进行修改的操作，所以在这两个函数中，在对free list进行修改之前，都要实例化一个 <code>_Lock</code> 的对象 <code>__lock_instance</code> ，此时调用构造函数进行加锁，当函数结束时，的对象 <code>__lock_instance</code> 自动析构，释放锁。这样，在多线程下，可以保证free list的一致性。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(0) STL简介]]></title>
@@ -126,7 +402,7 @@
 <h3>源码阅读与分析工具</h3>
 
 <p>能在Linux下用熟练使用vim最好了，实在不行用 Code::Blocks 也挺不错的，可以查找函数原型、定义、调用等。在Windows下用Source Insight最好了，可惜不是免费的，但同样也可以用Code::Blocks 或 Visual C++ Express 等 IDE。<br/>
-原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，貌似没有什么继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
+原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，基本没有太多的继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
 
 <h3>参考</h3>
 
@@ -777,173 +1053,6 @@ return 0;
 ```</p>
 
 <p>但是还是不知道之前的代码为什么会出现这个错误，已在 <a href="http://stackoverflow.com/questions/23614215/destructor-error-in-c-type-int-argument-given-to-delete-expected-pointer">StackOverFlow上提问</a>，希望能得到满意的答案。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ubuntu 下 Android NDK 开发入门]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/05/04/android-ndk-development/"/>
-    <updated>2014-05-04T23:53:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/05/04/android-ndk-development</id>
-    <content type="html"><![CDATA[<p>本文首先介绍一下在 Ubuntu 下如何配置 Android NDK 开发环境，然后用一个简单的 hello-jni 项目来介绍 NDK 开发流程，本文的全部代码下载链接：<a href="https://ibillxia.github.io/upload/code/20140504-HelloJni.tar.gz">HelloJni.tar.gz</a>，也可以在我的 <a href="https://github.com/ibillxia/Demo/tree/master/HelloJni">GitHub</a> 上下载。</p>
-
-<h2>1. 简介</h2>
-
-<p>什么是 Android NDK 呢？ NDK(Native Development Kit) 是一个允许开发者用一些本地语言(C/C++)编写 Android App 的部分功能的工具集。对于一些特定的 App，NDK 非常有利于我们直接使用现成的用 C/C++ 编写的代码库（但对于大多数 App 来说，NDK 是没有必要的）。使用 NDK 进行 C/C++ Android 开发的基本结构和流程如下图（来自<a href="http://shihongzhi.com/ndk/">shihongzhi博客</a> ）：</p>
-
-<center> {% img /images/2014/IMAG2014050401.jpg %} </center>
-
-
-<p>在开始之前，这里要提醒大家：NDK 对大多数 App 而言是不会有太多的好处的，在 Android 上使用原生 C/C++ 代码并不会很明显的提升应用的性能，但却增加了你开发应用的复杂度。所以，仅仅在需要使用 NDK 时才使用它 —— 不要因为你更喜欢用 C/C++。典型的 NDK 应用场景是一些 CPU 操作密集而不需要太多内存的场合，如信号处理、物理模拟等等，很多这些处理过程都已经封装到了 Android 系统内部，所以当你不确定是否要使用本地 C/C++ 代码时，先看看你的需求，以及 Android 框架中的 API 是否已经提供你需要的功能。</p>
-
-<!-- more -->
-
-
-<h2>2.开发环境配置</h2>
-
-<p>由于 NDK 开发过程中涉及到将 C/C++ 程序编译为动态库(.so文件)，所以首先系统中需要安装 C/C++ 的编译工具 gcc/g++，还要有 make 工具，一般情况下 Linux 系统会默认安装，如果没有安装请先安装这几个工具。然后是 Java 和 Android 开发相关环境的配置。首先需要安装 JDK，并配置 Java 的环境变量，然后是集成开发环境如 Eclipse 的安装和配置，这些也不是本文的重点，如果你没有安装，请自行 google 并安装配置好。</p>
-
-<p>下面重点讲讲 Android 相关 SDK 的安装和配置，主要涉及到 Android SDK，ADT，NDK等。要进行 Android 开发，首先需要安装 Android SDK，要在 Eclipse 中进行开发的话，还需在 Eclipse 中安装 ADT(Android Develop Tools)，在 Android 官网上提供了 SDK 和 包含 ADT 的 Eclipse 的集成开发包，可以一起下载：<a href="http://dl.google.com/android/adt/22.6.2/adt-bundle-linux-x86-20140321.zip">adt-bundle-linux-x86-20140321.zip</a>。另外，还需要安装 NDK，下载地址：<a href="http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2">android-ndk-r9d-linux-x86.tar.bz2</a>。下载完这两个压缩包后解压并移动到 /usr/local 目录下：</p>
-
-<p><code>
-sudo mv Downloads/adt-bundle-x86-20140321/ /usr/local/adt-x86-20140321
-mv Downloads/android-ndk-r9d/ /usr/local/adt-x86-20140321/ndk-r9d
-</code></p>
-
-<p>然后配置环境变量：</p>
-
-<p><code>
-sudo vim /etc/profile
-</code></p>
-
-<p>在 /etc/profile 最后添加如下两行：</p>
-
-<p><code>
-export PATH=/usr/local/adt-x86-20140321/sdk/tools:/usr/local/adt-x86-20140321/sdk/platform-tools:$PATH
-export PATH=/usr/local/adt-x86-20140321/ndk-r9d:$PATH
-</code></p>
-
-<p>保存并退出，并用如下命令使设置生效：</p>
-
-<p><code>
-source /etc/profile
-</code></p>
-
-<p>完了可以执行如下命令看看设置是否生效：</p>
-
-<p><code>
-echo $PATH
-adb --version
-emulator -version
-ndk-build --version
-</code></p>
-
-<p>至此，开发环境已经配置完成了，接下来我们看一个 hello-jni 的例子。</p>
-
-<h2>3.NDK 开发实例 hello-jni</h2>
-
-<h4>3.1 JNI 简介</h4>
-
-<p>首先我们了解一下什么是JNI。JNI(Java Native Interface)是一种在Java虚拟机控制下执行代码的标准机制。 代码被编写成汇编程序或者C/C++程序，并组装为动态库，从而提供了一个在Java平台上调用C/C++的一种途径。 JNI主要的竞争优势在于：它在设计之初就确保了二进制的兼容性，JNI编写的应用程序兼容性以及在某些具体平台上的Java虚拟机兼容性（当谈及JNI，这里并不特别针对Dalvik；JNI由Oracle开发，适用于所有Java虚拟机）。 关于JNI的更多内容可以参见该文：<a href="http://www.importnew.com/8038.html">Android NDK介绍</a>。</p>
-
-<h4>3.2 Eclipse 配置</h4>
-
-<p>下面以参考 Android NDK 自带的 hello-jni 示例程序改写的我自己的 hello-jni 来介绍开发流程。首先打开 Eclipse 并配置 Android SDK 和 NDK 的路径。 选择 Eclipse 的如下菜单：Window =&gt; Preferences =&gt; Android，点击浏览按钮设置 SDK 路径；Window =&gt; Preferences =&gt; Android =&gt; NDK，点击浏览按钮设置 NDK 路径。接下来按照简介中的开发流程图来一步一步介绍 NDK 开发步骤。</p>
-
-<h4>3.3 创建 Android App 并添加 Native Support</h4>
-
-<p>首先用Eclipse 创建一个空的 Android App，命名为 HelloJni。在项目上点击右键，选择 Android Tools =&gt; Add Native Support... ，在弹出的对话框中填入 HelloJni 并确定，会发现项目中多了一个 jni 目录，并自动生成了 HelloJni.cpp 和 Android.mk 文件，分别是我们需要封装的native C++ 代码和编译它的 Makefile 文件。</p>
-
-<h4>3.4 编写 java API</h4>
-
-<p>原本按照图一中的流程我们需要先编写一些 C/C++ 原生的代码，但实际中，为了简便起见，我们可以使用 jdk 的 javah 工具（如果没有， <code>sudo apt-get update</code> 一下）来根据 java 调用 C/C++ API 的接口类来自动生成 jni 的头文件。因此，我们需要先做第3步的内容，这里编写的 Java API 接口 HelloCal 类（在 <code>src/io.ibillxia.hellojni</code> 路径下）如下：</p>
-
-<p>```
-//HelloCal.java
-package io.ibillxia.hellojni;</p>
-
-<p>public class HelloCal {</p>
-
-<pre><code>static { 
-    System.loadLibrary("HelloJni"); // 加载 jni 动态库 
-} 
-
-public native String helloSay(); // 返回字符串 
-public native int helloAdd(int a,int b); // 两个整数相加 
-public native int helloSub(int a,int b); // 两个整数相减 
-public native int helloMul(int a,int b); // 两个整数相乘 
-public native int helloDiv(int a,int b); // 两个整数相除 
-</code></pre>
-
-<p>}
-```</p>
-
-<h4>3.5 使用 javah 生成 jni 格式的 C/C++ API</h4>
-
-<p>编写完 java API 后在 Eclipse 中 build 一下生成对应 .class 文件，然后使用 javah 工具根据该 class 文件自动生成 jni API 的头文件。在 HelloJni App 根目录下执行如下命令：</p>
-
-<p><code>
-javah -classpath ./bin/classes -d jni io.ibillxia.hellojni.HelloCal
-</code></p>
-
-<p>其中 <code>-classpath ./bin/classes</code> 表示类的路径，<code>-d jni</code> 表示生成的头文件存放的目录， <code>io.ibillxia.hellojni.HelloCal</code> 则是完整类名，如果不出意外，在 <code>~/workspace/HelloJni/jni</code> 目录下生成了 <code>io_ibillxia_hellojni_HelloCal.h</code> 。然后根据这个头文件的内容，编写 <code>HelloCal.cpp</code> 文件实现头文件中声明的接口，具体的头文件和 cpp 源文件内容见源码压缩包。值得一提的是，在 cpp 源文件中，对数据运算后可能产生溢出进行了判断，对于溢出异常这里处理的办法是，如果上溢则返回最大值，下溢则返回最小值。实际中，这样做可能还不是很合理，比较好的做法是，在 cpp 中处理并返回异常值，并在相应的 Java API 中针对返回的异常值进行不同的处理，即在 cpp 中只检查异常，而真正处理异常则由 Java API 来处理。</p>
-
-<p>注意，这里需要添加一下 C/C++ 的包含目录，否则会报错。选中 jni文件夹，右键选择 Properties =&gt; C/C++ General =&gt; Paths and Symbols =&gt; Includes，点击 Add 一个一个添加如下依赖库：</p>
-
-<blockquote><p>/usr/include<br/>
-/usr/include/c++/4.8<br/>
-/usr/include/c++/4.8/backward<br/>
-/usr/include/i386-linux-gnu<br/>
-/usr/include/i386-linux-gnu/c++/4.8<br/>
-/usr/lib/gcc/i686-linux-gnu/4.8/include<br/>
-/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed<br/>
-/usr/local/include<br/>
-/usr/local/adt-x86-20140321/ndk-r9d/platforms/android-19/arch-arm/usr/include</p></blockquote>
-
-<p>添加完后 build 一下，看看是否有错误，如果不出意外，应该在 <code>HelloJni/libs/armeabi/</code> 目录下生成了 <code>libHelloJni.so</code> 文件。</p>
-
-<h4>3.6 编写 Android App</h4>
-
-<p>最后是编写 Android App，并在 App 中调用 Jni 接口函数。在 <code>io.ibillxia.hellojni</code> 包中新建一个 Java 类 HelloJni ，编写如下代码（import 内容省略，具体见源码压缩包）：</p>
-
-<p>```
-//HelloJni.java
-public class HelloJni extends Activity {</p>
-
-<pre><code>/** Called when the activity is first created. */
-@Override
-public void onCreate(Bundle savedInstanceState)
-{
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.hello_jni);
-
-    Button btn = (Button)findViewById(R.id.btn_cal);
-    btn.setOnClickListener(new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            TextView tv1 = (TextView) findViewById(R.id.textView1);
-            TextView tv2 = (TextView) findViewById(R.id.textView2);
-            TextView tv3 = (TextView) findViewById(R.id.textView3);
-
-            int a = Integer.parseInt(tv1.getText().toString());
-            int b = Integer.parseInt(tv2.getText().toString());
-            HelloCal cal = new HelloCal();
-            int c = cal.helloAdd(a,b);
-            String str = cal.helloSay();  
-            tv3.setText(str + Integer.toString(c));
-        }
-    });
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>另外，还需要设计对应的 layout xml 文件，具体见源码压缩包。 最后上一张运行效果截图：
-{% img /images/2014/IMAG2014050402.png %}
-图中输入的两个数的和超过了 int 能表示的最大值，出现上溢，但返回的是最大值。如果输入的两个数本身就超出范围将出现
-<code>Unfortunately, HelloJni has stopped.</code> 的异常的对话框。实际过程中，究竟在哪一步检测并处理异常，还是一个值得商讨的问题。如果是引用第三方的库，可能需要对相应的接口提供充分的测试，对于可以并且方便在 native code 层面解决的异常就在 native code 层面上处理掉，实在不行也要在 Java API 层面上解决掉，比如这里需要在 Java 中判断输入参数本身的合法性。</p>
 ]]></content>
   </entry>
   

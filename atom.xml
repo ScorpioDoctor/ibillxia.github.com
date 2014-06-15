@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-13T23:37:01+08:00</updated>
+  <updated>2014-06-15T16:25:54+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,334 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(1) 空间配置器(allocator)]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/"/>
+    <updated>2014-06-13T22:04:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator</id>
+    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。</p>
+
+<p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Foo { ... };
+</span><span class='line'>Foo* pf = new Foo;
+</span><span class='line'>...
+</span><span class='line'>delete pf;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Allocator 的作用相当于operator new 和operator delete的功能，只是它考虑得更加细致周全。SGI STL 中考虑到了内存分配失败的异常处理，内置轻量级内存池（主要用于处理小块内存的分配，应对内存碎片问题）实现， 多线程中的内存分配处理（主要是针对内存池的互斥访问）等，本文就主要分析 SGI STL 中在这三个方面是如何处理的。在介绍着三个方面之前，我们先来看看 Allocator的标准接口。</p>
+
+<!-- more -->
+
+
+<h2>1. Allocator 的标准接口</h2>
+
+<p>在 SGI STL 中，Allocator的实现主要在文件<code>alloc.h</code> 和 <code>stl_alloc.h</code> 文件中。根据 STL 规范，Allocator 需提供如下的一些接口（见 <code>stl_alloc.h</code> 文件的第588行开始的class template allocator）：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// 标识数据类型的成员变量，关于中间的6个变量的涵义见后续文章（关于Traits编程技巧）
+</span><span class='line'>typedef alloc _Alloc;
+</span><span class='line'>typedef size_t     size_type;
+</span><span class='line'>typedef ptrdiff_t  difference_type;
+</span><span class='line'>typedef _Tp*       pointer;
+</span><span class='line'>typedef const _Tp* const_pointer;
+</span><span class='line'>typedef _Tp&       reference;
+</span><span class='line'>typedef const _Tp& const_reference;
+</span><span class='line'>typedef _Tp        value_type;
+</span><span class='line'>template &lt;class _Tp1&gt; struct rebind {
+</span><span class='line'>  typedef allocator&lt;_Tp1&gt; other;
+</span><span class='line'>}; // 一个嵌套的class template，仅包含一个成员变量 other
+</span><span class='line'>// 成员函数
+</span><span class='line'>allocator() __STL_NOTHROW {}  // 默认构造函数，其中__STL_NOTHROW 在 stl_config.h中定义，要么为空，要么为 throw()
+</span><span class='line'>allocator(const allocator&) __STL_NOTHROW {}  // 拷贝构造函数
+</span><span class='line'>template &lt;class _Tp1&gt; allocator(const allocator&lt;_Tp1&gt;&) __STL_NOTHROW {} // 泛化的拷贝构造函数
+</span><span class='line'>~allocator() __STL_NOTHROW {} // 析构函数
+</span><span class='line'>pointer address(reference __x) const { return &__x; } // 返回对象的地址
+</span><span class='line'>const_pointer address(const_reference __x) const { return &__x; }  // 返回const对象的地址
+</span><span class='line'>_Tp* allocate(size_type __n, const void* = 0) {
+</span><span class='line'>  return __n != 0 ? static_cast&lt;_Tp*&gt;(_Alloc::allocate(__n * sizeof(_Tp))) : 0; 
+</span><span class='line'>  // 配置空间，如果申请的空间块数不为0，那么调用 _Alloc 也即 alloc 的 allocate 函数来分配内存，
+</span><span class='line'>} //这里的 alloc 在 SGI STL 中默认使用的是__default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt;这个实现（见第402行）
+</span><span class='line'>void deallocate(pointer __p, size_type __n) { _Alloc::deallocate(__p, __n * sizeof(_Tp)); } // 释放空间
+</span><span class='line'>size_type max_size() const __STL_NOTHROW  // max_size() 函数，返回可成功配置的最大值
+</span><span class='line'>    { return size_t(-1) / sizeof(_Tp); }  //这里没看懂，这里的size_t(-1)是什么意思？
+</span><span class='line'>void construct(pointer __p, const _Tp& __val) { new(__p) _Tp(__val); } // 调用 new 来给新变量分配空间并赋值
+</span><span class='line'>void destroy(pointer __p) { __p-&gt;~_Tp(); } // 调用 _Tp 的析构函数来释放空间</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在SGI STL中设计了如下几个空间分配的 class template：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;int __inst&gt; class __malloc_alloc_template // Malloc-based allocator.  Typically slower than default alloc
+</span><span class='line'>typedef __malloc_alloc_template&lt;0&gt; malloc_alloc
+</span><span class='line'>template&lt;class _Tp, class _Alloc&gt; class simple_alloc
+</span><span class='line'>template &lt;class _Alloc&gt; class debug_alloc
+</span><span class='line'>template &lt;bool threads, int inst&gt; class __default_alloc_template // Default node allocator.
+</span><span class='line'>typedef __default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt; alloc
+</span><span class='line'>typedef __default_alloc_template&lt;false, 0&gt; single_client_alloc
+</span><span class='line'>template &lt;class _Tp&gt;class allocator
+</span><span class='line'>template&lt;&gt;class allocator&lt;void&gt;
+</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;struct __allocator
+</span><span class='line'>template &lt;class _Alloc&gt;class __allocator&lt;void, _Alloc&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中<code>simple_alloc</code> , <code>debug_alloc</code> , <code>allocator</code> 和 <code>__allocator</code>  的实现都比较简单，都是对其他适配器的一个简单封装（因为实际上还是调用其他配置器的方法，如 <code>_Alloc::allocate</code> ）。而真正内容比较充实的是 <code>__malloc_alloc_template</code> 和 <code>__default_alloc_template</code> 这两个配置器，这两个配置器就是 SGI STL 配置器的精华所在。其中 <code>__malloc_alloc_template</code> 是SGI STL 的第一层配置器，只是对系统的 <code>malloc</code> , <code>realloc</code> 函数的一个简单封装，并考虑到了分配失败后的异常处理。而 <code>__default_alloc_template</code> 是SGI STL 的第二层配置器，在第一层配置器的基础上还考虑了内存碎片的问题，通过内置一个轻量级的内存池。下文将先介绍第一级配置器的异常处理机制，然后介绍第二级配置器的内存池实现，及在多线程环境下内存池互斥访问的机制。</p>
+
+<h2>2. SGI STL 内存分配失败的异常处理</h2>
+
+<p>内存分配失败一般是由于out-of-memory(oom)，SGI STL 本身并不会去处理oom问题，而只是提供一个 private 的函数指针成员和一个 public 的设置该函数指针的方法，让用户来自定义异常处理逻辑：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>private:
+</span><span class='line'>#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
+</span><span class='line'>  static void (* __malloc_alloc_oom_handler)();  // 函数指针
+</span><span class='line'>#endif
+</span><span class='line'>public:
+</span><span class='line'>  static void (* __set_malloc_handler(void (*__f)()))() // 设置函数指针的public方法
+</span><span class='line'>  {
+</span><span class='line'>    void (* __old)() = __malloc_alloc_oom_handler;
+</span><span class='line'>    __malloc_alloc_oom_handler = __f;
+</span><span class='line'>    return(__old);
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果用户没有调用该方法来设置异常处理函数，那么就不做任何异常处理，仅仅是想标准错误流输出一句out of memory并退出程序（对于使用new和C++特性的情况而言，则是抛出一个<code>std::bad_alloc()</code>异常）， 因为该函数指针的缺省值为0，此时对应的异常处理是 <code>__THROW_BAD_ALLOC</code>：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// line 152 ~ 155
+</span><span class='line'>#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
+</span><span class='line'>template &lt;int __inst&gt;
+</span><span class='line'>void (* __malloc_alloc_template&lt;__inst&gt;::__malloc_alloc_oom_handler)() = 0;
+</span><span class='line'>#endif
+</span><span class='line'>// in _S_oom_malloc and _S_oom_realloc
+</span><span class='line'>__my_malloc_handler = __malloc_alloc_oom_handler;
+</span><span class='line'>if (0 == __my_malloc_handler) { __THROW_BAD_ALLOC; }
+</span><span class='line'>// in preprocess, line 41 ~ 50
+</span><span class='line'>#ifndef __THROW_BAD_ALLOC
+</span><span class='line'>#  if defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)
+</span><span class='line'>#    include &lt;stdio.h&gt;
+</span><span class='line'>#    include &lt;stdlib.h&gt;
+</span><span class='line'>#    define __THROW_BAD_ALLOC fprintf(stderr, "out of memory\n"); exit(1)
+</span><span class='line'>#  else /* Standard conforming out-of-memory handling */
+</span><span class='line'>#    include &lt;new&gt;
+</span><span class='line'>#    define __THROW_BAD_ALLOC throw std::bad_alloc()
+</span><span class='line'>#  endif
+</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
+
+
+<p>SGI STL 内存配置失败的异常处理机制就是这样子了，提供一个默认的处理方法，也留有一个用户自定义处理异常的接口。</p>
+
+<h2>3. SGI STL 内置轻量级内存池的实现</h2>
+
+<p>第一级配置器 <code>__malloc_alloc_template</code> 仅仅只是对 <code>malloc</code> 的一层封装，没有考虑可能出现的内存碎片化问题。内存碎片化问题在大量申请小块内存是可能非常严重，最终导致碎片化的空闲内存无法充分利用。SGI 于是在第二级配置器 <code>__default_alloc_template</code> 中 内置了一个轻量级的内存池。 对于小内存块的申请，从内置的内存池中分配。然后维护一些空闲内存块的链表（简记为空闲链表，free list），小块内存使用完后都回收到空闲链表中，这样如果新来一个小内存块申请，如果对应的空闲链表不为空，就可以从空闲链表中分配空间给用户。具体而言SGI默认最大的小块内存大小为128bytes，并设置了128/8=16 个free list，每个list 分别维护大小为 8, 16, 24, &#8230;, 128bytes 的空间内存块（均为8的整数倍），如果用户申请的空间大小不足8的倍数，则向上取整。</p>
+
+<p>SGI STL内置内存池的实现请看 <code>__default_alloc_template</code> 中被定义为 private 的这些成员变量和方法（去掉了部分预处理代码和互斥处理的代码）：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>private:
+</span><span class='line'>#if ! (defined(__SUNPRO_CC) || defined(__GNUC__))
+</span><span class='line'>    enum {_ALIGN = 8}; // 对齐大小
+</span><span class='line'>    enum {_MAX_BYTES = 128}; // 最大有内置内存池来分配的内存大小
+</span><span class='line'>    enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
+</span><span class='line'># endif
+</span><span class='line'>  static size_t  _S_round_up(size_t __bytes) // 不是8的倍数，向上取整
+</span><span class='line'>    { return (((__bytes) + (size_t) _ALIGN-1) & ~((size_t) _ALIGN - 1)); }
+</span><span class='line'>__PRIVATE:
+</span><span class='line'>  union _Obj { // 空闲链表的每个node的定义
+</span><span class='line'>        union _Obj* _M_free_list_link;
+</span><span class='line'>        char _M_client_data[1];   };
+</span><span class='line'>  static _Obj* __STL_VOLATILE _S_free_list[]; // 空闲链表数组
+</span><span class='line'>  static size_t _S_freelist_index(size_t __bytes) { // __bytes 对应的free list的index
+</span><span class='line'>        return (((__bytes) + (size_t)_ALIGN-1)/(size_t)_ALIGN - 1);
+</span><span class='line'>  }
+</span><span class='line'>  static void* _S_refill(size_t __n); // 从内存池中申请空间并构建free list，然后从free list中分配空间给用户
+</span><span class='line'>  static char* _S_chunk_alloc(size_t __size, int& __nobjs); // 从内存池中分配空间
+</span><span class='line'>  static char* _S_start_free;  // 内存池空闲部分的起始地址
+</span><span class='line'>  static char* _S_end_free; // 内存池结束地址
+</span><span class='line'>  static size_t _S_heap_size; // 内存池堆大小，主要用于配置内存池的大小</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中 <code>_S_refill</code> 和 <code>_S_chunk_alloc</code> 这两个函数是该内存池机制的核心。 <code>__default_alloc_template</code> 对外提供的 public 的接口有 <code>allocate</code>, <code>deallocate</code> 和 <code>reallocate</code> 这三个，其中涉及内存分配的 <code>allocate</code> 和 <code>reallocate</code> 的逻辑思路是，首先看申请的size（已round up）对应的free list是否为空，如果为空，则调用 <code>_S_refill</code> 来分配，否则直接从对应的free list中分配。而 <code>deallocate</code> 的逻辑是直接将空间插入到相应free list的最前面。</p>
+
+<p>函数 <code>_S_refill</code> 的逻辑是，先调用 <code>_S_chunk_alloc</code> 从内存池中分配20块小内存（而不是用户申请的1块），将这20块中的第一块返回给用户，而将剩下的19块依次链接，构建一个free list。这样下次再申请同样大小的内存就不用再从内存池中取了。有了 <code>_S_refill</code> ，用户申请空间时，就不是直接从内存池中取了，而是从 free list 中取。因此 <code>allocate</code> 和 <code>reallocate</code> 在相应的free list为空时都只需直接调用 <code>_S_refill</code> 就行了。</p>
+
+<p>这里默认是依次申请20块，但如果内存池空间不足以分配20块时，会尽量分配足够多的块，这些处理都在 <code>_S_chunk_alloc</code> 函数中。该函数的处理逻辑如下（源代码这里就不贴了）：</p>
+
+<blockquote><p>1) 能够分配20块</p>
+
+<blockquote><p>从内存池分配20块出来，改变 <code>_S_start_free</code> 的值，返回分配出来的内存的起始地址</p></blockquote>
+
+<p>2) 不足以分配20块，但至少能分配一块</p>
+
+<blockquote><p>分配经量多的块数，改变 <code>_S_start_free</code> 的值，返回分配出来的内存的起始地址</p></blockquote>
+
+<p>3) 一块也分配不了</p>
+
+<blockquote><p>首先计算新内存池大小 <code>size_t __bytes_to_get = 2 * __total_bytes + _S_round_up(_S_heap_size &gt;&gt; 4)</code><br/>
+将现在内存池中剩余空间插入到适当的free list中<br/>
+调用 <code>malloc</code> 来获取一大片空间作为新的内存池：<br/>
+&#8211; 如果分配成功，则调整 <code>_S_end_free</code> 和 <code>_S_heap_size</code> 的值，并重新调用自身，从新的内存池中给用户分配空间；
+&#8211; 否则，分配失败，考虑从比当前申请的空间大的free list中分配空间，如果无法找不到这样的非空free list，则调用第一级配置器的allocate，看oom机制能否解决问题</p></blockquote></blockquote>
+
+<p>SGI STL的轻量级内存池的实现就是酱紫了，其实并不复杂。</p>
+
+<h2>4. SGI STL 内存池在多线程下的互斥访问</h2>
+
+<p>最后，我们来看看SGI STL中如何处理多线程下对内存池互斥访问的（实际上是对相应的free list进行互斥访问，这里访问是只需要对free list进行修改的访问操作）。在SGI的第二级配置器中与内存池互斥访问相关的就是 <code>_Lock</code> 这个类了，它仅仅只包含一个构造函数和一个析构函数，但这两个函数足够了。在构造函数中对内存池加锁，在析构函数中对内存池解锁：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//// in __default_alloc_template
+</span><span class='line'># ifdef __STL_THREADS
+</span><span class='line'>    static _STL_mutex_lock _S_node_allocator_lock; // 互斥锁变量
+</span><span class='line'># endif
+</span><span class='line'>class _Lock {
+</span><span class='line'>    public:
+</span><span class='line'>        _Lock() { __NODE_ALLOCATOR_LOCK; }
+</span><span class='line'>        ~_Lock() { __NODE_ALLOCATOR_UNLOCK; }
+</span><span class='line'>};
+</span><span class='line'>//// in preprocess
+</span><span class='line'>#ifdef __STL_THREADS
+</span><span class='line'># include &lt;stl_threads.h&gt; // stl 的线程，只是对linux或windows线程的一个封装
+</span><span class='line'># define __NODE_ALLOCATOR_THREADS true
+</span><span class='line'># ifdef __STL_SGI_THREADS
+</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
+</span><span class='line'>                { _S_node_allocator_lock._M_acquire_lock(); }  // 获取锁
+</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
+</span><span class='line'>                { _S_node_allocator_lock._M_release_lock(); }  // 释放锁
+</span><span class='line'># else /* !__STL_SGI_THREADS */
+</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK \
+</span><span class='line'>        { if (threads) _S_node_allocator_lock._M_acquire_lock(); }
+</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK \
+</span><span class='line'>        { if (threads) _S_node_allocator_lock._M_release_lock(); }
+</span><span class='line'># endif
+</span><span class='line'>#else /* !__STL_THREADS */
+</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK
+</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK
+</span><span class='line'>#   define __NODE_ALLOCATOR_THREADS false
+</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
+
+
+<p>由于在 <code>__default_alloc_template</code> 的对外接口中，只有 <code>allocate</code> 和 <code>deallocate</code> 中直接涉及到对free list进行修改的操作，所以在这两个函数中，在对free list进行修改之前，都要实例化一个 <code>_Lock</code> 的对象 <code>__lock_instance</code> ，此时调用构造函数进行加锁，当函数结束时，的对象 <code>__lock_instance</code> 自动析构，释放锁。这样，在多线程下，可以保证free list的一致性。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(0) STL简介]]></title>
@@ -49,7 +377,7 @@
 
 <h2>1. STL 简史</h2>
 
-<p>声明：这里的内容主要来自<a href="http://zh.wikipedia.org/">Wiki中文网</a>，这里尽量简化其描述，虽然是尽量剪裁，但可能还是有些罗嗦，而且大段copy，掩面 ~(@\<sup>-\<sup>@)~</sup></sup></p>
+<p>声明：这里的内容主要来自<a href="http://zh.wikipedia.org/">Wiki中文网</a>，这里尽量简化其描述，虽然是尽量剪裁，但可能还是有些罗嗦，而且大段copy，掩面 ~(@&and;-&and;@)~</p>
 
 <p>STL 是 Standard Template Library（标准模板库）的缩写。Standard 是指STL是C++标准程序库的一部分，Template是指STL是一套模板，这也是STL最本质的特征。标准模板库使得C++编程语言在有了同Java一样强大的类库的同时，保有了更大的可扩展性。</p>
 
@@ -111,7 +439,7 @@
 
 <h2>4. SGI STL源码结构</h2>
 
-<p>最后，这里简单介绍一下SGI STL 源码的结构。我下载的是<a href="https://www.sgi.com/tech/stl/download.html">SGI-STL-v3.3</a>， 它是基于1994年HP版STL改造而成的，最新版本v3.3的更新时间是2000年6月8日，共91个文件（SGI-STL官网文档中只列出了90个文件，少列了<code>vector.h</code>这个文件），1.1M大小（其实总代码量并不是很大，非常轻量级 (*\<sup>-\<sup>*)</sup></sup> ，比较适合拿来彻底分析一遍 ）。</p>
+<p>最后，这里简单介绍一下SGI STL 源码的结构。我下载的是<a href="https://www.sgi.com/tech/stl/download.html">SGI-STL-v3.3</a>， 它是基于1994年HP版STL改造而成的，最新版本v3.3的更新时间是2000年6月8日，共91个文件（SGI-STL官网文档中只列出了90个文件，少列了<code>vector.h</code>这个文件），1.1M大小（其实总代码量并不是很大，非常轻量级 (*&and;-&and;*) ，比较适合拿来彻底分析一遍 ）。</p>
 
 <p>在这91个文件中，有<strong>37个</strong>以 <code>stl_</code> 开头的文件，这些都是STL内部实现文件。有<strong>23个</strong>无扩展名的文件，这些都是STL对外提供的标准接口。 有<strong>11个</strong>与无扩展名文件同名的.h文件，这是对应的old-style形式的头文件（至于为什么不是每个无扩展名（new-style）头文件都有对应的 <code>.h</code> 文件，我也不太清楚）。 还有<strong>20个</strong>文件，主要是为 <code>stl_</code> 开头的文件提供比较 common 的功能，如 <code>algobase.h</code>、<code>hashtable.h</code> 等，或者是对 <code>stl_</code> 开头的文件进行一次内部封装，还有其他一些杂项功能等。</p>
 
@@ -126,7 +454,7 @@
 <h3>源码阅读与分析工具</h3>
 
 <p>能在Linux下用熟练使用vim最好了，实在不行用 Code::Blocks 也挺不错的，可以查找函数原型、定义、调用等。在Windows下用Source Insight最好了，可惜不是免费的，但同样也可以用Code::Blocks 或 Visual C++ Express 等 IDE。<br/>
-原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，貌似没有什么继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
+原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，基本没有太多的继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
 
 <h3>参考</h3>
 
@@ -4659,427 +4987,6 @@ Data: 真正的语音数据部分。</br>
 </p>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用Windows API实现一个简单的录音程序]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/06/04/a-simple-code-for-wave-recording-using-windows-api/"/>
-    <updated>2013-06-04T23:59:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/06/04/a-simple-code-for-wave-recording-using-windows-api</id>
-    <content type="html"><![CDATA[<p>本文介绍如何使用Windows API来录制语音信号兵保存到wave文件中，主要用到三个结构体和几个wave开头的API函数（在Winmm.lib文件中）。其中三个结构体是WAVEFORMATEX、WAVEHDR、MMTIME，其详细定义都在MMSystem.h中定义，
-可以转到定义看其详细内容及每一项的英文注释。用到的API函数的详细用法可以参见MSDN： http://msdn.microsoft.com/en-us/library/windows/desktop/dd743847(v=vs.85).aspx
-详细的使用过程请看下文的源代码，这是一个Win32 Application，需要手动添加Winmm.lib的依赖。</p>
-
-
-
-
-<!--more-->
-
-
-
-
-<p>实例程序</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-<span class='line-number'>108</span>
-<span class='line-number'>109</span>
-<span class='line-number'>110</span>
-<span class='line-number'>111</span>
-<span class='line-number'>112</span>
-<span class='line-number'>113</span>
-<span class='line-number'>114</span>
-<span class='line-number'>115</span>
-<span class='line-number'>116</span>
-<span class='line-number'>117</span>
-<span class='line-number'>118</span>
-<span class='line-number'>119</span>
-<span class='line-number'>120</span>
-<span class='line-number'>121</span>
-<span class='line-number'>122</span>
-<span class='line-number'>123</span>
-<span class='line-number'>124</span>
-<span class='line-number'>125</span>
-<span class='line-number'>126</span>
-<span class='line-number'>127</span>
-<span class='line-number'>128</span>
-<span class='line-number'>129</span>
-<span class='line-number'>130</span>
-<span class='line-number'>131</span>
-<span class='line-number'>132</span>
-<span class='line-number'>133</span>
-<span class='line-number'>134</span>
-<span class='line-number'>135</span>
-<span class='line-number'>136</span>
-<span class='line-number'>137</span>
-<span class='line-number'>138</span>
-<span class='line-number'>139</span>
-<span class='line-number'>140</span>
-<span class='line-number'>141</span>
-<span class='line-number'>142</span>
-<span class='line-number'>143</span>
-<span class='line-number'>144</span>
-<span class='line-number'>145</span>
-<span class='line-number'>146</span>
-<span class='line-number'>147</span>
-<span class='line-number'>148</span>
-<span class='line-number'>149</span>
-<span class='line-number'>150</span>
-<span class='line-number'>151</span>
-<span class='line-number'>152</span>
-<span class='line-number'>153</span>
-<span class='line-number'>154</span>
-<span class='line-number'>155</span>
-<span class='line-number'>156</span>
-<span class='line-number'>157</span>
-<span class='line-number'>158</span>
-<span class='line-number'>159</span>
-<span class='line-number'>160</span>
-<span class='line-number'>161</span>
-<span class='line-number'>162</span>
-<span class='line-number'>163</span>
-<span class='line-number'>164</span>
-<span class='line-number'>165</span>
-<span class='line-number'>166</span>
-<span class='line-number'>167</span>
-<span class='line-number'>168</span>
-<span class='line-number'>169</span>
-<span class='line-number'>170</span>
-<span class='line-number'>171</span>
-<span class='line-number'>172</span>
-<span class='line-number'>173</span>
-<span class='line-number'>174</span>
-<span class='line-number'>175</span>
-<span class='line-number'>176</span>
-<span class='line-number'>177</span>
-<span class='line-number'>178</span>
-<span class='line-number'>179</span>
-<span class='line-number'>180</span>
-<span class='line-number'>181</span>
-<span class='line-number'>182</span>
-<span class='line-number'>183</span>
-<span class='line-number'>184</span>
-<span class='line-number'>185</span>
-<span class='line-number'>186</span>
-<span class='line-number'>187</span>
-<span class='line-number'>188</span>
-<span class='line-number'>189</span>
-<span class='line-number'>190</span>
-<span class='line-number'>191</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// ******************* FileName: WinMain.cpp *****************************
-</span><span class='line'>// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
-</span><span class='line'>// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib
-</span><span class='line'>
-</span><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;atlstr.h>
-</span><span class='line'>#include &lt;windows.h>
-</span><span class='line'>#include &lt;Mmsystem.h>
-</span><span class='line'>
-</span><span class='line'>#pragma comment(lib,"Winmm.lib")
-</span><span class='line'>
-</span><span class='line'>char lpTemp[256];
-</span><span class='line'>
-</span><span class='line'>DWORD FCC(LPSTR lpStr)
-</span><span class='line'>{
-</span><span class='line'>  DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
-</span><span class='line'>  return Number;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-</span><span class='line'>{
-</span><span class='line'>  DWORD datasize = 48000;
-</span><span class='line'>    
-</span><span class='line'>  // 设置录音采样参数
-</span><span class='line'>  WAVEFORMATEX waveformat;
-</span><span class='line'>  waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
-</span><span class='line'>  waveformat.nChannels=1;
-</span><span class='line'>  waveformat.nSamplesPerSec=8000;
-</span><span class='line'>  waveformat.nBlockAlign=1;
-</span><span class='line'>  waveformat.wBitsPerSample=8;
-</span><span class='line'>  waveformat.cbSize=0;
-</span><span class='line'>  waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
-</span><span class='line'>  
-</span><span class='line'>  sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  HWAVEIN m_hWaveIn;
-</span><span class='line'>  if ( !waveInGetNumDevs() )
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  // 打开录音设备
-</span><span class='line'>  int res = waveInOpen(&m_hWaveIn,WAVE_MAPPER, &waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
-</span><span class='line'>  if ( res != MMSYSERR_NOERROR )
-</span><span class='line'>  {
-</span><span class='line'>     sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
-</span><span class='line'>     MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>     return 0;
-</span><span class='line'>  }
-</span><span class='line'>  
-</span><span class='line'>  WAVEHDR m_pWaveHdr;
-</span><span class='line'>  m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
-</span><span class='line'>  memset(m_pWaveHdr.lpData, 0, datasize );
-</span><span class='line'>  m_pWaveHdr.dwBufferLength = datasize;
-</span><span class='line'>  m_pWaveHdr.dwBytesRecorded = 0;
-</span><span class='line'>  m_pWaveHdr.dwUser = 0;
-</span><span class='line'>  m_pWaveHdr.dwFlags = 0;
-</span><span class='line'>  m_pWaveHdr.dwLoops = 0;
-</span><span class='line'>  sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  // 准备内存块录音
-</span><span class='line'>  int resPrepare = waveInPrepareHeader( m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR) ); 
-</span><span class='line'>  if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>  {
-</span><span class='line'>      sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>      MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  resPrepare = waveInAddBuffer( m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR) );
-</span><span class='line'>  if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>  {
-</span><span class='line'>      sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>      MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'> 
-</span><span class='line'>  if (! waveInStart(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>  Sleep(30000);
-</span><span class='line'>
-</span><span class='line'>  MMTIME mmt;
-</span><span class='line'>  mmt.wType = TIME_BYTES;
-</span><span class='line'>  sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  if (! waveInGetPosition(m_hWaveIn, &mmt, sizeof(MMTIME)) )
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if (mmt.wType != TIME_BYTES) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if (! waveInStop(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else  
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  
-</span><span class='line'>  if ( waveInReset(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
-</span><span class='line'>  DWORD NumToWrite=0;
-</span><span class='line'>  DWORD dwNumber = 0;
-</span><span class='line'>  HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
-</span><span class='line'>      FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-</span><span class='line'>
-</span><span class='line'>  // memset(m_pWaveHdr.lpData, 0, datasize);
-</span><span class='line'>  dwNumber = FCC("RIFF");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("WAVE");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("fmt ");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = 18L;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  WriteFile(FileHandle, &waveformat, sizeof(WAVEFORMATEX), &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("data");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = m_pWaveHdr.dwBytesRecorded;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &NumToWrite, NULL);
-</span><span class='line'>  SetEndOfFile(FileHandle);
-</span><span class='line'>  CloseHandle( FileHandle );  
-</span><span class='line'>  FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
-</span><span class='line'>  MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  if ( waveInUnprepareHeader(m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR)) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if (res == MMSYSERR_NOERROR ) // 关闭录音设备
-</span><span class='line'>  {
-</span><span class='line'>      if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
-</span><span class='line'>      {
-</span><span class='line'>          MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>      }
-</span><span class='line'>      else
-</span><span class='line'>      {
-</span><span class='line'>          MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>          return 0;
-</span><span class='line'>      }
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  return 0;
-</span><span class='line'>}
-</span><span class='line'>// ******************* End of File ************************</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
-
-
-
-
-<p>参考：</br>
-[1]MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/dd743586(v=vs.85).aspx</br>
-[2]基于API的录音机程序: http://www.vckbase.com/index.php/wv/664
-</p>
 
 ]]></content>
   </entry>

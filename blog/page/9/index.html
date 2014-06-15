@@ -183,6 +183,106 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/">PHP格式化打印数组，调试有用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true">Aug 25<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以下是从FleaPHP上挖来的，感谢FleaPHP的开发者们。</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/**
+</span><span class='line'>* 输出变量的内容，通常用于调试
+</span><span class='line'>*
+</span><span class='line'>* @package Core
+</span><span class='line'>*
+</span><span class='line'>* @param mixed $vars 要输出的变量
+</span><span class='line'>* @param string $label
+</span><span class='line'>* @param boolean $return
+</span><span class='line'>*/
+</span><span class='line'>function dump($vars, $label = '', $return = false)
+</span><span class='line'>{
+</span><span class='line'>    if (ini_get('html_errors')) {
+</span><span class='line'>        $content = "&lt;pre>\n";
+</span><span class='line'>        if ($label != '') {
+</span><span class='line'>            $content .= "&lt;strong>{$label} :&lt;/strong>\n";
+</span><span class='line'>        }
+</span><span class='line'>        $content .= htmlspecialchars(print_r($vars, true));
+</span><span class='line'>        $content .= "\n&lt;/pre>\n";
+</span><span class='line'>    } else {
+</span><span class='line'>        $content = $label . " :\n" . print_r($vars, true);
+</span><span class='line'>    }
+</span><span class='line'>    if ($return) { return $content; }
+</span><span class='line'>    echo $content;
+</span><span class='line'>    return null;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2010/08/21/utf8-chinese-coding/">UTF8中文编码范围</a></h1>
     
     
@@ -792,129 +892,6 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/01/21/a-love-program/">一个爱情程序</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-21T22:13:00+08:00" pubdate data-updated="true">Jan 21<span>st</span>, 2010</time>
-        
-         | <a href="/blog/2010/01/21/a-love-program/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一个很有趣的爱情程序</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RESULT   love(boy,   girl)     
-</span><span class='line'>  {     
-</span><span class='line'>  　　if(   boy.有房()   AND   boy.有车()   )     
-</span><span class='line'>  　　{     
-</span><span class='line'>  　　　boy.Set(Nothing);     
-</span><span class='line'>  　　　return   girl.嫁给(boy);     
-</span><span class='line'>  　　}     
-</span><span class='line'>  　　else   if(   girl.愿意等()   )     
-</span><span class='line'>  　　{     
-</span><span class='line'>  　　　next_year:     
-</span><span class='line'>  　　　for(   day=1;   day&lt;=365;   day++)     
-</span><span class='line'>  　　　{     
-</span><span class='line'>  　　　　if(   day   ==   情人节   )     
-</span><span class='line'>  　　　　　if(   boy.GiveGirl(玫瑰)   )     
-</span><span class='line'>  　　　　　　girl.感情++;     
-</span><span class='line'>  　　　　　else     
-</span><span class='line'>  　　　　　　girl.感情--;     
-</span><span class='line'>  　　　　if(   day   ==   girl.生日)     
-</span><span class='line'>  　　　　　if(   boy.GiveGirl(玫瑰)   )     
-</span><span class='line'>  　　　　　　girl.感情++;     
-</span><span class='line'>  　　　　　else     
-</span><span class='line'>  　　　　　　girl.感情--;     
-</span><span class='line'>  　　　　boy.拼命赚钱();     
-</span><span class='line'>  　　　}     
-</span><span class='line'>  　　　年龄++;     
-</span><span class='line'>  　　　girl.感情--;     
-</span><span class='line'>  　　　if(   boy.有房()   AND   boy.有车()   )     
-</span><span class='line'>  　　　{     
-</span><span class='line'>  　　　　boy.Set(Nothing);     
-</span><span class='line'>  　　　　return   girl.嫁给(boy);     
-</span><span class='line'>  　　　}     
-</span><span class='line'>  　　　else   if(   boy.赚钱   >   100,000   AND   girl.感情   >   8   )     
-</span><span class='line'>  　　　　goto   next_year;     
-</span><span class='line'>  　　　else     
-</span><span class='line'>  　　　　return   girl.goto(   another_boy);     
-</span><span class='line'>  　　}     
-</span><span class='line'>  　　return   girl.goto(   another_boy);
-</span><span class='line'>  }
-</span><span class='line'>//有看懂吗，看懂了就很有意思。看不懂就加油！！</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/10/">&larr; Older</a></li>
@@ -927,73 +904,7 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
 </div>
 <aside class="sidebar-nav span3">
   
-    <section>
-  <h2>Categories</h2>
-    <ul id="category-list">
-		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (34)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
-	</ul>
-</section>
-<section>
-  <h2>Tags</h2>
-  <ul class="tag-cloud">
-	<a style="font-size: 137%" href="/blog/tags/audio/">Audio</a>
-<a style="font-size: 159%" href="/blog/tags/c/">C</a>
-<a style="font-size: 112%" href="/blog/tags/c-plus-plus/">C++</a>
-<a style="font-size: 93%" href="/blog/tags/convex/">Convex</a>
-<a style="font-size: 112%" href="/blog/tags/deeplearning/">DeepLearning</a>
-<a style="font-size: 93%" href="/blog/tags/htk/">HTK</a>
-<a style="font-size: 146%" href="/blog/tags/life/">Life</a>
-<a style="font-size: 93%" href="/blog/tags/love/">Love</a>
-<a style="font-size: 93%" href="/blog/tags/machinelearning/">MachineLearning</a>
-<a style="font-size: 159%" href="/blog/tags/neuralnetworks/">NeuralNetworks</a>
-<a style="font-size: 93%" href="/blog/tags/nuance/">Nuance</a>
-<a style="font-size: 93%" href="/blog/tags/optimization/">Optimization</a>
-<a style="font-size: 153%" href="/blog/tags/php/">PHP</a>
-<a style="font-size: 112%" href="/blog/tags/prim/">Prim</a>
-<a style="font-size: 153%" href="/blog/tags/programtest/">ProgramTest</a>
-<a style="font-size: 93%" href="/blog/tags/programing/">Programing</a>
-<a style="font-size: 146%" href="/blog/tags/python/">Python</a>
-<a style="font-size: 126%" href="/blog/tags/quicksort/">QuickSort</a>
-<a style="font-size: 93%" href="/blog/tags/rbm/">RBM</a>
-<a style="font-size: 112%" href="/blog/tags/stl/">STL</a>
-<a style="font-size: 112%" href="/blog/tags/speech/">Speech</a>
-<a style="font-size: 93%" href="/blog/tags/uml/">UML</a>
-<a style="font-size: 93%" href="/blog/tags/vpr/">VPR</a>
-<a style="font-size: 112%" href="/blog/tags/web/">Web</a>
-<a style="font-size: 165%" href="/blog/tags/zju/">ZJU</a>
-
-  </ul>
-</section><section>
-  <h2>Recent Comments</h2>
-  <script type="text/javascript" src="http://ibillxia.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=22"></script>
-  <a href="http://disqus.com/">Powered by Disqus</a>
-</section>
-
-<section>
-  <h2>Sina Weibo</h2>
-  <ul id="weibo">
-	<iframe 
-		width="100%" 
-		height="550" 
-		class="share_self"  
-		frameborder="0" 
-		scrolling="no" 
-		src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=2704795533&verifier=9551ab13&dpc=1">
-	</iframe>
-  </ul>
-</section>
-
-<section>
-	<h2>Reading List</h2>
-	<ul>
-		<script type="text/javascript" src="http://www.douban.com/service/badge/65527470/?show=collection&amp;n=12&amp;columns=3" ></script>
-	</ul>
-</section>
-<section>
-  <h2>Copyleft</h2>
-  <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"></a></p>
-  <p>Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></p>
-</section>
+    
   
 </aside>
 

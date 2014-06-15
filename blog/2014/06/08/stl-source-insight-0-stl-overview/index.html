@@ -237,7 +237,7 @@ $(document).ready(function(){
 
 <h2>1. STL 简史</h2>
 
-<p>声明：这里的内容主要来自<a href="http://zh.wikipedia.org/">Wiki中文网</a>，这里尽量简化其描述，虽然是尽量剪裁，但可能还是有些罗嗦，而且大段copy，掩面 ~(@\<sup>-\<sup>@)~</sup></sup></p>
+<p>声明：这里的内容主要来自<a href="http://zh.wikipedia.org/">Wiki中文网</a>，这里尽量简化其描述，虽然是尽量剪裁，但可能还是有些罗嗦，而且大段copy，掩面 ~(@&and;-&and;@)~</p>
 
 <p>STL 是 Standard Template Library（标准模板库）的缩写。Standard 是指STL是C++标准程序库的一部分，Template是指STL是一套模板，这也是STL最本质的特征。标准模板库使得C++编程语言在有了同Java一样强大的类库的同时，保有了更大的可扩展性。</p>
 
@@ -299,7 +299,7 @@ $(document).ready(function(){
 
 <h2>4. SGI STL源码结构</h2>
 
-<p>最后，这里简单介绍一下SGI STL 源码的结构。我下载的是<a href="https://www.sgi.com/tech/stl/download.html">SGI-STL-v3.3</a>， 它是基于1994年HP版STL改造而成的，最新版本v3.3的更新时间是2000年6月8日，共91个文件（SGI-STL官网文档中只列出了90个文件，少列了<code>vector.h</code>这个文件），1.1M大小（其实总代码量并不是很大，非常轻量级 (*\<sup>-\<sup>*)</sup></sup> ，比较适合拿来彻底分析一遍 ）。</p>
+<p>最后，这里简单介绍一下SGI STL 源码的结构。我下载的是<a href="https://www.sgi.com/tech/stl/download.html">SGI-STL-v3.3</a>， 它是基于1994年HP版STL改造而成的，最新版本v3.3的更新时间是2000年6月8日，共91个文件（SGI-STL官网文档中只列出了90个文件，少列了<code>vector.h</code>这个文件），1.1M大小（其实总代码量并不是很大，非常轻量级 (*&and;-&and;*) ，比较适合拿来彻底分析一遍 ）。</p>
 
 <p>在这91个文件中，有<strong>37个</strong>以 <code>stl_</code> 开头的文件，这些都是STL内部实现文件。有<strong>23个</strong>无扩展名的文件，这些都是STL对外提供的标准接口。 有<strong>11个</strong>与无扩展名文件同名的.h文件，这是对应的old-style形式的头文件（至于为什么不是每个无扩展名（new-style）头文件都有对应的 <code>.h</code> 文件，我也不太清楚）。 还有<strong>20个</strong>文件，主要是为 <code>stl_</code> 开头的文件提供比较 common 的功能，如 <code>algobase.h</code>、<code>hashtable.h</code> 等，或者是对 <code>stl_</code> 开头的文件进行一次内部封装，还有其他一些杂项功能等。</p>
 
@@ -314,7 +314,7 @@ $(document).ready(function(){
 <h3>源码阅读与分析工具</h3>
 
 <p>能在Linux下用熟练使用vim最好了，实在不行用 Code::Blocks 也挺不错的，可以查找函数原型、定义、调用等。在Windows下用Source Insight最好了，可惜不是免费的，但同样也可以用Code::Blocks 或 Visual C++ Express 等 IDE。<br/>
-原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，貌似没有什么继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
+原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，基本没有太多的继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
 
 <h3>参考</h3>
 
@@ -374,6 +374,10 @@ $(document).ready(function(){
       
       <li><a href="/blog/archives">Blog Archives</a></li>
       
+      <li class="next"><a class="basic-alignment right" href="/blog/2014/06/13/stl-source-insight-1-memory-allocator/"
+        title="Next Post: 深入理解STL源码(1) 空间配置器(allocator)">深入理解STL源码(1) 空间配置器(allocator)
+        &raquo;</a></li>
+      
     </ul>
     
     <section>
@@ -388,119 +392,7 @@ $(document).ready(function(){
 
 <aside class="sidebar-nav span3">
   
-    <section>
-  <h2>Categories</h2>
-    <ul id="category-list">
-		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (34)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
-	</ul>
-</section>
-<section>
-  <h2>Tags</h2>
-  <ul class="tag-cloud">
-	<a style="font-size: 137%" href="/blog/tags/audio/">Audio</a>
-<a style="font-size: 159%" href="/blog/tags/c/">C</a>
-<a style="font-size: 112%" href="/blog/tags/c-plus-plus/">C++</a>
-<a style="font-size: 93%" href="/blog/tags/convex/">Convex</a>
-<a style="font-size: 112%" href="/blog/tags/deeplearning/">DeepLearning</a>
-<a style="font-size: 93%" href="/blog/tags/htk/">HTK</a>
-<a style="font-size: 146%" href="/blog/tags/life/">Life</a>
-<a style="font-size: 93%" href="/blog/tags/love/">Love</a>
-<a style="font-size: 93%" href="/blog/tags/machinelearning/">MachineLearning</a>
-<a style="font-size: 159%" href="/blog/tags/neuralnetworks/">NeuralNetworks</a>
-<a style="font-size: 93%" href="/blog/tags/nuance/">Nuance</a>
-<a style="font-size: 93%" href="/blog/tags/optimization/">Optimization</a>
-<a style="font-size: 153%" href="/blog/tags/php/">PHP</a>
-<a style="font-size: 112%" href="/blog/tags/prim/">Prim</a>
-<a style="font-size: 153%" href="/blog/tags/programtest/">ProgramTest</a>
-<a style="font-size: 93%" href="/blog/tags/programing/">Programing</a>
-<a style="font-size: 146%" href="/blog/tags/python/">Python</a>
-<a style="font-size: 126%" href="/blog/tags/quicksort/">QuickSort</a>
-<a style="font-size: 93%" href="/blog/tags/rbm/">RBM</a>
-<a style="font-size: 112%" href="/blog/tags/stl/">STL</a>
-<a style="font-size: 112%" href="/blog/tags/speech/">Speech</a>
-<a style="font-size: 93%" href="/blog/tags/uml/">UML</a>
-<a style="font-size: 93%" href="/blog/tags/vpr/">VPR</a>
-<a style="font-size: 112%" href="/blog/tags/web/">Web</a>
-<a style="font-size: 165%" href="/blog/tags/zju/">ZJU</a>
-
-  </ul>
-</section><section>
-    <h2>Recent Posts</h2>
-	<ul>
     
-      <li class="post">
-        <a href="/blog/2014/06/08/stl-source-insight-0-stl-overview/">深入理解STL源码(0) STL简介</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/17/insight-into-define-and-inline-function-in-c/">深入理解C语言的define和内联函数</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/11/cpp-program-optimization-new-delete-operator/">C++ 应用程序性能优化之 new/delete 操作符</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/04/android-ndk-development/">Ubuntu 下 Android NDK 开发入门</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/28/configure-twitter-bootstrap-theme-in-octopress/">给Octopress博客配置Twitter Bootstrap主题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">全排列及某排列的后继的求解及其STL实现的分析</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/11/swap-two-variables-in-place/">原地交换两个变量的值</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/16/go-concurrent-programming-first-try/">Go并发编程初探</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/10/top-10-open-source-recommendation-systems/">TOP 10开源的推荐系统简介</a>
-      </li>
-    
-	</ul>
-</section>
-<section>
-  <h2>Recent Comments</h2>
-  <script type="text/javascript" src="http://ibillxia.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=22"></script>
-  <a href="http://disqus.com/">Powered by Disqus</a>
-</section>
-
-<section>
-  <h2>Sina Weibo</h2>
-  <ul id="weibo">
-	<iframe 
-		width="100%" 
-		height="550" 
-		class="share_self"  
-		frameborder="0" 
-		scrolling="no" 
-		src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=2704795533&verifier=9551ab13&dpc=1">
-	</iframe>
-  </ul>
-</section>
-
-<section>
-	<h2>Reading List</h2>
-	<ul>
-		<script type="text/javascript" src="http://www.douban.com/service/badge/65527470/?show=collection&amp;n=12&amp;columns=3" ></script>
-	</ul>
-</section>
-<section>
-  <h2>Copyleft</h2>
-  <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"></a></p>
-  <p>Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></p>
-</section>
   
 </aside>
 

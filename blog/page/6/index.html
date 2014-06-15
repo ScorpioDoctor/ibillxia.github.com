@@ -183,6 +183,68 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/09/23/EFI-and-operating-system/">EFI和操作系统</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-23T23:03:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/23/EFI-and-operating-system/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前两天在98上看到一个帖子 windows 8 没法和linux共存？ 里面有一个概念就是EFI</p>
+
+<h2>什么是EFI？</h2>
+
+
+<p>EFI英文全称为Extensible Firmware Interface，中文译为可扩展固件接口，其主要目的是为了提供一组在 OS 加载之前（启动前）在
+所有平台上一致的、正确指定的启动服务。EFI最初由Intel开发，并在2002年12月所发布1.1版，后来在2005年Intel将此规范交由UEFI论坛
+来推广与发展，并更名为Unified EFI(UEFI)。</p>
+
+
+
+
+<p>EFI是一种个人电脑系统规格，用来定义操作系统与系统固件之间的软件界面，为替代BIOS的升级方案。可扩展固件接口（EFI）负责
+加电自检（POST）、连系操作系统以及提供连接操作系统与硬件的接口。UEFI在EFI基础上增加与改进了加密编码（cryptography）、
+网络认证（network authentication）与用户界面架构（User Interface Architecture）等方面的内容。EFI在软件层次中的位置如下图</br>
+<img src="/images/2012/IMAG2012092301.png">
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/23/EFI-and-operating-system/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/08/14/the-log-sum-inequanlity/">The Log Sum Inequality</a></h1>
     
     
@@ -895,99 +957,6 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/05/09-zju-program-test-solution/">09年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-05T16:48:00+08:00" pubdate data-updated="true">Mar 5<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/05/09-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-09年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：xxx定律（hdoj3782）（九度1031）</h3>
-
-
-<p>水题，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int n,cnt;
-</span><span class='line'>    while(scanf("%d",&n)&&n!=0){
-</span><span class='line'>        if(n==1){printf("0\n");continue;}
-</span><span class='line'>        cnt=0;
-</span><span class='line'>        while(n!=1){
-</span><span class='line'>            if(n%2)n=(3*n+1)>>1;
-</span><span class='line'>            else n=n>>1;
-</span><span class='line'>            cnt++;
-</span><span class='line'>        }
-</span><span class='line'>        printf("%d\n",cnt);
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/05/09-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/7/">&larr; Older</a></li>
@@ -1000,73 +969,7 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 </div>
 <aside class="sidebar-nav span3">
   
-    <section>
-  <h2>Categories</h2>
-    <ul id="category-list">
-		<li><a href='/blog/categories/assp'>ASSP (15)</a></li><li><a href='/blog/categories/engineering'>Engineering (4)</a></li><li><a href='/blog/categories/intelligence'>Intelligence (4)</a></li><li><a href='/blog/categories/life'>Life (11)</a></li><li><a href='/blog/categories/linux'>Linux (3)</a></li><li><a href='/blog/categories/math'>Math (5)</a></li><li><a href='/blog/categories/prml'>PRML (12)</a></li><li><a href='/blog/categories/program'>Program (34)</a></li><li><a href='/blog/categories/technics'>Technics (7)</a></li><li><a href='/blog/categories/view'>View (7)</a></li>
-	</ul>
-</section>
-<section>
-  <h2>Tags</h2>
-  <ul class="tag-cloud">
-	<a style="font-size: 137%" href="/blog/tags/audio/">Audio</a>
-<a style="font-size: 159%" href="/blog/tags/c/">C</a>
-<a style="font-size: 112%" href="/blog/tags/c-plus-plus/">C++</a>
-<a style="font-size: 93%" href="/blog/tags/convex/">Convex</a>
-<a style="font-size: 112%" href="/blog/tags/deeplearning/">DeepLearning</a>
-<a style="font-size: 93%" href="/blog/tags/htk/">HTK</a>
-<a style="font-size: 146%" href="/blog/tags/life/">Life</a>
-<a style="font-size: 93%" href="/blog/tags/love/">Love</a>
-<a style="font-size: 93%" href="/blog/tags/machinelearning/">MachineLearning</a>
-<a style="font-size: 159%" href="/blog/tags/neuralnetworks/">NeuralNetworks</a>
-<a style="font-size: 93%" href="/blog/tags/nuance/">Nuance</a>
-<a style="font-size: 93%" href="/blog/tags/optimization/">Optimization</a>
-<a style="font-size: 153%" href="/blog/tags/php/">PHP</a>
-<a style="font-size: 112%" href="/blog/tags/prim/">Prim</a>
-<a style="font-size: 153%" href="/blog/tags/programtest/">ProgramTest</a>
-<a style="font-size: 93%" href="/blog/tags/programing/">Programing</a>
-<a style="font-size: 146%" href="/blog/tags/python/">Python</a>
-<a style="font-size: 126%" href="/blog/tags/quicksort/">QuickSort</a>
-<a style="font-size: 93%" href="/blog/tags/rbm/">RBM</a>
-<a style="font-size: 112%" href="/blog/tags/stl/">STL</a>
-<a style="font-size: 112%" href="/blog/tags/speech/">Speech</a>
-<a style="font-size: 93%" href="/blog/tags/uml/">UML</a>
-<a style="font-size: 93%" href="/blog/tags/vpr/">VPR</a>
-<a style="font-size: 112%" href="/blog/tags/web/">Web</a>
-<a style="font-size: 165%" href="/blog/tags/zju/">ZJU</a>
-
-  </ul>
-</section><section>
-  <h2>Recent Comments</h2>
-  <script type="text/javascript" src="http://ibillxia.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=22"></script>
-  <a href="http://disqus.com/">Powered by Disqus</a>
-</section>
-
-<section>
-  <h2>Sina Weibo</h2>
-  <ul id="weibo">
-	<iframe 
-		width="100%" 
-		height="550" 
-		class="share_self"  
-		frameborder="0" 
-		scrolling="no" 
-		src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=2704795533&verifier=9551ab13&dpc=1">
-	</iframe>
-  </ul>
-</section>
-
-<section>
-	<h2>Reading List</h2>
-	<ul>
-		<script type="text/javascript" src="http://www.douban.com/service/badge/65527470/?show=collection&amp;n=12&amp;columns=3" ></script>
-	</ul>
-</section>
-<section>
-  <h2>Copyleft</h2>
-  <p align="center"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"></a></p>
-  <p>Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a></p>
-</section>
+    
   
 </aside>
 

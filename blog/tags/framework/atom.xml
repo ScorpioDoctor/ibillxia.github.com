@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Framework | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/framework/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-13T23:38:26+08:00</updated>
+  <updated>2014-06-15T16:26:25+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -126,7 +126,7 @@
 <h3>源码阅读与分析工具</h3>
 
 <p>能在Linux下用熟练使用vim最好了，实在不行用 Code::Blocks 也挺不错的，可以查找函数原型、定义、调用等。在Windows下用Source Insight最好了，可惜不是免费的，但同样也可以用Code::Blocks 或 Visual C++ Express 等 IDE。<br/>
-原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，貌似没有什么继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
+原本想用一个UML建模工具来分析一下STL中的类之间的关系的，但是看了看源代码，基本没有太多的继承之类的关系，而且很多UML工具对C++源码自动生成类图的功能支持得并不好，就放弃了。</p>
 
 <h3>参考</h3>
 
