@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: STL | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/stl/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-21T11:07:42+08:00</updated>
+  <updated>2014-06-21T13:17:54+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -382,7 +382,7 @@ enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
 <h2>3. STL 各组件间的关系</h2>
 
 <p>STL 六大组件间的关系如下图（来自侯姐《STL源码剖析》一书 p6）：<br/>
-<img src="/images/2014/IMAG2014060801.jpg">
+{% img /images/2014/IMAG2014060801.jpg %}
 其中 Container 通过 Allocator 取得数据存储空间，Alogrithm 通过 Iterator 存取 Container 内容，Functor 可以协助 Algorithm 完成不同的策略变化，Adapter 可以修饰或套接 Functor。这里的描述有些抽象，等详细了解了每个组件的功能职责后，就比较好懂了。</p>
 
 <h2>4. SGI STL源码结构</h2>
@@ -729,7 +729,7 @@ for(int j=i;j&lt;n;j++){
 
 <p>举个例子，如下图（修改自 <a href="http://fisherlei.blogspot.com/2012/12/leetcode-next-permutation.html">Next Permutation 解题报告</a> ）所示：</p>
 
-<center><img src="/images/2014/IMAG2014042401.png"></center>
+<center>{% img /images/2014/IMAG2014042401.png %}</center>
 
 
 <p>上面的说明已经很接近伪代码了，具体实现如下：</p>

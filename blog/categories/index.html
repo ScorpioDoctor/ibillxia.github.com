@@ -88,7 +88,6 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -116,7 +115,6 @@ $(document).ready(function(){
 
 });
 </script>
-
 
   
   <script type="text/javascript">
@@ -239,9 +237,8 @@ $(document).ready(function(){
 
 </ul>
 
-
  
-  <h2 id="Program-ref"><a href="http://ibillxia.github.io/blog/categories/Program">Program</a></h2>
+  <h2 class="my-cate-ref" id="Program-ref"><a href="/blog/categories/Program">Program</a></h2>
   <ul>
       
     
@@ -533,7 +530,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Engineering-ref"><a href="http://ibillxia.github.io/blog/categories/Engineering">Engineering</a></h2>
+  <h2 class="my-cate-ref" id="Engineering-ref"><a href="/blog/categories/Engineering">Engineering</a></h2>
   <ul>
       
     
@@ -577,7 +574,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Math-ref"><a href="http://ibillxia.github.io/blog/categories/Math">Math</a></h2>
+  <h2 class="my-cate-ref" id="Math-ref"><a href="/blog/categories/Math">Math</a></h2>
   <ul>
       
     
@@ -629,7 +626,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Life-ref"><a href="http://ibillxia.github.io/blog/categories/Life">Life</a></h2>
+  <h2 class="my-cate-ref" id="Life-ref"><a href="/blog/categories/Life">Life</a></h2>
   <ul>
       
     
@@ -729,7 +726,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Technics-ref"><a href="http://ibillxia.github.io/blog/categories/Technics">Technics</a></h2>
+  <h2 class="my-cate-ref" id="Technics-ref"><a href="/blog/categories/Technics">Technics</a></h2>
   <ul>
       
     
@@ -797,7 +794,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Linux-ref"><a href="http://ibillxia.github.io/blog/categories/Linux">Linux</a></h2>
+  <h2 class="my-cate-ref" id="Linux-ref"><a href="/blog/categories/Linux">Linux</a></h2>
   <ul>
       
     
@@ -833,7 +830,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="View-ref"><a href="http://ibillxia.github.io/blog/categories/View">View</a></h2>
+  <h2 class="my-cate-ref" id="View-ref"><a href="/blog/categories/View">View</a></h2>
   <ul>
       
     
@@ -901,7 +898,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="PRML-ref"><a href="http://ibillxia.github.io/blog/categories/PRML">PRML</a></h2>
+  <h2 class="my-cate-ref" id="PRML-ref"><a href="/blog/categories/PRML">PRML</a></h2>
   <ul>
       
     
@@ -1009,7 +1006,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="ASSP-ref"><a href="http://ibillxia.github.io/blog/categories/ASSP">ASSP</a></h2>
+  <h2 class="my-cate-ref" id="ASSP-ref"><a href="/blog/categories/ASSP">ASSP</a></h2>
   <ul>
       
     
@@ -1141,7 +1138,7 @@ $(document).ready(function(){
 
   </ul>
  
-  <h2 id="Intelligence-ref"><a href="http://ibillxia.github.io/blog/categories/Intelligence">Intelligence</a></h2>
+  <h2 class="my-cate-ref" id="Intelligence-ref"><a href="/blog/categories/Intelligence">Intelligence</a></h2>
   <ul>
       
     
@@ -1185,7 +1182,13 @@ $(document).ready(function(){
 
   </ul>
 
-
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".my-cate-ref a").attr("href",function(i,origValue){
+		return origValue.toLowerCase();
+	});
+});
+</script>
   
     <footer>
       
