@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C++ | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-15T16:26:25+08:00</updated>
+  <updated>2014-06-21T11:07:42+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -382,7 +382,7 @@ enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
 <h2>3. STL 各组件间的关系</h2>
 
 <p>STL 六大组件间的关系如下图（来自侯姐《STL源码剖析》一书 p6）：<br/>
-{% img /images/2014/IMAG2014060801.jpg %}
+<img src="/images/2014/IMAG2014060801.jpg">
 其中 Container 通过 Allocator 取得数据存储空间，Alogrithm 通过 Iterator 存取 Container 内容，Functor 可以协助 Algorithm 完成不同的策略变化，Adapter 可以修饰或套接 Functor。这里的描述有些抽象，等详细了解了每个组件的功能职责后，就比较好懂了。</p>
 
 <h2>4. SGI STL源码结构</h2>
@@ -639,7 +639,7 @@ void print(){
 
 <p>C++ 程序的存储空间可以分为静态/全局存储区、栈区和堆区。下图展示了一个典型的Linux C/C++ 程序内存空间布局：</p>
 
-<center>{% img /images/2014/IMAG2014051101.png %}</center>
+<center><img src="/images/2014/IMAG2014051101.png"></center>
 
 
 <p>其中，每一部分的具体涵义如下：<br/>

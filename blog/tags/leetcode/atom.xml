@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Leetcode | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/leetcode/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-15T16:26:25+08:00</updated>
+  <updated>2014-06-21T11:07:42+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -112,7 +112,7 @@ for(int j=i;j&lt;n;j++){
 
 <p>举个例子，如下图（修改自 <a href="http://fisherlei.blogspot.com/2012/12/leetcode-next-permutation.html">Next Permutation 解题报告</a> ）所示：</p>
 
-<center>{% img /images/2014/IMAG2014042401.png %}</center>
+<center><img src="/images/2014/IMAG2014042401.png"></center>
 
 
 <p>上面的说明已经很接近伪代码了，具体实现如下：</p>

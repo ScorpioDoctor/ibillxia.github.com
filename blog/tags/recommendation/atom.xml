@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Recommendation | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/recommendation/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-15T16:26:25+08:00</updated>
+  <updated>2014-06-21T11:07:42+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -25,7 +25,7 @@ Mahout、Oryx、EasyRecd等，供大家参考。PS：这里的top 10仅代表个
 <h2>#1.SVDFeature</h2>
 
 
-<center>{% img /images/2014/IMAG2014031001.png %}</center>
+<center><img src="/images/2014/IMAG2014031001.png"></center>
 
 
 <p>主页：<a href="http://svdfeature.apexlab.org/wiki/Main_Page">http://svdfeature.apexlab.org/wiki/Main_Page</a> 语言：C++</br>
@@ -45,7 +45,7 @@ SVDFeature包含一个很灵活的Matrix Factorization推荐框架，能方便�
 <h2>#2.LibMF</h2>
 
 
-<center>{% img /images/2014/IMAG2014031002.gif %}</center>
+<center><img src="/images/2014/IMAG2014031002.gif"></center>
 
 
 <p>主页：<a href="http://www.csie.ntu.edu.tw/~cjlin/libmf/">http://www.csie.ntu.edu.tw/~cjlin/libmf/</a> 语言：C++</br>
@@ -61,7 +61,7 @@ LibMF在矩阵分解的并行化方面作出了很好的贡献，针对SGD（随
 <h2>#3.LibFM</h2>
 
 
-<center>{% img /images/2014/IMAG2014031003.jpg %}</center>
+<center><img src="/images/2014/IMAG2014031003.jpg"></center>
 
 
 <p>主页：<a href="http://www.libfm.org/">http://www.libfm.org/</a> 语言：C++</br>
@@ -75,7 +75,7 @@ LibFM是专门用于矩阵分解的利器，尤其是其中实现了MCMC（Marko
 <h2>#4.Lenskit</h2>
 
 
-<center>{% img /images/2014/IMAG2014031004.png %}</center>
+<center><img src="/images/2014/IMAG2014031004.png"></center>
 
 
 <p>主页：<a href="http://lenskit.grouplens.org/">http://lenskit.grouplens.org/</a> 语言Java</br>
@@ -85,14 +85,14 @@ lenskit-knn,lenskit-svd,lenskit-slopone,lenskit-parent,lenskit-data-structures,l
 典型的推荐系统算法。</p>
 
 <h2>#5.GraphLab</h2>
-<center>{% img /images/2014/IMAG2014031005.png %}</center>
+<center><img src="/images/2014/IMAG2014031005.png"></center>
 <p>主页：<a href="http://docs.graphlab.org/collaborative_filtering.html">GraphLab - Collaborative Filtering</a> 语言：C++</br>
 Graphlab是基于C++开发的一个高性能分布式graph处理挖掘系统，特点是对迭代的并行计算处理能力强（这方面是hadoop的弱项），由于功能独到，GraphLab在业界名声很响。
 用GraphLab来进行大数据量的random walk或graph-based的推荐算法非常有效。Graphlab虽然名气比较响亮（CMU开发），但是对一般数据量的应用来说可能还用不上。</br>
 GraphLab主要实现了ALS，CCD++，SGD，Bias-SGD，SVD++，Weighted-ALS，Sparse-ALS，Non-negative Matrix Factorization，Restarted Lanczos Algorithm等算法。</p>
 
 <h2>#6.Mahout</h2>
-<center>{% img /images/2014/IMAG2014031006.png %}</center>
+<center><img src="/images/2014/IMAG2014031006.png"></center>
 <p>主页：<a href="http://mahout.apache.org/">http://mahout.apache.org/</a> 语言：Java</br>
 Mahout 是 Apache Software Foundation (ASF) 开发的一个全新的开源项目，其主要目标是创建一些可伸缩的机器学习算法，供开发人员在 Apache 在许可下免费
 使用。Mahout项目是由 Apache Lucene社区中对机器学习感兴趣的一些成员发起的，他们希望建立一个可靠、文档翔实、可伸缩的项目，在其中实现一些常见的用于
@@ -101,7 +101,7 @@ Mahout 是 Apache Software Foundation (ASF) 开发的一个全新的开源项目
 在Mahout的Recommendation类算法中，主要有User-Based CF，Item-Based CF，ALS，ALS on Implicit Feedback，Weighted MF，SVD++，Parallel SGD等。</p>
 
 <h2>#7.Myrrix</h2>
-<center>{% img /images/2014/IMAG2014031007.png %}</center>
+<center><img src="/images/2014/IMAG2014031007.png"></center>
 <p>主页：<a href="http://myrrix.com/">http://myrrix.com/</a> 语言：Java</br>
 Myrrix最初是Mahout的作者之一Sean Owen基于Mahout开发的一个试验性质的推荐系统。目前Myrrix已经是一个完整的、实时的、可扩展的集群和推荐系统，主要
 架构分为两部分：服务层：在线服务，响应请求、数据读入、提供实时推荐；计算层：用于分布式离线计算，在后台使用分布式机器学习算法为服务层更新机器学习
@@ -109,7 +109,7 @@ Myrrix最初是Mahout的作者之一Sean Owen基于Mahout开发的一个试验�
 计算层，它会在本地运行机器学习算法。计算层也可以单独使用，其本质是一系列的Hadoop jobs。目前Myrrix以被 Cloudera 并入Oryx项目。</p>
 
 <h2>#8.EasyRec</h2>
-<center>{% img /images/2014/IMAG2014031008.png %}</center>
+<center><img src="/images/2014/IMAG2014031008.png"></center>
 <p>主页：<a href="http://easyrec.org/">http://easyrec.org/</a> 语言：Java</br>
 EasyRec是一个易集成、易扩展、功能强大且具有可视化管理的推荐系统，更像一个完整的推荐产品，包括了数据录入模块、管理模块、推荐挖掘、离线分析等。
 EasyRec可以同时给多个不同的网站提供推荐服务，通过tenant来区分不同的网站。架设EasyRec服务器，为网站申请tenant，通过tenant就可以很方便的集成到
@@ -117,14 +117,14 @@ EasyRec可以同时给多个不同的网站提供推荐服务，通过tenant来�
 Recommendations和Community Rankings来进行推荐业务的实现。</p>
 
 <h2>#9.Waffles</h2>
-<center>{% img /images/2014/IMAG2014031009.png %}</center>
+<center><img src="/images/2014/IMAG2014031009.png"></center>
 <p>主页：<a href="http://waffles.sourceforge.net/">http://waffles.sourceforge.net/</a> 语言：C++</br>
 Waffles英文原意是蜂蜜甜饼，在这里却指代一个非常强大的机器学习的开源工具包。Waffles里包含的算法特别多，涉及机器学习的方方面面，推荐系统位于
 其中的Waffles_recommend tool，大概只占整个Waffles的1/10的内容，其它还有分类、聚类、采样、降维、数据可视化、音频处理等许许多多工具包，估计
 能与之媲美的也就数Weka了。</p>
 
 <h2>#10.RapidMiner</h2>
-<center>{% img /images/2014/IMAG2014031010.png %}</center>
+<center><img src="/images/2014/IMAG2014031010.png"></center>
 <p>主页：<a href="http://rapidminer.com/">http://rapidminer.com/</a> 语言：Java</br>
 RapidMiner（前身是Yale）是一个比较成熟的数据挖掘解决方案，包括常见的机器学习、NLP、推荐、预测等方法（推荐只占其中很小一部分），而且带有GUI的
 数据分析环境，数据ETL、预处理、可视化、评估、部署等整套系统都有。另外RapidMiner提供commercial license，提供R语言接口，感觉在向着一个商用的
