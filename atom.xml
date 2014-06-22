@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-21T13:17:22+08:00</updated>
+  <updated>2014-06-22T23:54:32+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -14,11 +14,192 @@
 
   
   <entry>
+    <title type="html"><![CDATA[深入理解STL源码(2) 迭代器(Iterators)和Traits]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/"/>
+    <updated>2014-06-21T21:46:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有 <code>iterator.h</code>, <code>stl_iterator_base.h</code>, <code>concept_checks.h</code>, <code>stl_iterator.h</code>, <code>type_traits.h</code>, <code>stl_construct.h</code>, <code>stl_raw_storage_iter.h</code> 等7个文件。</p>
+
+<h2>1. 迭代器的设计思维</h2>
+
+<p>迭代器（iterators）是一种抽象的设计概念，显示程序中并没有直接对应于这个概念的实体。在 <em>Design Patterns</em> 一书中，对 iterators 模式的定义如下：提供一种方法，使之能够依序遍历某个聚合物（容器）所包含的各个元素，而又无需暴露该聚合物内部的表述方式。</p>
+
+<p>在STL中迭代器扮演着重要的角色。STL的中心思想在于：将数据容器（container）和算法（algorithm）分开，彼此独立设计，最后再通过某种方式将他们衔接在一起。容器和算法的泛型化，从技术的角度来看并不困难，C++ 的 class template 和 function template 可以分别达到目标，难点在于如何设计二者之间的衔接器。</p>
+
+<p>在STL中，起者这种衔接作用的是迭代器，它是一种行为类似指针的对象。指针的各种行为中最常见也最重要的便是内容获取（dereference）和成员访问（member access），因此迭代器最重要的工作就是对 <code>operator*</code> 和 <code>operator-&gt;</code> 进行重载。然而要对这两个操作符进行重载，就需要对容器内部的对象的数据类型和存储结构有所了解，于是在 STL 中迭代器的最终实现都是由容器本身来实现的，每种容器都有自己的迭代器实现，例如我们使用vector容器的迭代器的时候是这样用的 <code>vector&lt;int&gt;::iterator it;</code> 。而本文所讨论的迭代器是不依存于特定容器的迭代器，它在STL中主要有以下两个方面的作用（我自己的理解和总结）：</p>
+
+<blockquote><ul>
+<li>规定容器中需要实现的迭代器的类型及每种迭代器的标准接口</li>
+<li>通过Traits编程技巧实现迭代器相应型别的获取，弥补 C++ 模板参数推导的不足，为配置器提供可以获取容器中对象型别的接口</li>
+</ul>
+</blockquote>
+
+<p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
+
+<h2>2. STL 迭代器的分类与标准接口</h2>
+
+<h3>2.1 STL 迭代器的分类</h3>
+
+<p>在SGI STL中迭代器按照移动特性与读写方式分为 <code>input_iterator</code>, <code>output_iterator</code>, <code>forward_iterator</code>, <code>bidirectional_iterator</code>, <code>random_access_iterator</code> 这5种，他们的定义都在 <code>stl_iterators_base.h</code> 文件中。这5种迭代器的特性如下：</p>
+
+<blockquote><p>input_iterator:  这种迭代器所指对象只允许读取，而不允许改变，是只读的（read only）。
+output_iterator:  与上面的相反，只能写（write only）。
+forward_iterator: 同时允许读和写，适用于 <code>replace()</code> 等算法。
+bidirectional_iterator: 可双向移动，即既可以按顺序访问，也可以按逆序访问。
+random_access_iterator: 前4种只提供一部分指针运算功能，如前3种只支持 <code>operator++</code>, 而第4种还支持 <code>operator--</code>, 但这种随机访问迭代器还支持 <code>p+n</code>, <code>p-n</code>, <code>p[n]</code>, <code>p1-p2</code>, <code>p1+p2</code> 等。</p></blockquote>
+
+<p>从以上的特性可以看出，<code>input_iterator</code> 和 <code>output_iterator</code> 都是特殊的 <code>forward_iterator</code>, 而 <code>forward_iterator</code> 是特殊的 <code>bidirectional_iterator</code>, <code>bidirectional_iterator</code> 是特殊的 <code>random_access_iterator</code> 。在 <code>stl_iterator_base.h</code> 文件中，他们的定义中我们并不能看到这种特性的表达，而只是规定了这几种迭代器类型及应该包含的成员属性，真正表达这些迭代器不同特性的代码在 <code>stl_iterator.h</code> 文件中。在 <code>stl_iterator_base.h</code> 文件中，除了对这几种迭代器类型进行规定之外，还提供了获取迭代器类型的接口、获取迭代器中的 <code>value_type</code> 类型、获取迭代器中的 <code>distance_type</code> 、获取两个迭代器的距离（<code>distance</code> 函数）、将迭代器向前推进距离 n （<code>advance</code> 函数）等标准接口。</p>
+
+<h3>2.2 STL迭代器的标准接口</h3>
+
+<p>在 <code>stl_iterator.h</code> 文件中，设计了 <code>back_insert_iterator</code>, <code>front_insert_iterator</code>, <code>insert_iterator</code>, <code>reverse_bidirectional_iterator</code>, <code>reverse_iterator</code>, <code>istream_iterator</code>, <code>ostream_iterator</code>,  等标准的迭代器，其中前3中都使用 <code>output_iterator</code> 的只写特性（只进行插入操作，只是插入的位置不同而已），而第4种使用的是 <code>bidirectional_iterator</code> 的双向访问特性，第5种使用的是 <code>random_access_iterator</code> 的随机访问特性。而最后两种标准迭代器分别是使用 <code>input_iterator</code> 和 <code>output_iterator</code> 特性的迭代器。从这几个标准的迭代器的定义中可以看出，主要是实现了 <code>operator=</code>, <code>operator*</code>, <code>operator-&gt;</code>, <code>operator==</code>, <code>operator++</code>, <code>operator--</code>, <code>operator+</code>, <code>operator-</code>, <code>operator+=</code>, <code>operator-=</code> 等指针操作的标准接口。根据定义的操作符的不同，就是不同类型的迭代器了。</p>
+
+<p>例如，下面是 <code>back_insert_iterator</code> 的标准定义：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Container&gt;
+</span><span class='line'>class back_insert_iterator {
+</span><span class='line'>protected:
+</span><span class='line'>  _Container* container;
+</span><span class='line'>public:
+</span><span class='line'>  // member variables
+</span><span class='line'>  typedef _Container          container_type;
+</span><span class='line'>  typedef output_iterator_tag iterator_category;
+</span><span class='line'>  typedef void                value_type;
+</span><span class='line'>  typedef void                difference_type;
+</span><span class='line'>  typedef void                pointer;
+</span><span class='line'>  typedef void                reference;
+</span><span class='line'>  // member functions, mainly about operator overloading
+</span><span class='line'>  explicit back_insert_iterator(_Container& __x) : container(&__x) {}
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;&
+</span><span class='line'>  operator=(const typename _Container::value_type& __value) { 
+</span><span class='line'>    container-&gt;push_back(__value);
+</span><span class='line'>    return *this;
+</span><span class='line'>  }
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator*() { return *this; }
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++() { return *this; }
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++(int) { return *this; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 迭代器相应型别与Traits编程技巧</h2>
+
+<h3>3.1 迭代器相应型别</h3>
+
+<p>在算法中运用迭代器是，很可能需要获取器相应型别，即迭代器所指对象的类型。此时需要使用到 function template 的参数推导（argument deducation）机制，在传入迭代器模板类型的同时，传入迭代器所指对象的模板类型，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;class I, class T&gt;
+</span><span class='line'>void func_impl(I iter, T t){
+</span><span class='line'>    // TODO: Add your code here
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里不仅要传入类型 <code>class I</code>, 还要传入类型 <code>class T</code>。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
+
+<blockquote><p>value_type: 迭代器所指对象的类型。<br/>
+difference_type: 表示两个迭代器之间的距离，因此也可以用来表示一个容器的最大容量。例如一个提供计数功能的泛型算法 <code>count()</code> ，其返回值的类型就是迭代器的 <code>difference_type</code> .<br/>
+reference_type: 从迭代器所指内容是否允许修改来看，迭代器分为 constant iterator 和 mutable iterator，如果传回一个可以修改的对象，一般是以 reference 的方式，因此需要传回引用时，使用此类型。<br/>
+pointer_type: 在需要传回迭代器所指对象的地址时，使用这种类型。
+iterator_category: 即前面提到5种的迭代器的类型。</p></blockquote>
+
+<p>而且实际当中，并不是所有情况都可以通过以上的 template 的参数推导机制来实现（例如算法返回值的类型是迭代器所指对象的类型，template参数推导机制无法推导返回值类型），因此需要更一般化的解决方案，在STL中，这就是Traits编程技巧。</p>
+
+<h3>3.2 Traits 编程技巧</h3>
+
+<p>在STL的每个标准迭代器中，都定义了5个迭代器相应型别的成员变量，在STL定义了一个统一的接口：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// In file stl_iterator_base.h
+</span><span class='line'>template &lt;class _Category, class _Tp, class _Distance = ptrdiff_t,
+</span><span class='line'>          class _Pointer = _Tp*, class _Reference = _Tp&&gt;
+</span><span class='line'>struct iterator {
+</span><span class='line'>  typedef _Category  iterator_category;
+</span><span class='line'>  typedef _Tp        value_type;
+</span><span class='line'>  typedef _Distance  difference_type;
+</span><span class='line'>  typedef _Pointer   pointer;
+</span><span class='line'>  typedef _Reference reference;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其他的迭代器都可以继承这个标注类，由于后面3个模板参数都有默认值，因此新的迭代器只需提供前两个参数即可（但在SGI STL中并没有使用继承机制）。这样在使用该迭代器的泛型算法中，可以返回这5种类型中的任意一种，而不需要依赖于 template 参数推导的机制。</p>
+
+<p>在SGI STL中，如果启用 <code>__STL_CLASS_PARTIAL_SPECIALIZATION</code> 这个宏定义，还有这样一个标准的 <code>iterator_traits</code> ：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// In file stl_iterator_base.h
+</span><span class='line'>template &lt;class _Iterator&gt;
+</span><span class='line'>struct iterator_traits {
+</span><span class='line'>  typedef typename _Iterator::iterator_category iterator_category;
+</span><span class='line'>  typedef typename _Iterator::value_type        value_type;
+</span><span class='line'>  typedef typename _Iterator::difference_type   difference_type;
+</span><span class='line'>  typedef typename _Iterator::pointer           pointer;
+</span><span class='line'>  typedef typename _Iterator::reference         reference;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>值得一提的是，这些类型不仅可以是泛型算法的返回值类型，还可以是传入参数的类型。例如 <code>iterator_category</code> 可以作为迭代器的接口 <code>advance()</code> 和 <code>distance()</code>  的传入参数之一。 不同类型的迭代器实现同一算法的方式可能不同，可以通过这个参数类型来区分不同的重载函数。</p>
+
+<h2>4. SGI 中的 __type_traits</h2>
+
+<p>traits 编程技巧非常赞，适度弥补了 C++ template 本身的不足。 STL 只对迭代器加以规范，设计了 <code>iterator_traits</code> 这样的东西，SGI进一步将这种技法扩展到了迭代器之外，于是有了所谓的 <code>__type_traits</code>。</p>
+
+<p>在SGI中， <code>__type_traits</code> 可以获取一些类型的特殊属性，如该类型是否具备 trivial default ctor？是否具备 trivial copy ctor？是否具备 trivial assignment operator？是否具备 tivial dtor？是否是 plain old data（POD）？ 如果答案是肯定的，那么我们对这些类型进行构造、析构、拷贝、赋值等操作时，就可以采用比较有效的方法，如不调用该类型的默认构造、析构函数，而是直接调用 <code>malloc()</code>, <code>free()</code>, <code>memcpy()</code> 等等，这对于大量而频繁的操作容器，效率有显著的提升。</p>
+
+<p>SGI中 <code>__type_traits</code> 的特性的实现都在 <code>type_traits.h</code> 文件中。其中将 <code>bool</code>, <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code> 等基本的数据类型及其相应的指针类型的这些特性都定义为 <code>__true_type</code>，这以为着，这些对基本类型进行构造、析构、拷贝、赋值等操作时，都是使用系统函数进行的。而除了这些类型之外的其他类型，除非用户指定了它的这些特性为 <code>__true_type</code>，默认都是 <code>__false_type</code> 的，不能直接调用系统函数来进行内存配置或赋值等，而需要调用该类型的构造函数、拷贝构造函数等。</p>
+
+<p>另外，用户在自定义类型时，究竟一个 class 什么时候应该是 <code>__false_type</code> 的呢？一个简单的判断标准是：如果 class 内部有指针成员并需要对其进行动态配置内存是，这个 class 就需要定义为 <code>__false_type</code>的，需要给该类型定义构造函数、拷贝构造函数、析构函数等等。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[深入理解STL源码(1) 空间配置器(allocator)]]></title>
     <link href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/"/>
     <updated>2014-06-13T22:04:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator</id>
-    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。</p>
+    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。本文涉及到的 SGI STL 源代码文件有 <code>alloc.h</code>, <code>stl_config.h</code>, <code>stl_alloc.h</code>, <code>stl_threads.h</code> 这4个。</p>
 
 <p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：</p>
 
@@ -4772,222 +4953,6 @@ Data: 真正的语音数据部分。</br>
 <h2>一个Trick</h2>
 
 <p>在上面的HTML代码中，我们将一个链接添加到了ID为 #top 的里面，这个 #top 标签是 &lt;body&gt; 标签的ID，这样即使浏览器不支持相关的JS，通过这个link也实现了返回顶部的功能。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[蛙泳、自由泳、仰泳、蝶泳图解动画教你游泳]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/06/28/swimming-tutorial-with-gif-images/"/>
-    <updated>2013-06-28T21:37:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/06/28/swimming-tutorial-with-gif-images</id>
-    <content type="html"><![CDATA[<p>最近在室友的带领下，开始去cjl游泳馆学游泳，这里转载一篇游泳教程，分享给初学游泳的网友们</p>
-
-
-
-
-<h2>蛙泳</h2>
-
-
-<p>蛙泳配合有一个顺口溜，在讲解蛙泳动作要领之前先介绍给大家：“划手腿不动，收手再收腿，先伸胳膊后蹬腿，并拢伸直漂一会儿。”
-从顺口溜中可以看到，手的动作是先于腿的动作。一定要在收手后再收腿，伸手后再蹬腿。</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062801.gif"></center>
-
-
-
-
-<p>臂部动作：</br>
-1、外划。双手前伸，手掌倾斜大约45度(小拇指朝上)。双手同时向外、后方划，继而屈臂向后、向下方划。</br>
-2、内划。掌心由外转向内，手带动小臂加速内划，手由下向上并在胸前并拢(手高肘低、肘在肩下)，前伸。</br>
-3、前伸。双手向前伸(肘关节伸直)。要提醒大家注意的是：外划是放松的，内划是用力的、加速完成的、前伸是积极的。
-</p>
-
-
-
-
-<!--more-->
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062802.gif"></center>
-
-
-
-
-<p>腿部动作：</br>
-1、收腿：屈膝收腿，脚跟向臀部靠拢，小腿要躲在大腿后面慢收腿，这样可以减少阻力。收腿结束时，两膝与肩同宽，小腿与水面垂直，脚牚在水面附近。</br>
-2、翻脚：两脚距离大于两膝距离，两脚外翻，脚尖朝外，脚牚朝天，小腿和脚内侧对准水，像英文字母“W”。</br>
-3、夹蹬水：实际上是腿伸直的过程(屈髋、伸膝)，由腰腹和大腿同时发力，以小腿和脚内侧同时蹬夹水，先是向外、向后、向下，然后是向内、向上方蹬水，
-就像画半个圆圈。向外蹬水和向内夹水是连续完成的，也就是连蹬带夹。蹬夹水完成时双腿并拢伸直，双脚内转，脚尖相对。蹬水的速度不要过猛，要由
-慢到快地加速蹬水，两条腿将近伸直并拢的时候蹬水速度最快。</br>
-4、停：双腿并拢伸直后在一个短暂的滑行(1-2秒)。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062803.gif"></center>
-
-
-
-
-<p>蛙泳的完整配合动作：双手外划时抬头换气，双手内划时收腿低头稍憋气，双手前伸过头时蹬腿吐气。</p>
-
-
-
-
-<h2>自由泳</h2>
-
-
-<p>游泳是全身运动，任何一个部位的活动都离不开全身的协调配合。从表面上看，自由泳依靠划水和打腿产生推进力，实际上，躯干的作用也不能忽视。首先，
-躯干应保持一定的紧张度，腰部如果松软，整个人就像一摊泥一样。其次，身体的转动能够有效地发挥躯干部大肌肉群的力量，减少阻力，提高工作效果。</p>
-
-
-
-
-<p>自由泳的完整配合有多种形式。一般常见的是每划水2次，打水6次，呼吸1次。</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062804.gif"></center>
-
-
-
-
-<p>1、手的入水点在肩的延长线和身体中线之间，以大拇指领先，斜插入水。</br>
-2、入水后，手、肘、肩继续前伸，使手臂伸展。随着身体的转动，屈腕、屈肘，手臂向外、后方抓水;手下划到最低点后，旋转手臂向内、上、后方划水，
-保持高肘屈臂的划水姿势。</br>
-3、手臂与水平面垂直时，经手领先，加速推水，手臂转为向外、向上和身后划水直到大腿侧，提肘出水。</br>
-4、出水后，手臂自然、放松地经空中向前移臂，保持高肘姿势。然后手在肩前领先入水，开始下一个动作。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062805.gif"></center>
-
-
-
-
-<p>1、手臂在水下成曲线划水路线，从侧面看，手相对于身体的划水轨迹为“S”形。</br>
-2、自由泳两臂配合有前交叉配合、中交叉配合、和后交叉配合3种基本形式。本图为前交叉形式，为初学者比较容易掌握的方式。
-</p>
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062806.gif"></center>
-
-
-
-
-<p>单臂打水划臂动作是初学者应该重点练习的动作。如此图，左臂划水，那么可以右臂扶板。一般腿打水10次左右，手臂划水一次。
-掌握到一定程度的时候可以加上呼吸练习。</p>
-
-
-
-
-<p>腿部鞭状打水：</br>
-1、打腿动作从髋部开始发力，大腿带动小腿，做鞭状打水动作。</br>
-2、向上打水腿从直到弯。以直腿开始向上打，脚接近水面时屈膝，小腿上抬，使脚牚露出水面后向下打水。开始可直腿打水，但腿略放松，不要僵硬，
-在水的压力下腿会自然弯曲。向下打水前膝关节弯曲角度约130-160度，打水幅度约为30-40厘米。打水时要绷脚(芭蕾脚)，不要勾脚。
-</p>
-
-
-
-
-<h2>仰泳</h2>
-
-
-<p>1、臂划水时，出水以大拇指领先，移臂时手臂与水面垂直，上臂贴近耳朵。移臂过程中手臂旋转，入水时小拇指领先插入水中。</br>
-2、如果以头的位置为钟表12点，两手的入水点在11点和1点的位置。手入水后先直臂下划。</br>
-3、两臂划水应与身体转动协调配合，两肩不断形成位置差。</br>
-4、两臂划水配合采用中交叉方式，即两臂始终处于相反的位置，一臂划水时，另一臂移臂。</br>
-5、头部保持稳定没有左右摆动。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062807.gif"></center>
-
-
-
-
-<p>1、呼吸虽然不受限制，但最好采用有节奏的呼吸方式，或以固定在一臂移臂时吸气。毕竟划水以及身体在水中行进时会有波浪及水花。随意呼吸易呛水。</br>
-2、保持水平的身体姿势，躯干和肩随手臂动作围绕纵轴转动，始终有一肩不露出水面。</br>
-3、一般每划水2次，腿打水6次，呼吸1次。</br>
-4、两腿交替做鞭状上下打水。向上打水要快而有力，脚略内旋并绷直，向下打水时腿和脚自然放松。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062808.gif"></center>
-
-
-
-
-<p>1、移臂时手臂紧贴身体不能太宽。</br>
-2、移臂时如果手臂易弯曲，则可暂时用小拇指领先出水，养成直臂出水的习惯以后再用大拇指领先出水。</br>
-3、身体始终保持伸展、正直、几乎水平地仰卧于水面，好像平躺在床上，头下有一只矮枕头。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062809.gif"></center>
-
-
-
-
-<p>建议：仰泳腿要体会大腿用力，上抬与下压都要有，体会大腿带动小腿的感觉。</p>
-
-
-
-
-<h2>蝶泳</h2>
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062810.gif"></center>
-
-
-<p>1、蝶泳的手入水点在两肩的延长线上，以大拇指领先，斜插入水。</br>
-2、入水后，肩、肘前伸，两手沿曲线向外、后、下方抓水。两手分开到肩宽时，屈肘，加速划水。</br>
-3、两手分开到达到最大宽度后，手臂转为向内、向上和向后划水，手臂上抬时保持高肘屈臂。两手在胸下或腹下时，手之间的距离最近。</br>
-4、呼吸与划水的配合也是蝶泳技术的关键。手臂结束向内划水时，头露出水面吸气，移臂时头还原入水。记住两个“之前”，即头在手出水前出水，在手入水前入水。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062811.gif"></center>
-
-
-
-
-<p>1、蝶泳双手划水两手距离接近最近时，手臂划水的方向再一次改变，转为向外、向上和向后划水，直至出水。</br>
-2、划水出水后，手臂在肩的带动下经空中向前移臂，准备入水、移臂一般以低、平、放松的姿势从两侧前移。</br>
-3、蝶泳的身体姿势掌握比较难，同时鞭状打水也不易掌握。在蝶泳学习的时候，我们会有专门的分解练习让您逐步掌握运作。
-</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013062812.gif"></center>
-
-
-
-
-<p>1、蝶泳的划水路线一般为“钥匙孔”形，指两手在胸下或腹下时的距离最近，这种前后划水路线比较均匀。</br>
-2、注意蝶泳的四肢动作是双臂、双腿同时协调发力。
-</p>
-
-
-
 ]]></content>
   </entry>
   

@@ -182,6 +182,79 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2011/05/03/introduce-to-assert-in-c-language/">C语言断言简介</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-03T10:31:00+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/03/introduce-to-assert-in-c-language/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.概述</h2>
+
+
+<p> 断言是对某种假设条件进行检查（可理解为若条件成立则无动作，否则应报告），它可以快速发现并定位软件问题，
+同时对系统错误进行自动报警。断言可以对在系统中隐藏很深，用其它手段极难发现的问题进行定位，从而缩短软件问题定位时间，
+提高系统的可测性。实际应用时，可根据具体情况灵活地设计断言。</p>
+
+
+
+
+<h2>2.标准断言机制</h2>
+
+
+<p>原型定义：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;assert.h>
+</span><span class='line'>void assert( int expression_r_r_r );</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>assert的作用是现计算表达式 expression_r_r_r ，如果其值为假（即为0），
+那么它先向stderr打印一条出错信息，然后通过调用 abort来终止程序运行。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/05/03/introduce-to-assert-in-c-language/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2011/04/21/about-variable-parameters-in-c-language/">浅谈C语言的可变参数</a></h1>
     
     
@@ -767,63 +840,6 @@ magic_quotes_runtime 。</p>
   
     <footer>
       <a rel="full-article" href="/blog/2010/08/31/the-elements-of-ip-faking/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/28/a-php-html-parser-PHPSimpleHTMLDOMParser/">超好的HTML解析工具PHP Simple HTML DOM Parser</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-28T20:49:00+08:00" pubdate data-updated="true">Aug 28<span>th</span>, 2010</time>
-        
-         | <a href="/blog/2010/08/28/a-php-html-parser-PHPSimpleHTMLDOMParser/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>采用PHP5+ 开发的一个简单的 PHP HTML DOM 分析，支持 invalid HTML 并提供非常简单的方式来操作 HTML 元素。在 HMTL 页面
-上查找标签所使用的语法与 jQuery （一个轻量级，实用的 javascript 框架） 相似，从页面中抽取内容只需要一行代码。开源代码：
-<a href="http://sourceforge.net/projects/simplehtmldom/">http://sourceforge.net/projects/simplehtmldom/</a> </p>
-
-
-
-
-<p>它具有以下几个特点：</br>
-1. 只支援 PHP5 以上. </br>
-2. 可以分析不严谨 (invalid) 的 HTML. </br>
-3. 支援简单的 CSS Selector. </br>
-4. 简单的 DOM 操作. </br>
-5. 会维持 HTML 中的原始格式 .</br>
-下面是使用手册上举的几个简单的使用示例。</p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2010/08/28/a-php-html-parser-PHPSimpleHTMLDOMParser/">Read on &rarr;</a>
     </footer>
   
 

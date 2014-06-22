@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: allocator | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/allocator/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-21T13:17:54+08:00</updated>
+  <updated>2014-06-22T23:54:32+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -18,7 +18,7 @@
     <link href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/"/>
     <updated>2014-06-13T22:04:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator</id>
-    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。</p>
+    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。本文涉及到的 SGI STL 源代码文件有 <code>alloc.h</code>, <code>stl_config.h</code>, <code>stl_alloc.h</code>, <code>stl_threads.h</code> 这4个。</p>
 
 <p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：
 <code>

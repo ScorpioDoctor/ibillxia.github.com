@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-21T13:17:54+08:00</updated>
+  <updated>2014-06-22T23:54:32+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -14,11 +14,152 @@
 
   
   <entry>
+    <title type="html"><![CDATA[深入理解STL源码(2) 迭代器(Iterators)和Traits]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/"/>
+    <updated>2014-06-21T21:46:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有 <code>iterator.h</code>, <code>stl_iterator_base.h</code>, <code>concept_checks.h</code>, <code>stl_iterator.h</code>, <code>type_traits.h</code>, <code>stl_construct.h</code>, <code>stl_raw_storage_iter.h</code> 等7个文件。</p>
+
+<h2>1. 迭代器的设计思维</h2>
+
+<p>迭代器（iterators）是一种抽象的设计概念，显示程序中并没有直接对应于这个概念的实体。在 <em>Design Patterns</em> 一书中，对 iterators 模式的定义如下：提供一种方法，使之能够依序遍历某个聚合物（容器）所包含的各个元素，而又无需暴露该聚合物内部的表述方式。</p>
+
+<p>在STL中迭代器扮演着重要的角色。STL的中心思想在于：将数据容器（container）和算法（algorithm）分开，彼此独立设计，最后再通过某种方式将他们衔接在一起。容器和算法的泛型化，从技术的角度来看并不困难，C++ 的 class template 和 function template 可以分别达到目标，难点在于如何设计二者之间的衔接器。</p>
+
+<p>在STL中，起者这种衔接作用的是迭代器，它是一种行为类似指针的对象。指针的各种行为中最常见也最重要的便是内容获取（dereference）和成员访问（member access），因此迭代器最重要的工作就是对 <code>operator*</code> 和 <code>operator-&gt;</code> 进行重载。然而要对这两个操作符进行重载，就需要对容器内部的对象的数据类型和存储结构有所了解，于是在 STL 中迭代器的最终实现都是由容器本身来实现的，每种容器都有自己的迭代器实现，例如我们使用vector容器的迭代器的时候是这样用的 <code>vector&lt;int&gt;::iterator it;</code> 。而本文所讨论的迭代器是不依存于特定容器的迭代器，它在STL中主要有以下两个方面的作用（我自己的理解和总结）：</p>
+
+<blockquote><ul>
+<li>规定容器中需要实现的迭代器的类型及每种迭代器的标准接口</li>
+<li>通过Traits编程技巧实现迭代器相应型别的获取，弥补 C++ 模板参数推导的不足，为配置器提供可以获取容器中对象型别的接口</li>
+</ul>
+</blockquote>
+
+<p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
+
+<h2>2. STL 迭代器的分类与标准接口</h2>
+
+<h3>2.1 STL 迭代器的分类</h3>
+
+<p>在SGI STL中迭代器按照移动特性与读写方式分为 <code>input_iterator</code>, <code>output_iterator</code>, <code>forward_iterator</code>, <code>bidirectional_iterator</code>, <code>random_access_iterator</code> 这5种，他们的定义都在 <code>stl_iterators_base.h</code> 文件中。这5种迭代器的特性如下：</p>
+
+<blockquote><p>input_iterator:  这种迭代器所指对象只允许读取，而不允许改变，是只读的（read only）。
+output_iterator:  与上面的相反，只能写（write only）。
+forward_iterator: 同时允许读和写，适用于 <code>replace()</code> 等算法。
+bidirectional_iterator: 可双向移动，即既可以按顺序访问，也可以按逆序访问。
+random_access_iterator: 前4种只提供一部分指针运算功能，如前3种只支持 <code>operator++</code>, 而第4种还支持 <code>operator--</code>, 但这种随机访问迭代器还支持 <code>p+n</code>, <code>p-n</code>, <code>p[n]</code>, <code>p1-p2</code>, <code>p1+p2</code> 等。</p></blockquote>
+
+<p>从以上的特性可以看出，<code>input_iterator</code> 和 <code>output_iterator</code> 都是特殊的 <code>forward_iterator</code>, 而 <code>forward_iterator</code> 是特殊的 <code>bidirectional_iterator</code>, <code>bidirectional_iterator</code> 是特殊的 <code>random_access_iterator</code> 。在 <code>stl_iterator_base.h</code> 文件中，他们的定义中我们并不能看到这种特性的表达，而只是规定了这几种迭代器类型及应该包含的成员属性，真正表达这些迭代器不同特性的代码在 <code>stl_iterator.h</code> 文件中。在 <code>stl_iterator_base.h</code> 文件中，除了对这几种迭代器类型进行规定之外，还提供了获取迭代器类型的接口、获取迭代器中的 <code>value_type</code> 类型、获取迭代器中的 <code>distance_type</code> 、获取两个迭代器的距离（<code>distance</code> 函数）、将迭代器向前推进距离 n （<code>advance</code> 函数）等标准接口。</p>
+
+<h3>2.2 STL迭代器的标准接口</h3>
+
+<p>在 <code>stl_iterator.h</code> 文件中，设计了 <code>back_insert_iterator</code>, <code>front_insert_iterator</code>, <code>insert_iterator</code>, <code>reverse_bidirectional_iterator</code>, <code>reverse_iterator</code>, <code>istream_iterator</code>, <code>ostream_iterator</code>,  等标准的迭代器，其中前3中都使用 <code>output_iterator</code> 的只写特性（只进行插入操作，只是插入的位置不同而已），而第4种使用的是 <code>bidirectional_iterator</code> 的双向访问特性，第5种使用的是 <code>random_access_iterator</code> 的随机访问特性。而最后两种标准迭代器分别是使用 <code>input_iterator</code> 和 <code>output_iterator</code> 特性的迭代器。从这几个标准的迭代器的定义中可以看出，主要是实现了 <code>operator=</code>, <code>operator*</code>, <code>operator-&gt;</code>, <code>operator==</code>, <code>operator++</code>, <code>operator--</code>, <code>operator+</code>, <code>operator-</code>, <code>operator+=</code>, <code>operator-=</code> 等指针操作的标准接口。根据定义的操作符的不同，就是不同类型的迭代器了。</p>
+
+<p>例如，下面是 <code>back_insert_iterator</code> 的标准定义：
+```
+template <class _Container>
+class back_insert_iterator {
+protected:
+  <em>Container* container;
+public:
+  // member variables
+  typedef </em>Container          container_type;
+  typedef output_iterator_tag iterator_category;
+  typedef void                value_type;
+  typedef void                difference_type;
+  typedef void                pointer;
+  typedef void                reference;
+  // member functions, mainly about operator overloading
+  explicit back_insert_iterator(<em>Container&amp; <strong>x) : container(&amp;</strong>x) {}
+  back_insert_iterator<_Container>&amp;
+  operator=(const typename </em>Container::value_type&amp; __value) {</p>
+
+<pre><code>container-&gt;push_back(__value);
+return *this;
+</code></pre>
+
+<p>  }
+  back_insert_iterator<_Container>&amp; operator<em>() { return </em>this; }
+  back_insert_iterator<_Container>&amp; operator++() { return <em>this; }
+  back_insert_iterator<_Container>&amp; operator++(int) { return </em>this; }
+};
+```</p>
+
+<h2>3. 迭代器相应型别与Traits编程技巧</h2>
+
+<h3>3.1 迭代器相应型别</h3>
+
+<p>在算法中运用迭代器是，很可能需要获取器相应型别，即迭代器所指对象的类型。此时需要使用到 function template 的参数推导（argument deducation）机制，在传入迭代器模板类型的同时，传入迭代器所指对象的模板类型，例如：<br/>
+```
+template<class I, class T>
+void func_impl(I iter, T t){</p>
+
+<pre><code>// TODO: Add your code here
+</code></pre>
+
+<p>}
+<code>``
+这里不仅要传入类型</code>class I<code>, 还要传入类型</code>class T`。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
+
+<blockquote><p>value_type: 迭代器所指对象的类型。<br/>
+difference_type: 表示两个迭代器之间的距离，因此也可以用来表示一个容器的最大容量。例如一个提供计数功能的泛型算法 <code>count()</code> ，其返回值的类型就是迭代器的 <code>difference_type</code> .<br/>
+reference_type: 从迭代器所指内容是否允许修改来看，迭代器分为 constant iterator 和 mutable iterator，如果传回一个可以修改的对象，一般是以 reference 的方式，因此需要传回引用时，使用此类型。<br/>
+pointer_type: 在需要传回迭代器所指对象的地址时，使用这种类型。
+iterator_category: 即前面提到5种的迭代器的类型。</p></blockquote>
+
+<p>而且实际当中，并不是所有情况都可以通过以上的 template 的参数推导机制来实现（例如算法返回值的类型是迭代器所指对象的类型，template参数推导机制无法推导返回值类型），因此需要更一般化的解决方案，在STL中，这就是Traits编程技巧。</p>
+
+<h3>3.2 Traits 编程技巧</h3>
+
+<p>在STL的每个标准迭代器中，都定义了5个迭代器相应型别的成员变量，在STL定义了一个统一的接口：<br/>
+```
+// In file stl_iterator_base.h
+template &lt;class <em>Category, class </em>Tp, class _Distance = ptrdiff_t,</p>
+
+<pre><code>      class _Pointer = _Tp*, class _Reference = _Tp&amp;&gt;
+</code></pre>
+
+<p>struct iterator {
+  typedef <em>Category  iterator_category;
+  typedef </em>Tp        value_type;
+  typedef <em>Distance  difference_type;
+  typedef </em>Pointer   pointer;
+  typedef _Reference reference;
+};
+```
+其他的迭代器都可以继承这个标注类，由于后面3个模板参数都有默认值，因此新的迭代器只需提供前两个参数即可（但在SGI STL中并没有使用继承机制）。这样在使用该迭代器的泛型算法中，可以返回这5种类型中的任意一种，而不需要依赖于 template 参数推导的机制。</p>
+
+<p>在SGI STL中，如果启用 <code>__STL_CLASS_PARTIAL_SPECIALIZATION</code> 这个宏定义，还有这样一个标准的 <code>iterator_traits</code> ：<br/>
+<code>
+// In file stl_iterator_base.h
+template &lt;class _Iterator&gt;
+struct iterator_traits {
+  typedef typename _Iterator::iterator_category iterator_category;
+  typedef typename _Iterator::value_type        value_type;
+  typedef typename _Iterator::difference_type   difference_type;
+  typedef typename _Iterator::pointer           pointer;
+  typedef typename _Iterator::reference         reference;
+};
+</code>
+值得一提的是，这些类型不仅可以是泛型算法的返回值类型，还可以是传入参数的类型。例如 <code>iterator_category</code> 可以作为迭代器的接口 <code>advance()</code> 和 <code>distance()</code>  的传入参数之一。 不同类型的迭代器实现同一算法的方式可能不同，可以通过这个参数类型来区分不同的重载函数。</p>
+
+<h2>4. SGI 中的 __type_traits</h2>
+
+<p>traits 编程技巧非常赞，适度弥补了 C++ template 本身的不足。 STL 只对迭代器加以规范，设计了 <code>iterator_traits</code> 这样的东西，SGI进一步将这种技法扩展到了迭代器之外，于是有了所谓的 <code>__type_traits</code>。</p>
+
+<p>在SGI中， <code>__type_traits</code> 可以获取一些类型的特殊属性，如该类型是否具备 trivial default ctor？是否具备 trivial copy ctor？是否具备 trivial assignment operator？是否具备 tivial dtor？是否是 plain old data（POD）？ 如果答案是肯定的，那么我们对这些类型进行构造、析构、拷贝、赋值等操作时，就可以采用比较有效的方法，如不调用该类型的默认构造、析构函数，而是直接调用 <code>malloc()</code>, <code>free()</code>, <code>memcpy()</code> 等等，这对于大量而频繁的操作容器，效率有显著的提升。</p>
+
+<p>SGI中 <code>__type_traits</code> 的特性的实现都在 <code>type_traits.h</code> 文件中。其中将 <code>bool</code>, <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code> 等基本的数据类型及其相应的指针类型的这些特性都定义为 <code>__true_type</code>，这以为着，这些对基本类型进行构造、析构、拷贝、赋值等操作时，都是使用系统函数进行的。而除了这些类型之外的其他类型，除非用户指定了它的这些特性为 <code>__true_type</code>，默认都是 <code>__false_type</code> 的，不能直接调用系统函数来进行内存配置或赋值等，而需要调用该类型的构造函数、拷贝构造函数等。</p>
+
+<p>另外，用户在自定义类型时，究竟一个 class 什么时候应该是 <code>__false_type</code> 的呢？一个简单的判断标准是：如果 class 内部有指针成员并需要对其进行动态配置内存是，这个 class 就需要定义为 <code>__false_type</code>的，需要给该类型定义构造函数、拷贝构造函数、析构函数等等。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[深入理解STL源码(1) 空间配置器(allocator)]]></title>
     <link href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/"/>
     <updated>2014-06-13T22:04:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator</id>
-    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。</p>
+    <content type="html"><![CDATA[<p>在STL中，Memory Allocator 处于最底层的位置，为一切的 Container 提供存储服务，是一切其他组件的基石。对于一般使用 STL 的用户而言，Allocator 是不可见的，如果需要对 STL 进行扩展，如编写自定义的容器，就需要调用 Allocator 的内存分配函数进行空间配置。本文涉及到的 SGI STL 源代码文件有 <code>alloc.h</code>, <code>stl_config.h</code>, <code>stl_alloc.h</code>, <code>stl_threads.h</code> 这4个。</p>
 
 <p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：
 <code>
@@ -382,7 +523,7 @@ enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
 <h2>3. STL 各组件间的关系</h2>
 
 <p>STL 六大组件间的关系如下图（来自侯姐《STL源码剖析》一书 p6）：<br/>
-{% img /images/2014/IMAG2014060801.jpg %}
+<img src="/images/2014/IMAG2014060801.jpg">
 其中 Container 通过 Allocator 取得数据存储空间，Alogrithm 通过 Iterator 存取 Container 内容，Functor 可以协助 Algorithm 完成不同的策略变化，Adapter 可以修饰或套接 Functor。这里的描述有些抽象，等详细了解了每个组件的功能职责后，就比较好懂了。</p>
 
 <h2>4. SGI STL源码结构</h2>
@@ -776,283 +917,6 @@ return 0;
 
 <p>（4）实现类型通用的函数<br/>
 如果不借助C++模板这样的机制，C语言内联是无法实现这样的功能的，而只能针对不同的数据类型定义不同名的函数。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C++ 应用程序性能优化之 new/delete 操作符]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/"/>
-    <updated>2014-05-11T20:33:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator</id>
-    <content type="html"><![CDATA[<h2>1.概述</h2>
-
-<p>C++ 程序的存储空间可以分为静态/全局存储区、栈区和堆区。下图展示了一个典型的Linux C/C++ 程序内存空间布局：</p>
-
-<center>{% img /images/2014/IMAG2014051101.png %}</center>
-
-
-<p>其中，每一部分的具体涵义如下：<br/>
-- <strong>代码段（.text）</strong>：这里存放的是CPU要执行的指令。代码段是可共享的，相同的代码在内存中只会有一个拷贝，同时这个段是<strong>只读</strong>的，防止程序由于错误而修改自身的指令。<br/>
-- <strong>初始化数据段（.data）</strong>：这里存放的是程序中需要明确赋初始值的变量，例如位于所有函数之外的全局变量：<code>int val=100;</code> 。 需要强调的是，以上两段都是位于程序的可执行文件中，内核在调用 exec 函数启动该程序时从源程序文件中读入。<br/>
-- <strong>未初始化数据段（.bss）</strong>：位于这一段中的数据，内核在执行该程序前，将其初始化为0或者null。例如出现在任何函数之外的全局变量：<code>int sum;</code><br/>
-- <strong>堆（Heap）</strong>：这个段用于在程序中进行动态内存申请，例如经常用到的 malloc，new 系列函数就是从这个段中申请内存。<br/>
-- <strong>栈（Stack）</strong>：函数中的局部变量以及在函数调用过程中产生的临时变量都保存在此段中。<br/>
-静态/全局存储区和栈区一般在程序编译阶段决定；而堆区则随着程序的运行而动态变化，每一次程序运行都会有不同的行为，因此动态内存管理对于一个程序在运行过程中占用的内存大小及程序运行性能有非常重要的影响。 本文主要探讨在C++中如何管理动态内存，以及如何使用 C++ 的语言特性来提高动态内存的管理效率，减少错误的发生。</p>
-
-<!-- more -->
-
-
-<h2>2. new/delete 操作符</h2>
-
-<h4>2.1 C++内置new/delete的原型</h4>
-
-<p>一般来说 C++ 的运行库提供了默认的全局 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的实现，程序也可以用自定义的实现来取代运行库的实现。 下面是 C++ 标准中定义的 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的声明（位于 <code>include/c++/new</code> 文件中）：</p>
-
-<p>```
-namespace std {
-  class bad_alloc : public exception {</p>
-
-<pre><code>public:
-  bad_alloc() throw() { }
-  virtual ~bad_alloc() throw();
-  virtual const char* what() const throw();
-</code></pre>
-
-<p>  };
-  struct nothrow_t { };
-  extern const nothrow_t nothrow;
-  typedef void (*new_handler)();
-  new_handler set_new_handler(new_handler) throw();
-} // namespace std</p>
-
-<p>void<em> operator new(std::size_t) throw (std::bad_alloc);  // (1)
-void</em> operator new<a href="std::size_t"></a> throw (std::bad_alloc);
-void operator delete(void<em>) throw();
-void operator delete<a href="void*"></a> throw();
-void</em> operator new(std::size_t, const std::nothrow_t&amp;) throw();  // (2)
-void<em> operator new<a href="std::size_t,%20const%20std::nothrow_t&amp;"></a> throw();
-void operator delete(void</em>, const std::nothrow_t&amp;) throw();
-void operator delete<a href="void*,%20const%20std::nothrow_t&amp;"></a> throw();
-// Default placement versions of operator new.
-inline void<em> operator new(std::size_t, void</em> <strong>p) throw() { return </strong>p; }  // (3)
-inline void<em> operator new<a href="std::size_t,%20void*%20__p"></a> throw() { return __p; }
-// Default placement versions of operator delete.
-inline void  operator delete  (void</em>, void*) throw() { }
-inline void  operator delete<a href="void*,%20void*"></a> throw() { }
-```</p>
-
-<p>其中最后的 <code>inline</code> 函数是 <code>placement</code> 版本的 new/delete 操作，其特点在于分配的内存块的起始地址由用户给定（通过参数 <code>void* __p</code>）。 而前面两种 <code>new/delete</code> （(1)和(2)处）是系统决定待分配内存块的起始地址，区别在于：第一个在分配失败是会抛出 <code>bad_alloc</code> 异常（这是C++标准要求的）；而第二个则不抛出异常，返回0。 很多应用程序都没有处理内存分配的失败情况，但相对于一个需要长期稳定运行的系统来说，这种处理是必不可少的。 应用程序可以通过捕获 <code>bad_alloc</code> 异常或者检查返回值来检查内存分配是否成功，而更好的方法是使用C++中的 <code>new_handler()</code> 函数。 C++规定 <code>new_handler</code> 要执行如下操作中的一种：</p>
-
-<ul>
-<li>使 <code>new</code> 有更多的内存可用，然后返回</li>
-<li>抛出一个 <code>bad_alloc</code> 或其派生类的异常</li>
-<li>调用 <code>abort()</code> 或者 <code>exit()</code> 退出</li>
-</ul>
-
-
-<h4>2.2 使用 <code>new_handler</code> 自定义异常处理</h4>
-
-<p>下面看一个例子，看看如何使用 <code>new_handler</code> 处理内存分配失败的情况：</p>
-
-<p>```</p>
-
-<h1>include<new></h1>
-
-<h1>include<cstdio></h1>
-
-<h1>include&lt;Windows.h></h1>
-
-<p>using namespace std;
-char *gPool = NULL;
-void my_new_handler();</p>
-
-<p>int main(){</p>
-
-<pre><code>set_new_handler(my_new_handler);
-gPool = new char[512*1024*1024];
-if(gPool!=NULL){
-    printf("Preserve 512MB memory at %x.\n",gPool);
-}
-char *p = NULL;
-for(int i=0;i&lt;4;i++){
-    p = new char[512*1024*1024];
-    printf("%d * 512M, p = %x\n",i+1,p);
-    Sleep(5000); // 休眠5s
-}
-printf("Done.\n");
-return 0;
-</code></pre>
-
-<p>}</p>
-
-<p>void my_new_handler(){</p>
-
-<pre><code>if(gPool!=NULL){
-    printf("try to get more memory...\n");
-    delete[] gPool; // 释放512MB内存空间
-    gPool = NULL;
-    return;
-}else{
-    printf("I can not help...\n");
-    throw bad_alloc();  // 分配失败，抛出异常
-}
-return;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>在 Windows 上编译并运行（使用Code::Blocks 13.12 IDE），得到如下输出：</p>
-
-<p>```
-Preserve 512MB memory at 7e0020.
-1 * 512M, p = 207f0020
-2 * 512M, p = 40800020
-try to get more memory...
-3 * 512M, p = 7e0020
-I can not help...
-terminate called after throwing an instance of 'std::bad_alloc'
-  what():  std::bad_alloc</p>
-
-<p>This application has requested the Runtime to terminate it in an unusual way.
-Please contact the application's support team for more information.
-```</p>
-
-<p>在 Windows 的 win32 程序中，一个进程可以访问的内存空间是 4GB，但可以用来动态分配的最大内存是 2GB，因而上面的程序执行到第3次（为神马不是第4次？）动态内存分配时由于内存不够，调用了 <code>my_new_handler</code> 获得了内存（可以看到第3次分配的内存的地址和Preserve的内存地址是一样的），而当执行第4次内存分配时，<code>gPool</code> 已被分配，于是 <code>my_new_handler</code> 中抛出了 <code>bad_alloc</code> 异常，导致程序退出。 另外，在程序实际运行过程当中，会发现任务管理器中内存占用不会往上飙，这可能是因为操作系统的动态内存管理策略在作怪，不会说你一申请就立马全部给你，只是建立了一个映射表，只有当你真正用的时候才会给你。</p>
-
-<h4>2.3 使用 placement new</h4>
-
-<p>在 C++ 内置 <code>new/delete</code> 中最后的一种是 placement 形式的 <code>new/delete</code> ，即分配的内存地址有用户给定。下面是一个最简单的实例：</p>
-
-<p>```</p>
-
-<h1>include <cstdio></h1>
-
-<h1>include <new></h1>
-
-<p>using namespace std;</p>
-
-<p>int main()
-{</p>
-
-<pre><code>char buffer[100];
-char *p = new(buffer) char[20]; // call placement new
-printf("Address of buffer: %x, and p: %x.\n",buffer,p);
-return 0;
-</code></pre>
-
-<p>}
-// output: Address of buffer: 28feb8, and p: 28feb8.
-```</p>
-
-<p>可以看到 <code>buffer</code> 和 <code>p</code> 的地址是一样的。在大型应用程序中，我们可以充分利用 <code>placement new</code> 的特性，实现自己管理（分配、释放等）本应用的内存空间，基本思路就是： 首先申请一大片内存，然后对每个小的动态内存分配都使用 <code>placement new</code> 的方式进行申请。</p>
-
-<h4>2.4 重载 placement new</h4>
-
-<p>在 <code>new</code> 操作符中，除了可以使用自定义申请的内存的大小及位置，我们还可以通过重载系统的 <code>new/delete</code> 操作符来加入其它一些附加参数，但仍称之为 <code>placement new</code> 。例如：</p>
-
-<p>```</p>
-
-<h1>include<cstdio></h1>
-
-<h1>include<new></h1>
-
-<p>using namespace std;</p>
-
-<h1>define DEBUG</h1>
-
-<h1>ifdef DEBUG</h1>
-
-<p>// 自定义 new 操作符
-void *operator new<a href="unsigned%20int%20n,%20const%20char*%20file,%20int%20line"></a>{</p>
-
-<pre><code>printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-return ::operator new(n);
-</code></pre>
-
-<p>}
-// 自定义 delete 操作符
-// void operator delete(void <em>p,const char </em>file, int line){
-void operator delete<a href="void%20*p,const%20char%20*file,%20int%20line"></a>{</p>
-
-<pre><code>printf("delete at file %s, in line %d\n",file,line);
-::operator delete(p);
-return;
-</code></pre>
-
-<p>}
-// 宏定义，必须放在重载函数之后</p>
-
-<h1>define new new(<strong>FILE</strong>, <strong>LINE</strong>)</h1>
-
-<h1>define delete delete(<strong>FILE</strong>, <strong>LINE</strong>)</h1>
-
-<h1>endif</h1>
-
-<p>int main(){</p>
-
-<pre><code>char *p = new char[10];
-//delete p;  // delete 的重载还有问题 "error: type 'int' argument given to 'delete', expected pointer"
-delete[] p;  // 直接报语法错误，"error: expected primary-expression before ']' token"
-return 0;
-</code></pre>
-
-<p>}
-// output: Alloc size: 10 at file D:\Programs\test\main.cpp, in line 22
-```</p>
-
-<p>这在 <code>DEBUG</code> 模式下非常好使。</p>
-
-<p>更新：关于 <code>placement new</code> 的 demo 改为如下代码后就没问题了：</p>
-
-<p>```</p>
-
-<h1>include<cstdio></h1>
-
-<h1>include<new></h1>
-
-<p>using namespace std;</p>
-
-<h1>define DEBUG</h1>
-
-<h1>ifdef DEBUG</h1>
-
-<p>// 自定义 new 操作符
-void *operator new<a href="unsigned%20int%20n,%20const%20char*%20file,%20int%20line"></a>{</p>
-
-<pre><code>printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-return ::operator new(n);
-</code></pre>
-
-<p>}
-// 自定义 delete 操作符
-void operator delete(void <em>p,char </em>file, int line){</p>
-
-<pre><code>printf("Delete at file %s, in line %d\n",file,line);
-::operator delete(p);
-return;
-</code></pre>
-
-<p>}
-// 宏定义，必须放在重载函数之后</p>
-
-<h1>define new new(<strong>FILE</strong>, <strong>LINE</strong>)</h1>
-
-<h1>define delete(ptr) delete(ptr,<strong>FILE</strong>, <strong>LINE</strong>)</h1>
-
-<h1>endif</h1>
-
-<p>int main(){</p>
-
-<pre><code>char *p = new char[10];
-operator delete(p);
-return 0;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>但是还是不知道之前的代码为什么会出现这个错误，已在 <a href="http://stackoverflow.com/questions/23614215/destructor-error-in-c-type-int-argument-given-to-delete-expected-pointer">StackOverFlow上提问</a>，希望能得到满意的答案。</p>
 ]]></content>
   </entry>
   
