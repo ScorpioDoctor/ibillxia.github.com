@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-06-22T23:54:32+08:00</updated>
+  <updated>2014-06-23T13:45:33+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -35,6 +35,9 @@
 </blockquote>
 
 <p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
+
+<!-- more -->
+
 
 <h2>2. STL 迭代器的分类与标准接口</h2>
 
