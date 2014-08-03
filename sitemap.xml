@@ -493,6 +493,30 @@
         <lastmod>2014-06-23T13:45:08+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/
+        </loc>
+        <lastmod>2014-08-03T21:23:24+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/
+        </loc>
+        <lastmod>2014-08-03T21:22:25+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/
+        </loc>
+        <lastmod>2014-08-03T21:22:42+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/
+        </loc>
+        <lastmod>2014-08-03T21:22:54+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://ibillxia.github.io/404.html</loc>
         <lastmod>2014-04-27T10:28:20+08:00</lastmod>
     </url>
@@ -502,19 +526,19 @@
     </url>
     <url>
         <loc>http://ibillxia.github.io/blog/archives/</loc>
-        <lastmod>2014-07-04T13:57:26+08:00</lastmod>
+        <lastmod>2014-08-03T21:23:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.io/blog/categories/</loc>
-        <lastmod>2014-07-04T13:57:26+08:00</lastmod>
+        <lastmod>2014-08-03T21:23:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.io/blog/tags/</loc>
-        <lastmod>2014-07-04T13:57:26+08:00</lastmod>
+        <lastmod>2014-08-03T21:23:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.io/</loc>
-        <lastmod>2014-07-04T13:57:26+08:00</lastmod>
+        <lastmod>2014-08-03T21:23:24+08:00</lastmod>
     </url>
     <url>
         <loc>http://ibillxia.github.io/robots.txt</loc>

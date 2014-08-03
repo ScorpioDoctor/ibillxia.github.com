@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: heap | Bill's Blog]]></title>
+  <link href="http://ibillxia.github.io/blog/tags/heap/atom.xml" rel="self"/>
+  <link href="http://ibillxia.github.io/"/>
+  <updated>2014-08-03T21:25:41+08:00</updated>
+  <id>http://ibillxia.github.io/</id>
+  <author>
+    <name><![CDATA[Bill Xia]]></name>
+    <email><![CDATA[ibillxia@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.4) 序列式容器之heap和priority queue]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/"/>
+    <updated>2014-07-27T21:31:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>heap</code>、<code>stl_heap.h</code>、<code>heap.h</code>、<code>stl_queue.h</code>、<code>queue</code> 等几个文件。</p>
+
+<h2>1. 概述</h2>
+
+<p>前面分别介绍了三种各具特色的序列式容器 —— vector、list和deque，他们几乎可以涵盖所有类型的序列式容器了，但本文要介绍的heap则是一种比较特殊的容器。其实，在STL中heap并没有被定义为一个容器，而只是一组算法，提供给priority queue（优先队列）。故名思议，priority queue 允许用户以任何次序将元素放入容器内，但取出时一定是从优先权最高的元素开始取，binary max heap（二元大根堆）即具有这样的特性，因此如果学过max-heap再看STL中heap的算法和priority queue 的实现就会比较简单。</p>
+
+<h2>2. priority queue 的数据结构</h2>
+
+<p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：<br/>
+<code>
+template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+class priority_queue { // in stl_queue.h 文件中
+protected:
+  _Sequence c; // 使用vector作为数据存储的容器
+  _Compare comp;
+};
+</code>
+另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+
+<!-- more -->
+
+
+<h2>3. push heap 算法</h2>
+
+<p>为了满足完全二叉树的特性，新加入的元素一定要放在vector的最后面；又为了满足max-heap的条件（每个节点的键值不小于其叶子节点的键值），还需要执行上溯过程，将新插入的元素与其父节点进行比较，直到不大于父节点：<br/>
+```
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+void <strong>push_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>topIndex, _Tp </strong>value){
+  _Distance <strong>parent = (</strong>holeIndex - 1) / 2; //  新节点的父节点
+  while (<strong>holeIndex > </strong>topIndex &amp;&amp; *(<strong>first + </strong>parent) &lt; __value) { // 插入时的堆调整过程：当尚未到达顶端且父节点小于新值时，需要将新值往上（前）调整</p>
+
+<pre><code>*(__first + __holeIndex) = *(__first + __parent); // 父节点下移
+__holeIndex = __parent;
+__parent = (__holeIndex - 1) / 2;
+</code></pre>
+
+<p>  }  <br/>
+  <em>(<strong>first + </strong>holeIndex) = <strong>value; // 找到新值应当存储的位置
+}
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+inline void </strong>push_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <em>_last, </em>Distance</em>, <em>Tp*) {
+  <strong>push_heap(</strong>first, </em>Distance((<strong>last - </strong>first) - 1), <em>Distance(0), </em>Tp(*(<strong>last - 1)));
+}
+template <class _RandomAccessIterator>
+inline void push_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator <strong>last) { // 真正的对外接口，在调用之前，元素已经放在了vector的最后面了（见priority queue的push_back）
+  </strong>STL_REQUIRES(</em>RandomAccessIterator, <em>Mutable_RandomAccessIterator);
+  __STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, </em>LessThanComparable);
+  <strong>push_heap_aux(</strong>first, <strong>last, </strong>DISTANCE_TYPE(<strong>first), </strong>VALUE_TYPE(<strong>first)); // 直接调用 </strong>push_heap_aux
+}
+```</p>
+
+<h2>4. pop heap 算法</h2>
+
+<p>对heap进行pop操作就是取顶部的元素，取走后要对heap进行调整，是之满足max-heap的特性。调整的策略是，首先将最末尾的元素放到堆顶，然后进行下溯操作，将对顶元素下移到适当的位置：<br/>
+```
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+void <strong>adjust_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>len, _Tp </strong>value) { // 调整堆
+  <em>Distance <strong>topIndex = </strong>holeIndex; // 堆顶
+  </em>Distance <strong>secondChild = 2 * </strong>holeIndex + 2;
+  while (<strong>secondChild &lt; </strong>len) {</p>
+
+<pre><code>if (*(__first + __secondChild) &lt; *(__first + (__secondChild - 1))) __secondChild--; // secondChild 为左右两个子节点中较大者
+*(__first + __holeIndex) = *(__first + __secondChild); // 节点的值上移
+__holeIndex = __secondChild;
+__secondChild = 2 * (__secondChild + 1); // 下移一层
+</code></pre>
+
+<p>  }
+  if (<strong>secondChild == </strong>len) { // 最后一个元素</p>
+
+<pre><code>*(__first + __holeIndex) = *(__first + (__secondChild - 1));
+__holeIndex = __secondChild - 1;
+</code></pre>
+
+<p>  }
+  <strong>push_heap(</strong>first, <strong>holeIndex, </strong>topIndex, <strong>value);
+}
+template <class _RandomAccessIterator, class _Tp, class _Distance>
+inline void </strong>pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _RandomAccessIterator </strong>result, <em>Tp __value, </em>Distance<em>) {
+  </em><strong>result = *</strong>first; // 获取堆顶元素，并赋给堆尾的last-1
+  <strong>adjust_heap(</strong>first, <em>Distance(0), </em>Distance(<strong>last - </strong>first), <strong>value); // 调整堆
+}
+template <class _RandomAccessIterator, class _Tp>
+inline void </strong>pop_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Tp*) {
+  </strong>pop_heap(<strong>first, </strong>last - 1, <strong>last - 1, _Tp(*(</strong>last - 1)), <strong>DISTANCE_TYPE(</strong>first)); // 对 [first,last-1)进行pop，并将first赋给last-1
+}
+template <class _RandomAccessIterator>
+inline void pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last) { // 对外提供的接口，最后堆顶元素在堆的末尾，而[first,last-1) 区间为新堆，该接口调用完后再进行pop操作移除最后的元素
+  </strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
+  <strong>STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, _LessThanComparable);
+  </strong>pop_heap_aux(<strong>first, </strong>last, <strong>VALUE_TYPE(</strong>first));
+}
+```</p>
+
+<h2>5. make heap 算法</h2>
+
+<p>最后，我们来看看如何从一个初始序列来创建一个heap，有了前面的 <code>adjust_heap</code> ，创建heap也就很简单了，只需要从最后一个非叶子节点开始，不断调用堆调整函数，即可使得整个序列称为一个heap：<br/>
+```
+template <class _RandomAccessIterator, class _Compare, class _Tp, class _Distance>
+void <strong>make_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator __last, </em>Compare <strong>comp, <em>Tp*, </em>Distance*) {
+  if (</strong>last - <strong>first &lt; 2) return;
+  _Distance </strong>len = <strong>last - </strong>first;
+  _Distance <strong>parent = (</strong>len - 2)/2; // 定位到最后一个非叶子节点
+  while (true) { // 对每个非叶子节点为根的子树进行堆调整</p>
+
+<pre><code>__adjust_heap(__first, __parent, __len, _Tp(*(__first + __parent)), __comp);
+if (__parent == 0) return;
+__parent--;
+</code></pre>
+
+<p>  }
+}
+template <class _RandomAccessIterator, class _Compare>
+inline void make_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Compare </strong>comp) { // 对外提供的接口
+  <strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
+  </strong>make_heap(<strong>first, </strong>last, <strong>comp, </strong>VALUE_TYPE(<strong>first), </strong>DISTANCE_TYPE(__first));
+}
+```</p>
+
+<h2>6. 基于 heap 的 priority queue</h2>
+
+<p>上一篇文章中讲到stack和queue都是基于deque实现的，这里的priority queue是基于vector和heap来实现的，默认使用vector作为容器，而使用heap的算法来维持其priority的特性，因此priority queue也被归类为container adapter。其具体实现的主要代码如下:<br/>
+```
+template <class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>), class <em>Compare __STL_DEPENDENT_DEFAULT_TMPL(less<typename _Sequence::value_type>) >
+class priority_queue {
+protected:
+  </em>Sequence c;
+  <em>Compare comp;
+public:
+  priority_queue() : c() {}
+  explicit priority_queue(const </em>Compare&amp; <strong>x) :  c(), comp(</strong>x) {}
+  priority_queue(const <em>Compare&amp; __x, const </em>Sequence&amp; <strong>s) : c(</strong>s), comp(__x)</p>
+
+<pre><code>{ make_heap(c.begin(), c.end(), comp); }
+</code></pre>
+
+<p>  bool empty() const { return c.empty(); }
+  size_type size() const { return c.size(); }
+  const_reference top() const { return c.front(); }
+  void push(const value_type&amp; __x) {</p>
+
+<pre><code>__STL_TRY {
+  c.push_back(__x); // 在push_heap之前先将x放在vector c的最后面
+  push_heap(c.begin(), c.end(), comp);
+}
+__STL_UNWIND(c.clear());
+</code></pre>
+
+<p>  }
+  void pop() {</p>
+
+<pre><code>__STL_TRY {
+  pop_heap(c.begin(), c.end(), comp);
+  c.pop_back(); // 在调用pop_heap之后才将最后一个元素剔除出vector c
+}
+__STL_UNWIND(c.clear());
+</code></pre>
+
+<p>  }
+};
+```
+值得一提的是，priority queue也没有迭代器，不能对其进行遍历等操作，因为它只能在顶部取和删除元素，而插入元素的位置也是确定的，而不能有用户指定。<br/>
+关于heap和priority queue的内容就介绍到这里了，而序列式容器的介绍也到此结束了。</p>
+]]></content>
+  </entry>
+  
+</feed>

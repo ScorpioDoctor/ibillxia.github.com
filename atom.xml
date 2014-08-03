@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-07-09T15:24:02+08:00</updated>
+  <updated>2014-08-03T21:25:41+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,1113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.4) 序列式容器之heap和priority queue]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/"/>
+    <updated>2014-07-27T21:31:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>heap</code>、<code>stl_heap.h</code>、<code>heap.h</code>、<code>stl_queue.h</code>、<code>queue</code> 等几个文件。</p>
+
+<h2>1. 概述</h2>
+
+<p>前面分别介绍了三种各具特色的序列式容器 —— vector、list和deque，他们几乎可以涵盖所有类型的序列式容器了，但本文要介绍的heap则是一种比较特殊的容器。其实，在STL中heap并没有被定义为一个容器，而只是一组算法，提供给priority queue（优先队列）。故名思议，priority queue 允许用户以任何次序将元素放入容器内，但取出时一定是从优先权最高的元素开始取，binary max heap（二元大根堆）即具有这样的特性，因此如果学过max-heap再看STL中heap的算法和priority queue 的实现就会比较简单。</p>
+
+<h2>2. priority queue 的数据结构</h2>
+
+<p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+</span><span class='line'>class priority_queue { // in stl_queue.h 文件中
+</span><span class='line'>protected:
+</span><span class='line'>  _Sequence c; // 使用vector作为数据存储的容器
+</span><span class='line'>  _Compare comp;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+
+<!-- more -->
+
+
+<h2>3. push heap 算法</h2>
+
+<p>为了满足完全二叉树的特性，新加入的元素一定要放在vector的最后面；又为了满足max-heap的条件（每个节点的键值不小于其叶子节点的键值），还需要执行上溯过程，将新插入的元素与其父节点进行比较，直到不大于父节点：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _RandomAccessIterator, class _Distance, class _Tp&gt;
+</span><span class='line'>void __push_heap(_RandomAccessIterator __first, _Distance __holeIndex, _Distance __topIndex, _Tp __value){
+</span><span class='line'>  _Distance __parent = (__holeIndex - 1) / 2; //  新节点的父节点
+</span><span class='line'>  while (__holeIndex &gt; __topIndex && *(__first + __parent) &lt; __value) { // 插入时的堆调整过程：当尚未到达顶端且父节点小于新值时，需要将新值往上（前）调整
+</span><span class='line'>    *(__first + __holeIndex) = *(__first + __parent); // 父节点下移
+</span><span class='line'>    __holeIndex = __parent;
+</span><span class='line'>    __parent = (__holeIndex - 1) / 2;
+</span><span class='line'>  }    
+</span><span class='line'>  *(__first + __holeIndex) = __value; // 找到新值应当存储的位置
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator, class _Distance, class _Tp&gt;
+</span><span class='line'>inline void __push_heap_aux(_RandomAccessIterator __first, _RandomAccessIterator __last, _Distance*, _Tp*) {
+</span><span class='line'>  __push_heap(__first, _Distance((__last - __first) - 1), _Distance(0), _Tp(*(__last - 1))); 
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator&gt;
+</span><span class='line'>inline void push_heap(_RandomAccessIterator __first, _RandomAccessIterator __last) { // 真正的对外接口，在调用之前，元素已经放在了vector的最后面了（见priority queue的push_back）
+</span><span class='line'>  __STL_REQUIRES(_RandomAccessIterator, _Mutable_RandomAccessIterator);
+</span><span class='line'>  __STL_REQUIRES(typename iterator_traits&lt;_RandomAccessIterator&gt;::value_type, _LessThanComparable);
+</span><span class='line'>  __push_heap_aux(__first, __last, __DISTANCE_TYPE(__first), __VALUE_TYPE(__first)); // 直接调用 __push_heap_aux
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. pop heap 算法</h2>
+
+<p>对heap进行pop操作就是取顶部的元素，取走后要对heap进行调整，是之满足max-heap的特性。调整的策略是，首先将最末尾的元素放到堆顶，然后进行下溯操作，将对顶元素下移到适当的位置：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _RandomAccessIterator, class _Distance, class _Tp&gt;
+</span><span class='line'>void __adjust_heap(_RandomAccessIterator __first, _Distance __holeIndex, _Distance __len, _Tp __value) { // 调整堆
+</span><span class='line'>  _Distance __topIndex = __holeIndex; // 堆顶
+</span><span class='line'>  _Distance __secondChild = 2 * __holeIndex + 2;
+</span><span class='line'>  while (__secondChild &lt; __len) {
+</span><span class='line'>    if (*(__first + __secondChild) &lt; *(__first + (__secondChild - 1))) __secondChild--; // secondChild 为左右两个子节点中较大者
+</span><span class='line'>    *(__first + __holeIndex) = *(__first + __secondChild); // 节点的值上移
+</span><span class='line'>    __holeIndex = __secondChild;
+</span><span class='line'>    __secondChild = 2 * (__secondChild + 1); // 下移一层
+</span><span class='line'>  }
+</span><span class='line'>  if (__secondChild == __len) { // 最后一个元素
+</span><span class='line'>    *(__first + __holeIndex) = *(__first + (__secondChild - 1));
+</span><span class='line'>    __holeIndex = __secondChild - 1;
+</span><span class='line'>  }
+</span><span class='line'>  __push_heap(__first, __holeIndex, __topIndex, __value);
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator, class _Tp, class _Distance&gt;
+</span><span class='line'>inline void __pop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _RandomAccessIterator __result, _Tp __value, _Distance*) {
+</span><span class='line'>  *__result = *__first; // 获取堆顶元素，并赋给堆尾的last-1
+</span><span class='line'>  __adjust_heap(__first, _Distance(0), _Distance(__last - __first), __value); // 调整堆
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator, class _Tp&gt;
+</span><span class='line'>inline void __pop_heap_aux(_RandomAccessIterator __first, _RandomAccessIterator __last, _Tp*) {
+</span><span class='line'>  __pop_heap(__first, __last - 1, __last - 1, _Tp(*(__last - 1)), __DISTANCE_TYPE(__first)); // 对 [first,last-1)进行pop，并将first赋给last-1
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator&gt;
+</span><span class='line'>inline void pop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last) { // 对外提供的接口，最后堆顶元素在堆的末尾，而[first,last-1) 区间为新堆，该接口调用完后再进行pop操作移除最后的元素
+</span><span class='line'>  __STL_REQUIRES(_RandomAccessIterator, _Mutable_RandomAccessIterator);
+</span><span class='line'>  __STL_REQUIRES(typename iterator_traits&lt;_RandomAccessIterator&gt;::value_type, _LessThanComparable);
+</span><span class='line'>  __pop_heap_aux(__first, __last, __VALUE_TYPE(__first));
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>5. make heap 算法</h2>
+
+<p>最后，我们来看看如何从一个初始序列来创建一个heap，有了前面的 <code>adjust_heap</code> ，创建heap也就很简单了，只需要从最后一个非叶子节点开始，不断调用堆调整函数，即可使得整个序列称为一个heap：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _RandomAccessIterator, class _Compare, class _Tp, class _Distance&gt;
+</span><span class='line'>void __make_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp, _Tp*, _Distance*) {
+</span><span class='line'>  if (__last - __first &lt; 2) return;
+</span><span class='line'>  _Distance __len = __last - __first;
+</span><span class='line'>  _Distance __parent = (__len - 2)/2; // 定位到最后一个非叶子节点
+</span><span class='line'>  while (true) { // 对每个非叶子节点为根的子树进行堆调整
+</span><span class='line'>    __adjust_heap(__first, __parent, __len, _Tp(*(__first + __parent)), __comp);
+</span><span class='line'>    if (__parent == 0) return;
+</span><span class='line'>    __parent--;
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _RandomAccessIterator, class _Compare&gt;
+</span><span class='line'>inline void make_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp) { // 对外提供的接口
+</span><span class='line'>  __STL_REQUIRES(_RandomAccessIterator, _Mutable_RandomAccessIterator);
+</span><span class='line'>  __make_heap(__first, __last, __comp, __VALUE_TYPE(__first), __DISTANCE_TYPE(__first));
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>6. 基于 heap 的 priority queue</h2>
+
+<p>上一篇文章中讲到stack和queue都是基于deque实现的，这里的priority queue是基于vector和heap来实现的，默认使用vector作为容器，而使用heap的算法来维持其priority的特性，因此priority queue也被归类为container adapter。其具体实现的主要代码如下:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+</span><span class='line'>class priority_queue {
+</span><span class='line'>protected:
+</span><span class='line'>  _Sequence c;
+</span><span class='line'>  _Compare comp;
+</span><span class='line'>public:
+</span><span class='line'>  priority_queue() : c() {}
+</span><span class='line'>  explicit priority_queue(const _Compare& __x) :  c(), comp(__x) {}
+</span><span class='line'>  priority_queue(const _Compare& __x, const _Sequence& __s) : c(__s), comp(__x) 
+</span><span class='line'>    { make_heap(c.begin(), c.end(), comp); }
+</span><span class='line'>  bool empty() const { return c.empty(); }
+</span><span class='line'>  size_type size() const { return c.size(); }
+</span><span class='line'>  const_reference top() const { return c.front(); }
+</span><span class='line'>  void push(const value_type& __x) {
+</span><span class='line'>    __STL_TRY {
+</span><span class='line'>      c.push_back(__x); // 在push_heap之前先将x放在vector c的最后面
+</span><span class='line'>      push_heap(c.begin(), c.end(), comp);
+</span><span class='line'>    }
+</span><span class='line'>    __STL_UNWIND(c.clear());
+</span><span class='line'>  }
+</span><span class='line'>  void pop() {
+</span><span class='line'>    __STL_TRY {
+</span><span class='line'>      pop_heap(c.begin(), c.end(), comp);
+</span><span class='line'>      c.pop_back(); // 在调用pop_heap之后才将最后一个元素剔除出vector c
+</span><span class='line'>    }
+</span><span class='line'>    __STL_UNWIND(c.clear());
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>值得一提的是，priority queue也没有迭代器，不能对其进行遍历等操作，因为它只能在顶部取和删除元素，而插入元素的位置也是确定的，而不能有用户指定。<br/>
+关于heap和priority queue的内容就介绍到这里了，而序列式容器的介绍也到此结束了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.3) 序列式容器之deque和stack、queue]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/"/>
+    <updated>2014-07-13T20:46:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>deque</code>、<code>stl_deque.h</code>、<code>deque.h</code>、<code>stack</code>、<code>stl_stack.h</code>、<code>queue</code>、<code>stl_queue.h</code> 等几个文件。</p>
+
+<h2>1. deque 概述</h2>
+
+<p>前面分别介绍了连续式存储的序列容器vector和以节点为单位链接起来的非连续存储的序列容器list，这两者各有优缺点，而且刚好是优缺互补的，那么何不将二者结合利用对方的优点来弥补己方的不足呢，于是这就有了强大的deque。</p>
+
+<p>没错，与我们在数据结构中学到的固定连续空间的双端队列不同，STL中的deque是分段连续的空间通过list链接而成的序列容器，它结合了vector与list的存储特性，但与vector和list都不同的是deque只能在首部或尾部进行插入和删除操作，这个限制在一定程度上简化了deque实现的难度。由于使用分段连续空间链接的方式，所以deque不存在vector那样“因旧空间不足而重新配置新的更大的空间，然后复制元素，再释放原空间”的情形，也不会有list那样每次都只配置一个元素的空间而导致时间性能和空间的利用率低下。</p>
+
+<h2>2. deque 的数据结构</h2>
+
+<p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
+</span><span class='line'>  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
+</span><span class='line'>protected:
+</span><span class='line'>  _Tp** _M_map; // 指向缓冲区的指针数组首地址
+</span><span class='line'>  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
+</span><span class='line'>  iterator _M_start; // 指向第一个缓冲区的第一个元素
+</span><span class='line'>  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
+</span><span class='line'>};
+</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
+</span><span class='line'>protected:  // Internal typedefs
+</span><span class='line'>  typedef pointer* _Map_pointer;
+</span><span class='line'>  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<h2>3. deque 的配置器</h2>
+
+<p>由于deque涉及到两种类型（map和buffer）数据的空间配置，因此deque定义了两个专属的配置器 <code>_Map_alloc_type</code> 和 <code>_Node_alloc_type</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
+</span><span class='line'>protected:
+</span><span class='line'>  typedef simple_alloc&lt;_Tp, _Alloc&gt;  _Node_alloc_type;
+</span><span class='line'>  typedef simple_alloc&lt;_Tp*, _Alloc&gt; _Map_alloc_type;
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
+</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; { };</span></code></pre></td></tr></table></div></figure>
+
+
+<p>而这里的 <code>_Alloc</code> 使用的都是STL默认的 <code>alloc</code> 这个配置器，因此这两个配置器实际上都是 <code>alloc</code> 类型的配置器，即SGI的第二级配置器。<br/>
+在定义一个deque时，默认调用基类的构造函数，产生一个map大小为0的空的deque，随着第一次插入元素，由于map大小不够，需要调用<code>_M_push_back_aux</code> 进而调用 <code>_M_reallocate_map</code> 进行map的空间配置，如果初始的map不为空，还需要对map进行“分配新空间，复制，释放元空间”的操作，如果从头部插入同样的道理，这是就是map的配置逻辑（实际中，还有一种情况，就是map的前后剩余的node数不同，例如前部分都空着，而后面插入后溢出了，这时可以考虑在map内部移动，即将后半部分整体往前移动一定距离）。其中<code>_M_reallocate_map</code>的实现如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>void deque&lt;_Tp,_Alloc&gt;::_M_reallocate_map(size_type __nodes_to_add, bool __add_at_front){
+</span><span class='line'>  size_type __old_num_nodes = _M_finish._M_node - _M_start._M_node + 1;
+</span><span class='line'>  size_type __new_num_nodes = __old_num_nodes + __nodes_to_add;
+</span><span class='line'>  _Map_pointer __new_nstart;
+</span><span class='line'>  if (_M_map_size &gt; 2 * __new_num_nodes) { // map的size足够，在map内部移动
+</span><span class='line'>    __new_nstart = _M_map + (_M_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
+</span><span class='line'>    if (__new_nstart &lt; _M_start._M_node)
+</span><span class='line'>      copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart);
+</span><span class='line'>    else
+</span><span class='line'>      copy_backward(_M_start._M_node, _M_finish._M_node + 1, __new_nstart + __old_num_nodes);
+</span><span class='line'>  } else { // map的size不够，重新分配
+</span><span class='line'>    size_type __new_map_size = _M_map_size + max(_M_map_size, __nodes_to_add) + 2;
+</span><span class='line'>    _Map_pointer __new_map = _M_allocate_map(__new_map_size); // 重新分配map
+</span><span class='line'>    __new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
+</span><span class='line'>    copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart); // 复制原map到新的map中
+</span><span class='line'>    _M_deallocate_map(_M_map, _M_map_size); // 释放原map
+</span><span class='line'>    _M_map = __new_map;
+</span><span class='line'>    _M_map_size = __new_map_size;
+</span><span class='line'>  }
+</span><span class='line'>  _M_start._M_set_node(__new_nstart);
+</span><span class='line'>  _M_finish._M_set_node(__new_nstart + __old_num_nodes - 1);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么每个连续的缓冲区buffer（或node）是在什么时候配置呢？它是在map中实际使用到的最后一个node不够用时但map还可以继续在这个node后面加入node时（即map非满而node满时），在 <code>_M_push_back_aux</code> 中调用 <code>_M_allocate_node</code> 来分配，相关函数都比较简单，这里就不贴了。<br/>
+以上主要是空间分配相关的，那么在 <code>pop</code> 的时候，空间的释放又是怎样的呢？这里也需要判断是否当前node全部被 <code>pop</code> 了，如果是的则需要释放这个node所占用的空间。如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>void pop_back() { // deque内部实现的成员函数，inline的
+</span><span class='line'>    if (_M_finish._M_cur != _M_finish._M_first) { // 整个node还没有pop完
+</span><span class='line'>      --_M_finish._M_cur;
+</span><span class='line'>      destroy(_M_finish._M_cur); // 析构当前元素
+</span><span class='line'>    } else  _M_pop_back_aux();
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>void deque&lt;_Tp,_Alloc&gt;::_M_pop_back_aux() { // 整个node被pop完了的情况
+</span><span class='line'>  _M_deallocate_node(_M_finish._M_first); // 释放整个node的空间
+</span><span class='line'>  _M_finish._M_set_node(_M_finish._M_node - 1); // node前移
+</span><span class='line'>  _M_finish._M_cur = _M_finish._M_last - 1; // 当前元素为最后一个node的最后一个元素
+</span><span class='line'>  destroy(_M_finish._M_cur); // 释放当前元素
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. deque 的迭代器</h2>
+
+<p>deque是分段连续空间，前面也提到了deque使用的是Bidirectional Iterators，因此deque的迭代器主要需要实现<code>operator++</code>和<code>operator--</code>。要实现这两个操作，需要考虑当前指针是否处于buffer的头/尾，如果在buffer的头部而需要前移（或尾部需要后移），就需要将buffer往前/后移一个，在SGI中是通过调用 <code>_M_set_node</code> 来实现的。具体代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Ref, class _Ptr&gt; struct _Deque_iterator {
+</span><span class='line'>  typedef _Tp** _Map_pointer;
+</span><span class='line'>  _Tp* _M_cur; // 几个成员变量
+</span><span class='line'>  _Tp* _M_first;
+</span><span class='line'>  _Tp* _M_last;
+</span><span class='line'>  _Map_pointer _M_node;
+</span><span class='line'>  _Self& operator++() { // ++ 操作符重载，后移
+</span><span class='line'>    ++_M_cur;
+</span><span class='line'>    if (_M_cur == _M_last) { // 到了buffer的最后一个
+</span><span class='line'>      _M_set_node(_M_node + 1); // 将当前node指针_M_node指向下一个node
+</span><span class='line'>      _M_cur = _M_first; // 当前指针指向新node的第一个元素
+</span><span class='line'>    }
+</span><span class='line'>    return *this; 
+</span><span class='line'>  }
+</span><span class='line'>  void _M_set_node(_Map_pointer __new_node) {
+</span><span class='line'>    _M_node = __new_node; // map pointer后移
+</span><span class='line'>    _M_first = *__new_node; // first指向新node
+</span><span class='line'>    _M_last = _M_first + difference_type(_S_buffer_size()); // last指向下一个node
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用 <code>--</code> 操作符向前移动的同理，这里就不赘述了。</p>
+
+<h2>5. deque 的常用操作</h2>
+
+<p>deque中最常用的莫过于 <code>push</code> 和 <code>pop</code> 操作了，这些操作在前面的空间配置中基本已经介绍了，这里就主要介绍一下 <code>clear</code>、 <code>erase</code> 和 <code>insert</code> 操作吧。<br/>
+<strong>（1）clear</strong><br/>
+该函数的作用是清除整个deque，释放所有空间而只保留一个缓冲区：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; void deque&lt;_Tp,_Alloc&gt;::clear() {
+</span><span class='line'>  for (_Map_pointer __node = _M_start._M_node + 1; __node &lt; _M_finish._M_node; ++__node) { // 从第二个node开始，遍历每个缓冲区（node）
+</span><span class='line'>    destroy(*__node, *__node + _S_buffer_size()); // 析构每个元素
+</span><span class='line'>    _M_deallocate_node(*__node); // 释放缓冲区
+</span><span class='line'>  }
+</span><span class='line'>  if (_M_start._M_node != _M_finish._M_node) { // 还剩下头尾两个node
+</span><span class='line'>    destroy(_M_start._M_cur, _M_start._M_last); // 析构头node中的每个元素
+</span><span class='line'>    destroy(_M_finish._M_first, _M_finish._M_cur); // 析构尾node中的每个元素
+</span><span class='line'>    _M_deallocate_node(_M_finish._M_first); // 释放尾node的空间
+</span><span class='line'>  } else destroy(_M_start._M_cur, _M_finish._M_cur); // 只有一个node，析构这个node中的所有元素
+</span><span class='line'>  _M_finish = _M_start;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>（2）erase</strong><br/>
+该函数的作用是清除 [first,last) 间的所有元素：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>typename deque&lt;_Tp,_Alloc&gt;::iterator 
+</span><span class='line'>deque&lt;_Tp,_Alloc&gt;::erase(iterator __first, iterator __last) {
+</span><span class='line'>  if (__first == _M_start && __last == _M_finish) { // erase 所有元素，直接调用clear
+</span><span class='line'>    clear();
+</span><span class='line'>    return _M_finish;
+</span><span class='line'>  } else { // erase 部分元素
+</span><span class='line'>    difference_type __n = __last - __first; // 待擦出的区间长度
+</span><span class='line'>    difference_type __elems_before = __first - _M_start; // 擦出区间前的元素个数
+</span><span class='line'>    if (__elems_before &lt; difference_type((this-&gt;size() - __n) / 2)) { // 前面的元素个个数小于擦除后剩余总数的一半，将这部分后移
+</span><span class='line'>      copy_backward(_M_start, __first, __last); // 后移
+</span><span class='line'>      iterator __new_start = _M_start + __n; 
+</span><span class='line'>      destroy(_M_start, __new_start);
+</span><span class='line'>      _M_destroy_nodes(__new_start._M_node, _M_start._M_node);
+</span><span class='line'>      _M_start = __new_start;
+</span><span class='line'>    } else { // 前面剩余的元素较多，将后面的前移
+</span><span class='line'>      copy(__last, _M_finish, __first); // 前移
+</span><span class='line'>      iterator __new_finish = _M_finish - __n;
+</span><span class='line'>      destroy(__new_finish, _M_finish);
+</span><span class='line'>      _M_destroy_nodes(__new_finish._M_node + 1, _M_finish._M_node + 1);
+</span><span class='line'>      _M_finish = __new_finish;
+</span><span class='line'>    }
+</span><span class='line'>    return _M_start + __elems_before;
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>（3）insert</strong><br/>
+该函数的作用是在某个位置插入一个元素：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>iterator insert(iterator position, const value_type& __x) {
+</span><span class='line'>  if (position._M_cur == _M_start._M_cur) { // 在头部插入，用push_front
+</span><span class='line'>    push_front(__x);
+</span><span class='line'>    return _M_start;
+</span><span class='line'>  } else if (position._M_cur == _M_finish._M_cur) { // 在尾部插入
+</span><span class='line'>    push_back(__x);
+</span><span class='line'>    iterator __tmp = _M_finish;
+</span><span class='line'>    --__tmp;
+</span><span class='line'>    return __tmp; // 返回插入位置
+</span><span class='line'>  } else { // 在中间插入
+</span><span class='line'>    return _M_insert_aux(position, __x);
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>deque&lt;_Tp,_Alloc&gt;::_M_insert_aux(iterator __pos, const value_type& __x) {
+</span><span class='line'>  difference_type __index = __pos - _M_start; // 插入点之前的元素个数
+</span><span class='line'>  value_type __x_copy = __x;
+</span><span class='line'>  if (size_type(__index) &lt; this-&gt;size() / 2) { // 前面的元素个数较小
+</span><span class='line'>    push_front(front()); // 在头部插入与头部相同的元素，然后从第二个元素开始到插入位置整体前移一步
+</span><span class='line'>    iterator __front1 = _M_start; ++__front1;
+</span><span class='line'>    iterator __front2 = __front1; ++__front2;
+</span><span class='line'>    __pos = _M_start + __index;
+</span><span class='line'>    iterator __pos1 = __pos; ++__pos1;
+</span><span class='line'>    copy(__front2, __pos1, __front1);
+</span><span class='line'>  } else { // 插入点后面的元素较少，从后面插入，然后插入点到尾部整体往后移一步
+</span><span class='line'>    push_back(back());
+</span><span class='line'>    iterator __back1 = _M_finish; --__back1;
+</span><span class='line'>    iterator __back2 = __back1;  --__back2;
+</span><span class='line'>    __pos = _M_start + __index;
+</span><span class='line'>    copy_backward(__pos, __back2, __back1);
+</span><span class='line'>  }
+</span><span class='line'>  *__pos = __x_copy;
+</span><span class='line'>  return __pos;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>deque原本只能在头部或尾部插入元素的，提供了insert之后，就可以任何位置插入元素了。</p>
+
+<h2>6. 基于deque 的 stack 和 queue</h2>
+
+<p>由于deque可以从首位两端插入或剔除元素，所以只需要对其进行简单的封装就可以分别实现先进先出（FIFO）的stack和先进后出（FILO）的queue了。stack和queue中都有一个deque类型的成员，用做数据存储的容器，然后对deque的部分接口进行简单的封装，例如stack只提供从末端插入和删除的接口以及获取末端元素的接口，而queue则只提供从尾部插入而从头部删除的接口以及获取首位元素的接口。像这样具有“修改某物接口，形成另一种风貌”的性质的，称为配接器（adapter），因此STL中stack和queue往往不被归类为容器（container），而被归类为容器配接器（container adapter）。（关于配接器后面文章还会具体介绍）<br/>
+下面只给出stack的基本实现，并加以注解。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque&lt;_Tp&gt;) &gt;
+</span><span class='line'>class stack; // 原型声明
+</span><span class='line'>template &lt;class _Tp, class _Sequence&gt; class stack {
+</span><span class='line'>protected:
+</span><span class='line'>  _Sequence c; // _Sequence为deque&lt;_Tp&gt;，c为实际存储数据的容器
+</span><span class='line'>public: // 向外部提供的接口，都是调用deque的接口来实现的
+</span><span class='line'>  stack() : c() {}
+</span><span class='line'>  explicit stack(const _Sequence& __s) : c(__s) {}
+</span><span class='line'>  bool empty() const { return c.empty(); }
+</span><span class='line'>  size_type size() const { return c.size(); }
+</span><span class='line'>  reference top() { return c.back(); }
+</span><span class='line'>  const_reference top() const { return c.back(); }
+</span><span class='line'>  void push(const value_type& __x) { c.push_back(__x); }
+</span><span class='line'>  void pop() { c.pop_back(); }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>值得一提的是，stack和queue都没有迭代器，因此不能对stack或queue进行遍历。但他们提供了 <code>operator ==</code> 和 <code>operator&lt;</code> 这两个比较大小的操作符：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Seq&gt;
+</span><span class='line'>bool operator==(const stack&lt;_Tp,_Seq&gt;& __x, const stack&lt;_Tp,_Seq&gt;& __y) {
+</span><span class='line'>  return __x.c == __y.c;
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Seq&gt;
+</span><span class='line'>bool operator&lt;(const stack&lt;_Tp,_Seq&gt;& __x, const stack&lt;_Tp,_Seq&gt;& __y) {
+</span><span class='line'>  return __x.c &lt; __y.c;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外，除了使用默认的deque作为stack和queue的容器之外，我们还可以使用list或其他自定义的容器，只需要实现了stack或queue需要的接口，使用方法很简单：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>stack&lt;int,vector&lt;int&gt; &gt; ist;
+</span><span class='line'>queue&lt;char,list&lt;char&gt; &gt; cq;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>即只需要指定模板中第二个参数即可。<br/>
+关于deque的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.2) 序列式容器之list]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/"/>
+    <updated>2014-07-06T22:03:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>list</code>、<code>stl_list.h</code>、<code>list.h</code> 等几个文件。</p>
+
+<h2>1. list 和 slist</h2>
+
+<p>STL中也实现了链表这种数据结构，list是STL标准的双向链表，而slit是SGI的单链表。相比于vector的连续线性空间而言，list即有有点也有缺点：优点是空间分配更灵活，对任何位置的插入删除操作都是常数时间；缺点是排序不方便。list和vector是比较常用的线性容器，那么什么时候用哪一种容器呢，需要视元素的多少、元素构造的复杂度（是否为POD数据）以及元素存取行为的特性而定。限于篇幅，本文主要介绍list的内容，关于单链表slist可以参见源码和侯捷的书。</p>
+
+<h2>2. list 的数据结构</h2>
+
+<p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_node_base {
+</span><span class='line'>  _List_node_base* _M_next;
+</span><span class='line'>  _List_node_base* _M_prev;
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct _List_node : public _List_node_base {  // node 的定义
+</span><span class='line'>  _Tp _M_data;
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>class _List_base {
+</span><span class='line'>protected:
+</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
+</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; {
+</span><span class='line'>public:
+</span><span class='line'>  typedef _List_node&lt;_Tp&gt; _Node;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<p>在list中的 <code>_M_node</code> 其实指向一个空白节点，该空白节点的 <code>_M_data</code> 成员是没有被初始化的，实际上该节点是链表的尾部，后面将list的迭代器还会提到这样做的好处。</p>
+
+<h2>3. list 的配置器</h2>
+
+<p>list缺省使用 alloc （即 <code>__STL_DEFAULT_ALLOCATOR</code>） 作为空间配置器，并据此定义了另外一个 <code>list_node_allocator</code> ，并定义了<code>_M_get_node</code>和<code>_M_put_node</code>  两个函数，分别用于分配和释放空间，为的是更方便的以节点大小为配置单位。除此之外，还定义了两个<code>_M_create_node</code> 函数，在分配空间的同时调用元素的构建函数对其进行初始化：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; 
+</span><span class='line'>class _List_base {
+</span><span class='line'>protected:
+</span><span class='line'>  typedef simple_alloc&lt;_List_node&lt;_Tp&gt;, _Alloc&gt; _Alloc_type; // 专属配置器，每次配置一个节点
+</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_get_node() { return _Alloc_type::allocate(1); } // 分配一个节点
+</span><span class='line'>  void _M_put_node(_List_node&lt;_Tp&gt;* __p) { _Alloc_type::deallocate(__p, 1); }  // 释放一个节点
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt; // 缺省使用 __STL_DEFAULT_ALLOCATOR 配置器
+</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; { 
+</span><span class='line'>protected:
+</span><span class='line'>  _Node* _M_create_node(const _Tp& __x){ // 分配空间并初始化
+</span><span class='line'>    _Node* __p = _M_get_node();
+</span><span class='line'>    __STL_TRY {  _Construct(&__p-&gt;_M_data, __x);  }
+</span><span class='line'>    __STL_UNWIND(_M_put_node(__p));
+</span><span class='line'>    return __p;
+</span><span class='line'>  }
+</span><span class='line'>  _Node* _M_create_node(){
+</span><span class='line'>    _Node* __p = _M_get_node();
+</span><span class='line'>    __STL_TRY {  _Construct(&__p-&gt;_M_data);  }
+</span><span class='line'>    __STL_UNWIND(_M_put_node(__p));
+</span><span class='line'>    return __p;
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在list的构造和析构函数、插入、删除等操作中设计到空间的配置。由于list不涉及同时分配多个连续元素的空间，因此用不到SGI的第二层配置器。</p>
+
+<h2>4. list 的迭代器</h2>
+
+<p>由于list的节点在内存中不一定连续存储，其迭代器不能像vector那样使用普通指针了，由于list是双向的链表，迭代器必须具备前移、后移的能力，所以它的迭代器是BidirectionalIterators，即双向的可增可减的，以下是list的迭代器的设计：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_iterator_base {
+</span><span class='line'>  typedef bidirectional_iterator_tag iterator_category;
+</span><span class='line'>  _List_node_base* _M_node;
+</span><span class='line'>  _List_iterator_base(_List_node_base* __x) : _M_node(__x) {}
+</span><span class='line'>  _List_iterator_base() {}
+</span><span class='line'>  void _M_incr() { _M_node = _M_node-&gt;_M_next; }
+</span><span class='line'>  void _M_decr() { _M_node = _M_node-&gt;_M_prev; }
+</span><span class='line'>};
+</span><span class='line'>template&lt;class _Tp, class _Ref, class _Ptr&gt;
+</span><span class='line'>struct _List_iterator : public _List_iterator_base {
+</span><span class='line'>  _Self& operator++() { this-&gt;_M_incr(); return *this; }
+</span><span class='line'>  _Self operator++(int) { _Self __tmp = *this; this-&gt;_M_incr(); return __tmp; }
+</span><span class='line'>  _Self& operator--() { this-&gt;_M_decr(); return *this; }
+</span><span class='line'>  _Self operator--(int) { _Self __tmp = *this; this-&gt;_M_decr(); return __tmp; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>list有一个重要性质，插入操作（insert）和接合操作（splice）都不会造成原有list迭代器失效，而list的删除操作（erase）也只对“指向被删除元素”的那个迭代器失效，其他迭代器不受任何影响。</p>
+
+<h2>5. list 的常用操作</h2>
+
+<p>list的常用操作有很多，例如最基本的<code>push_front</code>、<code>push_back</code>、<code>pop_front</code>、<code>pop_back</code> 等，这里主要介绍一下<code>clear</code>、<code>remove</code>、<code>unique</code>、<code>transfer</code> 这几个。<br/>
+<strong>（1）clear</strong><br/>
+clear 函数的作用是清楚整个list的所有节点。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>void clear() { _Base::clear(); }
+</span><span class='line'>void _List_base&lt;_Tp,_Alloc&gt;::clear() {
+</span><span class='line'>  _List_node&lt;_Tp&gt;* __cur = (_List_node&lt;_Tp&gt;*) _M_node-&gt;_M_next;
+</span><span class='line'>  while (__cur != _M_node) {
+</span><span class='line'>    _List_node&lt;_Tp&gt;* __tmp = __cur;
+</span><span class='line'>    __cur = (_List_node&lt;_Tp&gt;*) __cur-&gt;_M_next; // 后移
+</span><span class='line'>    _Destroy(&__tmp-&gt;_M_data); // 析构当前节点的对象
+</span><span class='line'>    _M_put_node(__tmp); // 释放当前节点的空间
+</span><span class='line'>  }
+</span><span class='line'>  _M_node-&gt;_M_next = _M_node; // 置为空list
+</span><span class='line'>  _M_node-&gt;_M_prev = _M_node;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>（2）remove</strong><br/>
+remove 函数的作用是将数值为value的所有元素移除。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>void list&lt;_Tp, _Alloc&gt;::remove(const _Tp& __value) {
+</span><span class='line'>  iterator __first = begin();
+</span><span class='line'>  iterator __last = end();
+</span><span class='line'>  while (__first != __last) { // 遍历list
+</span><span class='line'>    iterator __next = __first;
+</span><span class='line'>    ++__next;
+</span><span class='line'>    if (*__first == __value) erase(__first); // 值与 value 相等就移除
+</span><span class='line'>    __first = __next;
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>（3）unique</strong><br/>
+unique函数的作用是移除相同的<strong>连续</strong>元素，只有“连续而且相同”的元素，才回被移除到只剩一个。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>void list&lt;_Tp, _Alloc&gt;::unique() {
+</span><span class='line'>  iterator __first = begin();
+</span><span class='line'>  iterator __last = end();
+</span><span class='line'>  if (__first == __last) return;
+</span><span class='line'>  iterator __next = __first;
+</span><span class='line'>  while (++__next != __last) {
+</span><span class='line'>    if (*__first == *__next) // 连续连个节点的值相同
+</span><span class='line'>      erase(__next);
+</span><span class='line'>    else
+</span><span class='line'>      __first = __next;
+</span><span class='line'>    __next = __first;
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>（4）transfer</strong><br/>
+transfer的作用是将 [first, last) 内的所有元素移动到 position 之前。它是一个私有函数，它为其他常用操作如 splice、sort、merge 等的实现提供了便利。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>protected:
+</span><span class='line'>  void transfer(iterator __position, iterator __first, iterator __last) {
+</span><span class='line'>    if (__position != __last) {
+</span><span class='line'>      // Remove [first, last) from its old position.
+</span><span class='line'>      __last._M_node-&gt;_M_prev-&gt;_M_next     = __position._M_node;
+</span><span class='line'>      __first._M_node-&gt;_M_prev-&gt;_M_next    = __last._M_node;
+</span><span class='line'>      __position._M_node-&gt;_M_prev-&gt;_M_next = __first._M_node; 
+</span><span class='line'>      // Splice [first, last) into its new position.
+</span><span class='line'>      _List_node_base* __tmp      = __position._M_node-&gt;_M_prev;
+</span><span class='line'>      __position._M_node-&gt;_M_prev = __last._M_node-&gt;_M_prev;
+</span><span class='line'>      __last._M_node-&gt;_M_prev     = __first._M_node-&gt;_M_prev; 
+</span><span class='line'>      __first._M_node-&gt;_M_prev    = __tmp;
+</span><span class='line'>    }
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>关于list的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.1) 序列式容器之vector]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/"/>
+    <updated>2014-06-29T23:26:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>vector</code>、<code>stl_vector.h</code>、<code>vector.h</code> 等几个文件。</p>
+
+<h2>1. 容器</h2>
+
+<p>在数据结构的课程中，我们主要研究数据的特定排列方式，以利于搜索、排序等算法，几乎可以说，任何特定的数据结构都是为了实现某种特定的算法。STL 容器即由一个个特定的数据结构组成，例如向量（vector），链表（list），堆栈（stack），队列（queue），树（tree），哈希表（hash table），集合（set），映射（map）等，根据数据在容器中的排列特性，这些数据接口分为序列式容器（sequence container）和关联式容器（association container）两种，本文主要解读SGI STL中的序列式容器。</p>
+
+<p>所谓序列式容器，其中的元素可序（ordered），但未必有序（sorted）。C++ 本身提供了一个序列式容器——数组（array），STL中还提供了向量（vector），链表（list），堆栈（stack），队列（queue），优先队列（priority queue）等，其中stack和queue只是将deque（双端队列）设限而得到的，技术上可以被归为一种配接器（adaptor）。本系列文章将依次解读SGI STL各容器的关键实现细节。</p>
+
+<h2>2. vector 及其数据结构</h2>
+
+<p>在STL中，vector的空间在物理上就是连续的，而且是可以动态扩展的，这里的动态扩展，不需要用户去处理溢出的问题，而只需要关心上层逻辑。vector连续物理空间的动态扩展技术是该容器的关键，它主要分为三个步骤：配置新空间，数据移动，释放旧空间。这三个步骤执行的次数以及每次执行时的效率是影响最终 vector 效率的关键因素。为了减少执行的次数，就需要未雨绸缪，每次扩充空间时，成倍增长。而每次执行的效率，就主要是数据移动的效率了。下面，我们依次介绍vector的数据结构，使用的空间配置器和迭代器，以及常用操作。<br/>
+<strong>vector 的数据结构</strong><br/>
+vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>class _Vector_base {
+</span><span class='line'>protected:
+</span><span class='line'>  _Tp* _M_start;
+</span><span class='line'>  _Tp* _M_finish;
+</span><span class='line'>  _Tp* _M_end_of_storage;
+</span><span class='line'>};
+</span><span class='line'>class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<!-- more -->
+
+
+<p>其中 <code>_M_finish</code> 是当前使用到的空间的结束地址，而 <code>_M_end_of_storage</code> 是可用空间的结束地址，前者小于等于后者，当新加入元素使得前者大于后者之后，就需要进行空间扩充了。</p>
+
+<h2>3. vector 的配置器</h2>
+
+<p>vector的空间配置器 STL 默认的 <code>alloc</code> 即 <code>__default_alloc_template</code> 配置器，即第二级配置器，它对于 POD(plain old data) 类型数据使用内建内存池来应对内存碎片问题，关于该默认配置器的更多介绍请参见本系列第2篇文章 <a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器</a> . 除此之外，SGI vector 还定义了一个 <code>data_allocator</code>，为的是更方便的以元素大小为配置单位：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; 
+</span><span class='line'>class _Vector_base  // vector 继承了该基类
+</span><span class='line'>protected:
+</span><span class='line'>    typedef simple_alloc&lt;_Tp, _Alloc&gt; _M_data_allocator;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>关于 <code>simple_alloc</code> 的内容见前面的文章，它其实就是简单的对 <code>malloc</code> 等的加一层封装。
+vector的内存是在vector的构造或析构、插入元素而容量不够等情况下，需要进行配置。vector 提供了很多的构造函数，具体可见源代码，而更详细的列表并涉及各个版本的说明的列表可以参见C++的文档：<a href="http://en.cppreference.com/w/cpp/container/vector/vector">cpp references</a>.</p>
+
+<h2>4. vector 的迭代器</h2>
+
+<p>由于vector使用的物理连续的空间，需要支持随机访问，所以它使用的随机访问迭代器（Random Access Iterators）。也正由于vector使用连续物理空间，所以不论其元素类型为何，使用普通指针就可以作为它的迭代器：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public:
+</span><span class='line'>  typedef _Tp value_type;
+</span><span class='line'>  typedef value_type* iterator;
+</span><span class='line'>  typedef const value_type* const_iterator;</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>注意</strong>：vector中所谓的动态增加大小，并不是在原空间之后接连续新空间（因为无法保证原空间之后尚有可供配置的空间），而是以原大小的两倍另外配置一块较大空间，然后将原内容拷贝过来，然后再在其后构造新元素，最后释放原空间。因此，对于vector的任何操作，一旦引起空间重新配置，指向原vector的所有迭代器就失效了，这是vector使用中的一个大坑，务必小心。</p>
+
+<h2>5. vector 的常用操作</h2>
+
+<p>vector所提供的元素操作很多，这里选取几个常用操作介绍一下。<br/>
+<strong>（1）push_back</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public  void push_back(const _Tp& __x) {
+</span><span class='line'>if (_M_finish != _M_end_of_storage) {
+</span><span class='line'>    construct(_M_finish, __x);
+</span><span class='line'>    ++_M_finish;
+</span><span class='line'>}
+</span><span class='line'>else
+</span><span class='line'>    _M_insert_aux(end(), __x); // auxiliary insert
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中辅助的insert函数的基本逻辑为：按原空间大小的两倍申请新空间，复制原数据到新空间，释放原空间，更新新vector的数据结构的成员变量。<br/>
+<strong>（2）insert</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public  iterator insert(iterator __position, const _Tp& __x) {
+</span><span class='line'>    size_type __n = __position - begin();
+</span><span class='line'>    if (_M_finish != _M_end_of_storage && __position == end()) {
+</span><span class='line'>      construct(_M_finish, __x);
+</span><span class='line'>      ++_M_finish;
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>      _M_insert_aux(__position, __x);
+</span><span class='line'>    return begin() + __n;
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>与<code>push_back</code>类似，只是<code>push_back</code> 在最后插入，更为简单。insert 首先判断是否为在最后插入且容量足够，如果是最后插入且容量足够就就直接内部实现了。否则还是调用上面的辅助插入函数，该函数中首先判断容量是否足够，容量足的话，先构造一个新元素并以当前vector的最后一个元素的值作为其初始值，然后从倒数第二个元素开始从后往前拷贝，将前一元素的值赋给后一元素，知道当前插入位置。<br/>
+<strong>(3)erase</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public  iterator erase(iterator __first, iterator __last) {
+</span><span class='line'>    iterator __i = copy(__last, _M_finish, __first);
+</span><span class='line'>    destroy(__i, _M_finish);
+</span><span class='line'>    _M_finish = _M_finish - (__last - __first);
+</span><span class='line'>    return __first;
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>与insert相反，该函数将某些连续的元素从vector中删除，所以不存在容量不足等问题，但也不会将没有使用的空间归还给操作系统。这里只有简单的元素拷贝（copy）和元素的析构（destroy）。另外，需要说明的是，对于vector而言clear函数和erase函数是等同的，都只清空对应内存块的值，而不将空间归还给操作系统，所以vector的容量是只增不减的。而对于其他一些容器就有所不同了，比如list之类以node为单位的数据结构。<br/>
+关于vector的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(2) 迭代器(Iterators)和Traits]]></title>
@@ -4065,897 +5172,6 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 <p>后记：第一次参加这样高大上的创业分享盛会，还是挺激动的，非常感谢@36氪 和 @36氪开放日。创业是一件很刺激、需要激情和果敢的事，也是一件需要理性、需要毅力的事。
 创业是一种追求，一种价值观，一种生活方式。</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[互联网公司为什么都在玩硬件？]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/10/30/why-web-companies-all-are-beginning-to-play-hardware-products/"/>
-    <updated>2013-10-30T21:07:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/10/30/why-web-companies-all-are-beginning-to-play-hardware-products</id>
-    <content type="html"><![CDATA[<p>昨天360高调推出安全手环，延续着去年以来互联网公司进军硬件行业的风气。小米手机一炮而红后，互联网公司纷纷进军手机硬件行业，
-百度、阿里、盛大、360等等都推出了自己的定制手机，不过巨头们发现原来硬件并没有想象中那般好玩。但不好玩也得玩，你不玩别人也
-会玩。</p>
-
-
-
-
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013103001.jpeg"></center>
-
-
-
-
-<p>但今年，巨头们不玩手机了，改玩其他了，有的是自己独立生产，有的是与厂家合作，内嵌自己的服务。这其中的玩家包括百度、360、小米、盛大、乐视等。</p>
-
-
-
-
-<!--more-->
-
-
-<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;分割线&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
-
-
-<p><strong>先不妨梳理一下巨头们都推出了哪些硬件.</strong></p>
-
-
-<h4>1、百度</h4>
-
-
-<p>咕咚手环：一款健康设备，用于检测运动和睡眠信息，了解在自身的健康状况。</br>
-inWatch智能腕表：提供时间、音乐、上网、拨打电话等功能，与智能手机无异。</br>
-小度WiFi：一个简易的WiFi共享装置。</br>
-小度路由，小度影棒：即将推出，都是网络看片用的。</p>
-
-
-<h4>2、腾讯</h4>
-
-
-<p>Q影：是一款口袋式的互动投影，可以在几乎任何你需要的场景中使用，任何一个平面，Q影都可以投影能够触控的画面，让任一平面瞬间变身触控Touch Pad。</br>
-小Q机器人：小Q机器人（Qrobot）是智能互联网机器人产品，是中国科学院与腾讯公司重大战略合作项目。它能够通过语音指令等多维交互方式为用户提供新闻、
-天气、音乐、股票、教育、娱乐、办公等资讯和服务应用。同时，Qrobot有丰富的应用平台，通过互联网即可下载更多的功能。</p>
-
-
-<h4>3、360</h4>
-
-
-<p>360随身WiFi：一个简易的WiFi共享设备。</br>
-360安全手环：用户孩童的安全设备，更像一个GPS+对讲机的结合。</p>
-
-
-<h4>4、盛大</h4>
-
-
-<p>果壳手表（Geak Watch）：同样是智能手表，其独特之处是可以独立上网，功能更全面。</br>
-果壳魔戒（Geak Ring）：提供解锁、传递个人信息等功能，功能比较杂糅，定位略显模糊。</p>
-
-
-<h4>5、小米</h4>
-
-
-<p>小米盒子和小米电视，就不在此赘述了，大家应该比我了解。</p>
-
-
-<h4>6、乐视</h4>
-
-
-<p>乐视盒子和乐视电视，同样不再赘述。</p>
-
-
-<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;分割线&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
-
-
-
-
-<p><strong>互联网巨头们推出的硬件看似杂乱无章，其实不外乎以下几种类型：</strong></p>
-
-
-<h4>1、独立的可穿戴设备</h4>
-
-
-<p>顺应国外可穿戴设备的潮流，可与人体或衣物整合的互联网设备，利用人体的行为与设备产生交互。</br>
-代表：百度咕咚手环，360安全手环，盛大果壳手表</p>
-
-
-<h4>2、创新性的配件</h4>
-
-
-<p>作为传统的硬件或传统的互联网服务的配件存在，更多的是微创新，起到细节优化的作用</br>
-代表：小米盒子，小度WiFi，360随身WiFi</p>
-
-
-<h4>3、传统的大众家电等</h4>
-
-
-<p>互联网企业进军传统家电绝不只是贴一个自己Logo就完事儿了，而是在其中增加更多满足用户需求的互联网因素</br>
-代表：小米电视，乐视TV</p>
-
-
-<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;分割线&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
-
-
-
-
-<p><strong>那么互联网企业进入硬件行业的目的是什么呢？</strong></p>
-
-
-<h4>1、抢占入口</h4>
-
-
-<p>这也是行业普遍的观点，互联网公司进军硬件行业是为了给自己的互联网服务找更多的入口。在当下，互联网服务同质化非常严重，很难在内容上吸引到更多的用户，所以互联网企业只能在渠道入口上下功夫。</p>
-
-
-<p>PC上，浏览器和网址导航是入口，而用户已经在逃离PC，不仅手机，更多的电子设备以及接入了互联网，包括平板电脑、电子书等，这些设备不仅分流了用户的上网时间，
-一定程度上也形成了新的入口。所以巨头的战略就是通过硬件切入，抢占入口，输出自己的互联网服务，获取利益。</p>
-
-
-<p>举个例子，假设用户想看视频。在传统PC端，用户会习惯性地打开优酷土豆搜索或者去百度搜索（很可能被导入到爱奇艺或者PPS），这样优酷土豆和百度就是个强劲的入口；
-在移动端，用户可能会选取App Store、豌豆荚、360手机助手、91助手或者其他应用商店下，这样控制应用分发的百度和360 很可能强推自己的百度视频（以及爱奇艺和PPS的移动APP）和360视频搜索。</p>
-
-
-<p>而PC和移动端都无法满足你看视频的需求，假设你购买了小度影棒或者乐视盒子，高清大屏，更好的用户体验吸引了你，这时你浏览的视频一定来自于百度系爱奇艺、PPS或者乐视网的内容，这也就是硬件的价值所在。</p>
-
-
-
-
-<h4>2、再造新的入口</h4>
-
-
-<p>一切都在互联网化，人与互联网的界限也在逐渐变得模糊，在不断互联网化的过程中我们总会挖掘更多地需求，这种需求可能是原来就有的，现在只是把其互联网化了；
-也可能是原来没有的，现在借用互联网将其挖掘了出来。很多互联网公司涉足这样的硬件可能并不是推广自己的服务，因为其本身的服务并不一定契合硬件产品功能，
-其目的是提前布局，或许用户，建立新的互联网服务，再造一个入口，而不是抢夺原来的入口。</p>
-
-
-<p>就拿昨天推出的360安全手环举例。儿童安全这个市场一定有不少产品了，但周鸿祎让这个市场及产品互联网化了。除了网络上的新闻报道，笔者对这款产品的细节及后续的更新还不是很了解，
-但我认为360此举肯定不是为了推广自己的互联网服务，内置个360杀毒未免太low了吧。</p>
-
-
-<p>这款产品自身在通话、录音、定位等方面有着广泛的互联网需求，而这些需求一旦被接受，就会带来价值，这才是很多互联网公司推出硬件的目的，开辟一款处女地，再重新开荒耕耘。</p>
-
-
-
-
-<h4>3、获取数据</h4>
-
-
-<p>很多互联网公司已经获取到足够多的数据了，但对于数据永远是嫌少不嫌多的，更何况，可穿戴设备下的数据是不同于传统的网络浏览数据的，可穿戴设备下的数据由于在交互上离人的真实更接近，
-这样的数据其实更立体直观、更接近现实，也就更有价值。</p>
-
-
-<p>举个例子，假设你用百度或者微博搜索一些关于运动健康的关键词，通过一定的数据处理分析，可能你以后会在百度右侧广告栏或者微博推广橱窗中看到运动健康相关的广告，
-这就是一个简单的大数据分析，但这样的分析大部分情况下是不准确的。而假设你用了百度的咕咚手环，它有效记录了你的睡眠和运动情况，这样分析的结果可能更接近真实，
-由于你用了同一个账户体系，以后再使用百度的时候，推广的广告可能就精准了。</p>
-
-
-<p>我再做一个猜测，假如这个手环通过分析你的心跳、血液循环流动监测到了你潜在的疾病，并提醒了你，是不是这样的数据更有价值？因为这个手环离你更近，不只是空间上，
-更是生理心理上。所以，可穿戴设备的数据的价值不在于更多，而在于更精确。</p>
-
-
-
-
-<h4>4、硬件盈利</h4>
-
-
-<p>好吧，笔者开了个玩笑。Kindle都在赔钱卖吆喝，当下用硬件盈利未免太反科学了。而周鸿祎也已经预言未来是一个硬件免费的时代，笔者希望那一天快点到来吧。</p>
-
-
-<p>互联网企业进军硬件已经成为大势所趋，而进军硬件只是表象，本质原因是因为随着互联网的全面普及和深化，我们需要更多的新设备来连接或者呈现新的功能，所以就有了这一波硬件的潮流，
-这有点像电灯、电话、电视那个百花齐放的时代，对应的是电的利用。</p>
-
-
-<p>所以，在去年一股脑扎进手机圈后，今年互联网巨头对硬件制造更加理性了，推出的产品也更有市场针对性和前瞻性。这些硬件产品或是互联网企业传统服务的入口，
-或是承担试水新领域的任务，或是大数据采集的深化，或是几者叠加重合。总之，对于硬件，我是不嫌多的。</p>
-
-
-
-
-<p>转载自钛媒体：<a href="http://www.tmtpost.com/74476.html">互联网公司为什么都在玩硬件？</a>， 有删改。</p>
-
-
-<p>知乎相关问答：</br>
-[1] <a href="http://www.zhihu.com/question/21337805">2013年国内有哪些互联网公司在做硬件？</a></br>
-[2] <a href="http://www.zhihu.com/question/21661422">怎么看待现在国内互联网公司纷纷开始发力硬件产品？</a>
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linux的OSS和ALSA声音系统简介及其比较]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/09/08/brief-introduction-of-alsa-and-oss-and-its-comparision/"/>
-    <updated>2013-09-08T19:46:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/09/08/brief-introduction-of-alsa-and-oss-and-its-comparision</id>
-    <content type="html"><![CDATA[<h2>概述</h2>
-
-
-<p>昨天想在Ubuntu上用一下HTK工具包来绘制语音信号的频谱图和提取MFCC的结果，但由于前段时间把Ubuntu升级到13.04，系统的声卡驱动
-是ALSA（Advanced Linux Sound Architecture，高级Linux声音体系），而不是HTK中所使用的OSS（Open Sound System，开放声音系统）。
-网上查阅了大半天，按照 http://forum.ubuntu.org.cn/viewtopic.php?t=316792 中提供的方法用OSS4来替换ALSA，结果OSS4没替换成功，
-而原来的ALSA也不好使了，真坑爹啊！到现在还没办法完全复原，现在只能通过alsamixer来设置音量了，系统的音量设置根本无法用，而且
-声音设置中的输入设备和输出设备都是空的。（现在将系统升级到13.10版，系统的音量设置可以用了，哈哈）捣鼓了半天也没还原回来唉，
-整个人都快崩溃了，都是由于对Linux不熟悉才被虐至如此地步，得恶补啊！！！下面本文就主要介绍一下OSS和ALSA，并将二者进行比较。</p>
-
-
-
-
-<p>在介绍OSS和ALSA之前，先介绍一下音频设备的一些基础知识。</br>
-数字音频设备，有时也称codec，PCM，DSP，ADC/DAC设备，用来播放或录制数字化的声音。它的指标主要有：采样速率（电话为8K，DVD为96K）、
-channel数目（单声道，立体声）、采样分辨率（8-bit，16-bit）等。</br>
-mixer（混频器）：用来控制多个输入、输出的音量，也控制输入（microphone，line-in，CD）之间的切换。</br>
-synthesizer（合成器）：通过一些预先定义好的波形来合成声音，有时用在游戏中声音效果的产生。</br>
-MIDI接口：MIDI接口是为了连接舞台上的synthesizer、键盘、道具、灯光控制器的一种串行接口。</p>
-
-
-
-
-<!--more-->
-
-
-
-
-<h2>OSS开放声音系统简介</h2>
-
-
-<p>Open Sound System是一个类Unix和POSIX兼容系统上一个可选的声音架构。OSSv3是Linux下原始的声音系统并集成在内核里，但是OSSv4
-在2002年OSS成为商业软件时它地位被ALSA所取代。OSSv4在2007年又成为了开源软件，4Front Technologies以GPL协议发布了它的源码。</p>
-
-
-
-
-<p>OSS（Open Sound System）是unix平台上一个统一的音频接口。以前，每个Unix厂商都会提供一个自己专有的API，用来处理音频。这就
-意味着为一种Unix平台编写的音频处理应用程序，在移植到另外一种Unix平台上时，必须要重写。不仅如此，在一种平台上具备的功能，
-可能在另外一个平台上无法实现。但是，OSS出现以后情况就大不一样了，只要音频处理应用程序按照OSS的API来编写，那么在移植到另外
-一个平台时，只需要重新编译即可。因此，OSS提供了源代码级的可移植性。</p>
-
-
-
-
-<p>同时，很多的Unix工作站中，只能提供录音与放音的功能。有了OSS后，给这些工作站带来了MIDI功能，加上音频流、语音识别/生成、
-计算机电话（CT）、JAVA以及其它的多媒体技术，在Unix工作站中，同样可以享受到同Windows、Macintosh环境一样的音频世界。另外，
-OSS还提供了与视频和动画播放同步的音频能力，这对在Unix中实现动画、游戏提供了帮助。</p>
-
-
-
-
-<p>在Unix系统中，所有的设备都被统一成文件，通过对文件的访问方式（首先open，然后read/write，同时可以使用ioctl读取/设置参数，
-最后close）来访问设备.在OSS中，主要有以下的几种设备文件：</br>
-/dev/mixer：访问声卡中内置的mixer，调整音量大小，选择音源。</br>
-/dev/sndstat：测试声卡，执行cat /dev/sndstat会显示声卡驱动的信息。</br>
-/dev/dsp、/dev/dspW、/dev/audio：读这个设备就相当于录音，写这个设备就相当于放音。/dev/dsp与/dev/audio之间的区别在于采样的编码
-不同，/dev/audio使用μ律编码，/dev/dsp使用8-bit（无符号）线性编码，/dev/dspW使用16-bit（有符号）线形编码。/dev/audio主要是为了
-与SunOS兼容，所以尽量不要使用。</br>
-/dev/sequencer：访问声卡内置的，或者连接在MIDI接口的synthesizer。</p>
-
-
-
-
-<p>OSS为音频编程提供三种设备，分别是/dev/dsp，/dev/dspW和/dev/audio，用户可以直接使用Unix的命令来放音和录音，命令cat /dev/dsp >xyz
-可用来录音，录音的结果放在xyz文件中；命令cat xyz >/dev/dsp播放声音文件xyz。如果通过编程的方式来使用这些设备，那么Unix平台通过
-文件系统提供了统一的访问接口。程序员可以通过文件的操作函数直接控制这些设备，这些操作函数包括：open、close、read、write、ioctl等。</p>
-
-
-
-
-<h2>ALSA高级Linux声音系统简介</h2>
-
-
-<p>高级Linux声音体系（英语：Advanced Linux Sound Architecture，缩写为ALSA）是Linux内核中，为声卡提供的驱动组件，以替代原先的
-OSS（开放声音系统）。一部分的目的是支持声卡的自动配置，以及完美的处理系统中的多个声音设备，这些目的大多都已达到。另一个声音
-框架JACK使用ALSA提供低延迟的专业级音频编辑和混音能力。</p>
-
-
-
-
-<p>这个项目开始于为1998年Gravis Ultrasound所开发的驱动，它一直作为一个单独的软件包开发，直到2002年他被引进入Linux内核的开发
-版本(2.5.4-2.5.5)。从2.6版本开始ALSA成为Linux内核中默认的标准音频驱动程序集，OSS则被标记为废弃。</p>
-
-
-
-
-<p>ALSA由许多声卡的声卡驱动程序组成，同时它也提供一个称为libasound的API库。应用程序开发者应该使用libasound而不是内核中的ALSA接口。
-因为libasound提供最高级并且编程方便的编程接口。并且提供一个设备逻辑命名功能，这样开发者甚至不需要知道类似设备文件这样的低层接口。
-相反，OSS/Free驱动是在内核系统调用级上编程，它要求开发者提供设备文件名并且利用ioctrl来实现相应的功能。为了向后兼容，ALSA提供内核
-模块来模拟OSS，这样之前的许多在OSS基础上开发的应用程序不需要任何改动就可以在ALSA上运行。另外，libaoss库也可以模拟OSS，而它不需要
-内核模块。另外，ALSA还包含插件功能，使用插件可以扩展新的声卡驱动，包括完全用软件实现的虚拟声卡。ALSA提供一系列基于命令行的工具集，
-比如混音器(mixer)，音频文件播放器(aplay)，以及控制特定声卡特定属性的工具。</p>
-
-
-
-
-<p>ALSA API主要分为以下几种接口：</br>
-控制接口：提供灵活的方式管理注册的声卡和对存在的声卡进行查询。</br>
-PCM接口：提供管理数字音频的捕捉和回放。</br>
-原始MIDI接口: 支持 MIDI (Musical Instrument Digital Interface)，一种标准电子音乐指令集。这些API提供访问声卡上的MIDI总线。
-这些原始借口直接工作在 The MIDI事件上，程序员只需要管理协议和时间。</br>
-记时接口: 为支持声音的同步事件提供访问声卡上的定时器。</br>
-音序器接口：一个比原始MIDI接口高级的MIDI编程和声音同步高层接口。它可以处理很多的MIDI协议和定时器。</br>
-混音器接口：控制发送信号和控制声音大小的声卡上的设备。</p>
-
-
-
-
-<p>API库使用逻辑设备名而不是设备文件。设备名字可以是真实的硬件名字也可以是插件名字。硬件名字使用hw:i,j这样的格式。其中i是卡号，
-j是这块声卡上的设备号。第一个声音设备是hw:0,0.这个别名默认引用第一块声音设备并且在本文示例中一真会被用到。插件使用另外的唯一名字。
-比如plughw:,表示一个插件，这个插件不提供对硬件设备的访问，而是提供像采样率转换这样的软件特性，硬件本身并不支持这样的特性。</p>
-
-
-
-
-<h2>OSS与ALSA的优缺点比较</h2>
-
-
-<p>ALSA是一个完全开放源代码的音频驱动程序集，除了像OSS那样提供了一组内核驱动程序模块之外，ALSA还专门为简化应用程序的编写提供了
-相应的函数库，与OSS提供的基于ioctl的原始编程接口相比，ALSA函数库使用起来要更加方便一些。利用该函数库，开发人员可以方便快捷的
-开发出自己的应用程序，细节则留给函数库内部处理。当然ALSA也提供了类似于OSS的系统接口，不过ALSA的开发者建议应用程序开发者使用
-音频函数库而不是驱动程序的API。Ubuntu默认使用ALSA作为底层声音驱动，程序则与PulseAudio交互，这是一个很不错的方案。</p>
-
-
-
-
-<p>下面来比较一下OSS和ALSA的优缺点：</br>
-<strong>(1)OSS的优点（对用户来说）</strong></br>
-在内核空间（kernel space）里面包含了一个透明软件混音器(vmix)。这样多个程序就可以同时使用声音设备而且没有任何问题。</br>
-这个混音器可以让你单独调节各个程序的音量。</br>
-对某些老声卡有着更好的支持比如创新（Creative）的X-Fi。</br>
-声音程序的初始反应时间一般更好。</br>
-对使用OSS的应用程序接口（API）的程序有更好的支持，很多程序都支持OSS的API，而不需要ALSA的模拟。</br>
-
-<strong>(2)OSS的优点（对开发者来说）</strong></br>
-清晰的API文档，更易于使用。</br>
-支持用户空间的声音驱动。</br>
-可移植性强，OSS也可以在BSDs和Solaris下运行。</br>
-本身可以跨平台，可以更方便移植到新的操作系统。</br>
-
-<strong>(3)ALSA的优点</strong></br>
-ALSA对USB音频设备支持更好，而OSS的输出还在试验中，输入还未实现。</br>
-ALSA支持蓝牙声音设备。</br>
-ALSA支持AC&#8217;97和HDAudio dial-up soft-modems (比如Si3055)。</br>
-ALSA对MIDI支持得更好，但用OSS你只能通过软件合成器（如timidity和fluidsynth）来使用MIDI。</br>
-ALSA对待机支持更好，而用OSS，你需要在待机前使用soundoff来停止OSS驱动，在恢复后使用soundon来启动OSS。</br>
-OSS的jack检测目前在某些HDAudio-powered主板上不能正常工作。也就是说在某些型号的主板上，你可能需要在插入耳机的
-时候手动关闭外置扬声器。而ALSA没这个问题。
-</p>
-
-
-
-
-<h2>参考资料</h2>
-
-
-<p>[1]Archlinux上介绍OSS的Wiki：https://wiki.archlinux.org/index.php/OSS_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29 </br>
-[2]Archlinux上介绍ALSA的Wiki：https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87) </br>
-[3]OSS&#8211;跨平台的音频接口简介: http://www.ibm.com/developerworks/cn/linux/l-ossapi/ </br>
-[4]Linux ALSA声卡驱动之一：ALSA架构简介: http://blog.csdn.net/droidphone/article/details/6271122 </br>
-[5]Linux ALSA声卡编程简介: http://enmind.blog.163.com/blog/static/164138001201092334620355/</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PCM WAVE格式详解及用C语言实现wave文件的读取]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/"/>
-    <updated>2013-07-20T20:07:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language</id>
-    <content type="html"><![CDATA[<h2>1.PCM Wave格式详解</h2>
-
-
-<p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
-一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个&#8221;fmt&#8221;子数据块和一个“data”子
-数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013072001.gif"></center>
-</p>
-
-
-<!--more-->
-
-
-<p>每个字段的涵义如下：
-ChunkID: 占4个字节，内容为“RIFF”的ASCII码(0x52494646)，以大端（big endian）存储。</br>
-ChunkSize: 4字节，存储整个文件的字节数（不包含ChunkID和ChunkSize这8个字节），以小端（little endian）方式存储。</br>
-Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储。</br>
-</p>
-
-
-
-
-<p>
-其中bigendian 主要有一个特征，在内存中对操作数的存储方式和从高字节到低字节。例如：0x1234，这样一个数，存储为:</br>
-0x4000:   0x12</br>
-0x4001:   0x34</br>
-而小尾端littleendian是：</br>
-0x4000:   0x34</br>
-0x4001:   0x12</br>
-用程序在区别的话，可以考虑：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;stdlib.h>
-</span><span class='line'>int main(int argc, char *argv[])
-</span><span class='line'>{
-</span><span class='line'>       union w
-</span><span class='line'>      {
-</span><span class='line'>       short int a;
-</span><span class='line'>       char b;
-</span><span class='line'>      }c;
-</span><span class='line'>      c.a=1;
-</span><span class='line'>      if( c.b==1 )  printf("little endian\n");
-</span><span class='line'>      else printf("big endian\n");
-</span><span class='line'>      system("PAUSE"); 
-</span><span class='line'>      return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-</p>
-
-
-
-
-<p>&#8220;WAVE&#8221;格式由两个子数据块构成：“fmt”块和“data”块，其中“fmt”块的详细解释如下：
-Subchunk1ID: 占4个字节，内容为“fmt ”的ASCII码(0x666d7420)，以大端存储。</br>
-Subchunk1Size: 占4个字节，存储该子块的字节数（不含前面的Subchunk1ID和Subchunk1Size这8个字节），以小端方式存储。</br>
-AudioFormat：占2个字节，以小端方式存储，存储音频文件的编码格式，例如若为PCM则其存储值为1，若为其他非PCM格式的则有一定的压缩。</br>
-NumChannels: 占2个字节，以小端方式存储，通道数，单通道(Mono)值为1，双通道(Stereo)值为2，等等。</br>
-SampleRate: 占4个字节，以小端方式存储，采样率，如8k，44.1k等。</br>
-ByteRate: 占4个字节，以小端方式存储，每秒存储的bit数，其值=SampleRate * NumChannels * BitsPerSample/8</br>
-BlockAlign: 占2个字节，以小端方式存储，块对齐大小，其值=NumChannels * BitsPerSample/8</br>
-BitsPerSample: 占2个字节，以小端方式存储，每个采样点的bit数，一般为8,16,32等。</br>
-接下来是两个可选的扩展参数：</br>
-ExtraParamSize: 占2个字节，表示扩展段的大小。</br>
-ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由前一个字段给定。
-</p>
-
-
-
-
-<p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// data 为读取到的采样点的值，speech为原始数据流，
-</span><span class='line'>//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
-</span><span class='line'>for(i=0;i&lt;NumSample;i++){
-</span><span class='line'>  if(BitsPerSample==8)
-</span><span class='line'>      data[i] = (int)*((char*)speech+i);
-</span><span class='line'>  else if(BitsPerSample==16)
-</span><span class='line'>      data[i] = (int)*((short*)speech+i);
-</span><span class='line'>  else if(BitsPerSample==32)
-</span><span class='line'>      data[i] = (int)*((int*)speech+i);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-</p>
-
-
-
-
-<p>&#8220;WAVE&#8221;格式文件的第二个子数据块是“data”，其个字段的详细解释如下：</br>
-Subchunk2ID: 占4个字节，内容为“data”的ASCII码(0x64617461)，以大端存储。</br>
-Subchunk2Size: 占4个字节，内容为接下来的正式的数据部分的字节数，其值=NumSamples * NumChannels * BitsPerSample/8</br>
-Data: 真正的语音数据部分。</br>
-</p>
-
-
-
-
-<h2>一个Wave文件头的实例</h2>
-
-
-<p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-</span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-</span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure>
-
-则其个字段的解析如下图：
-<center><img src="http://ibillxia.github.io/images/2013/IMAG2013072002.gif"></center>
-</p>
-
-
-
-
-<h2>C语言实现wave文件的读取</h2>
-
-
-<p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;stdlib.h>
-</span><span class='line'>#include &lt;string.h>
-</span><span class='line'>
-</span><span class='line'>// define Wave format structure
-</span><span class='line'>typedef struct tWAVEFORMATEX
-</span><span class='line'>{
-</span><span class='line'>    short wFormatTag;         /* format type */
-</span><span class='line'>    short nChannels;          /* number of channels (i.e. mono, stereo...) */
-</span><span class='line'>    unsigned int nSamplesPerSec;     /* sample rate */
-</span><span class='line'>    unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-</span><span class='line'>    short nBlockAlign;        /* block size of data */
-</span><span class='line'>    short wBitsPerSample;     /* number of bits per sample of mono data */
-</span><span class='line'>    short cbSize;             /* the count in bytes of the size of */
-</span><span class='line'>                                    /* extra information (after cbSize) */
-</span><span class='line'>} WAVEFORMATEX, *PWAVEFORMATEX;
-</span><span class='line'>
-</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf);
-</span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>  char fname[] = "test.wav";
-</span><span class='line'>  char *speech;
-</span><span class='line'>  WAVEFORMATEX wf;
-</span><span class='line'>  
-</span><span class='line'>  speech = wavread(fname, &wf);
-</span><span class='line'>  // afterward processing...
-</span><span class='line'>  
-</span><span class='line'>  return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>// read wave file
-</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf){
-</span><span class='line'>  FILE* fp;
-</span><span class='line'>  char str[32];
-</span><span class='line'>  char *speech;
-</span><span class='line'>  unsigned int subchunk1size; // head size
-</span><span class='line'>  unsigned int subchunk2size; // speech data size
-</span><span class='line'>
-</span><span class='line'>  // check format type
-</span><span class='line'>  fp = fopen(fname,"r");
-</span><span class='line'>  if(!fp){
-</span><span class='line'>      fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 8, SEEK_SET);
-</span><span class='line'>  fread(str, sizeof(char), 7, fp);
-</span><span class='line'>  str[7] = '\0';
-</span><span class='line'>  if(strcmp(str,"WAVEfmt")){
-</span><span class='line'>      fprintf(stderr,"The file is not in WAVE format!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  
-</span><span class='line'>  // read format header
-</span><span class='line'>  fseek(fp, 16, SEEK_SET);
-</span><span class='line'>  fread((unsigned int*)(&subchunk1size),4,1,fp);
-</span><span class='line'>  fseek(fp, 20, SEEK_SET);
-</span><span class='line'>  fread(wf, subchunk1size, 1, fp);
-</span><span class='line'>  
-</span><span class='line'>  // read wave data
-</span><span class='line'>  fseek(fp, 20+subchunk1size, SEEK_SET);
-</span><span class='line'>  fread(str, 1, 4, fp);
-</span><span class='line'>  str[4] = '\0';
-</span><span class='line'>  if(strcmp(str,"data")){
-</span><span class='line'>      fprintf(stderr,"Locating data start point failed!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 20+subchunk1size+4, SEEK_SET);
-</span><span class='line'>  fread((unsigned int*)(&subchunk2size), 4, 1, fp);
-</span><span class='line'>  speech = (char*)malloc(sizeof(char)*subchunk2size);
-</span><span class='line'>  if(!speech){
-</span><span class='line'>      fprintf(stderr, "Memory alloc failed!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 20+subchunk1size+8, SEEK_SET);
-</span><span class='line'>  fread(speech, 1, subchunk2size, fp);
-</span><span class='line'>
-</span><span class='line'>  fclose(fp);
-</span><span class='line'>  return speech;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<h2>参考</h2>
-
-
-<p>
-[1]WAVE PCM soundfile format: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ </br>
-[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format </br>
-[3]基于Visual C++6.0的声音文件操作: http://www.yesky.com/20030414/1663116_1.shtml
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[给Octpress博客添加返回顶部按钮]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octpress-blog/"/>
-    <updated>2013-06-30T10:47:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/06/30/add-a-back-to-top-button-on-ur-octpress-blog</id>
-    <content type="html"><![CDATA[<p>有时候，博客文章太长，需要返回顶部时，需要用鼠标拖着滚动条向上好半天，这里提供一个用 jQuery 来实现的动态上滚的示例。这个示例完全参考和翻译自 webdesignerwall 的 blog：<a href="http://webdesignerwall.com/tutorials/animated-scroll-to-top">http://webdesignerwall.com/tutorials/animated-scroll-to-top</a>，其中有部分删改，并在本人的 blog 上实现。</p>
-
-<p>主要包含HTML和CSS的设计，基于jQuery的JS的设计。另外还有一点小trick</p>
-
-<h2>Design &amp; CSS</h2>
-
-<p>相关的 HTML 代码很简单，在source/_include/custom/footer.html中添加如下代码：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;p id = "back-top"&gt;
-</span><span class='line'>  &lt;a href="#top"&gt;&lt;span&gt;&lt;/span&gt;Back to Top&lt;/a&gt;
-</span><span class='line'>&lt;/p&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
-
-
-<p>对应的 CSS 样式的设置如下：（这段代码同样的放在source/_include/custom/footer.html文件中）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;style type="text/css"&gt;
-</span><span class='line'>#back-top {
-</span><span class='line'>  position: fixed;
-</span><span class='line'>  bottom: 50px;
-</span><span class='line'>  right: 100px;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>#back-top a {
-</span><span class='line'>  width: 80px;
-</span><span class='line'>  display: block;
-</span><span class='line'>  text-align: center;
-</span><span class='line'>  font: 11px/100% Arial, Helvetica, sans-serif;
-</span><span class='line'>  text-transform: uppercase;
-</span><span class='line'>  text-decoration: none;
-</span><span class='line'>  color: #bbb;
-</span><span class='line'>
-</span><span class='line'>  /* transition */
-</span><span class='line'>  -webkit-transition: 1s;
-</span><span class='line'>  -moz-transition: 1s;
-</span><span class='line'>  transition: 1s;
-</span><span class='line'>}
-</span><span class='line'>#back-top a:hover {
-</span><span class='line'>  color: #000;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>/* arrow icon (span tag) */
-</span><span class='line'>#back-top span {
-</span><span class='line'>  width: 80px;
-</span><span class='line'>  height: 80px;
-</span><span class='line'>  display: block;
-</span><span class='line'>  margin-bottom: 7px;
-</span><span class='line'>  background: #ddd url(../../images/up-arrow.png) no-repeat center center;
-</span><span class='line'>
-</span><span class='line'>  /* rounded corners */
-</span><span class='line'>  -webkit-border-radius: 15px;
-</span><span class='line'>  -moz-border-radius: 15px;
-</span><span class='line'>  border-radius: 15px;
-</span><span class='line'>
-</span><span class='line'>  /* transition */
-</span><span class='line'>  -webkit-transition: 1s;
-</span><span class='line'>  -moz-transition: 1s;
-</span><span class='line'>  transition: 1s;
-</span><span class='line'>}
-</span><span class='line'>/*
-</span><span class='line'>#back-top a:hover span {
-</span><span class='line'>  background-color: #888;
-</span><span class='line'>}
-</span><span class='line'>*/
-</span><span class='line'>&lt;/style&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的 css 中用到了一张图片up-arrow.png，放在source/images/目录下，图片如下：</p>
-
-<center><img src="http://ibillxia.github.io/images/up-arrow.png"></center>
-
-
-<p>这是从google image里面随便找的一个，你也可以找一个自己喜欢的图片。</p>
-
-<h2>jQuery部分</h2>
-
-<p>HTML 和 CSS 样式设置好了之后，最后就是添加 JavaScript 事件响应代码了，这里是基于 jQuery 实现的。代码如下：（这段代码还是放在source/_include/custom/footer.html文件中）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"&gt;&lt;/script&gt;
-</span><span class='line'>&lt;script type="text/javascript"&gt;
-</span><span class='line'>$(document).ready(function(){
-</span><span class='line'>  // hide #back-top first
-</span><span class='line'>  $("#back-top").hide();
-</span><span class='line'>  
-</span><span class='line'>  // fade in #back-top
-</span><span class='line'>  $(function () {
-</span><span class='line'>      $(window).scroll(function () {
-</span><span class='line'>          if ($(this).scrollTop() &gt; 100) {
-</span><span class='line'>              $('#back-top').fadeIn();
-</span><span class='line'>          } else {
-</span><span class='line'>              $('#back-top').fadeOut();
-</span><span class='line'>          }
-</span><span class='line'>      });
-</span><span class='line'>
-</span><span class='line'>      // scroll body to 0px on click
-</span><span class='line'>      $('#back-top a').click(function () {
-</span><span class='line'>          $('body,html').animate({
-</span><span class='line'>              scrollTop: 0
-</span><span class='line'>          }, 800);
-</span><span class='line'>          return false;
-</span><span class='line'>      });
-</span><span class='line'>  });
-</span><span class='line'>
-</span><span class='line'>});
-</span><span class='line'>&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>一个Trick</h2>
-
-<p>在上面的HTML代码中，我们将一个链接添加到了ID为 #top 的里面，这个 #top 标签是 &lt;body&gt; 标签的ID，这样即使浏览器不支持相关的JS，通过这个link也实现了返回顶部的功能。</p>
 ]]></content>
   </entry>
   

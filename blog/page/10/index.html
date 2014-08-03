@@ -182,6 +182,310 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2010/07/21/php-send-email/">PHP发送邮件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-21T10:05:00+08:00" pubdate data-updated="true">Jul 21<span>st</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/21/php-send-email/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>现在很多主机空间都是IIS上执行PHP程序，大多不能直接用mail()发送邮件，有了这个类只要你有注册过邮箱，
+就可以随意的发送邮件，速度也不慢哦。</p>
+
+
+
+
+<p>先给一个具体的使用示例：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
+</span><span class='line'>require (FILE_DIR."smtp.php"); 
+</span><span class='line'>$smtpserver = "smtp.xxx.com";//SMTP服务器 
+</span><span class='line'>$smtpserverport =25;//SMTP服务器端口 
+</span><span class='line'>$smtpusermail = "xxxxx@xxx.com";//SMTP服务器的用户邮箱 
+</span><span class='line'>$smtpemailto = "aaaaa@xxx.com";//发送给谁 
+</span><span class='line'>$smtpuser = "xxxxx";//SMTP服务器的用户帐号 
+</span><span class='line'>$smtppass = "xxxxx";//SMTP服务器的用户密码 
+</span><span class='line'>$mailsubject = "Test Subject";//邮件主题 
+</span><span class='line'>$mailbody = "&lt;h1>This is a test mail&lt;/h1>";//邮件内容 
+</span><span class='line'>$mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件 
+</span><span class='line'>$smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证. 
+</span><span class='line'>$smtp->debug = TRUE;//是否显示发送的调试信息 
+</span><span class='line'>$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype); 
+</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/07/21/php-send-email/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/19/ucenter-sync-login-mechanism/">UCenter同步登陆机制</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-19T14:34:00+08:00" pubdate data-updated="true">Jul 19<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/19/ucenter-sync-login-mechanism/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>UC同步登陆机制</h2>
+
+
+<p>以用户登录为例介绍UC的同步机制，其它注销，改密码，消息，头像，好友均类同。UC同步登陆的过程如下：</p>
+
+
+
+
+<p>1.从用户xxx在某一应用程序的login.php，输入用户名，密码讲起。</br>
+先用uc_user_login函数到uc server验证此用户和密码，如正确，则写入session,写入cookies，并更新应用程序会员表中的登录ip，
+登录时间。用户感觉不到这个过程。</p>
+
+
+
+
+<p>2.然后通过uc_user_synlogin通知uc server 用户xxx登录成功,这个过程可能使用ajax，用户感觉不到通知过程。</p>
+
+
+
+
+<p>3.uc server收到这个消息后，马上命令手下，把xxx登录的消息，像令牌环一样，发给所有愿意接收（后台中那个是否开启同步登录）
+这个消息的其它应用程序。其实就是带参数访问一下各应用程序的uc.php,用户感觉不到这个过程。</p>
+
+
+
+
+<p>4.各应用程序靠api下的uc.php来接收uc server发来的消息，并对uc server言听计从，让干什么就干什么。现在，收到让xxx用户
+在你的程序中登录的命令，马上执行。</br>
+并写本应用程序的session，并且使用p3p, 写入相同域或不同域的cookies.   用户感觉不到这个过程。</p>
+
+
+
+
+<p>5.最后所有和uc整合的程序，xxx均登录成功。用户从www.test.com/bbs登录后， 跳到www.test.com/news同样显示登录。
+因为bbs 和news系统在后台均已登录。</p>
+
+
+
+
+<p>6.应用程序与uc server的会话结束。</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/">基于UML的图书管理系统的需求分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-18T10:06:00+08:00" pubdate data-updated="true">Jul 18<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一个图书馆的图书资料库在正常运转中总是面对大量的读者信息、书籍信息以及两者相互作用产生的借书信息、还书信息。
+图书馆作为一个信息资源的集散地，图书和用户借阅资料繁多，包含着很多的信息数据。图书管理系统的开发和应用主要通过
+两个步骤来实现：首先是基于系统功能的需求分析，其次是系统模型的设计和实现。
+</p>
+
+
+
+
+<h2>1.需求分析</h2>
+
+
+<p>需求分析是软件工程过程的一个重要阶段,其中一个主要任务是确定系统的功能需求,采用面向对象方法,基于UML的可视化
+系统需求分析,因为有用户的积极参与,既可以加快设计者对于问题的理解,又能够在系统描述方面减少语义差异,保证分析的
+正确性。需求分析的目标就是建立需求模型,即从功能需求出发建立用例模型, UML的用例视图从用户的需求中提取,以盒图的
+方式描述待开发的系统的功能需求。每个用例都指定了客户的需求即他们需要系统干什么。用例图为设计活动不仅记录需求
+而且还提供了一种挖掘的信息, 它记录了需求到设计结果之间的映射关系,能够确保设计结果具有明确的根据或者说具有可
+维护性,基于UML的软件开发过程是以用例驱动的。</p>
+
+
+
+
+<p>首先我们进行角色识别，角色识别的任务是找出所有可能与系统发生交互行为的外部实体、对象、系统。它们的行为不受系统控制，
+但是可以提供输入给系统。对于一所大学的图书管理系统，基本的功能是完成图书的借阅和相关信息的管理，服务的对象有本科生，
+研究生，教师，及其他学校的学生，还有社会人员，这些人可归结为一类即读者。而为帮助读者顺利完成借还书的可以是工作人员，
+可以是自动借还书机，他们可以归结为一类即图书管理人员。因此对于一个图书管理系统主要有两类角色，读者、图书管理员。</p>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/">怎么过有意义的日子-俞敏洪</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-21T23:21:00+08:00" pubdate data-updated="true">Jun 21<span>st</span>, 2010</time>
+        
+         | <a href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>当时，我们班50个同学，25个男生25个女生。一开始我听完这个数字就特别兴奋，但是没想到我们班的女生没一个正眼瞧我一眼的。到了2001年的时候,我们全班同学聚会，
+大家从世界各地赶回来。蓦然回首，大家突然发现班上挺没出息的，普通话也讲不好的，默默无闻的那个人怎么就成了全班最出色的了。这个时候女同学们都热情的走上来
+握住我的手，后悔当初没下手。</p>
+
+
+
+
+<p>所以后来大学女生问我，俞老师我们现在找男朋友要什么标准.我说很简单，参考我的长相。当然如果长得像我，那是绝对不能放过的。凡是长得比我难看的也不要放过，
+因为这个世界上的规律就是，越难看的人内涵越丰富。</p>
+
+
+
+
+<p>大三的时候我最喜欢读的是《红楼梦》，而且刚好读到林黛玉咳嗽而死的那一章。结果发现自己也在吐血。到医院，医生一查说得了肺结核立刻关起来，一关就是一年。
+我跟医生说像我这样的小伙子怎么会得肺结核呢？医生让我讲讲现状。我说，您看我学习特别刻苦，可成绩就是上不去，班里没有一个女孩子喜欢我。他说，这种情况不得
+肺结核是完全不可能的。</p>
+
+
+
+
+<p>但这个病也给我带来了心态上的调整，因为我在大学一二年级，想要追赶我的同学就是我的精神支柱。但是到了三年级，病了一年后我完全改变了，我觉得活着就挺好。
+然后我就给自己订了一个最低标准，至少保证大学毕业拿到毕业证书，最后国家给我分配一份工作就挺好。虽然我并没有放弃努力，结果反而获得一个更加开阔的心胸。
+所以，到现在为止我学会了永远不要去比，因为总有比你更加优秀的，也总有比你更加落后的。</p>
+
+
+
+
+<p>这个世界上最正确的是跟自己比，想一想今天是不是比昨天进步了一点，想一想明年是不是比今年更加好一点。想一想，10年以后的你是不是比今年的你要更加出色。
+这样的心态一直保持到我大学毕业。</p>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2010/04/10/10-stories-in-management/">管理的十个寓言故事</a></h1>
     
     
@@ -607,297 +911,9 @@ C++ 1.0是真正意义上的Windows IDE，这也是Visual Studio的最初原型�
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/">Sql Server数据库常用的查询语句</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2009</time>
-        
-         | <a href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>一、表操作 </h2>
-
-
-<p>例 1 对于表的教学管理数据库中的表 STUDENTS ，可以定义如下： 
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Create TABLE STUDENTS (SNO NUMERIC (6, 0) NOT NULL 
-</span><span class='line'>SNAME CHAR (8) NOT NULL 
-</span><span class='line'>AGE NUMERIC(3,0) 
-</span><span class='line'>SEX CHAR(2) 
-</span><span class='line'>BPLACE CHAR(20) 
-</span><span class='line'>PRIMARY KEY(SNO))</span></code></pre></td></tr></table></div></figure>
-</p>
-
-
-
-
-<p>例 2 对于表的教学管理数据库中的表 ENROLLS ，可以定义如下： </p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Create TABLE ENROLLS(SNO NUMERIC(6,0) NOT NULL 
-</span><span class='line'>CNO CHAR(4) NOT NULL 
-</span><span class='line'>GRADE INT 
-</span><span class='line'>PRIMARY KEY(SNO,CNO) 
-</span><span class='line'>FOREIGN KEY(SNO) REFERENCES STUDENTS(SNO) 
-</span><span class='line'>FOREIGN KEY(CNO) REFERENCES COURSES(CNO) 
-</span><span class='line'>CHECK ((GRADE IS NULL) or (GRADE BETWEEN 0 AND 100)))</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Sql Server数据库常用的命令语句</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-20T14:44:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2009</time>
-        
-         | <a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>1. 查看数据库的版本 </br>
-select @@version</p>
-
-
-
-
-<p>2. 查看数据库所在机器操作系统参数 </br>
-exec master..xp_msver</p>
-
-
-
-
-<p>3. 查看数据库启动的参数 </br>
-sp_configure</p>
-
-
-
-
-<p>4. 查看数据库启动时间 </br>
-select convert(varchar(30),login_time,120) from   master..sysprocesses where spid=1</br>
-查看数据库服务器名和实例名 </br>
-print &#8216;Server Name&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + convert(varchar(30),@@SERVERNAME) </br>
-print &#8216;Instance&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + convert(varchar(30),@@SERVICENAME) </p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/06/05/io-buffer-in-c-language/">C语言输入输出缓冲区</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true">Jun 5<span>th</span>, 2009</time>
-        
-         | <a href="/blog/2009/06/05/io-buffer-in-c-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>原文链接：<a href="http://blog.csdn.net/cxyol/archive/2006/03/18/628324.aspx">http://blog.csdn.net/cxyol/archive/2006/03/18/628324.aspx</a></p>
-
-<h2>1.输入输出缓冲区的概念（C++用的多一些）</h2>
-
-
-<p>我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，
-那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。
-数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不能保证数据源向端口
-发送的恰好是第二个字符（也许是第三个，而第二个已经在数据目标显示时发送过了）。
-这样的话就不能保证输出的数据能完整的被数据目标所接受并处理。</p>
-
-
-<p>为了解决这个问题，我们需要在数据源与数据目标中间放置一个保存完整数据内容的区域，
-那就是 “缓冲区”。这样的话， 数据源可以不考虑数据目标正在处理哪部分数据，只要把数据输出到缓冲区就可以了，
-数据目标也可以不考虑数据源的发送频率，只是从缓冲区中依次取出下一个数据。
-从而保证了数据发送的完整性，同时也提高了程序的效率。<p>
-<p>当然getch(),getche()没有用到缓冲区。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/06/05/io-buffer-in-c-language/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/">C语言编译过程全解析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-05-28T19:45:00+08:00" pubdate data-updated="true">May 28<span>th</span>, 2009</time>
-        
-         | <a href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>0.内容摘要</h2>
-
-
-<p>C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，
-深入了解整个编译过程对工程师理解应用程序的编写是有很大帮助的，希望大家可以多了解一些，
-在遇到问题时多思考、多实践。 </p>
-
-
-
-
-<p>一般情况下，我们只需要知道分成编译和连接两个阶段:</br>
-&nbsp;&nbsp;&nbsp;&nbsp;·编译阶段将源程序（*.c)转换成为目标代码（一般是obj文件，至于具体过程就是上面说的那些阶段）；</br>
-&nbsp;&nbsp;&nbsp;&nbsp;·连接阶段是把源程序转换成的目标代码（obj文件）与你程序里面调用的库函数对应的代码连接起来形成
-对应的可执行文件（exe文件）就可以了，其他的都需要在实践中多多体会才能有更深的理解。</br>
-编译的概念：编译程序读取源程序（字符流），对之进行词法和语法的分析，
-将高级语言指令转换为功能等效的汇编代码，再由汇编程序转换为机器语言，
-并且按照操作系统对可执行文件格式的要求链接生成可执行程序。</p>
-
-
-
-
-<p>编译的完整过程：C源程序->预编译处理(.c)->编译、优化程序（.s、.asm）->
-汇编程序(.obj、.o、.a、.ko)->链接程序（.exe、.elf、.axf等）。</p>
-
-
-
-
-<h2>1.编译预处理</h2>
-
-
-<p>读取c源程序，对其中的伪指令（以#开头的指令）和特殊符号进行处理
-伪指令主要包括以下四个方面：</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
+    
+    <li class="previous"><a href="/blog/page/11/">&larr; Older</a></li>
     
     <li><a href="/blog/archives">Blog Archives</a></li>
     

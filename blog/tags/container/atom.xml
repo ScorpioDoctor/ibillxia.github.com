@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: container | Bill's Blog]]></title>
+  <link href="http://ibillxia.github.io/blog/tags/container/atom.xml" rel="self"/>
+  <link href="http://ibillxia.github.io/"/>
+  <updated>2014-08-03T21:25:41+08:00</updated>
+  <id>http://ibillxia.github.io/</id>
+  <author>
+    <name><![CDATA[Bill Xia]]></name>
+    <email><![CDATA[ibillxia@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.4) 序列式容器之heap和priority queue]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/"/>
+    <updated>2014-07-27T21:31:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>heap</code>、<code>stl_heap.h</code>、<code>heap.h</code>、<code>stl_queue.h</code>、<code>queue</code> 等几个文件。</p>
+
+<h2>1. 概述</h2>
+
+<p>前面分别介绍了三种各具特色的序列式容器 —— vector、list和deque，他们几乎可以涵盖所有类型的序列式容器了，但本文要介绍的heap则是一种比较特殊的容器。其实，在STL中heap并没有被定义为一个容器，而只是一组算法，提供给priority queue（优先队列）。故名思议，priority queue 允许用户以任何次序将元素放入容器内，但取出时一定是从优先权最高的元素开始取，binary max heap（二元大根堆）即具有这样的特性，因此如果学过max-heap再看STL中heap的算法和priority queue 的实现就会比较简单。</p>
+
+<h2>2. priority queue 的数据结构</h2>
+
+<p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：<br/>
+<code>
+template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+class priority_queue { // in stl_queue.h 文件中
+protected:
+  _Sequence c; // 使用vector作为数据存储的容器
+  _Compare comp;
+};
+</code>
+另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+
+<!-- more -->
+
+
+<h2>3. push heap 算法</h2>
+
+<p>为了满足完全二叉树的特性，新加入的元素一定要放在vector的最后面；又为了满足max-heap的条件（每个节点的键值不小于其叶子节点的键值），还需要执行上溯过程，将新插入的元素与其父节点进行比较，直到不大于父节点：<br/>
+```
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+void <strong>push_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>topIndex, _Tp </strong>value){
+  _Distance <strong>parent = (</strong>holeIndex - 1) / 2; //  新节点的父节点
+  while (<strong>holeIndex > </strong>topIndex &amp;&amp; *(<strong>first + </strong>parent) &lt; __value) { // 插入时的堆调整过程：当尚未到达顶端且父节点小于新值时，需要将新值往上（前）调整</p>
+
+<pre><code>*(__first + __holeIndex) = *(__first + __parent); // 父节点下移
+__holeIndex = __parent;
+__parent = (__holeIndex - 1) / 2;
+</code></pre>
+
+<p>  }  <br/>
+  <em>(<strong>first + </strong>holeIndex) = <strong>value; // 找到新值应当存储的位置
+}
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+inline void </strong>push_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <em>_last, </em>Distance</em>, <em>Tp*) {
+  <strong>push_heap(</strong>first, </em>Distance((<strong>last - </strong>first) - 1), <em>Distance(0), </em>Tp(*(<strong>last - 1)));
+}
+template <class _RandomAccessIterator>
+inline void push_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator <strong>last) { // 真正的对外接口，在调用之前，元素已经放在了vector的最后面了（见priority queue的push_back）
+  </strong>STL_REQUIRES(</em>RandomAccessIterator, <em>Mutable_RandomAccessIterator);
+  __STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, </em>LessThanComparable);
+  <strong>push_heap_aux(</strong>first, <strong>last, </strong>DISTANCE_TYPE(<strong>first), </strong>VALUE_TYPE(<strong>first)); // 直接调用 </strong>push_heap_aux
+}
+```</p>
+
+<h2>4. pop heap 算法</h2>
+
+<p>对heap进行pop操作就是取顶部的元素，取走后要对heap进行调整，是之满足max-heap的特性。调整的策略是，首先将最末尾的元素放到堆顶，然后进行下溯操作，将对顶元素下移到适当的位置：<br/>
+```
+template <class _RandomAccessIterator, class _Distance, class _Tp>
+void <strong>adjust_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>len, _Tp </strong>value) { // 调整堆
+  <em>Distance <strong>topIndex = </strong>holeIndex; // 堆顶
+  </em>Distance <strong>secondChild = 2 * </strong>holeIndex + 2;
+  while (<strong>secondChild &lt; </strong>len) {</p>
+
+<pre><code>if (*(__first + __secondChild) &lt; *(__first + (__secondChild - 1))) __secondChild--; // secondChild 为左右两个子节点中较大者
+*(__first + __holeIndex) = *(__first + __secondChild); // 节点的值上移
+__holeIndex = __secondChild;
+__secondChild = 2 * (__secondChild + 1); // 下移一层
+</code></pre>
+
+<p>  }
+  if (<strong>secondChild == </strong>len) { // 最后一个元素</p>
+
+<pre><code>*(__first + __holeIndex) = *(__first + (__secondChild - 1));
+__holeIndex = __secondChild - 1;
+</code></pre>
+
+<p>  }
+  <strong>push_heap(</strong>first, <strong>holeIndex, </strong>topIndex, <strong>value);
+}
+template <class _RandomAccessIterator, class _Tp, class _Distance>
+inline void </strong>pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _RandomAccessIterator </strong>result, <em>Tp __value, </em>Distance<em>) {
+  </em><strong>result = *</strong>first; // 获取堆顶元素，并赋给堆尾的last-1
+  <strong>adjust_heap(</strong>first, <em>Distance(0), </em>Distance(<strong>last - </strong>first), <strong>value); // 调整堆
+}
+template <class _RandomAccessIterator, class _Tp>
+inline void </strong>pop_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Tp*) {
+  </strong>pop_heap(<strong>first, </strong>last - 1, <strong>last - 1, _Tp(*(</strong>last - 1)), <strong>DISTANCE_TYPE(</strong>first)); // 对 [first,last-1)进行pop，并将first赋给last-1
+}
+template <class _RandomAccessIterator>
+inline void pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last) { // 对外提供的接口，最后堆顶元素在堆的末尾，而[first,last-1) 区间为新堆，该接口调用完后再进行pop操作移除最后的元素
+  </strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
+  <strong>STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, _LessThanComparable);
+  </strong>pop_heap_aux(<strong>first, </strong>last, <strong>VALUE_TYPE(</strong>first));
+}
+```</p>
+
+<h2>5. make heap 算法</h2>
+
+<p>最后，我们来看看如何从一个初始序列来创建一个heap，有了前面的 <code>adjust_heap</code> ，创建heap也就很简单了，只需要从最后一个非叶子节点开始，不断调用堆调整函数，即可使得整个序列称为一个heap：<br/>
+```
+template <class _RandomAccessIterator, class _Compare, class _Tp, class _Distance>
+void <strong>make_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator __last, </em>Compare <strong>comp, <em>Tp*, </em>Distance*) {
+  if (</strong>last - <strong>first &lt; 2) return;
+  _Distance </strong>len = <strong>last - </strong>first;
+  _Distance <strong>parent = (</strong>len - 2)/2; // 定位到最后一个非叶子节点
+  while (true) { // 对每个非叶子节点为根的子树进行堆调整</p>
+
+<pre><code>__adjust_heap(__first, __parent, __len, _Tp(*(__first + __parent)), __comp);
+if (__parent == 0) return;
+__parent--;
+</code></pre>
+
+<p>  }
+}
+template <class _RandomAccessIterator, class _Compare>
+inline void make_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Compare </strong>comp) { // 对外提供的接口
+  <strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
+  </strong>make_heap(<strong>first, </strong>last, <strong>comp, </strong>VALUE_TYPE(<strong>first), </strong>DISTANCE_TYPE(__first));
+}
+```</p>
+
+<h2>6. 基于 heap 的 priority queue</h2>
+
+<p>上一篇文章中讲到stack和queue都是基于deque实现的，这里的priority queue是基于vector和heap来实现的，默认使用vector作为容器，而使用heap的算法来维持其priority的特性，因此priority queue也被归类为container adapter。其具体实现的主要代码如下:<br/>
+```
+template <class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>), class <em>Compare __STL_DEPENDENT_DEFAULT_TMPL(less<typename _Sequence::value_type>) >
+class priority_queue {
+protected:
+  </em>Sequence c;
+  <em>Compare comp;
+public:
+  priority_queue() : c() {}
+  explicit priority_queue(const </em>Compare&amp; <strong>x) :  c(), comp(</strong>x) {}
+  priority_queue(const <em>Compare&amp; __x, const </em>Sequence&amp; <strong>s) : c(</strong>s), comp(__x)</p>
+
+<pre><code>{ make_heap(c.begin(), c.end(), comp); }
+</code></pre>
+
+<p>  bool empty() const { return c.empty(); }
+  size_type size() const { return c.size(); }
+  const_reference top() const { return c.front(); }
+  void push(const value_type&amp; __x) {</p>
+
+<pre><code>__STL_TRY {
+  c.push_back(__x); // 在push_heap之前先将x放在vector c的最后面
+  push_heap(c.begin(), c.end(), comp);
+}
+__STL_UNWIND(c.clear());
+</code></pre>
+
+<p>  }
+  void pop() {</p>
+
+<pre><code>__STL_TRY {
+  pop_heap(c.begin(), c.end(), comp);
+  c.pop_back(); // 在调用pop_heap之后才将最后一个元素剔除出vector c
+}
+__STL_UNWIND(c.clear());
+</code></pre>
+
+<p>  }
+};
+```
+值得一提的是，priority queue也没有迭代器，不能对其进行遍历等操作，因为它只能在顶部取和删除元素，而插入元素的位置也是确定的，而不能有用户指定。<br/>
+关于heap和priority queue的内容就介绍到这里了，而序列式容器的介绍也到此结束了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.3) 序列式容器之deque和stack、queue]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/"/>
+    <updated>2014-07-13T20:46:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>deque</code>、<code>stl_deque.h</code>、<code>deque.h</code>、<code>stack</code>、<code>stl_stack.h</code>、<code>queue</code>、<code>stl_queue.h</code> 等几个文件。</p>
+
+<h2>1. deque 概述</h2>
+
+<p>前面分别介绍了连续式存储的序列容器vector和以节点为单位链接起来的非连续存储的序列容器list，这两者各有优缺点，而且刚好是优缺互补的，那么何不将二者结合利用对方的优点来弥补己方的不足呢，于是这就有了强大的deque。</p>
+
+<p>没错，与我们在数据结构中学到的固定连续空间的双端队列不同，STL中的deque是分段连续的空间通过list链接而成的序列容器，它结合了vector与list的存储特性，但与vector和list都不同的是deque只能在首部或尾部进行插入和删除操作，这个限制在一定程度上简化了deque实现的难度。由于使用分段连续空间链接的方式，所以deque不存在vector那样“因旧空间不足而重新配置新的更大的空间，然后复制元素，再释放原空间”的情形，也不会有list那样每次都只配置一个元素的空间而导致时间性能和空间的利用率低下。</p>
+
+<h2>2. deque 的数据结构</h2>
+
+<p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：<br/>
+<code>
+inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
+  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
+}
+template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
+protected:
+  _Tp** _M_map; // 指向缓冲区的指针数组首地址
+  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
+  iterator _M_start; // 指向第一个缓冲区的第一个元素
+  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
+};
+class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
+protected:  // Internal typedefs
+  typedef pointer* _Map_pointer;
+  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
+};
+</code></p>
+
+<!-- more -->
+
+
+<h2>3. deque 的配置器</h2>
+
+<p>由于deque涉及到两种类型（map和buffer）数据的空间配置，因此deque定义了两个专属的配置器 <code>_Map_alloc_type</code> 和 <code>_Node_alloc_type</code>:<br/>
+<code>
+template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
+protected:
+  typedef simple_alloc&lt;_Tp, _Alloc&gt;  _Node_alloc_type;
+  typedef simple_alloc&lt;_Tp*, _Alloc&gt; _Map_alloc_type;
+};
+template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
+class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; { };
+</code>
+而这里的 <code>_Alloc</code> 使用的都是STL默认的 <code>alloc</code> 这个配置器，因此这两个配置器实际上都是 <code>alloc</code> 类型的配置器，即SGI的第二级配置器。<br/>
+在定义一个deque时，默认调用基类的构造函数，产生一个map大小为0的空的deque，随着第一次插入元素，由于map大小不够，需要调用<code>_M_push_back_aux</code> 进而调用 <code>_M_reallocate_map</code> 进行map的空间配置，如果初始的map不为空，还需要对map进行“分配新空间，复制，释放元空间”的操作，如果从头部插入同样的道理，这是就是map的配置逻辑（实际中，还有一种情况，就是map的前后剩余的node数不同，例如前部分都空着，而后面插入后溢出了，这时可以考虑在map内部移动，即将后半部分整体往前移动一定距离）。其中<code>_M_reallocate_map</code>的实现如下：<br/>
+```
+template <class _Tp, class _Alloc>
+void deque&lt;<em>Tp,</em>Alloc>::<em>M_reallocate_map(size_type <strong>nodes_to_add, bool </strong>add_at_front){
+  size_type __old_num_nodes = </em>M_finish.<em>M_node - </em>M_start.<em>M_node + 1;
+  size_type <strong>new_num_nodes = </strong>old_num_nodes + __nodes_to_add;
+  </em>Map_pointer <strong>new_nstart;
+  if (_M_map_size > 2 * </strong>new_num_nodes) { // map的size足够，在map内部移动</p>
+
+<pre><code>__new_nstart = _M_map + (_M_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
+if (__new_nstart &lt; _M_start._M_node)
+  copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart);
+else
+  copy_backward(_M_start._M_node, _M_finish._M_node + 1, __new_nstart + __old_num_nodes);
+</code></pre>
+
+<p>  } else { // map的size不够，重新分配</p>
+
+<pre><code>size_type __new_map_size = _M_map_size + max(_M_map_size, __nodes_to_add) + 2;
+_Map_pointer __new_map = _M_allocate_map(__new_map_size); // 重新分配map
+__new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
+copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart); // 复制原map到新的map中
+_M_deallocate_map(_M_map, _M_map_size); // 释放原map
+_M_map = __new_map;
+_M_map_size = __new_map_size;
+</code></pre>
+
+<p>  }
+  <em>M_start.</em>M_set_node(<strong>new_nstart);
+  <em>M_finish.</em>M_set_node(</strong>new_nstart + __old_num_nodes - 1);
+}
+<code>
+那么每个连续的缓冲区buffer（或node）是在什么时候配置呢？它是在map中实际使用到的最后一个node不够用时但map还可以继续在这个node后面加入node时（即map非满而node满时），在 `_M_push_back_aux` 中调用 `_M_allocate_node` 来分配，相关函数都比较简单，这里就不贴了。  
+以上主要是空间分配相关的，那么在 `pop` 的时候，空间的释放又是怎样的呢？这里也需要判断是否当前node全部被 `pop` 了，如果是的则需要释放这个node所占用的空间。如下：  
+</code>
+void pop_back() { // deque内部实现的成员函数，inline的</p>
+
+<pre><code>if (_M_finish._M_cur != _M_finish._M_first) { // 整个node还没有pop完
+  --_M_finish._M_cur;
+  destroy(_M_finish._M_cur); // 析构当前元素
+} else  _M_pop_back_aux();
+</code></pre>
+
+<p>}
+template <class _Tp, class _Alloc>
+void deque&lt;<em>Tp,</em>Alloc>::<em>M_pop_back_aux() { // 整个node被pop完了的情况
+  </em>M_deallocate_node(<em>M_finish.</em>M_first); // 释放整个node的空间
+  <em>M_finish.</em>M_set_node(<em>M_finish.</em>M_node - 1); // node前移
+  <em>M_finish.</em>M_cur = <em>M_finish.</em>M_last - 1; // 当前元素为最后一个node的最后一个元素
+  destroy(<em>M_finish.</em>M_cur); // 释放当前元素
+}
+```</p>
+
+<h2>4. deque 的迭代器</h2>
+
+<p>deque是分段连续空间，前面也提到了deque使用的是Bidirectional Iterators，因此deque的迭代器主要需要实现<code>operator++</code>和<code>operator--</code>。要实现这两个操作，需要考虑当前指针是否处于buffer的头/尾，如果在buffer的头部而需要前移（或尾部需要后移），就需要将buffer往前/后移一个，在SGI中是通过调用 <code>_M_set_node</code> 来实现的。具体代码如下：<br/>
+```
+template <class _Tp, class _Ref, class _Ptr> struct <em>Deque_iterator {
+  typedef </em>Tp<em><em> <em>Map_pointer;
+  </em>Tp</em> <em>M_cur; // 几个成员变量
+  </em>Tp</em> <em>M_first;
+  </em>Tp* <em>M_last;
+  </em>Map_pointer <em>M_node;
+  </em>Self&amp; operator++() { // ++ 操作符重载，后移</p>
+
+<pre><code>++_M_cur;
+if (_M_cur == _M_last) { // 到了buffer的最后一个
+  _M_set_node(_M_node + 1); // 将当前node指针_M_node指向下一个node
+  _M_cur = _M_first; // 当前指针指向新node的第一个元素
+}
+return *this; 
+</code></pre>
+
+<p>  }
+  void <em>M_set_node(</em>Map_pointer __new_node) {</p>
+
+<pre><code>_M_node = __new_node; // map pointer后移
+_M_first = *__new_node; // first指向新node
+_M_last = _M_first + difference_type(_S_buffer_size()); // last指向下一个node
+</code></pre>
+
+<p>  }
+};
+<code>``
+使用</code>--` 操作符向前移动的同理，这里就不赘述了。</p>
+
+<h2>5. deque 的常用操作</h2>
+
+<p>deque中最常用的莫过于 <code>push</code> 和 <code>pop</code> 操作了，这些操作在前面的空间配置中基本已经介绍了，这里就主要介绍一下 <code>clear</code>、 <code>erase</code> 和 <code>insert</code> 操作吧。<br/>
+<strong>（1）clear</strong><br/>
+该函数的作用是清除整个deque，释放所有空间而只保留一个缓冲区：<br/>
+```
+template <class _Tp, class _Alloc> void deque&lt;<em>Tp,</em>Alloc>::clear() {
+  for (<em>Map_pointer __node = </em>M_start.<em>M_node + 1; __node &lt; </em>M_finish._M_node; ++__node) { // 从第二个node开始，遍历每个缓冲区（node）</p>
+
+<pre><code>destroy(*__node, *__node + _S_buffer_size()); // 析构每个元素
+_M_deallocate_node(*__node); // 释放缓冲区
+</code></pre>
+
+<p>  }
+  if (<em>M_start.</em>M_node != <em>M_finish.</em>M_node) { // 还剩下头尾两个node</p>
+
+<pre><code>destroy(_M_start._M_cur, _M_start._M_last); // 析构头node中的每个元素
+destroy(_M_finish._M_first, _M_finish._M_cur); // 析构尾node中的每个元素
+_M_deallocate_node(_M_finish._M_first); // 释放尾node的空间
+</code></pre>
+
+<p>  } else destroy(<em>M_start.</em>M_cur, <em>M_finish.</em>M_cur); // 只有一个node，析构这个node中的所有元素
+  <em>M_finish = </em>M_start;
+}
+<code>
+**（2）erase**  
+该函数的作用是清除 [first,last) 间的所有元素：  
+</code>
+typename deque&lt;<em>Tp,</em>Alloc>::iterator
+deque&lt;<em>Tp,</em>Alloc>::erase(iterator <strong>first, iterator </strong>last) {
+  if (<strong>first == _M_start &amp;&amp; </strong>last == _M_finish) { // erase 所有元素，直接调用clear</p>
+
+<pre><code>clear();
+return _M_finish;
+</code></pre>
+
+<p>  } else { // erase 部分元素</p>
+
+<pre><code>difference_type __n = __last - __first; // 待擦出的区间长度
+difference_type __elems_before = __first - _M_start; // 擦出区间前的元素个数
+if (__elems_before &lt; difference_type((this-&gt;size() - __n) / 2)) { // 前面的元素个个数小于擦除后剩余总数的一半，将这部分后移
+  copy_backward(_M_start, __first, __last); // 后移
+  iterator __new_start = _M_start + __n; 
+  destroy(_M_start, __new_start);
+  _M_destroy_nodes(__new_start._M_node, _M_start._M_node);
+  _M_start = __new_start;
+} else { // 前面剩余的元素较多，将后面的前移
+  copy(__last, _M_finish, __first); // 前移
+  iterator __new_finish = _M_finish - __n;
+  destroy(__new_finish, _M_finish);
+  _M_destroy_nodes(__new_finish._M_node + 1, _M_finish._M_node + 1);
+  _M_finish = __new_finish;
+}
+return _M_start + __elems_before;
+</code></pre>
+
+<p>  }
+}
+<code>
+**（3）insert**  
+该函数的作用是在某个位置插入一个元素：  
+</code>
+iterator insert(iterator position, const value_type&amp; <em><em>x) {
+  if (position.</em>M_cur == </em>M_start._M_cur) { // 在头部插入，用push_front</p>
+
+<pre><code>push_front(__x);
+return _M_start;
+</code></pre>
+
+<p>  } else if (position.<em>M_cur == </em>M_finish._M_cur) { // 在尾部插入</p>
+
+<pre><code>push_back(__x);
+iterator __tmp = _M_finish;
+--__tmp;
+return __tmp; // 返回插入位置
+</code></pre>
+
+<p>  } else { // 在中间插入</p>
+
+<pre><code>return _M_insert_aux(position, __x);
+</code></pre>
+
+<p>  }
+}
+deque&lt;<em>Tp,</em>Alloc>::<em>M_insert_aux(iterator <strong>pos, const value_type&amp; </strong>x) {
+  difference_type <strong>index = </strong>pos - </em>M_start; // 插入点之前的元素个数
+  value_type <strong>x_copy = </strong>x;
+  if (size_type(__index) &lt; this->size() / 2) { // 前面的元素个数较小</p>
+
+<pre><code>push_front(front()); // 在头部插入与头部相同的元素，然后从第二个元素开始到插入位置整体前移一步
+iterator __front1 = _M_start; ++__front1;
+iterator __front2 = __front1; ++__front2;
+__pos = _M_start + __index;
+iterator __pos1 = __pos; ++__pos1;
+copy(__front2, __pos1, __front1);
+</code></pre>
+
+<p>  } else { // 插入点后面的元素较少，从后面插入，然后插入点到尾部整体往后移一步</p>
+
+<pre><code>push_back(back());
+iterator __back1 = _M_finish; --__back1;
+iterator __back2 = __back1;  --__back2;
+__pos = _M_start + __index;
+copy_backward(__pos, __back2, __back1);
+</code></pre>
+
+<p>  }
+  *<strong>pos = </strong>x_copy;
+  return __pos;
+}
+```
+deque原本只能在头部或尾部插入元素的，提供了insert之后，就可以任何位置插入元素了。</p>
+
+<h2>6. 基于deque 的 stack 和 queue</h2>
+
+<p>由于deque可以从首位两端插入或剔除元素，所以只需要对其进行简单的封装就可以分别实现先进先出（FIFO）的stack和先进后出（FILO）的queue了。stack和queue中都有一个deque类型的成员，用做数据存储的容器，然后对deque的部分接口进行简单的封装，例如stack只提供从末端插入和删除的接口以及获取末端元素的接口，而queue则只提供从尾部插入而从头部删除的接口以及获取首位元素的接口。像这样具有“修改某物接口，形成另一种风貌”的性质的，称为配接器（adapter），因此STL中stack和queue往往不被归类为容器（container），而被归类为容器配接器（container adapter）。（关于配接器后面文章还会具体介绍）<br/>
+下面只给出stack的基本实现，并加以注解。<br/>
+<code>
+template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque&lt;_Tp&gt;) &gt;
+class stack; // 原型声明
+template &lt;class _Tp, class _Sequence&gt; class stack {
+protected:
+  _Sequence c; // _Sequence为deque&lt;_Tp&gt;，c为实际存储数据的容器
+public: // 向外部提供的接口，都是调用deque的接口来实现的
+  stack() : c() {}
+  explicit stack(const _Sequence&amp; __s) : c(__s) {}
+  bool empty() const { return c.empty(); }
+  size_type size() const { return c.size(); }
+  reference top() { return c.back(); }
+  const_reference top() const { return c.back(); }
+  void push(const value_type&amp; __x) { c.push_back(__x); }
+  void pop() { c.pop_back(); }
+};
+</code>
+值得一提的是，stack和queue都没有迭代器，因此不能对stack或queue进行遍历。但他们提供了 <code>operator ==</code> 和 <code>operator&lt;</code> 这两个比较大小的操作符：<br/>
+<code>
+template &lt;class _Tp, class _Seq&gt;
+bool operator==(const stack&lt;_Tp,_Seq&gt;&amp; __x, const stack&lt;_Tp,_Seq&gt;&amp; __y) {
+  return __x.c == __y.c;
+}
+template &lt;class _Tp, class _Seq&gt;
+bool operator&lt;(const stack&lt;_Tp,_Seq&gt;&amp; __x, const stack&lt;_Tp,_Seq&gt;&amp; __y) {
+  return __x.c &lt; __y.c;
+}
+</code>
+另外，除了使用默认的deque作为stack和queue的容器之外，我们还可以使用list或其他自定义的容器，只需要实现了stack或queue需要的接口，使用方法很简单：<br/>
+<code>
+stack&lt;int,vector&lt;int&gt; &gt; ist;
+queue&lt;char,list&lt;char&gt; &gt; cq;
+</code>
+即只需要指定模板中第二个参数即可。<br/>
+关于deque的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.2) 序列式容器之list]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/"/>
+    <updated>2014-07-06T22:03:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>list</code>、<code>stl_list.h</code>、<code>list.h</code> 等几个文件。</p>
+
+<h2>1. list 和 slist</h2>
+
+<p>STL中也实现了链表这种数据结构，list是STL标准的双向链表，而slit是SGI的单链表。相比于vector的连续线性空间而言，list即有有点也有缺点：优点是空间分配更灵活，对任何位置的插入删除操作都是常数时间；缺点是排序不方便。list和vector是比较常用的线性容器，那么什么时候用哪一种容器呢，需要视元素的多少、元素构造的复杂度（是否为POD数据）以及元素存取行为的特性而定。限于篇幅，本文主要介绍list的内容，关于单链表slist可以参见源码和侯捷的书。</p>
+
+<h2>2. list 的数据结构</h2>
+
+<p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：<br/>
+<code>
+struct _List_node_base {
+  _List_node_base* _M_next;
+  _List_node_base* _M_prev;
+};
+template &lt;class _Tp&gt;
+struct _List_node : public _List_node_base {  // node 的定义
+  _Tp _M_data;
+};
+template &lt;class _Tp, class _Alloc&gt;
+class _List_base {
+protected:
+  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
+};
+template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
+class list : protected _List_base&lt;_Tp, _Alloc&gt; {
+public:
+  typedef _List_node&lt;_Tp&gt; _Node;
+};
+</code></p>
+
+<!-- more -->
+
+
+<p>在list中的 <code>_M_node</code> 其实指向一个空白节点，该空白节点的 <code>_M_data</code> 成员是没有被初始化的，实际上该节点是链表的尾部，后面将list的迭代器还会提到这样做的好处。</p>
+
+<h2>3. list 的配置器</h2>
+
+<p>list缺省使用 alloc （即 <code>__STL_DEFAULT_ALLOCATOR</code>） 作为空间配置器，并据此定义了另外一个 <code>list_node_allocator</code> ，并定义了<code>_M_get_node</code>和<code>_M_put_node</code>  两个函数，分别用于分配和释放空间，为的是更方便的以节点大小为配置单位。除此之外，还定义了两个<code>_M_create_node</code> 函数，在分配空间的同时调用元素的构建函数对其进行初始化：<br/>
+```
+template <class _Tp, class _Alloc>
+class <em>List_base {
+protected:
+  typedef simple_alloc&lt;</em>List_node<_Tp>, <em>Alloc> </em>Alloc_type; // 专属配置器，每次配置一个节点
+  <em>List_node<_Tp>* </em>M_get_node() { return <em>Alloc_type::allocate(1); } // 分配一个节点
+  void </em>M_put_node(<em>List_node<_Tp>* __p) { </em>Alloc_type::deallocate(<strong>p, 1); }  // 释放一个节点
+};
+template <class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) > // 缺省使用 </strong>STL_DEFAULT_ALLOCATOR 配置器
+class list : protected <em>List_base&lt;</em>Tp, <em>Alloc> {
+protected:
+  </em>Node* <em>M_create_node(const </em>Tp&amp; __x){ // 分配空间并初始化</p>
+
+<pre><code>_Node* __p = _M_get_node();
+__STL_TRY {  _Construct(&amp;__p-&gt;_M_data, __x);  }
+__STL_UNWIND(_M_put_node(__p));
+return __p;
+</code></pre>
+
+<p>  }
+  <em>Node* </em>M_create_node(){</p>
+
+<pre><code>_Node* __p = _M_get_node();
+__STL_TRY {  _Construct(&amp;__p-&gt;_M_data);  }
+__STL_UNWIND(_M_put_node(__p));
+return __p;
+</code></pre>
+
+<p>  }
+};
+```
+在list的构造和析构函数、插入、删除等操作中设计到空间的配置。由于list不涉及同时分配多个连续元素的空间，因此用不到SGI的第二层配置器。</p>
+
+<h2>4. list 的迭代器</h2>
+
+<p>由于list的节点在内存中不一定连续存储，其迭代器不能像vector那样使用普通指针了，由于list是双向的链表，迭代器必须具备前移、后移的能力，所以它的迭代器是BidirectionalIterators，即双向的可增可减的，以下是list的迭代器的设计：<br/>
+<code>
+struct _List_iterator_base {
+  typedef bidirectional_iterator_tag iterator_category;
+  _List_node_base* _M_node;
+  _List_iterator_base(_List_node_base* __x) : _M_node(__x) {}
+  _List_iterator_base() {}
+  void _M_incr() { _M_node = _M_node-&gt;_M_next; }
+  void _M_decr() { _M_node = _M_node-&gt;_M_prev; }
+};
+template&lt;class _Tp, class _Ref, class _Ptr&gt;
+struct _List_iterator : public _List_iterator_base {
+  _Self&amp; operator++() { this-&gt;_M_incr(); return *this; }
+  _Self operator++(int) { _Self __tmp = *this; this-&gt;_M_incr(); return __tmp; }
+  _Self&amp; operator--() { this-&gt;_M_decr(); return *this; }
+  _Self operator--(int) { _Self __tmp = *this; this-&gt;_M_decr(); return __tmp; }
+};
+</code>
+list有一个重要性质，插入操作（insert）和接合操作（splice）都不会造成原有list迭代器失效，而list的删除操作（erase）也只对“指向被删除元素”的那个迭代器失效，其他迭代器不受任何影响。</p>
+
+<h2>5. list 的常用操作</h2>
+
+<p>list的常用操作有很多，例如最基本的<code>push_front</code>、<code>push_back</code>、<code>pop_front</code>、<code>pop_back</code> 等，这里主要介绍一下<code>clear</code>、<code>remove</code>、<code>unique</code>、<code>transfer</code> 这几个。<br/>
+<strong>（1）clear</strong><br/>
+clear 函数的作用是清楚整个list的所有节点。<br/>
+```
+void clear() { <em>Base::clear(); }
+void </em>List_base&lt;<em>Tp,</em>Alloc>::clear() {
+  <em>List_node<_Tp>* __cur = (</em>List_node<_Tp>*) <em>M_node-></em>M_next;
+  while (<em>_cur != </em>M_node) {</p>
+
+<pre><code>_List_node&lt;_Tp&gt;* __tmp = __cur;
+__cur = (_List_node&lt;_Tp&gt;*) __cur-&gt;_M_next; // 后移
+_Destroy(&amp;__tmp-&gt;_M_data); // 析构当前节点的对象
+_M_put_node(__tmp); // 释放当前节点的空间
+</code></pre>
+
+<p>  }
+  <em>M_node-></em>M_next = <em>M_node; // 置为空list
+  </em>M_node-><em>M_prev = </em>M_node;
+}
+<code>
+**（2）remove**  
+remove 函数的作用是将数值为value的所有元素移除。  
+</code>
+void list&lt;<em>Tp, </em>Alloc>::remove(const _Tp&amp; <strong>value) {
+  iterator </strong>first = begin();
+  iterator <strong>last = end();
+  while (</strong>first != __last) { // 遍历list</p>
+
+<pre><code>iterator __next = __first;
+++__next;
+if (*__first == __value) erase(__first); // 值与 value 相等就移除
+__first = __next;
+</code></pre>
+
+<p>  }
+}
+<code>
+**（3）unique**  
+unique函数的作用是移除相同的**连续**元素，只有“连续而且相同”的元素，才回被移除到只剩一个。  
+</code>
+void list&lt;<em>Tp, </em>Alloc>::unique() {
+  iterator <strong>first = begin();
+  iterator </strong>last = end();
+  if (<strong>first == </strong>last) return;
+  iterator <strong>next = </strong>first;
+  while (++<strong>next != </strong>last) {</p>
+
+<pre><code>if (*__first == *__next) // 连续连个节点的值相同
+  erase(__next);
+else
+  __first = __next;
+__next = __first;
+</code></pre>
+
+<p>  }
+}
+<code>
+**（4）transfer**  
+transfer的作用是将 [first, last) 内的所有元素移动到 position 之前。它是一个私有函数，它为其他常用操作如 splice、sort、merge 等的实现提供了便利。  
+</code>
+protected:
+  void transfer(iterator <strong>position, iterator </strong>first, iterator __last) {</p>
+
+<pre><code>if (__position != __last) {
+  // Remove [first, last) from its old position.
+  __last._M_node-&gt;_M_prev-&gt;_M_next     = __position._M_node;
+  __first._M_node-&gt;_M_prev-&gt;_M_next    = __last._M_node;
+  __position._M_node-&gt;_M_prev-&gt;_M_next = __first._M_node; 
+  // Splice [first, last) into its new position.
+  _List_node_base* __tmp      = __position._M_node-&gt;_M_prev;
+  __position._M_node-&gt;_M_prev = __last._M_node-&gt;_M_prev;
+  __last._M_node-&gt;_M_prev     = __first._M_node-&gt;_M_prev; 
+  __first._M_node-&gt;_M_prev    = __tmp;
+}
+</code></pre>
+
+<p>  }
+```
+关于list的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(3.1) 序列式容器之vector]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/"/>
+    <updated>2014-06-29T23:26:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>vector</code>、<code>stl_vector.h</code>、<code>vector.h</code> 等几个文件。</p>
+
+<h2>1. 容器</h2>
+
+<p>在数据结构的课程中，我们主要研究数据的特定排列方式，以利于搜索、排序等算法，几乎可以说，任何特定的数据结构都是为了实现某种特定的算法。STL 容器即由一个个特定的数据结构组成，例如向量（vector），链表（list），堆栈（stack），队列（queue），树（tree），哈希表（hash table），集合（set），映射（map）等，根据数据在容器中的排列特性，这些数据接口分为序列式容器（sequence container）和关联式容器（association container）两种，本文主要解读SGI STL中的序列式容器。</p>
+
+<p>所谓序列式容器，其中的元素可序（ordered），但未必有序（sorted）。C++ 本身提供了一个序列式容器——数组（array），STL中还提供了向量（vector），链表（list），堆栈（stack），队列（queue），优先队列（priority queue）等，其中stack和queue只是将deque（双端队列）设限而得到的，技术上可以被归为一种配接器（adaptor）。本系列文章将依次解读SGI STL各容器的关键实现细节。</p>
+
+<h2>2. vector 及其数据结构</h2>
+
+<p>在STL中，vector的空间在物理上就是连续的，而且是可以动态扩展的，这里的动态扩展，不需要用户去处理溢出的问题，而只需要关心上层逻辑。vector连续物理空间的动态扩展技术是该容器的关键，它主要分为三个步骤：配置新空间，数据移动，释放旧空间。这三个步骤执行的次数以及每次执行时的效率是影响最终 vector 效率的关键因素。为了减少执行的次数，就需要未雨绸缪，每次扩充空间时，成倍增长。而每次执行的效率，就主要是数据移动的效率了。下面，我们依次介绍vector的数据结构，使用的空间配置器和迭代器，以及常用操作。<br/>
+<strong>vector 的数据结构</strong><br/>
+vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：<br/>
+<code>
+template &lt;class _Tp, class _Alloc&gt;
+class _Vector_base {
+protected:
+  _Tp* _M_start;
+  _Tp* _M_finish;
+  _Tp* _M_end_of_storage;
+};
+class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
+};
+</code></p>
+
+<!-- more -->
+
+
+<p>其中 <code>_M_finish</code> 是当前使用到的空间的结束地址，而 <code>_M_end_of_storage</code> 是可用空间的结束地址，前者小于等于后者，当新加入元素使得前者大于后者之后，就需要进行空间扩充了。</p>
+
+<h2>3. vector 的配置器</h2>
+
+<p>vector的空间配置器 STL 默认的 <code>alloc</code> 即 <code>__default_alloc_template</code> 配置器，即第二级配置器，它对于 POD(plain old data) 类型数据使用内建内存池来应对内存碎片问题，关于该默认配置器的更多介绍请参见本系列第2篇文章 <a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器</a> . 除此之外，SGI vector 还定义了一个 <code>data_allocator</code>，为的是更方便的以元素大小为配置单位：<br/>
+```
+template <class _Tp, class _Alloc>
+class _Vector_base  // vector 继承了该基类
+protected:</p>
+
+<pre><code>typedef simple_alloc&lt;_Tp, _Alloc&gt; _M_data_allocator;
+</code></pre>
+
+<p>}
+<code>``
+关于</code>simple_alloc<code>的内容见前面的文章，它其实就是简单的对</code>malloc` 等的加一层封装。
+vector的内存是在vector的构造或析构、插入元素而容量不够等情况下，需要进行配置。vector 提供了很多的构造函数，具体可见源代码，而更详细的列表并涉及各个版本的说明的列表可以参见C++的文档：<a href="http://en.cppreference.com/w/cpp/container/vector/vector">cpp references</a>.</p>
+
+<h2>4. vector 的迭代器</h2>
+
+<p>由于vector使用的物理连续的空间，需要支持随机访问，所以它使用的随机访问迭代器（Random Access Iterators）。也正由于vector使用连续物理空间，所以不论其元素类型为何，使用普通指针就可以作为它的迭代器：<br/>
+<code>
+public:
+  typedef _Tp value_type;
+  typedef value_type* iterator;
+  typedef const value_type* const_iterator;
+</code>
+<strong>注意</strong>：vector中所谓的动态增加大小，并不是在原空间之后接连续新空间（因为无法保证原空间之后尚有可供配置的空间），而是以原大小的两倍另外配置一块较大空间，然后将原内容拷贝过来，然后再在其后构造新元素，最后释放原空间。因此，对于vector的任何操作，一旦引起空间重新配置，指向原vector的所有迭代器就失效了，这是vector使用中的一个大坑，务必小心。</p>
+
+<h2>5. vector 的常用操作</h2>
+
+<p>vector所提供的元素操作很多，这里选取几个常用操作介绍一下。<br/>
+<strong>（1）push_back</strong><br/>
+```
+public  void push_back(const <em>Tp&amp; __x) {
+if (</em>M_finish != _M_end_of_storage) {</p>
+
+<pre><code>construct(_M_finish, __x);
+++_M_finish;
+</code></pre>
+
+<p>}
+else</p>
+
+<pre><code>_M_insert_aux(end(), __x); // auxiliary insert
+</code></pre>
+
+<p>}
+<code>
+其中辅助的insert函数的基本逻辑为：按原空间大小的两倍申请新空间，复制原数据到新空间，释放原空间，更新新vector的数据结构的成员变量。  
+**（2）insert**  
+</code>
+public  iterator insert(iterator <strong>position, const _Tp&amp; </strong>x) {</p>
+
+<pre><code>size_type __n = __position - begin();
+if (_M_finish != _M_end_of_storage &amp;&amp; __position == end()) {
+  construct(_M_finish, __x);
+  ++_M_finish;
+}
+else
+  _M_insert_aux(__position, __x);
+return begin() + __n;
+</code></pre>
+
+<p>  }
+<code>
+与`push_back`类似，只是`push_back` 在最后插入，更为简单。insert 首先判断是否为在最后插入且容量足够，如果是最后插入且容量足够就就直接内部实现了。否则还是调用上面的辅助插入函数，该函数中首先判断容量是否足够，容量足的话，先构造一个新元素并以当前vector的最后一个元素的值作为其初始值，然后从倒数第二个元素开始从后往前拷贝，将前一元素的值赋给后一元素，知道当前插入位置。  
+**(3)erase**  
+</code>
+public  iterator erase(iterator <strong>first, iterator </strong>last) {</p>
+
+<pre><code>iterator __i = copy(__last, _M_finish, __first);
+destroy(__i, _M_finish);
+_M_finish = _M_finish - (__last - __first);
+return __first;
+</code></pre>
+
+<p>  }
+```
+与insert相反，该函数将某些连续的元素从vector中删除，所以不存在容量不足等问题，但也不会将没有使用的空间归还给操作系统。这里只有简单的元素拷贝（copy）和元素的析构（destroy）。另外，需要说明的是，对于vector而言clear函数和erase函数是等同的，都只清空对应内存块的值，而不将空间归还给操作系统，所以vector的容量是只增不减的。而对于其他一些容器就有所不同了，比如list之类以node为单位的数据结构。<br/>
+关于vector的内容就介绍到这里了。</p>
+]]></content>
+  </entry>
+  
+</feed>
