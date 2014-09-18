@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C++ | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-09-13T11:05:03+08:00</updated>
+  <updated>2014-09-18T15:16:42+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -27,14 +27,18 @@
 <h2>2. priority queue 的数据结构</h2>
 
 <p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：<br/>
-<code>
-template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
-class priority_queue { // in stl_queue.h 文件中
+```
+template <class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>),</p>
+
+<pre><code>        class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+</code></pre>
+
+<p>class priority_queue { // in stl_queue.h 文件中
 protected:
-  _Sequence c; // 使用vector作为数据存储的容器
-  _Compare comp;
+  <em>Sequence c; // 使用vector作为数据存储的容器
+  </em>Compare comp;
 };
-</code>
+```
 另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
 
 <!-- more -->
