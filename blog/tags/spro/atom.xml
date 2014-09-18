@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SPro | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/spro/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-09-18T15:16:42+08:00</updated>
+  <updated>2014-09-18T15:23:16+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -20,6 +20,8 @@
     <id>http://ibillxia.github.io/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc</id>
     <content type="html"><![CDATA[<p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
 开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>.</p>
+
+<h3>基本流程</h3>
 
 <p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</p>
 
@@ -54,17 +56,19 @@ EnergyDetector.exe 基于能量检测的静音去除</p>
 
 <h4>8. Compute EER 计算等错误率</h4>
 
-<p>你可以查查计算EER的matlab代码，NIST SRE的官网上有下载<a href="http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm">DETware_v2.1.tar.gz</a> 。</p>
+<p>你可以查查计算EER的matlab代码，NIST SRE的官网上有下载<a href="http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm">DETware_v2.1.tar.gz</a> 。_</p>
 
 <!-- more -->
 
 
+<h3>获取帮助</h3>
+
 <p>关于各步骤中参数的问题，可以在命令行“工具 -help”来查看该工具个参数的具体含义，另外还可参考Alize源码中各个工具的test目录中提供的实例，
 而关于每个工具的作用及理论知识则需要查看相关论文。</p>
 
-<p>常见问题及解答: http://mistral.univ-avignon.fr/mediawiki/index.php/Frequently_asked_questions</p>
+<p>常见问题及解答: <a href="http://mistral.univ-avignon.fr/mediawiki/index.php/Frequently_asked_questions">Frequently asked questions - by alize</a></p>
 
-<p>更多问题请在Google论坛（https://groups.google.com/forum/?fromgroups=&amp;hl=zh-CN#!forum/alize---voice-print-recognition）提出，大家一起讨论！</p>
+<p>更多问题请在 <a href="https://groups.google.com/forum/?fromgroups=&amp;hl=zh-CN#!forum/alize---voice-print-recognition">Google Groups</a> 提出，大家一起讨论！</p>
 
 <p>另外，还可以通过 QQ 群：二⑦九⑥四④零⑤柒 进行Real-Time的交流与讨论，加群请注明学校姓名，以防广告。</p>
 
