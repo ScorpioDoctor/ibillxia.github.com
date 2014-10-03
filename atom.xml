@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-09-18T15:23:16+08:00</updated>
+  <updated>2014-10-03T20:14:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -44,7 +44,8 @@
 </span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
 
 
-<p>另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+<p>
+另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
 
 <!-- more -->
 
@@ -1727,7 +1728,7 @@ iterator_category: 即前面提到5种的迭代器的类型。</p></blockquote>
 <h2>3. STL 各组件间的关系</h2>
 
 <p>STL 六大组件间的关系如下图（来自侯姐《STL源码剖析》一书 p6）：<br/>
-<img src="http://ibillxia.github.io/images/2014/IMAG2014060801.jpg">
+<img src="http://ibillxia.github.io/images/2014/IMAG2014060801.jpg"><br/>
 其中 Container 通过 Allocator 取得数据存储空间，Alogrithm 通过 Iterator 存取 Container 内容，Functor 可以协助 Algorithm 完成不同的策略变化，Adapter 可以修饰或套接 Functor。这里的描述有些抽象，等详细了解了每个组件的功能职责后，就比较好懂了。</p>
 
 <h2>4. SGI STL源码结构</h2>

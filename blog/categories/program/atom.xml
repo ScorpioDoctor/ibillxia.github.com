@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-09-18T15:23:16+08:00</updated>
+  <updated>2014-10-03T20:14:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -38,7 +38,7 @@ protected:
   <em>Sequence c; // 使用vector作为数据存储的容器
   </em>Compare comp;
 };
-```
+```<br/>
 另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
 
 <!-- more -->

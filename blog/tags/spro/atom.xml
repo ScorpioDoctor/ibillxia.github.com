@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SPro | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/spro/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-09-18T15:23:16+08:00</updated>
+  <updated>2014-10-03T20:14:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -76,7 +76,7 @@ EnergyDetector.exe 基于能量检测的静音去除</p>
 
 <p>[1] ALIZE - User Manual: <a href="http://mistral.univ-avignon.fr/doc/userguide_alize.001.pdf">userguide_alize.001.pdf</a><br/>
 [2] LIA_SPKDET Package documentation: <a href="http://mistral.univ-avignon.fr/doc/userguide_LIA_SpkDet.002.pdf">userguide_LIA_SpkDet.002.pdf</a><br/>
-[3] <a href="http://www-clips.imag.fr/geod/User/laurent.besacier/NEW-TPs/TP-Biometrie/tools/CommentsLBInstall/doc.pdf">Reference System based on speech modality ALIZE/LIA RAL</a>
+[3] <a href="http://www-clips.imag.fr/geod/User/laurent.besacier/NEW-TPs/TP-Biometrie/tools/CommentsLBInstall/doc.pdf">Reference System based on speech modality ALIZE/LIA RAL</a><br/>
 [4] Jean-Francois Bonastre, etc. ALIZE/SpkDet: a state-of-the-art open source software for speaker recognition<br/>
 [5] TOMMIE GANNERT. A Speaker Veri?cation System Under The Scope: Alize<br/>
 [6] <a href="http://mistral.univ-avignon.fr/mediawiki/index.php/Main_Page">Alize Wiki</a></p>
