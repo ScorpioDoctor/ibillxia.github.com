@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-10-03T20:14:15+08:00</updated>
+  <updated>2014-10-07T15:43:22+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -14,911 +14,870 @@
 
   
   <entry>
-    <title type="html"><![CDATA[深入理解STL源码(3.4) 序列式容器之heap和priority queue]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/"/>
-    <updated>2014-07-27T21:31:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>heap</code>、<code>stl_heap.h</code>、<code>heap.h</code>、<code>stl_queue.h</code>、<code>queue</code> 等几个文件。</p>
+    <title type="html"><![CDATA[深入理解STL源码(4.5) 关联式容器之hashset和hashmap]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/"/>
+    <updated>2014-09-27T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_hash_set.h</code>、<code>stl_hash_map.h</code> 等文件。</p>
 
-<h2>1. 概述</h2>
+<h2>1. hashset 和 hash_multi_set</h2>
 
-<p>前面分别介绍了三种各具特色的序列式容器 —— vector、list和deque，他们几乎可以涵盖所有类型的序列式容器了，但本文要介绍的heap则是一种比较特殊的容器。其实，在STL中heap并没有被定义为一个容器，而只是一组算法，提供给priority queue（优先队列）。故名思议，priority queue 允许用户以任何次序将元素放入容器内，但取出时一定是从优先权最高的元素开始取，binary max heap（二元大根堆）即具有这样的特性，因此如果学过max-heap再看STL中heap的算法和priority queue 的实现就会比较简单。</p>
-
-<h2>2. priority queue 的数据结构</h2>
-
-<p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：<br/>
-```
-template <class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>),</p>
-
-<pre><code>        class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
-</code></pre>
-
-<p>class priority_queue { // in stl_queue.h 文件中
-protected:
-  <em>Sequence c; // 使用vector作为数据存储的容器
-  </em>Compare comp;
-};
-```<br/>
-另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+<p>需要说明的是，STL 标准只规范了复杂度与接口，并没有规范实现方法，但 STL 实现的版本中 set 大多以 RB-tree 为底层机制，SGI STL 在实现了以 RB-tree 为底层机制的 set 外，还实现了以 hashtable 为底层机制的 hashset。<br/>
+和 set 一样，hashset 的键值（key）和实值（value）是同一个字段，不同的是 set 默认是自动排序的，而 hashset 则是无序的。除此之外，hashset 与 set 的对外接口完全相同。<br/>
+这里还有一种称为 hash_multi_set 的集合，它同 multiset 类似，允许键值重复，而上面的 hashset 则不允许。下面是 hashset 的定义的主要代码：</p>
 
 <!-- more -->
 
 
-<h2>3. push heap 算法</h2>
-
-<p>为了满足完全二叉树的特性，新加入的元素一定要放在vector的最后面；又为了满足max-heap的条件（每个节点的键值不小于其叶子节点的键值），还需要执行上溯过程，将新插入的元素与其父节点进行比较，直到不大于父节点：<br/>
-```
-template <class _RandomAccessIterator, class _Distance, class _Tp>
-void <strong>push_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>topIndex, _Tp </strong>value){
-  _Distance <strong>parent = (</strong>holeIndex - 1) / 2; //  新节点的父节点
-  while (<strong>holeIndex > </strong>topIndex &amp;&amp; *(<strong>first + </strong>parent) &lt; __value) { // 插入时的堆调整过程：当尚未到达顶端且父节点小于新值时，需要将新值往上（前）调整</p>
-
-<pre><code>*(__first + __holeIndex) = *(__first + __parent); // 父节点下移
-__holeIndex = __parent;
-__parent = (__holeIndex - 1) / 2;
-</code></pre>
-
-<p>  }  <br/>
-  <em>(<strong>first + </strong>holeIndex) = <strong>value; // 找到新值应当存储的位置
-}
-template <class _RandomAccessIterator, class _Distance, class _Tp>
-inline void </strong>push_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <em>_last, </em>Distance</em>, <em>Tp*) {
-  <strong>push_heap(</strong>first, </em>Distance((<strong>last - </strong>first) - 1), <em>Distance(0), </em>Tp(*(<strong>last - 1)));
-}
-template <class _RandomAccessIterator>
-inline void push_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator <strong>last) { // 真正的对外接口，在调用之前，元素已经放在了vector的最后面了（见priority queue的push_back）
-  </strong>STL_REQUIRES(</em>RandomAccessIterator, <em>Mutable_RandomAccessIterator);
-  __STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, </em>LessThanComparable);
-  <strong>push_heap_aux(</strong>first, <strong>last, </strong>DISTANCE_TYPE(<strong>first), </strong>VALUE_TYPE(<strong>first)); // 直接调用 </strong>push_heap_aux
-}
-```</p>
-
-<h2>4. pop heap 算法</h2>
-
-<p>对heap进行pop操作就是取顶部的元素，取走后要对heap进行调整，是之满足max-heap的特性。调整的策略是，首先将最末尾的元素放到堆顶，然后进行下溯操作，将对顶元素下移到适当的位置：<br/>
-```
-template <class _RandomAccessIterator, class _Distance, class _Tp>
-void <strong>adjust_heap(_RandomAccessIterator </strong>first, <em>Distance __holeIndex, </em>Distance <strong>len, _Tp </strong>value) { // 调整堆
-  <em>Distance <strong>topIndex = </strong>holeIndex; // 堆顶
-  </em>Distance <strong>secondChild = 2 * </strong>holeIndex + 2;
-  while (<strong>secondChild &lt; </strong>len) {</p>
-
-<pre><code>if (*(__first + __secondChild) &lt; *(__first + (__secondChild - 1))) __secondChild--; // secondChild 为左右两个子节点中较大者
-*(__first + __holeIndex) = *(__first + __secondChild); // 节点的值上移
-__holeIndex = __secondChild;
-__secondChild = 2 * (__secondChild + 1); // 下移一层
-</code></pre>
-
-<p>  }
-  if (<strong>secondChild == </strong>len) { // 最后一个元素</p>
-
-<pre><code>*(__first + __holeIndex) = *(__first + (__secondChild - 1));
-__holeIndex = __secondChild - 1;
-</code></pre>
-
-<p>  }
-  <strong>push_heap(</strong>first, <strong>holeIndex, </strong>topIndex, <strong>value);
-}
-template <class _RandomAccessIterator, class _Tp, class _Distance>
-inline void </strong>pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _RandomAccessIterator </strong>result, <em>Tp __value, </em>Distance<em>) {
-  </em><strong>result = *</strong>first; // 获取堆顶元素，并赋给堆尾的last-1
-  <strong>adjust_heap(</strong>first, <em>Distance(0), </em>Distance(<strong>last - </strong>first), <strong>value); // 调整堆
-}
-template <class _RandomAccessIterator, class _Tp>
-inline void </strong>pop_heap_aux(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Tp*) {
-  </strong>pop_heap(<strong>first, </strong>last - 1, <strong>last - 1, _Tp(*(</strong>last - 1)), <strong>DISTANCE_TYPE(</strong>first)); // 对 [first,last-1)进行pop，并将first赋给last-1
-}
-template <class _RandomAccessIterator>
-inline void pop_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last) { // 对外提供的接口，最后堆顶元素在堆的末尾，而[first,last-1) 区间为新堆，该接口调用完后再进行pop操作移除最后的元素
-  </strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
-  <strong>STL_REQUIRES(typename iterator_traits<_RandomAccessIterator>::value_type, _LessThanComparable);
-  </strong>pop_heap_aux(<strong>first, </strong>last, <strong>VALUE_TYPE(</strong>first));
-}
-```</p>
-
-<h2>5. make heap 算法</h2>
-
-<p>最后，我们来看看如何从一个初始序列来创建一个heap，有了前面的 <code>adjust_heap</code> ，创建heap也就很简单了，只需要从最后一个非叶子节点开始，不断调用堆调整函数，即可使得整个序列称为一个heap：<br/>
-```
-template <class _RandomAccessIterator, class _Compare, class _Tp, class _Distance>
-void <strong>make_heap(_RandomAccessIterator </strong>first, <em>RandomAccessIterator __last, </em>Compare <strong>comp, <em>Tp*, </em>Distance*) {
-  if (</strong>last - <strong>first &lt; 2) return;
-  _Distance </strong>len = <strong>last - </strong>first;
-  _Distance <strong>parent = (</strong>len - 2)/2; // 定位到最后一个非叶子节点
-  while (true) { // 对每个非叶子节点为根的子树进行堆调整</p>
-
-<pre><code>__adjust_heap(__first, __parent, __len, _Tp(*(__first + __parent)), __comp);
-if (__parent == 0) return;
-__parent--;
-</code></pre>
-
-<p>  }
-}
-template <class _RandomAccessIterator, class _Compare>
-inline void make_heap(<em>RandomAccessIterator __first, </em>RandomAccessIterator <strong>last, _Compare </strong>comp) { // 对外提供的接口
-  <strong>STL_REQUIRES(<em>RandomAccessIterator, </em>Mutable_RandomAccessIterator);
-  </strong>make_heap(<strong>first, </strong>last, <strong>comp, </strong>VALUE_TYPE(<strong>first), </strong>DISTANCE_TYPE(__first));
-}
-```</p>
-
-<h2>6. 基于 heap 的 priority queue</h2>
-
-<p>上一篇文章中讲到stack和queue都是基于deque实现的，这里的priority queue是基于vector和heap来实现的，默认使用vector作为容器，而使用heap的算法来维持其priority的特性，因此priority queue也被归类为container adapter。其具体实现的主要代码如下:<br/>
-```
-template <class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>), class <em>Compare __STL_DEPENDENT_DEFAULT_TMPL(less<typename _Sequence::value_type>) >
-class priority_queue {
-protected:
-  </em>Sequence c;
-  <em>Compare comp;
+<p>```
+template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
+class hash_set {
+private:
+  typedef hashtable&lt;<em>Value, </em>Value, <em>HashFcn, </em>Identity<_Value>, <em>EqualKey, </em>Alloc> <em>Ht;
+  </em>Ht <em>M_ht; // 底层容器的定义
 public:
-  priority_queue() : c() {}
-  explicit priority_queue(const </em>Compare&amp; <strong>x) :  c(), comp(</strong>x) {}
-  priority_queue(const <em>Compare&amp; __x, const </em>Sequence&amp; <strong>s) : c(</strong>s), comp(__x)</p>
+  hash_set() : </em>M_ht(100, hasher(), key_equal(), allocator_type()) {} // 构造函数
+  iterator find(const key_type&amp; <strong>key) const { return _M_ht.find(</strong>key); } // 查找
+  size_type count(const key_type&amp; <strong>key) const { return _M_ht.count(</strong>key); } // 计数
+  size_type size() const { return <em>M_ht.size(); } // 表格大小
+  size_type max_size() const { return </em>M_ht.max_size(); }
+  bool empty() const { return <em>M_ht.empty(); } // 是否为空
+  void swap(hash_set&amp; __hs) { </em>M_ht.swap(<strong>hs.<em>M_ht); } // 交换
+  iterator begin() const { return </em>M_ht.begin(); }
+  iterator end() const { return _M_ht.end(); }
+  pair&lt;iterator, bool> insert(const value_type&amp; </strong>obj){ // 插入</p>
 
-<pre><code>{ make_heap(c.begin(), c.end(), comp); }
-</code></pre>
-
-<p>  bool empty() const { return c.empty(); }
-  size_type size() const { return c.size(); }
-  const_reference top() const { return c.front(); }
-  void push(const value_type&amp; __x) {</p>
-
-<pre><code>__STL_TRY {
-  c.push_back(__x); // 在push_heap之前先将x放在vector c的最后面
-  push_heap(c.begin(), c.end(), comp);
-}
-__STL_UNWIND(c.clear());
+<pre><code>  pair&lt;typename _Ht::iterator, bool&gt; __p = _M_ht.insert_unique(__obj);
+  return pair&lt;iterator,bool&gt;(__p.first, __p.second);
 </code></pre>
 
 <p>  }
-  void pop() {</p>
-
-<pre><code>__STL_TRY {
-  pop_heap(c.begin(), c.end(), comp);
-  c.pop_back(); // 在调用pop_heap之后才将最后一个元素剔除出vector c
-}
-__STL_UNWIND(c.clear());
-</code></pre>
-
-<p>  }
+  size_type erase(const key_type&amp; <strong>key) {return _M_ht.erase(</strong>key); } // 擦除
+  void erase(iterator <strong>it) { _M_ht.erase(</strong>it); }
+  void erase(iterator <strong>f, iterator </strong>l) { <em>M_ht.erase(<strong>f, </strong>l); }
+  void clear() { </em>M_ht.clear(); } // 清空
 };
-```
-值得一提的是，priority queue也没有迭代器，不能对其进行遍历等操作，因为它只能在顶部取和删除元素，而插入元素的位置也是确定的，而不能有用户指定。<br/>
-关于heap和priority queue的内容就介绍到这里了，而序列式容器的介绍也到此结束了。</p>
+template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
+inline bool operator==(const hash_set&lt;<em>Value,</em>HashFcn,<em>EqualKey,</em>Alloc>&amp; __hs1,</p>
+
+<pre><code>       const hash_set&lt;_Value,_HashFcn,_EqualKey,_Alloc&gt;&amp; __hs2) {
+</code></pre>
+
+<p>  return <strong>hs1._M_ht == </strong>hs2._M_ht;
+}
+```</p>
+
+<h2>2. hashmap 和 hash_multi_map</h2>
+
+<p>hashmap 是以 hashtable 为底层容器的 map，而 map 是同时拥有实值（value）和键值（key），且不允许键值重复。<br/>
+而 hash_multi_map 是以 hashtable 为底层容器的 map，且允许键值重复。</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[深入理解STL源码(3.3) 序列式容器之deque和stack、queue]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/"/>
-    <updated>2014-07-13T20:46:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>deque</code>、<code>stl_deque.h</code>、<code>deque.h</code>、<code>stack</code>、<code>stl_stack.h</code>、<code>queue</code>、<code>stl_queue.h</code> 等几个文件。</p>
+    <title type="html"><![CDATA[深入理解STL源码(4.4) 关联式容器之hashtable]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/"/>
+    <updated>2014-09-13T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_hashtable.h</code>、<code>stl_hash_fun.h</code> 等文件。</p>
 
-<h2>1. deque 概述</h2>
+<h2>1. hashtable 简介</h2>
 
-<p>前面分别介绍了连续式存储的序列容器vector和以节点为单位链接起来的非连续存储的序列容器list，这两者各有优缺点，而且刚好是优缺互补的，那么何不将二者结合利用对方的优点来弥补己方的不足呢，于是这就有了强大的deque。</p>
+<p>在数据结构中我们知道，有种数据结构的插入、删除、查找等操作的性能是常数时间，但需要比元素个数更多的空间，这种数据结构就是哈希表。哈希表的基本思想是，将数据存储在与其数值大小相关的地方，比如对该数取模，然后存储在以余数为下表的数组中。但这样会出现一个问题，就是可能会有多个数据被映射到同一个存储位置，即出现了所谓的“碰撞”。哈希表的主要内容就是解决“碰撞”问题，一般而言有以下几种方法：线性探测、二次探测、开链等。</p>
 
-<p>没错，与我们在数据结构中学到的固定连续空间的双端队列不同，STL中的deque是分段连续的空间通过list链接而成的序列容器，它结合了vector与list的存储特性，但与vector和list都不同的是deque只能在首部或尾部进行插入和删除操作，这个限制在一定程度上简化了deque实现的难度。由于使用分段连续空间链接的方式，所以deque不存在vector那样“因旧空间不足而重新配置新的更大的空间，然后复制元素，再释放原空间”的情形，也不会有list那样每次都只配置一个元素的空间而导致时间性能和空间的利用率低下。</p>
+<h4>线性探测</h4>
 
-<h2>2. deque 的数据结构</h2>
+<p>简单而言，就是在出现“碰撞”后，寻找当前位置以后的空档，然后存入。如果找到尾部都没有空档，则从头部重新开始找。只要空间大小比元素个数大，总能找到的。相应的，元素的查找和删除也与普通的数组不同，查找如果直接定位到相应位置并找到或是空档，就可以确定存在或不存在，而如果定位到当前位置非空且与待查找的元素不同，则要依序寻找后续位置的元素，直到找到或移到了空档。删除则是采用懒惰删除策略，即只标记删除记号，实际删除操作则待表格重新整理时再进行。</p>
 
-<p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：<br/>
+<h4>二次探测</h4>
+
+<p>与线性探测类似，但向后寻找的策略是探测距当前位置为平方数的位置，即 $index = H+i<em><sup>{2}$</sup> </em>。但这样会有一个问题，那就是能否保证每次探测的是不同的位置，即是否存在某次插入时，探测完一圈后回到自己而出现死循环。</p>
+
+<h4>开链</h4>
+
+<p>这种方法是将出现冲突的元素放在一个链表中，而哈希表中只存储这些链表的首地址。SGI STL中就是使用这种方法来解决“碰撞”的。</p>
+
+<h2>2. hashtable 的数据结构</h2>
+
+<p>由于使用开链的方法解决冲突，所以要维护两种数据结构，一个是 hash table，在 STL 中称为 buckets，用 vector 作为容器；另一个是链表，这里没有使用 list 或 slist 这些现成的数据结构，而是使用自定义 <code>__hashtable_node</code> ，相关定义具体如下：</p>
+
+<!-- more -->
+
+
+<p><code>
+template &lt;class _Val&gt;
+struct _Hashtable_node { // 链表节点的定义
+  _Hashtable_node* _M_next; // 指向下一个节点
+  _Val _M_val;
+};
+template &lt;class _Val, class _Key, class _HashFcn, class _ExtractKey, class _EqualKey, class _Alloc&gt;
+class hashtable {
+private:
+  typedef _HashFcn hasher;
+  hasher                _M_hash; // 哈希函数
+  typedef _Hashtable_node&lt;_Val&gt; _Node; // 节点类型别名定义
+  vector&lt;_Node*,_Alloc&gt; _M_buckets; // hash table，存储链表的索引
+};
+</code>
+这里 hashtable 的模板参数很多，其含义如下：</p>
+
+<blockquote><p><em>Val: 节点的实值类型
+</em>Key: 节点的键值类型
+<em>HashFcn: 哈希函数的类型
+</em>ExtractKey: 从节点中取出键值的方法（函数或仿函数）
+<em>EqualKey: 判断键值相同与否的方法（函数或仿函数）
+</em>Alloc: 空间配置器，默认使用 std::alloc</p></blockquote>
+
+<p>虽然开链法并不要求哈希表的大小为质数，但 SGI STL 仍然以质数来设计表的大小，并将28个质数（大约2倍依次递增）计算好，并提供函数来查询其中最接近某数并大于某数的质数，如下：<br/>
 <code>
-inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
-  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
+enum { __stl_num_primes = 28 };
+static const unsigned long __stl_prime_list[__stl_num_primes] = {
+  53ul,         97ul,         193ul,       389ul,       769ul,
+  1543ul,       3079ul,       6151ul,      12289ul,     24593ul,
+  49157ul,      98317ul,      196613ul,    393241ul,    786433ul,
+  1572869ul,    3145739ul,    6291469ul,   12582917ul,  25165843ul,
+  50331653ul,   100663319ul,  201326611ul, 402653189ul, 805306457ul,
+  1610612741ul, 3221225473ul, 4294967291ul
+}; // 使用无符号长整型（32bit）
+inline unsigned long __stl_next_prime(unsigned long __n) {
+  const unsigned long* __first = __stl_prime_list;
+  const unsigned long* __last = __stl_prime_list + (int)__stl_num_primes;
+  const unsigned long* pos = lower_bound(__first, __last, __n); // lower_bound 是泛型算法，后续会介绍
+  return pos == __last ? *(__last - 1) : *pos;
 }
-template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-protected:
-  _Tp** _M_map; // 指向缓冲区的指针数组首地址
-  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
-  iterator _M_start; // 指向第一个缓冲区的第一个元素
-  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
+</code></p>
+
+<h2>3. hashtable 的空间配置</h2>
+
+<h4>节点空间配置</h4>
+
+<p>首先只考虑比较简单的情况，即哈希表的大小不需要调整，此时空间配置主要是链表节点的配置，而 hashtable 使用 vector 作为容器，链表节点的空间配置（分配和释放）如下：<br/>
+```
+typedef simple_alloc&lt;<em>Node, </em>Alloc> <em>M_node_allocator_type;
+</em>Node<em> <em>M_get_node() { return </em>M_node_allocator_type::allocate(1); } // 分配一个节点的空间
+void <em>M_put_node(</em>Node</em> <strong>p) { _M_node_allocator_type::deallocate(</strong>p, 1); } // 释放一个节点的空间
+<em>Node* </em>M_new_node(const value_type&amp; __obj) {</p>
+
+<pre><code>_Node* __n = _M_get_node();
+__n-&gt;_M_next = 0;
+__STL_TRY {
+    construct(&amp;__n-&gt;_M_val, __obj);
+    return __n;
+}
+__STL_UNWIND(_M_put_node(__n));
+</code></pre>
+
+<p>}
+void <em>M_delete_node(</em>Node* __n) {</p>
+
+<pre><code>destroy(&amp;__n-&gt;_M_val);
+_M_put_node(__n);
+</code></pre>
+
+<p>}
+```</p>
+
+<h4>插入操作表格重新整理</h4>
+
+<p>哈希表的插入操作有两个问题要考虑，一个是 是否允许插入相同键值的元素，另一个是 是否需要扩充表的大小。在 STL 中，首先是判断新插入一个元素后是否需要扩充，判断的条件是插入后元素的个数大于当前哈希表的大小；而是否允许元素重复则通过提供 <code>insert_unique</code> 和 <code>insert_equal</code> 来解决。相关代码如下：<br/>
+```
+pair&lt;iterator, bool> insert_unique(const value_type&amp; __obj) {</p>
+
+<pre><code>resize(_M_num_elements + 1); // 先进行扩充（如有必要）
+return insert_unique_noresize(__obj); // 然后插入
+</code></pre>
+
+<p>}
+iterator insert_equal(const value_type&amp; __obj) {</p>
+
+<pre><code>resize(_M_num_elements + 1);
+return insert_equal_noresize(__obj);
+</code></pre>
+
+<p>}
+void hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::resize(size_type <strong>num_elements_hint) { // 扩充表格
+  const size_type </strong>old_n = _M_buckets.size();
+  if (<strong>num_elements_hint > </strong>old_n) { // 判断是否需要扩充</p>
+
+<pre><code>const size_type __n = _M_next_size(__num_elements_hint); // 下一个质数
+if (__n &gt; __old_n) {
+  vector&lt;_Node*, _All&gt; __tmp(__n, (_Node*)(0), _M_buckets.get_allocator()); // 新的buckets
+  __STL_TRY {
+    for (size_type __bucket = 0; __bucket &lt; __old_n; ++__bucket) { // 遍历旧的buckets
+      _Node* __first = _M_buckets[__bucket];
+      while (__first) { // 处理每一个链表
+        size_type __new_bucket = _M_bkt_num(__first-&gt;_M_val, __n); // 确定当前节点落在新buckets中的位置
+        _M_buckets[__bucket] = __first-&gt;_M_next; // 指向下一个节点
+        __first-&gt;_M_next = __tmp[__new_bucket]; // 在新buckets的新索引位置头部插入
+        __tmp[__new_bucket] = __first;
+        __first = _M_buckets[__bucket]; // 指向旧链表下一个节点
+      }
+    }
+    _M_buckets.swap(__tmp); // 交换新旧buckets，退出后临时buckets __tmp 自动释放
+  }
+}
+</code></pre>
+
+<p>  }
+}
+template <class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All>
+pair<typename hashtable<_Val,_Key,_HF,_Ex,_Eq,_All>::iterator, bool>
+hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::insert_unique_noresize(const value_type&amp; <strong>obj) { // 不允许键值重复
+  const size_type </strong>n = <em>M_bkt_num(__obj);
+  </em>Node<em> <strong>first = _M_buckets[</strong>n];
+  for (_Node</em> <strong>cur = </strong>first; <strong>cur; </strong>cur = <em>_cur-></em>M_next)</p>
+
+<pre><code>if (_M_equals(_M_get_key(__cur-&gt;_M_val), _M_get_key(__obj))) // 判断是否存在重复的key
+  return pair&lt;iterator, bool&gt;(iterator(__cur, this), false); 
+</code></pre>
+
+<p>  <em>Node* __tmp = </em>M_new_node(<strong>obj);
+  </strong>tmp-><em>M_next = __first;
+  </em>M_buckets[<strong>n] = </strong>tmp;
+  ++_M_num_elements;
+  return pair&lt;iterator, bool>(iterator(__tmp, this), true);
+}
+```
+允许键值重复的插入操作类似的，只是为了确保相同键值的挨在一起，先要找到相同键值的位置，然后插入。</p>
+
+<h4>整体复制和清空</h4>
+
+<p>复制和清空时分别涉及空间的分配和释放，所以在这里也介绍一下。首先是复制操作，需要先将目标 hashtable 清空，然后将源 hashtable 的 buckets 中的每个链表一一复制，如下：<br/>
+```
+template <class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All>
+void hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::<em>M_copy_from(const hashtable&amp; __ht) {
+  </em>M_buckets.clear(); // 先清空目标 hashtable
+  <em>M_buckets.reserve(__ht.</em>M_buckets.size()); // 大小重置为源 hashtable 的大小
+  <em>M_buckets.insert(</em>M_buckets.end(), <strong>ht.<em>M_buckets.size(), (</em>Node*) 0); // 将目标 hashtable 的 buckets 置空
+  </strong>STL_TRY {</p>
+
+<pre><code>for (size_type __i = 0; __i &lt; __ht._M_buckets.size(); ++__i) { // 遍历 buckets
+  const _Node* __cur = __ht._M_buckets[__i];
+  if (__cur) {
+    _Node* __copy = _M_new_node(__cur-&gt;_M_val);
+    _M_buckets[__i] = __copy;
+    for (_Node* __next = __cur-&gt;_M_next; __next; __cur = __next,
+            __next = __cur-&gt;_M_next) { // 复制每个节点
+      __copy-&gt;_M_next = _M_new_node(__next-&gt;_M_val);
+      __copy = __copy-&gt;_M_next;
+    }
+  }
+}
+_M_num_elements = __ht._M_num_elements;
+</code></pre>
+
+<p>  }
+  __STL_UNWIND(clear());
+}
+```</p>
+
+<h2>4. hashtable 的迭代器</h2>
+
+<p>hashtable 的迭代器是前向的单向迭代器，遍历的方式是先遍历完一个 list 然后切换到下一个 bucket 指向的 list 进行遍历。以下是 hashtable 的迭代器的定义：<br/>
+```
+template <class _Val, class _Key, class _HashFcn, class _ExtractKey, class _EqualKey, class _Alloc>
+struct <em>Hashtable_iterator {
+  typedef hashtable&lt;</em>Val,<em>Key,</em>HashFcn,<em>ExtractKey,</em>EqualKey,<em>Alloc> </em>Hashtable;
+  typedef <em>Hashtable_iterator&lt;</em>Val, <em>Key, </em>HashFcn, <em>ExtractKey, </em>EqualKey, <em>Alloc> iterator;
+  typedef </em>Hashtable_const_iterator&lt;<em>Val, </em>Key, <em>HashFcn, </em>ExtractKey, <em>EqualKey, </em>Alloc> const_iterator;
+  typedef <em>Hashtable_node<_Val> </em>Node;</p>
+
+<p>  <em>Node* </em>M_cur; // 指向当前节点
+  <em>Hashtable* </em>M_ht; // 指向当前节点所在 bucket</p>
+
+<p>  <em>Hashtable_iterator(</em>Node<em> <em>_n, </em>Hashtable</em> <strong>tab) : _M_cur(</strong>n), <em>M_ht(__tab) {}
+  </em>Hashtable_iterator() {}
+  reference operator<em>() const { return <em>M_cur-></em>M_val; }
+  iterator&amp; operator++();
+  iterator operator++(int);
+  bool operator==(const iterator&amp; <strong>it) const { return _M_cur == </strong>it.<em>M_cur; }
+  bool operator!=(const iterator&amp; __it) const { return </em>M_cur != <em><em>it.</em>M_cur; }
 };
-class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
-protected:  // Internal typedefs
-  typedef pointer* _Map_pointer;
-  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
+template <class _Val, class _Key, class _HF, class _ExK, class _EqK, class _All>
+</em>Hashtable_iterator&lt;<em>Val,</em>Key,<em>HF,</em>ExK,<em>EqK,</em>All>&amp;
+<em>Hashtable_iterator&lt;</em>Val,<em>Key,</em>HF,<em>ExK,</em>EqK,<em>All>::operator++(){
+  const </em>Node</em> <em><em>old = </em>M_cur;
+  </em>M_cur = <em>M_cur-></em>M_next;
+  if (!_M_cur) { // 到了当前 bucket 的尾部</p>
+
+<pre><code>size_type __bucket = _M_ht-&gt;_M_bkt_num(__old-&gt;_M_val);
+while (!_M_cur &amp;&amp; ++__bucket &lt; _M_ht-&gt;_M_buckets.size())
+  _M_cur = _M_ht-&gt;_M_buckets[__bucket];
+</code></pre>
+
+<p>  }
+  return *this;
+}
+```</p>
+
+<h2>5. 哈希函数</h2>
+
+<p>在第三节中介绍 hashtable 的数据结构时，提到了一个哈希函数类型的模板参数，从键值到索引位置的映射由这个哈希函数来完成，实际中是通过函数 <code>_M_bkt_num_key</code> 来完成这个映射的，如下：<br/>
+```
+size_type _M_bkt_num_key(const key_type&amp; __key) const {</p>
+
+<pre><code>return _M_bkt_num_key(__key, _M_buckets.size());
+</code></pre>
+
+<p>}
+size_type _M_bkt_num_key(const key_type&amp; <strong>key, size_t </strong>n) const {</p>
+
+<pre><code>return _M_hash(__key) % __n; // 在这里调用函数 _M_hash，实现映射
+</code></pre>
+
+<p>}
+<code>
+这里的 `_M_hash` 是一个哈希函数类型的成员，可以看做是一个函数指针，真正的函数的定义在 `&lt;stl_hash_fun.h&gt;` 中，针对 char，int，long 等整数型别，这里大部分的 hash function 什么也没做，只是重视返回原始值，但对字符串（const char* ）设计了一个转换函数，如下：  
+</code>
+template <class _Key> struct hash { }; // 仿函数 hash
+inline size_t <strong>stl_hash_string(const char* </strong>s) { // 将字符串映射为整型
+  unsigned long <strong>h = 0;
+  for ( ; *</strong>s; ++__s)</p>
+
+<pre><code>__h = 5*__h + *__s;
+</code></pre>
+
+<p>  return size_t(<strong>h);
+}
+</strong>STL_TEMPLATE_NULL struct hash&lt;char<em>> {
+  size_t operator()(const char</em> <strong>s) const { return </strong>stl_hash_string(<strong>s); } // 函数调用操作符 operator()
 };
+</strong>STL_TEMPLATE_NULL struct hash<const char*> {
+  size_t operator()(const char* <strong>s) const { return </strong>stl_hash_string(<strong>s); }
+};
+</strong>STL_TEMPLATE_NULL struct hash<char> {
+  size_t operator()(char <strong>x) const { return </strong>x; }
+};
+<strong>STL_TEMPLATE_NULL struct hash<unsigned char> {
+  size_t operator()(unsigned char </strong>x) const { return <strong>x; }
+};
+</strong>STL_TEMPLATE_NULL struct hash<signed char> {
+  size_t operator()(unsigned char <strong>x) const { return </strong>x; }
+};
+<strong>STL_TEMPLATE_NULL struct hash<short> {
+  size_t operator()(short </strong>x) const { return <strong>x; }
+};
+</strong>STL_TEMPLATE_NULL struct hash<unsigned short> {
+  size_t operator()(unsigned short <strong>x) const { return </strong>x; }
+};
+<strong>STL_TEMPLATE_NULL struct hash<int> {
+  size_t operator()(int </strong>x) const { return <strong>x; }
+};
+</strong>STL_TEMPLATE_NULL struct hash<unsigned int> {
+  size_t operator()(unsigned int <strong>x) const { return </strong>x; }
+};
+<strong>STL_TEMPLATE_NULL struct hash<long> {
+  size_t operator()(long </strong>x) const { return <strong>x; }
+};
+</strong>STL_TEMPLATE_NULL struct hash<unsigned long> {
+  size_t operator()(unsigned long <strong>x) const { return </strong>x; }
+};
+```
+关于函数调用操作符的更多介绍，可以参见我的另一篇文章 【<a href="http://ibillxia.github.io/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a>】。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(4.3) 关联式容器之map和multimap]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/"/>
+    <updated>2014-08-31T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_map.h</code>、<code>stl_multimap.h</code>、<code>stl_pair.h</code>、<code>map.h</code>、 <code>multimap.h</code>、 <code>map</code>  等文件。</p>
+
+<h2>1. map 简介</h2>
+
+<p>map 的特性是，所有元素都是键值对，用一个 pair 表示，pair 的第一个元素是键值（key），第二个元素是实值（value），map 不允许两个元素的键值相同。<br/>
+与 set 类似的，map 也不允许修改 key 的值，但不同的是可以修改 value 的值，因此 map 的迭代器既不是一种 constant iterators，也不是一种 mutable iterators。同样的，map的插入和删除操作不影响操作之前定义的迭代器的使用（被删除的那个元素除外）。<br/>
+与 set 不同的是，map 没有交、并、差等运算，只有插入、删除、查找、比较等基本操作。</p>
+
+<h2>2. map 的实现</h2>
+
+<p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：<br/>
+<code>
+template &lt;class _T1, class _T2&gt;
+struct pair {
+  typedef _T1 first_type;
+  typedef _T2 second_type;
+  _T1 first; // 两个成员 first 和 second
+  _T2 second;
+  pair() : first(_T1()), second(_T2()) {} // 构造函数
+  pair(const _T1&amp; __a, const _T2&amp; __b) : first(__a), second(__b) {} // 拷贝构造函数
+};
+template &lt;class _T1, class _T2&gt;
+inline bool operator==(const pair&lt;_T1, _T2&gt;&amp; __x, const pair&lt;_T1, _T2&gt;&amp; __y) { // 相等比较
+  return __x.first == __y.first &amp;&amp; __x.second == __y.second;
+}
+template &lt;class _T1, class _T2&gt;
+inline bool operator&lt;(const pair&lt;_T1, _T2&gt;&amp; __x, const pair&lt;_T1, _T2&gt;&amp; __y) { // 大小比较
+  return __x.first &lt; __y.first || (!(__y.first &lt; __x.first) &amp;&amp; __x.second &lt; __y.second);
+}
+template &lt;class _T1, class _T2&gt;
+inline pair&lt;_T1, _T2&gt; make_pair(const _T1&amp; __x, const _T2&amp; __y) { // 创建一个 pair
+  return pair&lt;_T1, _T2&gt;(__x, __y);
+}
 </code></p>
 
 <!-- more -->
 
 
-<h2>3. deque 的配置器</h2>
-
-<p>由于deque涉及到两种类型（map和buffer）数据的空间配置，因此deque定义了两个专属的配置器 <code>_Map_alloc_type</code> 和 <code>_Node_alloc_type</code>:<br/>
-<code>
-template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-protected:
-  typedef simple_alloc&lt;_Tp, _Alloc&gt;  _Node_alloc_type;
-  typedef simple_alloc&lt;_Tp*, _Alloc&gt; _Map_alloc_type;
-};
-template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
-class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; { };
-</code>
-而这里的 <code>_Alloc</code> 使用的都是STL默认的 <code>alloc</code> 这个配置器，因此这两个配置器实际上都是 <code>alloc</code> 类型的配置器，即SGI的第二级配置器。<br/>
-在定义一个deque时，默认调用基类的构造函数，产生一个map大小为0的空的deque，随着第一次插入元素，由于map大小不够，需要调用<code>_M_push_back_aux</code> 进而调用 <code>_M_reallocate_map</code> 进行map的空间配置，如果初始的map不为空，还需要对map进行“分配新空间，复制，释放元空间”的操作，如果从头部插入同样的道理，这是就是map的配置逻辑（实际中，还有一种情况，就是map的前后剩余的node数不同，例如前部分都空着，而后面插入后溢出了，这时可以考虑在map内部移动，即将后半部分整体往前移动一定距离）。其中<code>_M_reallocate_map</code>的实现如下：<br/>
+<p>然后是 map 的定义，大体上和 set 差不多，只是在使用 RB-tree 作为容器时，传入的模板参数是一个 pair，主要代码如下：<br/>
 ```
-template <class _Tp, class _Alloc>
-void deque&lt;<em>Tp,</em>Alloc>::<em>M_reallocate_map(size_type <strong>nodes_to_add, bool </strong>add_at_front){
-  size_type __old_num_nodes = </em>M_finish.<em>M_node - </em>M_start.<em>M_node + 1;
-  size_type <strong>new_num_nodes = </strong>old_num_nodes + __nodes_to_add;
-  </em>Map_pointer <strong>new_nstart;
-  if (_M_map_size > 2 * </strong>new_num_nodes) { // map的size足够，在map内部移动</p>
+template <class _Key, class _Tp, class _Compare, class _Alloc>
+class map {
+public:
+  typedef <em>Key                  key_type;
+  typedef </em>Tp                   data_type;
+  typedef <em>Tp                   mapped_type;
+  typedef pair<const _Key, _Tp> value_type;
+  typedef </em>Compare              key_compare;
+  // 一个用于键值比较的内部类
+  class value_compare : public binary_function&lt;value_type, value_type, bool> {
+  friend class map&lt;<em>Key,</em>Tp,<em>Compare,</em>Alloc>;
+  protected :</p>
 
-<pre><code>__new_nstart = _M_map + (_M_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
-if (__new_nstart &lt; _M_start._M_node)
-  copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart);
-else
-  copy_backward(_M_start._M_node, _M_finish._M_node + 1, __new_nstart + __old_num_nodes);
+<pre><code>_Compare comp;
+value_compare(_Compare __c) : comp(__c) {}
 </code></pre>
 
-<p>  } else { // map的size不够，重新分配</p>
+<p>  public:</p>
 
-<pre><code>size_type __new_map_size = _M_map_size + max(_M_map_size, __nodes_to_add) + 2;
-_Map_pointer __new_map = _M_allocate_map(__new_map_size); // 重新分配map
-__new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
-copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart); // 复制原map到新的map中
-_M_deallocate_map(_M_map, _M_map_size); // 释放原map
-_M_map = __new_map;
-_M_map_size = __new_map_size;
+<pre><code>bool operator()(const value_type&amp; __x, const value_type&amp; __y) const {
+  return comp(__x.first, __y.first);
+}
+</code></pre>
+
+<p>  };
+private:
+  typedef <em>Rb_tree&lt;key_type, value_type, </em>Select1st<value_type>,</p>
+
+<pre><code>key_compare, _Alloc&gt; _Rep_type; // 这里的value_type是一个pair&lt;const _Key, _Tp&gt;
+</code></pre>
+
+<p>  <em>Rep_type </em>M_t;  // 用红黑树作为底层容器
+public:
+  map() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
+  bool empty() const { return <em>M_t.empty(); } // 判断是否为空
+  size_type size() const { return </em>M_t.size(); } // 获取元素个数
+  map(const value_type<em> __first, const value_type</em> __last)</p>
+
+<pre><code>: _M_t(_Compare(), allocator_type())
+{ _M_t.insert_unique(__first, __last); } // 构造函数，使用insert_unique，键值不允许重复
+</code></pre>
+
+<p>  void insert(const value_type<em> __first, const value_type</em> __last) { // 插入操作</p>
+
+<pre><code>_M_t.insert_unique(__first, __last);
 </code></pre>
 
 <p>  }
-  <em>M_start.</em>M_set_node(<strong>new_nstart);
-  <em>M_finish.</em>M_set_node(</strong>new_nstart + __old_num_nodes - 1);
-}
-<code>
-那么每个连续的缓冲区buffer（或node）是在什么时候配置呢？它是在map中实际使用到的最后一个node不够用时但map还可以继续在这个node后面加入node时（即map非满而node满时），在 `_M_push_back_aux` 中调用 `_M_allocate_node` 来分配，相关函数都比较简单，这里就不贴了。  
-以上主要是空间分配相关的，那么在 `pop` 的时候，空间的释放又是怎样的呢？这里也需要判断是否当前node全部被 `pop` 了，如果是的则需要释放这个node所占用的空间。如下：  
-</code>
-void pop_back() { // deque内部实现的成员函数，inline的</p>
-
-<pre><code>if (_M_finish._M_cur != _M_finish._M_first) { // 整个node还没有pop完
-  --_M_finish._M_cur;
-  destroy(_M_finish._M_cur); // 析构当前元素
-} else  _M_pop_back_aux();
-</code></pre>
-
-<p>}
-template <class _Tp, class _Alloc>
-void deque&lt;<em>Tp,</em>Alloc>::<em>M_pop_back_aux() { // 整个node被pop完了的情况
-  </em>M_deallocate_node(<em>M_finish.</em>M_first); // 释放整个node的空间
-  <em>M_finish.</em>M_set_node(<em>M_finish.</em>M_node - 1); // node前移
-  <em>M_finish.</em>M_cur = <em>M_finish.</em>M_last - 1; // 当前元素为最后一个node的最后一个元素
-  destroy(<em>M_finish.</em>M_cur); // 释放当前元素
-}
-```</p>
-
-<h2>4. deque 的迭代器</h2>
-
-<p>deque是分段连续空间，前面也提到了deque使用的是Bidirectional Iterators，因此deque的迭代器主要需要实现<code>operator++</code>和<code>operator--</code>。要实现这两个操作，需要考虑当前指针是否处于buffer的头/尾，如果在buffer的头部而需要前移（或尾部需要后移），就需要将buffer往前/后移一个，在SGI中是通过调用 <code>_M_set_node</code> 来实现的。具体代码如下：<br/>
+  void erase(iterator <strong>position) { _M_t.erase(</strong>position); } // 删除操作
+  iterator find(const key_type&amp; <strong>x) { return _M_t.find(</strong>x); } // 查找操作
+};
 ```
-template <class _Tp, class _Ref, class _Ptr> struct <em>Deque_iterator {
-  typedef </em>Tp<em><em> <em>Map_pointer;
-  </em>Tp</em> <em>M_cur; // 几个成员变量
-  </em>Tp</em> <em>M_first;
-  </em>Tp* <em>M_last;
-  </em>Map_pointer <em>M_node;
-  </em>Self&amp; operator++() { // ++ 操作符重载，后移</p>
+可以看到，基本也是对底层容器 RB-tree 的一个简单的封装。</p>
 
-<pre><code>++_M_cur;
-if (_M_cur == _M_last) { // 到了buffer的最后一个
-  _M_set_node(_M_node + 1); // 将当前node指针_M_node指向下一个node
-  _M_cur = _M_first; // 当前指针指向新node的第一个元素
-}
-return *this; 
+<h2>3. multimap</h2>
+
+<p>multimap 与 map 的关系和 multiset 与 set 的关系一样，即 multimap 允许键值（key）重复，插入操作使用 RB-tree 的 <code>insert_equal</code> ，其他都和 map 一样，这里就不贴源代码了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(4.2) 关联式容器之set和multiset]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/"/>
+    <updated>2014-08-17T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要有 <code>stl_set.h</code>、 <code>stl_multiset.h</code>、 <code>set.h</code>、 <code>multiset.h</code>、 <code>set</code> 等文件。</p>
+
+<h2>1. set 简介</h2>
+
+<p>set 即集合，相比于其他容器有些特别。首先是它的每个元素是唯一的，即不允许有相同的值出现。其次，作为一种关联容器，set 的元素不像 map 那样可以同时拥有实值（value）和键值（key），set 元素的键值就是实值，实值就是键值。<br/>
+由于 set 的实质和键值相同，共用同一个内存空间，而 set 的底层容器为红黑树（中序遍历有序），因此不能对其键值进行修改，否则会破坏其有序特性。为避免非法修改操作，在SGI STL的实现中，<code>set&lt;T&gt;::iterator</code> 被定义为 RB-tree 底层的 const_iterator，_杜绝写入操作。set 与 list 有一个相似的地方是，元素插入、删除后，之前的迭代器依然有效（被删除的那个元素的迭代器除外）。<br/>
+我们知道集合有一些特殊的操作，诸如并、交、差等，在STL的 set 中，默认也提供了这些操作，如交集 <code>set_intersection</code> 、联集 <code>set_union</code> 、差集 <code>set_difference</code> 和对称差集 <code>set_symmetric_difference</code> 等。与之前那些线性容器不同的是，这些 set 的操作并不是在 set 内部实现的，而是放在了算法模块（algorithm）中，其具体实现在后面的算法章节中会具体介绍。</p>
+
+<h2>2. set 的实现</h2>
+
+<p>前面多次提到 set 的底层采用 RB-tree 容器，这是因为 RB-tree 是一种比较高效的平衡二叉搜索树，能够很好的满足元素值唯一的条件，而且查找效率高。由于 RB-tree 已实现了很多操作，因此 set 基本上只是对 RB-tree 进行了一层简单的封装。下面是其实现的主要代码：</p>
+
+<!-- more -->
+
+
+<p>```
+template <class _Key, class _Compare, class _Alloc>
+class set {
+public:
+  typedef <em>Key     key_type;
+  typedef </em>Key     value_type; // 实值与键值同类型
+private:
+  typedef <em>Rb_tree&lt;key_type, value_type, </em>Identity<value_type>, key_compare, <em>Alloc> </em>Rep_type;
+  <em>Rep_type </em>M_t;  // 底层使用红黑树作为容器
+  set() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
+  set(const set&lt;<em>Key,</em>Compare,<em>Alloc>&amp; __x) : </em>M_t(<strong>x._M_t) {}  // 拷贝构造函数
+  pair&lt;iterator,bool> insert(const value_type&amp; </strong>x) { // 插入操作</p>
+
+<pre><code>pair&lt;typename _Rep_type::iterator, bool&gt; __p = _M_t.insert_unique(__x); 
+return pair&lt;iterator, bool&gt;(__p.first, __p.second);
 </code></pre>
 
 <p>  }
-  void <em>M_set_node(</em>Map_pointer __new_node) {</p>
+  void erase(iterator __position) { // 删除操作</p>
 
-<pre><code>_M_node = __new_node; // map pointer后移
-_M_first = *__new_node; // first指向新node
-_M_last = _M_first + difference_type(_S_buffer_size()); // last指向下一个node
+<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
+_M_t.erase((_Rep_iterator&amp;)__position); 
+</code></pre>
+
+<p>  }
+  void clear() { <em>M_t.clear(); } // 清空操作
+  iterator find(const key_type&amp; __x) const { return </em>M_t.find(<strong>x); } // 查找
+  size_type count(const key_type&amp; </strong>x) const { // 计数</p>
+
+<pre><code>return _M_t.find(__x) == _M_t.end() ? 0 : 1;
 </code></pre>
 
 <p>  }
 };
+template <class _Key, class _Compare, class _Alloc>
+inline bool operator==(const set&lt;<em>Key,</em>Compare,_Alloc>&amp; __x,</p>
+
+<pre><code>                   const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较相等操作符
+</code></pre>
+
+<p>  return <strong>x._M_t == </strong>y.<em>M_t;
+}
+template <class _Key, class _Compare, class _Alloc>
+inline bool operator&lt;(const set&lt;</em>Key,<em>Compare,</em>Alloc>&amp; __x,</p>
+
+<pre><code>                  const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较大小操作符
+</code></pre>
+
+<p>  return <strong>x._M_t &lt; </strong>y.<em>M_t;
+}
 <code>``
-使用</code>--` 操作符向前移动的同理，这里就不赘述了。</p>
+可以看到基本都是调用</code></em>M_t<code>的方法来实现的，而这里的</code>_M_t` 是一个红黑树对象。</p>
 
-<h2>5. deque 的常用操作</h2>
+<h2>3. multiset</h2>
 
-<p>deque中最常用的莫过于 <code>push</code> 和 <code>pop</code> 操作了，这些操作在前面的空间配置中基本已经介绍了，这里就主要介绍一下 <code>clear</code>、 <code>erase</code> 和 <code>insert</code> 操作吧。<br/>
-<strong>（1）clear</strong><br/>
-该函数的作用是清除整个deque，释放所有空间而只保留一个缓冲区：<br/>
+<p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。<br/>
 ```
-template <class _Tp, class _Alloc> void deque&lt;<em>Tp,</em>Alloc>::clear() {
-  for (<em>Map_pointer __node = </em>M_start.<em>M_node + 1; __node &lt; </em>M_finish._M_node; ++__node) { // 从第二个node开始，遍历每个缓冲区（node）</p>
+template <class _Key, class _Compare, class _Alloc>
+class multiset {
+public:
+  multiset(const value_type<em> __first, const value_type</em> __last)</p>
 
-<pre><code>destroy(*__node, *__node + _S_buffer_size()); // 析构每个元素
-_M_deallocate_node(*__node); // 释放缓冲区
+<pre><code>: _M_t(_Compare(), allocator_type())
+{ _M_t.insert_equal(__first, __last); } // 构造函数
+</code></pre>
+
+<p>  iterator insert(const value_type&amp; __x) { // 插入操作</p>
+
+<pre><code>return _M_t.insert_equal(__x);
 </code></pre>
 
 <p>  }
-  if (<em>M_start.</em>M_node != <em>M_finish.</em>M_node) { // 还剩下头尾两个node</p>
+  iterator insert(iterator <strong>position, const value_type&amp; </strong>x) {</p>
 
-<pre><code>destroy(_M_start._M_cur, _M_start._M_last); // 析构头node中的每个元素
-destroy(_M_finish._M_first, _M_finish._M_cur); // 析构尾node中的每个元素
-_M_deallocate_node(_M_finish._M_first); // 释放尾node的空间
-</code></pre>
-
-<p>  } else destroy(<em>M_start.</em>M_cur, <em>M_finish.</em>M_cur); // 只有一个node，析构这个node中的所有元素
-  <em>M_finish = </em>M_start;
-}
-<code>
-**（2）erase**  
-该函数的作用是清除 [first,last) 间的所有元素：  
-</code>
-typename deque&lt;<em>Tp,</em>Alloc>::iterator
-deque&lt;<em>Tp,</em>Alloc>::erase(iterator <strong>first, iterator </strong>last) {
-  if (<strong>first == _M_start &amp;&amp; </strong>last == _M_finish) { // erase 所有元素，直接调用clear</p>
-
-<pre><code>clear();
-return _M_finish;
-</code></pre>
-
-<p>  } else { // erase 部分元素</p>
-
-<pre><code>difference_type __n = __last - __first; // 待擦出的区间长度
-difference_type __elems_before = __first - _M_start; // 擦出区间前的元素个数
-if (__elems_before &lt; difference_type((this-&gt;size() - __n) / 2)) { // 前面的元素个个数小于擦除后剩余总数的一半，将这部分后移
-  copy_backward(_M_start, __first, __last); // 后移
-  iterator __new_start = _M_start + __n; 
-  destroy(_M_start, __new_start);
-  _M_destroy_nodes(__new_start._M_node, _M_start._M_node);
-  _M_start = __new_start;
-} else { // 前面剩余的元素较多，将后面的前移
-  copy(__last, _M_finish, __first); // 前移
-  iterator __new_finish = _M_finish - __n;
-  destroy(__new_finish, _M_finish);
-  _M_destroy_nodes(__new_finish._M_node + 1, _M_finish._M_node + 1);
-  _M_finish = __new_finish;
-}
-return _M_start + __elems_before;
+<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
+return _M_t.insert_equal((_Rep_iterator&amp;)__position, __x);
 </code></pre>
 
 <p>  }
-}
-<code>
-**（3）insert**  
-该函数的作用是在某个位置插入一个元素：  
-</code>
-iterator insert(iterator position, const value_type&amp; <em><em>x) {
-  if (position.</em>M_cur == </em>M_start._M_cur) { // 在头部插入，用push_front</p>
+  void insert(const value_type<em> __first, const value_type</em> __last) {</p>
 
-<pre><code>push_front(__x);
-return _M_start;
-</code></pre>
-
-<p>  } else if (position.<em>M_cur == </em>M_finish._M_cur) { // 在尾部插入</p>
-
-<pre><code>push_back(__x);
-iterator __tmp = _M_finish;
---__tmp;
-return __tmp; // 返回插入位置
-</code></pre>
-
-<p>  } else { // 在中间插入</p>
-
-<pre><code>return _M_insert_aux(position, __x);
+<pre><code>_M_t.insert_equal(__first, __last);
 </code></pre>
 
 <p>  }
-}
-deque&lt;<em>Tp,</em>Alloc>::<em>M_insert_aux(iterator <strong>pos, const value_type&amp; </strong>x) {
-  difference_type <strong>index = </strong>pos - </em>M_start; // 插入点之前的元素个数
-  value_type <strong>x_copy = </strong>x;
-  if (size_type(__index) &lt; this->size() / 2) { // 前面的元素个数较小</p>
+  void insert(const_iterator <strong>first, const_iterator </strong>last) {</p>
 
-<pre><code>push_front(front()); // 在头部插入与头部相同的元素，然后从第二个元素开始到插入位置整体前移一步
-iterator __front1 = _M_start; ++__front1;
-iterator __front2 = __front1; ++__front2;
-__pos = _M_start + __index;
-iterator __pos1 = __pos; ++__pos1;
-copy(__front2, __pos1, __front1);
-</code></pre>
-
-<p>  } else { // 插入点后面的元素较少，从后面插入，然后插入点到尾部整体往后移一步</p>
-
-<pre><code>push_back(back());
-iterator __back1 = _M_finish; --__back1;
-iterator __back2 = __back1;  --__back2;
-__pos = _M_start + __index;
-copy_backward(__pos, __back2, __back1);
+<pre><code>_M_t.insert_equal(__first, __last);
 </code></pre>
 
 <p>  }
-  *<strong>pos = </strong>x_copy;
-  return __pos;
-}
-```
-deque原本只能在头部或尾部插入元素的，提供了insert之后，就可以任何位置插入元素了。</p>
-
-<h2>6. 基于deque 的 stack 和 queue</h2>
-
-<p>由于deque可以从首位两端插入或剔除元素，所以只需要对其进行简单的封装就可以分别实现先进先出（FIFO）的stack和先进后出（FILO）的queue了。stack和queue中都有一个deque类型的成员，用做数据存储的容器，然后对deque的部分接口进行简单的封装，例如stack只提供从末端插入和删除的接口以及获取末端元素的接口，而queue则只提供从尾部插入而从头部删除的接口以及获取首位元素的接口。像这样具有“修改某物接口，形成另一种风貌”的性质的，称为配接器（adapter），因此STL中stack和queue往往不被归类为容器（container），而被归类为容器配接器（container adapter）。（关于配接器后面文章还会具体介绍）<br/>
-下面只给出stack的基本实现，并加以注解。<br/>
-<code>
-template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque&lt;_Tp&gt;) &gt;
-class stack; // 原型声明
-template &lt;class _Tp, class _Sequence&gt; class stack {
-protected:
-  _Sequence c; // _Sequence为deque&lt;_Tp&gt;，c为实际存储数据的容器
-public: // 向外部提供的接口，都是调用deque的接口来实现的
-  stack() : c() {}
-  explicit stack(const _Sequence&amp; __s) : c(__s) {}
-  bool empty() const { return c.empty(); }
-  size_type size() const { return c.size(); }
-  reference top() { return c.back(); }
-  const_reference top() const { return c.back(); }
-  void push(const value_type&amp; __x) { c.push_back(__x); }
-  void pop() { c.pop_back(); }
 };
-</code>
-值得一提的是，stack和queue都没有迭代器，因此不能对stack或queue进行遍历。但他们提供了 <code>operator ==</code> 和 <code>operator&lt;</code> 这两个比较大小的操作符：<br/>
-<code>
-template &lt;class _Tp, class _Seq&gt;
-bool operator==(const stack&lt;_Tp,_Seq&gt;&amp; __x, const stack&lt;_Tp,_Seq&gt;&amp; __y) {
-  return __x.c == __y.c;
-}
-template &lt;class _Tp, class _Seq&gt;
-bool operator&lt;(const stack&lt;_Tp,_Seq&gt;&amp; __x, const stack&lt;_Tp,_Seq&gt;&amp; __y) {
-  return __x.c &lt; __y.c;
-}
-</code>
-另外，除了使用默认的deque作为stack和queue的容器之外，我们还可以使用list或其他自定义的容器，只需要实现了stack或queue需要的接口，使用方法很简单：<br/>
-<code>
-stack&lt;int,vector&lt;int&gt; &gt; ist;
-queue&lt;char,list&lt;char&gt; &gt; cq;
-</code>
-即只需要指定模板中第二个参数即可。<br/>
-关于deque的内容就介绍到这里了。</p>
+```
+其他部分基本与 set 一样。</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[深入理解STL源码(3.2) 序列式容器之list]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/"/>
-    <updated>2014-07-06T22:03:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>list</code>、<code>stl_list.h</code>、<code>list.h</code> 等几个文件。</p>
+    <title type="html"><![CDATA[深入理解STL源码(4.1) 关联式容器之红黑树]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree/"/>
+    <updated>2014-08-03T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree</id>
+    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_tree.h</code> 这个文件。</p>
 
-<h2>1. list 和 slist</h2>
+<h2>0. 关联式容器</h2>
 
-<p>STL中也实现了链表这种数据结构，list是STL标准的双向链表，而slit是SGI的单链表。相比于vector的连续线性空间而言，list即有有点也有缺点：优点是空间分配更灵活，对任何位置的插入删除操作都是常数时间；缺点是排序不方便。list和vector是比较常用的线性容器，那么什么时候用哪一种容器呢，需要视元素的多少、元素构造的复杂度（是否为POD数据）以及元素存取行为的特性而定。限于篇幅，本文主要介绍list的内容，关于单链表slist可以参见源码和侯捷的书。</p>
+<p>之前几篇文章详细介绍了SGI STL中序列式容器的实现，并提到过STL中还有一类关联式的容器。标准的STL管理师容器分为 set（集合）和map（映射表）两大类，以及这两大类的衍生体multiset（多键集合）和multimap（多键映射表），这些容器的底层机制均以RB-Tree（红黑树）完成。RB-Tree是一种非常高效的数据结构，它本质上是一种平衡的二叉搜索树，因而其查找的平均时间复杂度为元素总个数的对数（即logN）。在STL中RB-Tree是一个独立的容器，但并没有对用户的公开接口，仅提供给STL的set和map使用。<br/>
+SGI STL在标准STL之外，还提供了一类关联式容器——hash table（哈希表），以及以此为低层机制的hash set（散列集合）、hash map（散列映射表）、hash multiset（散列多键集合）和hash multimap（散列多键映射表）。相比于RB-Tree，hash table的时间效率更高，插入、删除、查找的时间复杂度均为常数时间，但需要比元素总个数多得多的空间。<br/>
+本文接下来主要介绍树及RB-Tree相关的内容，后续文章将具体介绍SGI STL中set、map、hash table的实现。</p>
 
-<h2>2. list 的数据结构</h2>
+<h2>1. 树与二叉搜索树</h2>
 
-<p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：<br/>
-<code>
-struct _List_node_base {
-  _List_node_base* _M_next;
-  _List_node_base* _M_prev;
-};
-template &lt;class _Tp&gt;
-struct _List_node : public _List_node_base {  // node 的定义
-  _Tp _M_data;
-};
-template &lt;class _Tp, class _Alloc&gt;
-class _List_base {
-protected:
-  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
-};
-template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
-class list : protected _List_base&lt;_Tp, _Alloc&gt; {
-public:
-  typedef _List_node&lt;_Tp&gt; _Node;
-};
-</code></p>
+<p>树是一种非常常见而且实用的数据结构，几乎所有的操作系统都将文件存放在树状结构里，几乎所有编译器需要实现一个表达式树（expression tree），文件压缩所用的哈夫曼算法也需要用到树状结构，数据库所使用的B-tree则是一种相当复杂的树状结构。<br/>
+关于树的一些基本概念相信大家都比较熟悉，这里就不赘述了，如果需要可以google或看wikipedia，这里重点重温一下数据结构里的二叉搜索树、平衡二叉搜索树、AVL树。<br/>
+<strong>二叉搜索树</strong>：任何节点的键值大于其<strong>左子树</strong>中<strong>每一个</strong>节点的键值，并小于其<strong>右子树</strong>中的<strong>每一个</strong>节点的键值。根据二叉搜索树的定义可知，按照中序遍历该树可以得到一个有序的序列。平均情况下，二叉搜索树可以提供对数时间的插入和访问。其插入和查找的算法也很简单，每次与根节点的键值进行比较，小于根节点的键值则往根节点的左子树插入或查找，大于则往右子树插入或查找，无论是递归实现还是非递归实现都很简单。<br/>
+<strong>平衡二叉搜索树</strong>：上面提到二叉搜索数的<strong>平均</strong>性能为对数时间，这是因为二叉搜索树的深度与数据插入的顺序有关，如果插入的数据本身就比较有序，那么就会产生一个深度过大的树，甚至会退化为一个链表的结构，这中情况下，其查找的效率就是线性时间了。平衡二叉搜索树就是为了解决这个问题而产生的，“平衡”的意义是，没有任何一个节点过深。不同的平衡条件造就出不同的效率表现，以及不同的实现复杂度，如 <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL-Tree</a>、<a href="http://en.wikipedia.org/wiki/Red%E2%80%93black_tree">RB-Tree</a>、<a href="http://en.wikipedia.org/wiki/AA_tree">AA-Tree</a> _等。他们都比简单的二叉搜索树要复杂，特别是插入和删除操作，但他们可以避免高度不平衡的情况，因而查找时间较快。</p>
 
 <!-- more -->
 
 
-<p>在list中的 <code>_M_node</code> 其实指向一个空白节点，该空白节点的 <code>_M_data</code> 成员是没有被初始化的，实际上该节点是链表的尾部，后面将list的迭代器还会提到这样做的好处。</p>
+<p><strong>AVL树</strong>：AVL-tree（Adelson-Velskii-Landis tree）是一个加上了“额外平衡条件”的二叉搜索树，是一种高度平衡的二叉搜索树，它的这个额外的条件为：任何节点的左右子树高度相差最多1。该条件能够保证整棵树的高度为logN，但其插入和删除的操作也相对比较复杂，因为这些操作可能导致树的失衡，需要调整（或旋转）树的结构，使其保持平衡。插入时出现失衡的情况有如下四种（其中X为最小失衡子树的根节点）：</p>
 
-<h2>3. list 的配置器</h2>
-
-<p>list缺省使用 alloc （即 <code>__STL_DEFAULT_ALLOCATOR</code>） 作为空间配置器，并据此定义了另外一个 <code>list_node_allocator</code> ，并定义了<code>_M_get_node</code>和<code>_M_put_node</code>  两个函数，分别用于分配和释放空间，为的是更方便的以节点大小为配置单位。除此之外，还定义了两个<code>_M_create_node</code> 函数，在分配空间的同时调用元素的构建函数对其进行初始化：<br/>
-```
-template <class _Tp, class _Alloc>
-class <em>List_base {
-protected:
-  typedef simple_alloc&lt;</em>List_node<_Tp>, <em>Alloc> </em>Alloc_type; // 专属配置器，每次配置一个节点
-  <em>List_node<_Tp>* </em>M_get_node() { return <em>Alloc_type::allocate(1); } // 分配一个节点
-  void </em>M_put_node(<em>List_node<_Tp>* __p) { </em>Alloc_type::deallocate(<strong>p, 1); }  // 释放一个节点
-};
-template <class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) > // 缺省使用 </strong>STL_DEFAULT_ALLOCATOR 配置器
-class list : protected <em>List_base&lt;</em>Tp, <em>Alloc> {
-protected:
-  </em>Node* <em>M_create_node(const </em>Tp&amp; __x){ // 分配空间并初始化</p>
-
-<pre><code>_Node* __p = _M_get_node();
-__STL_TRY {  _Construct(&amp;__p-&gt;_M_data, __x);  }
-__STL_UNWIND(_M_put_node(__p));
-return __p;
-</code></pre>
-
-<p>  }
-  <em>Node* </em>M_create_node(){</p>
-
-<pre><code>_Node* __p = _M_get_node();
-__STL_TRY {  _Construct(&amp;__p-&gt;_M_data);  }
-__STL_UNWIND(_M_put_node(__p));
-return __p;
-</code></pre>
-
-<p>  }
-};
-```
-在list的构造和析构函数、插入、删除等操作中设计到空间的配置。由于list不涉及同时分配多个连续元素的空间，因此用不到SGI的第二层配置器。</p>
-
-<h2>4. list 的迭代器</h2>
-
-<p>由于list的节点在内存中不一定连续存储，其迭代器不能像vector那样使用普通指针了，由于list是双向的链表，迭代器必须具备前移、后移的能力，所以它的迭代器是BidirectionalIterators，即双向的可增可减的，以下是list的迭代器的设计：<br/>
-<code>
-struct _List_iterator_base {
-  typedef bidirectional_iterator_tag iterator_category;
-  _List_node_base* _M_node;
-  _List_iterator_base(_List_node_base* __x) : _M_node(__x) {}
-  _List_iterator_base() {}
-  void _M_incr() { _M_node = _M_node-&gt;_M_next; }
-  void _M_decr() { _M_node = _M_node-&gt;_M_prev; }
-};
-template&lt;class _Tp, class _Ref, class _Ptr&gt;
-struct _List_iterator : public _List_iterator_base {
-  _Self&amp; operator++() { this-&gt;_M_incr(); return *this; }
-  _Self operator++(int) { _Self __tmp = *this; this-&gt;_M_incr(); return __tmp; }
-  _Self&amp; operator--() { this-&gt;_M_decr(); return *this; }
-  _Self operator--(int) { _Self __tmp = *this; this-&gt;_M_decr(); return __tmp; }
-};
-</code>
-list有一个重要性质，插入操作（insert）和接合操作（splice）都不会造成原有list迭代器失效，而list的删除操作（erase）也只对“指向被删除元素”的那个迭代器失效，其他迭代器不受任何影响。</p>
-
-<h2>5. list 的常用操作</h2>
-
-<p>list的常用操作有很多，例如最基本的<code>push_front</code>、<code>push_back</code>、<code>pop_front</code>、<code>pop_back</code> 等，这里主要介绍一下<code>clear</code>、<code>remove</code>、<code>unique</code>、<code>transfer</code> 这几个。<br/>
-<strong>（1）clear</strong><br/>
-clear 函数的作用是清楚整个list的所有节点。<br/>
-```
-void clear() { <em>Base::clear(); }
-void </em>List_base&lt;<em>Tp,</em>Alloc>::clear() {
-  <em>List_node<_Tp>* __cur = (</em>List_node<_Tp>*) <em>M_node-></em>M_next;
-  while (<em>_cur != </em>M_node) {</p>
-
-<pre><code>_List_node&lt;_Tp&gt;* __tmp = __cur;
-__cur = (_List_node&lt;_Tp&gt;*) __cur-&gt;_M_next; // 后移
-_Destroy(&amp;__tmp-&gt;_M_data); // 析构当前节点的对象
-_M_put_node(__tmp); // 释放当前节点的空间
-</code></pre>
-
-<p>  }
-  <em>M_node-></em>M_next = <em>M_node; // 置为空list
-  </em>M_node-><em>M_prev = </em>M_node;
-}
-<code>
-**（2）remove**  
-remove 函数的作用是将数值为value的所有元素移除。  
-</code>
-void list&lt;<em>Tp, </em>Alloc>::remove(const _Tp&amp; <strong>value) {
-  iterator </strong>first = begin();
-  iterator <strong>last = end();
-  while (</strong>first != __last) { // 遍历list</p>
-
-<pre><code>iterator __next = __first;
-++__next;
-if (*__first == __value) erase(__first); // 值与 value 相等就移除
-__first = __next;
-</code></pre>
-
-<p>  }
-}
-<code>
-**（3）unique**  
-unique函数的作用是移除相同的**连续**元素，只有“连续而且相同”的元素，才回被移除到只剩一个。  
-</code>
-void list&lt;<em>Tp, </em>Alloc>::unique() {
-  iterator <strong>first = begin();
-  iterator </strong>last = end();
-  if (<strong>first == </strong>last) return;
-  iterator <strong>next = </strong>first;
-  while (++<strong>next != </strong>last) {</p>
-
-<pre><code>if (*__first == *__next) // 连续连个节点的值相同
-  erase(__next);
-else
-  __first = __next;
-__next = __first;
-</code></pre>
-
-<p>  }
-}
-<code>
-**（4）transfer**  
-transfer的作用是将 [first, last) 内的所有元素移动到 position 之前。它是一个私有函数，它为其他常用操作如 splice、sort、merge 等的实现提供了便利。  
-</code>
-protected:
-  void transfer(iterator <strong>position, iterator </strong>first, iterator __last) {</p>
-
-<pre><code>if (__position != __last) {
-  // Remove [first, last) from its old position.
-  __last._M_node-&gt;_M_prev-&gt;_M_next     = __position._M_node;
-  __first._M_node-&gt;_M_prev-&gt;_M_next    = __last._M_node;
-  __position._M_node-&gt;_M_prev-&gt;_M_next = __first._M_node; 
-  // Splice [first, last) into its new position.
-  _List_node_base* __tmp      = __position._M_node-&gt;_M_prev;
-  __position._M_node-&gt;_M_prev = __last._M_node-&gt;_M_prev;
-  __last._M_node-&gt;_M_prev     = __first._M_node-&gt;_M_prev; 
-  __first._M_node-&gt;_M_prev    = __tmp;
-}
-</code></pre>
-
-<p>  }
-```
-关于list的内容就介绍到这里了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(3.1) 序列式容器之vector]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/"/>
-    <updated>2014-06-29T23:26:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有<code>vector</code>、<code>stl_vector.h</code>、<code>vector.h</code> 等几个文件。</p>
-
-<h2>1. 容器</h2>
-
-<p>在数据结构的课程中，我们主要研究数据的特定排列方式，以利于搜索、排序等算法，几乎可以说，任何特定的数据结构都是为了实现某种特定的算法。STL 容器即由一个个特定的数据结构组成，例如向量（vector），链表（list），堆栈（stack），队列（queue），树（tree），哈希表（hash table），集合（set），映射（map）等，根据数据在容器中的排列特性，这些数据接口分为序列式容器（sequence container）和关联式容器（association container）两种，本文主要解读SGI STL中的序列式容器。</p>
-
-<p>所谓序列式容器，其中的元素可序（ordered），但未必有序（sorted）。C++ 本身提供了一个序列式容器——数组（array），STL中还提供了向量（vector），链表（list），堆栈（stack），队列（queue），优先队列（priority queue）等，其中stack和queue只是将deque（双端队列）设限而得到的，技术上可以被归为一种配接器（adaptor）。本系列文章将依次解读SGI STL各容器的关键实现细节。</p>
-
-<h2>2. vector 及其数据结构</h2>
-
-<p>在STL中，vector的空间在物理上就是连续的，而且是可以动态扩展的，这里的动态扩展，不需要用户去处理溢出的问题，而只需要关心上层逻辑。vector连续物理空间的动态扩展技术是该容器的关键，它主要分为三个步骤：配置新空间，数据移动，释放旧空间。这三个步骤执行的次数以及每次执行时的效率是影响最终 vector 效率的关键因素。为了减少执行的次数，就需要未雨绸缪，每次扩充空间时，成倍增长。而每次执行的效率，就主要是数据移动的效率了。下面，我们依次介绍vector的数据结构，使用的空间配置器和迭代器，以及常用操作。<br/>
-<strong>vector 的数据结构</strong><br/>
-vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：<br/>
-<code>
-template &lt;class _Tp, class _Alloc&gt;
-class _Vector_base {
-protected:
-  _Tp* _M_start;
-  _Tp* _M_finish;
-  _Tp* _M_end_of_storage;
-};
-class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
-};
-</code></p>
-
-<!-- more -->
-
-
-<p>其中 <code>_M_finish</code> 是当前使用到的空间的结束地址，而 <code>_M_end_of_storage</code> 是可用空间的结束地址，前者小于等于后者，当新加入元素使得前者大于后者之后，就需要进行空间扩充了。</p>
-
-<h2>3. vector 的配置器</h2>
-
-<p>vector的空间配置器 STL 默认的 <code>alloc</code> 即 <code>__default_alloc_template</code> 配置器，即第二级配置器，它对于 POD(plain old data) 类型数据使用内建内存池来应对内存碎片问题，关于该默认配置器的更多介绍请参见本系列第2篇文章 <a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器</a> . 除此之外，SGI vector 还定义了一个 <code>data_allocator</code>，为的是更方便的以元素大小为配置单位：<br/>
-```
-template <class _Tp, class _Alloc>
-class _Vector_base  // vector 继承了该基类
-protected:</p>
-
-<pre><code>typedef simple_alloc&lt;_Tp, _Alloc&gt; _M_data_allocator;
-</code></pre>
-
-<p>}
-<code>``
-关于</code>simple_alloc<code>的内容见前面的文章，它其实就是简单的对</code>malloc` 等的加一层封装。
-vector的内存是在vector的构造或析构、插入元素而容量不够等情况下，需要进行配置。vector 提供了很多的构造函数，具体可见源代码，而更详细的列表并涉及各个版本的说明的列表可以参见C++的文档：<a href="http://en.cppreference.com/w/cpp/container/vector/vector">cpp references</a>.</p>
-
-<h2>4. vector 的迭代器</h2>
-
-<p>由于vector使用的物理连续的空间，需要支持随机访问，所以它使用的随机访问迭代器（Random Access Iterators）。也正由于vector使用连续物理空间，所以不论其元素类型为何，使用普通指针就可以作为它的迭代器：<br/>
-<code>
-public:
-  typedef _Tp value_type;
-  typedef value_type* iterator;
-  typedef const value_type* const_iterator;
-</code>
-<strong>注意</strong>：vector中所谓的动态增加大小，并不是在原空间之后接连续新空间（因为无法保证原空间之后尚有可供配置的空间），而是以原大小的两倍另外配置一块较大空间，然后将原内容拷贝过来，然后再在其后构造新元素，最后释放原空间。因此，对于vector的任何操作，一旦引起空间重新配置，指向原vector的所有迭代器就失效了，这是vector使用中的一个大坑，务必小心。</p>
-
-<h2>5. vector 的常用操作</h2>
-
-<p>vector所提供的元素操作很多，这里选取几个常用操作介绍一下。<br/>
-<strong>（1）push_back</strong><br/>
-```
-public  void push_back(const <em>Tp&amp; __x) {
-if (</em>M_finish != _M_end_of_storage) {</p>
-
-<pre><code>construct(_M_finish, __x);
-++_M_finish;
-</code></pre>
-
-<p>}
-else</p>
-
-<pre><code>_M_insert_aux(end(), __x); // auxiliary insert
-</code></pre>
-
-<p>}
-<code>
-其中辅助的insert函数的基本逻辑为：按原空间大小的两倍申请新空间，复制原数据到新空间，释放原空间，更新新vector的数据结构的成员变量。  
-**（2）insert**  
-</code>
-public  iterator insert(iterator <strong>position, const _Tp&amp; </strong>x) {</p>
-
-<pre><code>size_type __n = __position - begin();
-if (_M_finish != _M_end_of_storage &amp;&amp; __position == end()) {
-  construct(_M_finish, __x);
-  ++_M_finish;
-}
-else
-  _M_insert_aux(__position, __x);
-return begin() + __n;
-</code></pre>
-
-<p>  }
-<code>
-与`push_back`类似，只是`push_back` 在最后插入，更为简单。insert 首先判断是否为在最后插入且容量足够，如果是最后插入且容量足够就就直接内部实现了。否则还是调用上面的辅助插入函数，该函数中首先判断容量是否足够，容量足的话，先构造一个新元素并以当前vector的最后一个元素的值作为其初始值，然后从倒数第二个元素开始从后往前拷贝，将前一元素的值赋给后一元素，知道当前插入位置。  
-**(3)erase**  
-</code>
-public  iterator erase(iterator <strong>first, iterator </strong>last) {</p>
-
-<pre><code>iterator __i = copy(__last, _M_finish, __first);
-destroy(__i, _M_finish);
-_M_finish = _M_finish - (__last - __first);
-return __first;
-</code></pre>
-
-<p>  }
-```
-与insert相反，该函数将某些连续的元素从vector中删除，所以不存在容量不足等问题，但也不会将没有使用的空间归还给操作系统。这里只有简单的元素拷贝（copy）和元素的析构（destroy）。另外，需要说明的是，对于vector而言clear函数和erase函数是等同的，都只清空对应内存块的值，而不将空间归还给操作系统，所以vector的容量是只增不减的。而对于其他一些容器就有所不同了，比如list之类以node为单位的数据结构。<br/>
-关于vector的内容就介绍到这里了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(2) 迭代器(Iterators)和Traits]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/"/>
-    <updated>2014-06-21T21:46:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件有 <code>iterator.h</code>, <code>stl_iterator_base.h</code>, <code>concept_checks.h</code>, <code>stl_iterator.h</code>, <code>type_traits.h</code>, <code>stl_construct.h</code>, <code>stl_raw_storage_iter.h</code> 等7个文件。</p>
-
-<h2>1. 迭代器的设计思维</h2>
-
-<p>迭代器（iterators）是一种抽象的设计概念，显示程序中并没有直接对应于这个概念的实体。在 <em>Design Patterns</em> 一书中，对 iterators 模式的定义如下：提供一种方法，使之能够依序遍历某个聚合物（容器）所包含的各个元素，而又无需暴露该聚合物内部的表述方式。</p>
-
-<p>在STL中迭代器扮演着重要的角色。STL的中心思想在于：将数据容器（container）和算法（algorithm）分开，彼此独立设计，最后再通过某种方式将他们衔接在一起。容器和算法的泛型化，从技术的角度来看并不困难，C++ 的 class template 和 function template 可以分别达到目标，难点在于如何设计二者之间的衔接器。</p>
-
-<p>在STL中，起者这种衔接作用的是迭代器，它是一种行为类似指针的对象。指针的各种行为中最常见也最重要的便是内容获取（dereference）和成员访问（member access），因此迭代器最重要的工作就是对 <code>operator*</code> 和 <code>operator-&gt;</code> 进行重载。然而要对这两个操作符进行重载，就需要对容器内部的对象的数据类型和存储结构有所了解，于是在 STL 中迭代器的最终实现都是由容器本身来实现的，每种容器都有自己的迭代器实现，例如我们使用vector容器的迭代器的时候是这样用的 <code>vector&lt;int&gt;::iterator it;</code> 。而本文所讨论的迭代器是不依存于特定容器的迭代器，它在STL中主要有以下两个方面的作用（我自己的理解和总结）：</p>
-
-<blockquote><ul>
-<li>规定容器中需要实现的迭代器的类型及每种迭代器的标准接口</li>
-<li>通过Traits编程技巧实现迭代器相应型别的获取，弥补 C++ 模板参数推导的不足，为配置器提供可以获取容器中对象型别的接口</li>
-</ul>
+<blockquote><ol>
+<li>插入点位于X的左子节点的左子树——左左；</li>
+<li>插入点位于X的左子节点的右子树——左右；</li>
+<li>插入点位于X的右子节点的左子树——右左；</li>
+<li>插入点位于X的右子节点的右子树——右右。</li>
+</ol>
 </blockquote>
 
-<p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
+<p>情况1和4对称，称为外侧插入，可以采用单旋转操作调整恢复平衡；2和3对称，称为内侧插入，可以采用双旋转操作调整恢复平衡：先经过一次旋转变成左左或右右，然后再经过一次旋转恢复平衡。1和2的实例如下图：<br/>
+<img src="/images/2014/IMAG2014080301.jpg"><br/>
+图中从中间到最右情况1的恢复平衡的旋转方法，只是其中节点3为新插入的元素；而最左到最右是情况2的恢复平衡的旋转方法，其中节点4为新插入的元素。情况3和4分别与2和1对称，其调整方法也很类似，就不赘述了。<br/>
+RB-tree是另一种被广泛使用的平衡二叉搜索树，也是SGI STL唯一实现的一种搜索树，作为关联式容器的底层容器。RB-tree的平衡条件不同于AVL-tree，但同样运用了单旋转和双旋转的恢复平衡的机制，下面我们详细介绍RB-tree的实现。</p>
 
-<!-- more -->
+<h2>2. RB-tree的定义及数据结构</h2>
 
+<p>所谓RB-tree，不仅仅是一个二叉搜索树，而且必须满足以下规则：</p>
 
-<h2>2. STL 迭代器的分类与标准接口</h2>
+<blockquote><ol>
+<li>每个节点不是红色就是黑色；</li>
+<li>根节点为黑色；</li>
+<li>每个叶子节点（NIL）为黑色；</li>
+<li>如果节点为红，其左右子节点必为黑；</li>
+<li>对每个节点，从该节点到其子孙中的叶子节点的所有路径上所包含的黑节点数目相同。</li>
+</ol>
+</blockquote>
 
-<h3>2.1 STL 迭代器的分类</h3>
-
-<p>在SGI STL中迭代器按照移动特性与读写方式分为 <code>input_iterator</code>, <code>output_iterator</code>, <code>forward_iterator</code>, <code>bidirectional_iterator</code>, <code>random_access_iterator</code> 这5种，他们的定义都在 <code>stl_iterators_base.h</code> 文件中。这5种迭代器的特性如下：</p>
-
-<blockquote><p>input_iterator:  这种迭代器所指对象只允许读取，而不允许改变，是只读的（read only）。
-output_iterator:  与上面的相反，只能写（write only）。
-forward_iterator: 同时允许读和写，适用于 <code>replace()</code> 等算法。
-bidirectional_iterator: 可双向移动，即既可以按顺序访问，也可以按逆序访问。
-random_access_iterator: 前4种只提供一部分指针运算功能，如前3种只支持 <code>operator++</code>, 而第4种还支持 <code>operator--</code>, 但这种随机访问迭代器还支持 <code>p+n</code>, <code>p-n</code>, <code>p[n]</code>, <code>p1-p2</code>, <code>p1+p2</code> 等。</p></blockquote>
-
-<p>从以上的特性可以看出，<code>input_iterator</code> 和 <code>output_iterator</code> 都是特殊的 <code>forward_iterator</code>, 而 <code>forward_iterator</code> 是特殊的 <code>bidirectional_iterator</code>, <code>bidirectional_iterator</code> 是特殊的 <code>random_access_iterator</code> 。在 <code>stl_iterator_base.h</code> 文件中，他们的定义中我们并不能看到这种特性的表达，而只是规定了这几种迭代器类型及应该包含的成员属性，真正表达这些迭代器不同特性的代码在 <code>stl_iterator.h</code> 文件中。在 <code>stl_iterator_base.h</code> 文件中，除了对这几种迭代器类型进行规定之外，还提供了获取迭代器类型的接口、获取迭代器中的 <code>value_type</code> 类型、获取迭代器中的 <code>distance_type</code> 、获取两个迭代器的距离（<code>distance</code> 函数）、将迭代器向前推进距离 n （<code>advance</code> 函数）等标准接口。</p>
-
-<h3>2.2 STL迭代器的标准接口</h3>
-
-<p>在 <code>stl_iterator.h</code> 文件中，设计了 <code>back_insert_iterator</code>, <code>front_insert_iterator</code>, <code>insert_iterator</code>, <code>reverse_bidirectional_iterator</code>, <code>reverse_iterator</code>, <code>istream_iterator</code>, <code>ostream_iterator</code>,  等标准的迭代器，其中前3中都使用 <code>output_iterator</code> 的只写特性（只进行插入操作，只是插入的位置不同而已），而第4种使用的是 <code>bidirectional_iterator</code> 的双向访问特性，第5种使用的是 <code>random_access_iterator</code> 的随机访问特性。而最后两种标准迭代器分别是使用 <code>input_iterator</code> 和 <code>output_iterator</code> 特性的迭代器。从这几个标准的迭代器的定义中可以看出，主要是实现了 <code>operator=</code>, <code>operator*</code>, <code>operator-&gt;</code>, <code>operator==</code>, <code>operator++</code>, <code>operator--</code>, <code>operator+</code>, <code>operator-</code>, <code>operator+=</code>, <code>operator-=</code> 等指针操作的标准接口。根据定义的操作符的不同，就是不同类型的迭代器了。</p>
-
-<p>例如，下面是 <code>back_insert_iterator</code> 的标准定义：
+<p>上面的这些约束保证了这个树大致上是平衡的，这也决定了红黑树的插入、删除、查询等操作是比较快速的。 根据规则5，新增节点必须为红色；根据规则4，新增节点之父节点必须为黑色。当新增节点根据二叉搜索树的规则到达其插入点时，却未能符合上述条件时，就必须调整颜色并旋转树形。下图是一个典型的RB-tree（来自wiki）：<br/>
+<img src="/images/2014/IMAG2014080302.png"><br/>
+SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构如下：
 ```
-template <class _Container>
-class back_insert_iterator {
-protected:
-  <em>Container* container;
-public:
-  // member variables
-  typedef </em>Container          container_type;
-  typedef output_iterator_tag iterator_category;
-  typedef void                value_type;
-  typedef void                difference_type;
-  typedef void                pointer;
-  typedef void                reference;
-  // member functions, mainly about operator overloading
-  explicit back_insert_iterator(<em>Container&amp; <strong>x) : container(&amp;</strong>x) {}
-  back_insert_iterator<_Container>&amp;
-  operator=(const typename </em>Container::value_type&amp; __value) {</p>
+typedef bool <em>Rb_tree_Color_type;
+const </em>Rb_tree_Color_type <em>S_rb_tree_red = false;
+const </em>Rb_tree_Color_type <em>S_rb_tree_black = true;
+//======================================
+struct </em>Rb_tree_node_base { // 节点的定义
+  typedef <em>Rb_tree_Color_type </em>Color_type;
+  typedef <em>Rb_tree_node_base* </em>Base_ptr;
+  <em>Color_type </em>M_color; // 节点颜色，实际为一个bool型变量
+  <em>Base_ptr </em>M_parent; // 指向父节点，方便遍历
+  <em>Base_ptr </em>M_left;
+  <em>Base_ptr </em>M_right;</p>
 
-<pre><code>container-&gt;push_back(__value);
-return *this;
+<p>  static <em>Base_ptr </em>S_minimum(_Base_ptr __x) {</p>
+
+<pre><code>while (__x-&gt;_M_left != 0) __x = __x-&gt;_M_left;
+return __x;
 </code></pre>
 
 <p>  }
-  back_insert_iterator<_Container>&amp; operator<em>() { return </em>this; }
-  back_insert_iterator<_Container>&amp; operator++() { return <em>this; }
-  back_insert_iterator<_Container>&amp; operator++(int) { return </em>this; }
+  static <em>Base_ptr </em>S_maximum(_Base_ptr __x) {</p>
+
+<pre><code>while (__x-&gt;_M_right != 0) __x = __x-&gt;_M_right;
+return __x;
+</code></pre>
+
+<p>  }
 };
-```</p>
+//======================================
+template <class _Value> struct <em>Rb_tree_node : public </em>Rb_tree_node_base { // 节点的定义
+  typedef <em>Rb_tree_node<_Value>* </em>Link_type;
+  <em>Value </em>M_value_field;
+};
+<code>
+其中每个节点主要包含一个标志颜色的bool变量 `_M_color`，3个节点指针 `_M_parent` , `_M_left` , `_M_right`，2个成员函数 `_S_minimum` 和 `_S_maximum` （分别求取最小（最左）、最大（最右）节点）。  
+而RB-tree的定义如下：  
+</code>
+template <class _Tp, class _Alloc> struct <em>Rb_tree_base { // RB-tree的定义
+  typedef </em>Alloc allocator_type;
+  allocator_type get_allocator() const { return allocator_type(); }
+  <em>Rb_tree_base(const allocator_type&amp;)  : </em>M_header(0) { <em>M_header = </em>M_get_node(); } // 构造函数
+  ~<em>Rb_tree_base() { </em>M_put_node(<em>M_header); } // 析构函数
+protected:
+  </em>Rb_tree_node<_Tp><em> <em>M_header; // 根节点
+  typedef simple_alloc&lt;</em>Rb_tree_node<_Tp>, <em>Alloc> </em>Alloc_type; // 空间配置器
+  _Rb_tree_node<_Tp></em> <em>M_get_node()  { return </em>Alloc_type::allocate(1); } // 分配一个节点的空间
+  void <em>M_put_node(</em>Rb_tree_node<_Tp>* <strong>p) { _Alloc_type::deallocate(</strong>p, 1); } // 释放<em><em>p节点的空间
+};
+//======================================
+template &lt;class </em>Key, class </em>Value, class <em>KeyOfValue, class </em>Compare,</p>
 
-<h2>3. 迭代器相应型别与Traits编程技巧</h2>
+<pre><code>      class _Alloc = __STL_DEFAULT_ALLOCATOR(_Value) &gt;
+</code></pre>
 
-<h3>3.1 迭代器相应型别</h3>
+<p>class <em>Rb_tree : protected </em>Rb_tree_base&lt;<em>Value, </em>Alloc> {
+  typedef <em>Rb_tree_base&lt;</em>Value, <em>Alloc> </em>Base;
+// ...
+};
+<code>``
+可以看到RB-tree的空间配置器是</code>simple_alloc<code>配置器，按</code>_Rb_tree_node` 节点大小分配空间，每次分配或释放一个节点的空间。</p>
 
-<p>在算法中运用迭代器是，很可能需要获取器相应型别，即迭代器所指对象的类型。此时需要使用到 function template 的参数推导（argument deducation）机制，在传入迭代器模板类型的同时，传入迭代器所指对象的模板类型，例如：<br/>
+<h2>3. RB-tree的迭代器</h2>
+
+<p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator--）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下： <br/>
+<code>
+struct _Rb_tree_base_iterator {
+  typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
+  typedef bidirectional_iterator_tag iterator_category;
+  void _M_increment()  { }
+  void _M_decrement()  { }
+};
+template &lt;class _Value, class _Ref, class _Ptr&gt;
+struct _Rb_tree_iterator : public _Rb_tree_base_iterator {
+  _Self&amp; operator++() { _M_increment(); return *this; }
+  _Self&amp; operator--() { _M_decrement(); return *this; }
+};
+</code>
+可以看到RB-tree的自增和自减操作是使用基迭代器的increment和decrement来实现的，这里仅分析自增操作的实现（自减操作类似的）。RB-tree的自增操作实际上是寻找中序遍历下当前节点的后一个节点，其代码如下：<br/>
 ```
-template<class I, class T>
-void func_impl(I iter, T t){</p>
+  void _M_increment()  { // 自增操作，中序遍历的下一个节点</p>
 
-<pre><code>// TODO: Add your code here
+<pre><code>if (_M_node-&gt;_M_right != 0) { // 当前节点有右子树
+  _M_node = _M_node-&gt;_M_right;
+  while (_M_node-&gt;_M_left != 0) // 右子树的最左节点即为所求
+    _M_node = _M_node-&gt;_M_left;
+} else { // 当前节点没有右子树，找父节点且父节点的右子树不包含当前节点的祖先节点
+  _Base_ptr __y = _M_node-&gt;_M_parent;
+  while (_M_node == __y-&gt;_M_right) { // 当前节点在父节点的右子树中就继续往父节点的父节点找
+    _M_node = __y;
+    __y = __y-&gt;_M_parent;
+  }
+  if (_M_node-&gt;_M_right != __y)
+    _M_node = __y;
+}
+</code></pre>
+
+<p>  }
+```<br/>
+下面几节主要介绍一下RB-tree的基本操作。</p>
+
+<h2>4. RB-tree的插入操作</h2>
+
+<h4>4.1 基本插入操作</h4>
+
+<p>RB-tree提供两种插入操作，<code>insert_unique()</code> 和 <code>insert_equal()</code>，顾名思义，前者表示被插入的节点的键值在树中是唯一的（如果已经存在，就不需要插入了），后者表示可以存在键值相同的节点。这两个函数都有多个版本，下面以后者的最简单版本（单一参数：被插入的节点的键值）为实例进行介绍。下面是 <code>insert_equal</code> 的实现：
+```
+<em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc> ::insert_equal(const <em>Value&amp; __v) {
+  </em>Link_type <strong>y = <em>M_header;
+  </em>Link_type </strong>x = _M_root(); // 从根节点开始
+  while (__x != 0) { // 往下寻找插入点</p>
+
+<pre><code>__y = __x;
+// 比较，当前节点的键值比插入值大往左子树找，否则往右子树找
+__x = _M_key_compare(_KeyOfValue()(__v), _S_key(__x)) ? _S_left(__x) : _S_right(__x); 
+</code></pre>
+
+<p>  }
+  return <em>M_insert(<strong>x, </strong>y, __v); // 真正的插入操作，x为新插入节点，y为x的父节点，v为新值
+}
+//真正的插入操作，主要是对RB-tree及新节点的成员变量的设置
+</em>Rb_tree&lt;<em>Key,</em>Value,<em>KeyOfValue,</em>Compare,<em>Alloc> ::</em>M_insert(<em>Base_ptr __x</em>, <em>Base_ptr __y</em>, const <em>Value&amp; __v) {
+  </em>Link_type <strong>x = (_Link_type) </strong>x<em>;
+  </em>Link_type <strong>y = (_Link_type) </strong>y<em>;
+  </em>Link_type <strong>z;
+  if (</strong>y == <em>M_header || __x != 0 || </em>M_key_compare(<em>KeyOfValue()(__v), </em>S_key(__y))) {</p>
+
+<pre><code>__z = _M_create_node(__v); // 创建新节点
+_S_left(__y) = __z;     // makes _M_leftmost() = __z, when __y == _M_header
+if (__y == _M_header) { // y为header
+  _M_root() = __z;
+  _M_rightmost() = __z;
+} else if (__y == _M_leftmost()) // y为最左节点
+  _M_leftmost() = __z;  // maintain _M_leftmost() pointing to min node
+</code></pre>
+
+<p>  } else {</p>
+
+<pre><code>__z = _M_create_node(__v); // 创建新节点。???为什么不放到if-else上面???
+_S_right(__y) = __z; // 新节点为y的右孩子
+if (__y == _M_rightmost()) // y为最右节点
+  _M_rightmost() = __z; // maintain _M_rightmost() pointing to max node
+</code></pre>
+
+<p>  }
+  <em>S_parent(<strong>z) = </strong>y; // 设定新节点的父节点
+  </em>S_left(<strong>z) = 0;
+  _S_right(</strong>z) = 0;
+  <em>Rb_tree_rebalance(__z, </em>M_header-><em>M_parent); // 调整RB-tree使之恢复平衡
+  ++</em>M_node_count;
+  return iterator(<em>_z); // 返回指向新节点的迭代器
+}
+<code>``
+至此新节点插入完成。然而，由于新节点的插入，可能会引起RB-tree的性质4,5的破坏，需要对RB-tree进行旋转并对相关节点重新着色，这都是在</code></em>Rb_tree_rebalance` 这个函数中实现的，下面就主要介绍RB-tree是如何恢复平衡。</p>
+
+<h4>4.2 调整RB-tree使之恢复平衡</h4>
+
+<p>RB-tree的调整与AVL-tree类似但更复杂，因为不仅仅需要旋转，还需要考虑节点的颜色是否符合要求。破坏RB-tree性质4的可能起因是插入了一个红色节点、将一个黑色节点变为红色或者是旋转，而破坏性质5的可能原因是插入一个黑色的节点、节点颜色的改变（红变黑或黑变红）或者是旋转。<br/>
+在讨论 RB-tree 插入操作之前必须明白一点，那就是新插入的节点的颜色必为红色（调整前），因为插入黑点会增加某条路径上黑结点的数目，从而导致整棵树黑高度的不平衡。但如果新结点的父结点为红色时（如下图所示），将会违反红黑树的性质：一条路径上不能出现父子同为红色结点。这时就需要通过一系列操作来使红黑树保持平衡。为了清楚地表示插入操作以下在结点中使用“N”字表示一个新插入的结点，使用“P”字表示新插入点的父结点，使用“U”字表示“P”结点的兄弟结点，使用“G”字表示“P”结点的父结点。插入操作分为以下几种情况：<br/>
+<strong>1）、树为空</strong><br/>
+此时，新插入节点为根节点，上面说过新插入节点均为红色，这不符合RB-tree的性质2，只需要将新节点重新改为黑色即可。<br/>
+<strong>2）、黑父</strong><br/>
+如果新节点的父结点为黑色结点，那么插入一个红点将不会影响红黑树的平衡，此时插入操作完成。红黑树比AVL树优秀的地方之一在于黑父的情况比较常见，从而使红黑树需要旋转的几率相对AVL树来说会少一些。<br/>
+<strong>3）、红父</strong><br/>
+这种情况就比较复杂。由于父节点为红，所以祖父节点必为黑色。由于新节点和父节点均为红，所以需要重新着色或进行旋转，此时就需要考虑叔父节点的颜色，进而可能需要考虑祖父、祖先节点的颜色。
+<strong>3.1）、叔父为红</strong>
+只要将父和叔结点变为黑色，将祖父结点变为红色即可，如下图所示：<br/>
+<img src="/images/2014/IMAG2014080303.png"><br/>
+但由于祖父结点的父结点有可能为红色，从而违反红黑树性质。此时必须将祖父结点作为新的判定点<strong>继续向上</strong>（迭代）进行平衡操作。<br/>
+<strong>3.2）、叔父为黑</strong><br/>
+当叔父结点为黑色时，需要进行旋转，有4中情况（类似AVL），以下图示了所有的旋转可能：<br/>
+<img src="/images/2014/IMAG2014080304.png"><br/>
+可以观察到，当旋转完成后，新的旋转根全部为黑色，此时不需要再向上回溯进行平衡操作，插入操作完成。篇幅原因，相关代码这里就不粘贴出来了，要注意的一点就是case1和case2的变色方案是一样的，虽然从上图中看一个是P由红变黑，一个是N由红变黑，但实际上在case2中，经过一次旋转后，迭代器所指向的节点已经发生改变，这样刚好使得这两个case的变色方案相同，均为P由红变黑而G由黑变红。case3与case4的变色方案也是类似的。</p>
+
+<h2>5. RB-tree的删除操作</h2>
+
+<p>相比于插入操作，RB-tree的删除操作更加复杂。在侯捷的书上并没有讲删除操作，而在算法导论上是有专门的一节内容的，wiki上也有详细的讲述。限于篇幅，这里指讲解一个大概的思路，更详细的介绍请参见wiki或算法导论。RB-tree删除操作的基本思路是这样的，首先按照一般的二叉搜索树进行节点的删除，然后对RB-tree相关节点进行变色或旋转。<br/>
+一般的二叉搜索树删除节点的基本思路是：首先找到待删除节点位置，设为D。如果D同时有左右子树，那么用D的后继（右孩子的最左子节点，该后继最多有一个子节点——右孩子）替代D（<strong>注意</strong>：这里的替代是只key的替代，color不变，仍为D的color），从而将删除位置转移到该后继节点（成为新的D，为叶子节点或只有右孩子）。于是，我们只需要讨论删除只有一个儿子的节点的情况(如果它两个儿子都为空，即均为叶子，我们任意将其中一个看作它的儿子)，设这个儿子节点为N，这仍然需要分三种情况：<br/>
+<strong>1）D为红</strong><br/>
+这种情况比较简单。由于D为红色，所以它的父亲和儿子一定是黑色的，我们可以简单的用它的黑色儿子替换它，并不会破坏性质3和性质4。通过被删除节点的所有路径只是少了一个红色节点，这样可以继续保证性质5。<br/>
+  <strong>2）D为黑且N为红</strong><br/>
+如果只是去除这个黑色节点，用它的红色儿子顶替上来的话，会破坏性质5，可能会破坏性质4，但是如果我们重绘它的儿子为黑色，则曾经通过它的所有路径将通过它的黑色儿子，这样可以继续保持性质5，同时也满足性质4。<br/>
+<strong>3）D为黑且N为黑</strong><br/>
+这是一种复杂的情况。我们首先把要删除的节点D替换为它的（右）儿子N，在新树中（D被N覆盖），设N的父节点为P，兄弟为S，SL为S的左儿子，SR为S的右儿子。此时，以N为根节点的子树的黑高度减少了一，与S为根节点的子树的黑高度不一致，破坏了性质5。为了恢复，可以分为如下情形：<br/>
+<strong>3.1）N为根节点</strong><br/>
+已经满足所有性质，不需要调整。<br/>
+<strong>3.2） N是它父亲P的左儿子</strong><br/>
+<strong>case1、S为红色</strong>：将P改为红色，S改为黑色，以P为中心左旋，旋转后<strong>SL为新的S</strong>，SL和SR是新的S的左右孩子，此时case1就转化为了case2或case3或case4；<br/>
+注：case2~4中S均为黑色（否则是case1）。<br/>
+<strong>case2、SL、SR同为黑色</strong>：将S改为红色，这样黑高度失衡的节点变为P，转到3.1）重新开始判断和调整；<br/>
+<strong>case3、SR为黑</strong>：此时SL为红（否则是case2）。将S改为红色，SL改为黑色，然后以S为中心右旋，旋转后SL为新的S，而原S成为SR且为红色，这就将case3变成了case4；<br/>
+<strong>case4、SR为红</strong>：以P为中心左旋，然后交换P和S的颜色，最后将SR改为黑色，即可完成调整。可以看到调整过程与SL的颜色无关。<br/>
+<strong>3.3）N是它父亲P的右儿子</strong><br/>
+与3.2）类似，这里就不详细展开了。</p>
+
+<h2>6. RB-tree的查询操作</h2>
+
+<p>RB-tree是一个二叉搜索树，元素的查询是其拿手项目，非常简单，以下是RB-tree提供的查询操作：
+```
+template <class _Key, class _Value, class _KeyOfValue, class _Compare, class _Alloc>
+typename <em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::iterator
+<em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::find(const <em>Key&amp; __k) {
+  </em>Link_type <strong>y = _M_header;      // Last node which is not less than </strong>k.
+  <em>Link_type __x = </em>M_root();      // Current node.</p>
+
+<p>  while (__x != 0) // x为NIL时推出循环</p>
+
+<pre><code>if (!_M_key_compare(_S_key(__x), __k))
+  __y = __x, __x = _S_left(__x); // 往左子树找（赋值运算优先于逗号运算，y是x的父节点）
+else
+  __x = _S_right(__x); // 往右子树找
+</code></pre>
+
+<p>  iterator <strong>j = iterator(</strong>y); <br/>
+  return (<strong>j == end() || _M_key_compare(</strong>k, <em>S_key(__j.</em>M_node))) ?</p>
+
+<pre><code> end() : __j; // 没找到返回end()，否则返回相应节点的指针（迭代器）
 </code></pre>
 
 <p>}
-<code>``
-这里不仅要传入类型</code>class I<code>, 还要传入类型</code>class T`。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
+```</p>
 
-<blockquote><p>value_type: 迭代器所指对象的类型。<br/>
-difference_type: 表示两个迭代器之间的距离，因此也可以用来表示一个容器的最大容量。例如一个提供计数功能的泛型算法 <code>count()</code> ，其返回值的类型就是迭代器的 <code>difference_type</code> .<br/>
-reference_type: 从迭代器所指内容是否允许修改来看，迭代器分为 constant iterator 和 mutable iterator，如果传回一个可以修改的对象，一般是以 reference 的方式，因此需要传回引用时，使用此类型。<br/>
-pointer_type: 在需要传回迭代器所指对象的地址时，使用这种类型。
-iterator_category: 即前面提到5种的迭代器的类型。</p></blockquote>
+<h2>小结</h2>
 
-<p>而且实际当中，并不是所有情况都可以通过以上的 template 的参数推导机制来实现（例如算法返回值的类型是迭代器所指对象的类型，template参数推导机制无法推导返回值类型），因此需要更一般化的解决方案，在STL中，这就是Traits编程技巧。</p>
-
-<h3>3.2 Traits 编程技巧</h3>
-
-<p>在STL的每个标准迭代器中，都定义了5个迭代器相应型别的成员变量，在STL定义了一个统一的接口：<br/>
-```
-// In file stl_iterator_base.h
-template &lt;class <em>Category, class </em>Tp, class _Distance = ptrdiff_t,</p>
-
-<pre><code>      class _Pointer = _Tp*, class _Reference = _Tp&amp;&gt;
-</code></pre>
-
-<p>struct iterator {
-  typedef <em>Category  iterator_category;
-  typedef </em>Tp        value_type;
-  typedef <em>Distance  difference_type;
-  typedef </em>Pointer   pointer;
-  typedef _Reference reference;
-};
-```
-其他的迭代器都可以继承这个标注类，由于后面3个模板参数都有默认值，因此新的迭代器只需提供前两个参数即可（但在SGI STL中并没有使用继承机制）。这样在使用该迭代器的泛型算法中，可以返回这5种类型中的任意一种，而不需要依赖于 template 参数推导的机制。</p>
-
-<p>在SGI STL中，如果启用 <code>__STL_CLASS_PARTIAL_SPECIALIZATION</code> 这个宏定义，还有这样一个标准的 <code>iterator_traits</code> ：<br/>
-<code>
-// In file stl_iterator_base.h
-template &lt;class _Iterator&gt;
-struct iterator_traits {
-  typedef typename _Iterator::iterator_category iterator_category;
-  typedef typename _Iterator::value_type        value_type;
-  typedef typename _Iterator::difference_type   difference_type;
-  typedef typename _Iterator::pointer           pointer;
-  typedef typename _Iterator::reference         reference;
-};
-</code>
-值得一提的是，这些类型不仅可以是泛型算法的返回值类型，还可以是传入参数的类型。例如 <code>iterator_category</code> 可以作为迭代器的接口 <code>advance()</code> 和 <code>distance()</code>  的传入参数之一。 不同类型的迭代器实现同一算法的方式可能不同，可以通过这个参数类型来区分不同的重载函数。</p>
-
-<h2>4. SGI 中的 __type_traits</h2>
-
-<p>traits 编程技巧非常赞，适度弥补了 C++ template 本身的不足。 STL 只对迭代器加以规范，设计了 <code>iterator_traits</code> 这样的东西，SGI进一步将这种技法扩展到了迭代器之外，于是有了所谓的 <code>__type_traits</code>。</p>
-
-<p>在SGI中， <code>__type_traits</code> 可以获取一些类型的特殊属性，如该类型是否具备 trivial default ctor？是否具备 trivial copy ctor？是否具备 trivial assignment operator？是否具备 tivial dtor？是否是 plain old data（POD）？ 如果答案是肯定的，那么我们对这些类型进行构造、析构、拷贝、赋值等操作时，就可以采用比较有效的方法，如不调用该类型的默认构造、析构函数，而是直接调用 <code>malloc()</code>, <code>free()</code>, <code>memcpy()</code> 等等，这对于大量而频繁的操作容器，效率有显著的提升。</p>
-
-<p>SGI中 <code>__type_traits</code> 的特性的实现都在 <code>type_traits.h</code> 文件中。其中将 <code>bool</code>, <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code> 等基本的数据类型及其相应的指针类型的这些特性都定义为 <code>__true_type</code>，这以为着，这些对基本类型进行构造、析构、拷贝、赋值等操作时，都是使用系统函数进行的。而除了这些类型之外的其他类型，除非用户指定了它的这些特性为 <code>__true_type</code>，默认都是 <code>__false_type</code> 的，不能直接调用系统函数来进行内存配置或赋值等，而需要调用该类型的构造函数、拷贝构造函数等。</p>
-
-<p>另外，用户在自定义类型时，究竟一个 class 什么时候应该是 <code>__false_type</code> 的呢？一个简单的判断标准是：如果 class 内部有指针成员并需要对其进行动态配置内存是，这个 class 就需要定义为 <code>__false_type</code>的，需要给该类型定义构造函数、拷贝构造函数、析构函数等等。</p>
+<p>关于RB-tree基本就介绍到这里了，主要是RB-tree的定义、数据结构、插入删除和查找等基本操作，其中最主要也最困难的就是插入和删除操作中恢复平衡的方法。另外，还介绍了二叉搜索树的基本概念和高度平衡的AVL树，可以看到，AVL树保持平衡的方法非常简单易懂，而RB-tree由于引入了节点的颜色属性，使得理解起来相对比较困难，那么问题就来了，为什么不用AVL-tree而用RB-tree作为set和map的低层容器呢？<br/>
+这个问题要问STL的实现者了，其实AVL-tree和RB-tree的平均性能在 <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL-tree的wiki</a> _上是有严格的数学公式的，AVL的平均高度为 $1.44logN$ ，而RB-tree的平均高度为 $2logN$ ，这些数据的来历也有相关的论文，感兴趣的可以更深入的看看。</p>
 ]]></content>
   </entry>
   

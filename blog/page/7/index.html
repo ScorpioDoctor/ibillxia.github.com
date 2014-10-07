@@ -182,6 +182,336 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/09/23/EFI-and-operating-system/">EFI和操作系统</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-23T23:03:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/23/EFI-and-operating-system/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前两天在98上看到一个帖子 windows 8 没法和linux共存？ 里面有一个概念就是EFI</p>
+
+<h2>什么是EFI？</h2>
+
+
+<p>EFI英文全称为Extensible Firmware Interface，中文译为可扩展固件接口，其主要目的是为了提供一组在 OS 加载之前（启动前）在
+所有平台上一致的、正确指定的启动服务。EFI最初由Intel开发，并在2002年12月所发布1.1版，后来在2005年Intel将此规范交由UEFI论坛
+来推广与发展，并更名为Unified EFI(UEFI)。</p>
+
+
+
+
+<p>EFI是一种个人电脑系统规格，用来定义操作系统与系统固件之间的软件界面，为替代BIOS的升级方案。可扩展固件接口（EFI）负责
+加电自检（POST）、连系操作系统以及提供连接操作系统与硬件的接口。UEFI在EFI基础上增加与改进了加密编码（cryptography）、
+网络认证（network authentication）与用户界面架构（User Interface Architecture）等方面的内容。EFI在软件层次中的位置如下图</br>
+<img src="/images/2012/IMAG2012092301.png">
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/23/EFI-and-operating-system/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/14/the-log-sum-inequanlity/">The Log Sum Inequality</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-14T21:42:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/14/the-log-sum-inequanlity/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In  mathematics, the log sum inequality is very useful for proving several theorems in information theory.</p>
+
+
+
+
+<h2>1.Statements</h2>
+
+
+<p>Suppose ai and bi are nonnegative numbers. The log sum inequality states that</br>
+<center>$\sum_{i=1}^{n}a_{i}log \frac{a_{i}}{b_{i}} \seq a log \frac{a}{b}$,</center>
+where $a=\sum a_{i}$ and $b=\sum b_{i}$. The equality established if and only if $a_{i}/b{i}$ are equal for all $i$.
+</p>
+
+
+
+
+<h2>2.Proof</h2>
+
+
+<h3>(1)Convex functioin</h3>
+
+
+<p>In mathematics, a real-valued function F(x) defined on an interval is called convex (or convex downward or concave 
+upward) if the graph of the function lies below the line segment joining any two points of the graph. Equivalently, a 
+function is convex if its epigraph (the set of points on or above the graph of the function) is a convex set.</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/14/the-log-sum-inequanlity/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/">GMM-SVM-NAP Method in Speaker Recognition</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.Gaussian Mixture Models(GMM)</h2>
+
+
+<p>For a D-dimensional feature vector, x, the mixture density used for the likelihood function is deﬁned as</br>
+<center>$p(x|\lambda) = \sum_{i=1}^{M}w_{i}p_{i}(x)$.</center></br>
+The density is a weighted linear combination of $M$ unimodal Gaussian densities , $p_{i}(x)$</br>
+<center>$p_{i}(x) = \frac{1}{(2\pi)^{D/2}|\sum _{i}|^{1/2}} exp[-\frac{1}{2}(x-\mu_{i})^{T}(\sum _{i})^{-1}(x-\mu_{i})]$.</center></br>
+</p>
+
+
+
+
+<h2>2.Support Vector Machines(SVM)</h2>
+
+
+<p>An SVM is a two-class classifier constructed from sums of a kernel function $K(• , •)$</br>
+<center>$f(x) = \sum_{i=1}{N}\alpha_{i} t_{i} K(x,x_{i}) + d$.</center></br>
+$t_{i}$ are the ideal outputs,  $\sum_{i=1}{N}\alpha_{i} t_{i}=0$ and $\alpha_{i} > 0$,$x_{i}$ are support vectors and obtained 
+from the training set by an optimization process.</br>
+$K(. , .)$ is constrained to have certain properties (the Mercer condition), so that it can be expressed as</br>
+<center>$K(x,y) = b(x)^{T} b(y)$.</center></br>
+Kernel function examples: <a href="http://www.shamoxia.com/html/y2010/2292.html">http://www.shamoxia.com/html/y2010/2292.html</a>
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/20/PCA-based-speaker-recognition/">基于主成分分析分类器的说话人识别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-20T22:08:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/20/PCA-based-speaker-recognition/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.说话人分类常用算法</h2>
+
+
+<p>说话人分类是说话人识别中的一大主题，目前已经发展了很多方法，这些方法大致可以分为两类：</br>
+(1)基于概率分布的高复杂度的精确分类算法，如高斯混合模型（Gaussian Mixture Model，GMM）、隐马尔科夫
+模型（Hidden Markov Model，HMM）和支持向量机（Support Vector Machine，SVM）模型；</br>
+(2)基于模板的低复杂度的分类算法，如向量量化方法（Vector Quantization，VQ）。</br>
+第一类说话人分类算法能取得不错的效果，但他们的高复杂度使得进行说话人识别需要很长时间，不适合于实时应用。
+而第二类说话人匪类算法虽然复杂度低，但当系统中说话人的人数增加时，识别性能下降得很快。</p>
+
+
+
+
+<p>Wu Junwen，Zhang Xuegong提出了一种基于PCA的分类器（即主成分子空间（Principal Component Subspace，PCS）分类器），
+作为一种线性分类器，其复杂度低于以上第一类算法，又表现出很好的分类能力。另外，我们还可以根据截断误差子空间来构造分类器，
+称为TES（Truncation Error Subspace）分类器。这两种分类器反映了主成分分析方法的两个方面，结合两种分类器可得到混合分类器，
+称其为P&T分类器。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/20/PCA-based-speaker-recognition/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/18/MFCC-feature-extraction/">MFCC参数提取及Matalab实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-18T20:10:00+08:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/18/MFCC-feature-extraction/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.概述</h2>
+
+
+<p>Mel倒谱系数（Mel-frequency cepstral coefficients，MFCC）是受人的听觉系统研究成果推动而导出的声学特征。
+研究发现，当两个音调的频率差小于临界带宽时，人就会把两个音调听成一个(屏蔽效应)。Mel刻度是对这一临界带宽的
+度量方法之一, MFCC在语音识别领域应用广泛。本文详细介绍了Mel频率倒谱系数参数的6大提取步骤。</p>
+
+
+
+
+<h2>2.什么是Mel频率倒谱系数？</h2>
+
+
+<p>Mel频率倒谱系数（Mel Frequency Cepstrum Coefficient）的缩写是MFCC，Mel频率是基于人耳听觉特性提出来的，
+它与Hz频率成非线性对应关系。Mel频率倒谱系数(MFCC)则是利用它们之间的这种关系，计算得到的Hz频谱特征。</p>
+
+
+
+
+<p>用录音设备录制一段模拟语音信号后，经由自定的取样频率(如8000 Hz、16000 Hz等)采样后转换(A/D)为数字语音信号。
+由于在时域(time domain)上语音信号的波形变化相当快速、不易观察，因此一般都会在频域(frequency domain)上来观察，
+其频谱是随着时间而缓慢变化的，因此通常可以假设在一较短时间中，其语音信号的特性是稳定的，通常我们定义这个较短
+时间为一帧(frame)，根据人的语音的音调周期值的变化，一般取10~20ms。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/07/18/MFCC-feature-extraction/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/07/17/covariance-matrix-and-correlation-matrix/">协方差矩阵和相关系数矩阵</a></h1>
     
     
@@ -620,509 +950,6 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
   
     <footer>
       <a rel="full-article" href="/blog/2012/03/07/10-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/05/09-zju-program-test-solution/">09年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-05T16:48:00+08:00" pubdate data-updated="true">Mar 5<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/05/09-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-09年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：xxx定律（hdoj3782）（九度1031）</h3>
-
-
-<p>水题，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int n,cnt;
-</span><span class='line'>    while(scanf("%d",&n)&&n!=0){
-</span><span class='line'>        if(n==1){printf("0\n");continue;}
-</span><span class='line'>        cnt=0;
-</span><span class='line'>        while(n!=1){
-</span><span class='line'>            if(n%2)n=(3*n+1)>>1;
-</span><span class='line'>            else n=n>>1;
-</span><span class='line'>            cnt++;
-</span><span class='line'>        }
-</span><span class='line'>        printf("%d\n",cnt);
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/05/09-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/04/08-zju-program-test-solution/">08年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-04T22:42:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/04/08-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-08年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：又一版A+B（hdoj1877）（九度1026）</h3>
-
-
-<p>水题，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>char out[34];
-</span><span class='line'>unsigned int m,a,b,c;
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int i;
-</span><span class='line'>    while(scanf("%d",&m)&&m!=0){
-</span><span class='line'>        scanf("%d %d",&a,&b);
-</span><span class='line'>        c=a+b;
-</span><span class='line'>        if(c==0){printf("0\n");continue;}
-</span><span class='line'>        i=0;
-</span><span class='line'>        while(c){
-</span><span class='line'>            out[i++]=c%m;
-</span><span class='line'>            c/=m;
-</span><span class='line'>        }
-</span><span class='line'>        while(i)
-</span><span class='line'>            printf("%d",out[--i]);
-</span><span class='line'>        printf("\n");
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/04/08-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/03/07-zju-program-test-solution/">07年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-03T22:05:00+08:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/03/07-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-07年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：最小长方形（hdoj1859）（九度1020）</h3>
-
-
-<p>水题，不解释，代码如下：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int lx,ly,rx,ry,tx,ty;
-</span><span class='line'>    while(1){
-</span><span class='line'>        scanf("%d %d",&tx,&ty);
-</span><span class='line'>        if(tx==0&&ty==0)break;
-</span><span class='line'>        lx=rx=tx;
-</span><span class='line'>        ly=ry=ty;
-</span><span class='line'>        while(1){
-</span><span class='line'>            scanf("%d %d",&tx,&ty);
-</span><span class='line'>            if(tx==0&&ty==0)break;
-</span><span class='line'>            if(tx&lt;lx)lx=tx;
-</span><span class='line'>            if(ty&lt;ly)ly=ty;
-</span><span class='line'>            if(tx>rx)rx=tx;
-</span><span class='line'>            if(ty>ry)ry=ty;
-</span><span class='line'>        }
-</span><span class='line'>        printf("%d %d %d %d\n",lx,ly,rx,ry);
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/03/07-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/02/06-zju-program-test-solution/">06年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-02T12:12:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/02/06-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-06年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：还是A+B（hdoj1229）（九度1015）</h3>
-
-
-<p>水题，简直水得不能再水</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;string.h>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int a,b,k,t;
-</span><span class='line'>    while(1){
-</span><span class='line'>        scanf("%d %d %d",&a,&b,&k);
-</span><span class='line'>        if(a==0&&b==0) return 0;
-</span><span class='line'>        t=1;
-</span><span class='line'>        while(k--)t*=10;
-</span><span class='line'>        if(a%t==b%t)printf("%d\n",-1);
-</span><span class='line'>        else printf("%d\n",a+b);
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/02/06-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/01/05-zju-program-test-solution/">05年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-01T11:41:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/01/05-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-以下是05年浙大研究生复试机试题解，感觉题目与ACM题相比，难度还相差很远，
-基本上直接贴上代码了（后续年度的题解同上），
-而且将整年的5道题的代码在一篇文章中贴出来。
-</p>
-
-
-
-
-<h3>A题：A+B （hdoj1228）（ 九度1010）</h3>
-
-
-<p>水题，不解释，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h> 
-</span><span class='line'>#include &lt;string.h> 
-</span><span class='line'>char map[][8] = {"zero","one","two","three","four","five","six","seven","eight","nine"};
-</span><span class='line'>int cmp( char s[] ) 
-</span><span class='line'>{
-</span><span class='line'>  for( int i = 0 ; i &lt;= 9 ; i++ )
-</span><span class='line'>      if( strcmp( s , map[i] ) == 0 )
-</span><span class='line'>          return i;
-</span><span class='line'>}
-</span><span class='line'>int main() 
-</span><span class='line'>{
-</span><span class='line'>  char s[8];
-</span><span class='line'>  int a,b;
-</span><span class='line'>  while(1) 
-</span><span class='line'>  {
-</span><span class='line'>      a = 0;
-</span><span class='line'>      while(scanf("%s",s)&&strcmp(s,"+")!=0)
-</span><span class='line'>          a = 10*a + cmp(s);
-</span><span class='line'>      b = 0;
-</span><span class='line'>      while(scanf("%s",s)&&strcmp(s,"=")!=0)
-</span><span class='line'>          b = 10*b + cmp(s);
-</span><span class='line'>      if( a == 0 && b == 0 ) break;
-</span><span class='line'>      printf( "%d\n" , a+b );
-</span><span class='line'>  }
-</span><span class='line'>  return 1;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/01/05-zju-program-test-solution/">Read on &rarr;</a>
     </footer>
   
 

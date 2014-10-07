@@ -182,6 +182,345 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/03/20/basics-of-neural-networks/">神经网络简介</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-20T23:21:00+08:00" pubdate data-updated="true">Mar 20<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/03/20/basics-of-neural-networks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Deep Learning的本质是多层的神经网络，因此在深入学习Deep Learning之前，有必要了解一些神经网络的基本知识。
+本文首先对神经网络的发展历史进行简要的介绍，然后给出神经元模型的形式化描述，接着是神经网络模型的定义、特性，
+最后是一些最新的进展等。关于神经网络的分类、学习方法、应用场景等将在后续文章中介绍。</p>
+
+
+
+
+<h2>1.发展简史</h2>
+
+
+<p>1943年，心理学家W.S.McCulloch和数理逻辑学家W.Pitts建立了神经网络和数学模型，称为MP模型。他们通过MP模型提出
+了神经元的形式化数学描述和网络结构方法，证明了单个神经元能执行逻辑功能，从而开创了人工神经网络研究的时代。</br>
+1945年，Von Neumann在成功的试制了存储程序式电子计算机后，他也对人脑的结构与存储式计算机进行的根本区别的比较，还提出了以简单神经元构成的自再生自动机网络结构。</br>
+1949年，心理学家D.O.Heb提出了突触联系强度可变的设想，并据此提出神经元的学习准则——Hebb规则，为神经网络的学习算法奠定了基础。</br>
+1958年，F.Rosenblatt提出了感知模型，该模型是由阈值神经元组成的，它试图模拟动物和人的感知和学习能力。</br>
+1962年Widrow提出了自适应线性元件，这是一种连续的取值的线性网络，主要用于自适应信号处理和自适应控制。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/20/basics-of-neural-networks/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/16/introduction-to-deep-learning/">深度学习简介</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-16T21:36:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/03/16/introduction-to-deep-learning/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>0.概述</h2>
+
+<p>
+以下是Wiki上对深度学习的下的定义：</br>
+Deep learning refers to a sub-field of machine learning that is based on learning several levels of representations, 
+corresponding to a hierarchy of features or factors or concepts, where higher-level concepts are defined from lower-level ones, 
+and the same lower-level concepts can help to define many higher-level concepts.
+</p>
+
+
+<p>
+深度学习就是学习多个级别的表示和抽象，帮助理解数据，如图像、声音和文本。深度学习的概念源于人工神经网络的研究，
+含多隐层的多层感知器就是一种深度学习结构。那些涉及从输入产生输出的计算,我们可以用流程图来表示，
+流程图的一个特殊的概念就是它的深度: 从输入到输出的路径的最长长度。传统的前馈神经网络可以理解为
+深度等于层数(隐层数+1)的网络。深度学习通过组合低层特征形成更加抽象的高层表示（属性类别或特征），
+以发现数据的分布式特征表示。
+</p>
+
+
+<h2>1.深度学习产生的背景</h2>
+
+<h3>1.1深度不够的缺陷</h3>
+
+<p>
+在很多情况下，深度为2就已足以在给定精度范围内表示任何函数了，例如逻辑门、正常
+神经元、sigmoid-神经元、SVM中的RBF(Radial Basis Function)等，但这样也有一个代价：
+那就是图中需要的节点数会很多，这也就意味着当我们学习目标函数时，需要更多的计算
+单元和更多的参数。理论结果显示，对于某一类函数，需要的参数的个数与输入的大小是
+成指数关系的，逻辑门、正常神经元、RBF单元就属于这类。后来Hastad发现，当深度为d时，
+这类函数可以用O(n)个节点（输入为n个）的神经网络有效表示，但当深度被限制为d-1时，
+则需要有O(n2)个节点来表示。
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/16/introduction-to-deep-learning/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/04/2013-first-snow/">2013年第一场雪</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-04T21:13:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/04/2013-first-snow/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>元旦刚过就下了新年的第一场雪，这场雪下得还确实有点大，从昨天下午开始，今天下了一天了，现在积雪都有四、五寸厚了吧！
+在南方持续这么长时间下这么大的雪很少见了，所以大家都很兴奋。下午上完了两节课后，大概3点的样子，我们实验室的六、七号人就
+准备去爬宝石山，瞻保俶塔，观断桥残雪美景。</p>
+
+
+
+
+<p>出发了，在校门口拍了几张照。
+下面这张是正大门的全景：</br>
+<img src="/images/2013/IMAG2013010401.jpg"></p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/04/2013-first-snow/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/02/ai-top-conferences/">AI 顶级会议列表</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-02T19:17:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+        
+         | <a href="/blog/2013/01/02/ai-top-conferences/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>注: 本文为小百合BBS的daniel所写，稍有删改。</p>
+
+
+<p>tier-1的列得较全, tier-2的不太全, tier-3的很不全.同分的按字母序排列. 不很严谨地说, tier-1是可以令人羡慕的, tier-2是可以令人
+尊敬的,由于AI的相关会议非常多, 所以能列进tier-3的也是不错的。</p>
+
+
+
+
+<h3>The First Class</h3>
+
+
+<p>今天先谈谈AI里面tier-1的conferences, 其实基本上就是AI里面大家比较公认的top conference. 下面同分的按字母序排列.</p>
+
+
+
+
+<p>IJCAI (1+): AI最好的综合性会议, 1969年开始, 每两年开一次, 奇数年开. 因为AI实在太大, 所以虽然每届基本上能录100多篇（现在已经
+到200多篇了），但分到每个领域就没几篇 了，象machine learning、computer vision这么大的领域每次大概也就10篇左右, 所以难度很大. 
+不过从录用率上来看倒不太低,基本上20%左右, 因为内行人都会掂掂分量, 没希望的就别浪费reviewer的时间了. 最近中国大陆投往国际会议
+的文章象潮水一样, 而且因为国内很少有能自己把关的研究组, 所以很多会议都在complain说中国的低质量文章严重妨碍了PC的工作效
+率（囧o(╯□╰)o）. 在这种情况下, 估计这几年国际会议的录用率都会降下去. 另外, 以前的IJCAI是没有poster的, 03年开始, 为了减少
+被误杀的好人, 增加了2页纸的poster.值得一提的是, IJCAI是由貌似一个公司的&#8221;IJCAI Inc.&#8221;主办的(当然实际上并不是公司, 实际上是
+个基金会), 每次会议上要发几个奖, 其中最重要的两个是IJCAI Research Excellence Award 和 Computer& Thoughts Award, 前者是终身
+成就奖, 每次一个人, 基本上是AI的最高奖(有趣的是, 以AI为主业拿图灵奖的6位中, 有2位还没得到这个奖), 后者是奖给35岁以下的青年
+科学家,每次一个人. 这两个奖的获奖演说是每次IJCAI的一个重头戏.另外, IJCAI 的 PC member相当于其他会议的area chair, 权力很大, 
+因为是由PC member去找 reviewer 来审, 而不象一般会议的PC member其实就是 reviewer. 为了制约这种权力, IJCAI的审稿程序是每篇
+文章分配2位PC member, primary PC member去找3位reviewer, second PC member 找一位. （PS：一个非常好的消息是IJCAI-2013要来
+中国Beijing了，非常感谢王飞跃老师等的辛勤的申办！但愿能够亲临现场！）。IJCAI-2013的Important dates：</br>
+ Abstract submission: January 26, 2013 (11:59PM, UTC-12).</br>
+ Paper submission: January 31, 2013 (11:59PM, UTC- 12).</br>
+ Author feedback: March 4-6, 2013 (11:59PM, UTC-12).</br>
+ Notification of acceptance/rejection: April 2, 2013.</br>
+ Camera-ready copy due: Apr 23, 2013.</br>
+ Technical sessions: August 3-9, 2013.</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/02/ai-top-conferences/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/21/human-audio-system-neural-parts/">人的听觉系统生理结构（2）——中枢部分</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-21T21:55:00+08:00" pubdate data-updated="true">Dec 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012/12/21/human-audio-system-neural-parts/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>0.概述</h2>
+
+
+<p>大脑中与听觉相关的部分称为听觉中枢，它纵跨脑干、中脑、丘脑的大脑皮层，是感觉系统中最长的中枢通路之一。自下向上，
+主要环节包括：蜗神经核、上橄榄核、外侧丘系核、下丘核、丘脑的内侧膝状体、大脑皮层颞叶的听觉皮层等，图1所示为听觉中枢
+的传导通路。由中枢系统的多层传导过程，可以很自然的联想到近两年很热门的Deep Learning的机器学习方法。
+<center><img src="/images/2012/IMAG2012122106.jpg"></center>
+<center>图 1 听觉中枢传导通路</center>
+</p>
+
+
+
+
+<h2>1蜗神经核</h2>
+
+
+<p>听神经纤维全部终止于蜗神经核，每条神经纤维可分为三个分支，分别支配耳蜗核的三个亚核，即背核、后腹核与前腹核。用微电极记录
+单细胞电活动的方法证实，每个亚核都有各自的声音频率代表区（或称音调定位组合），高频分布在各亚核的背侧，即耳蜗底部投射在各亚核
+的背上部；低频区分布在各亚核的腹侧，即耳蜗顶部投射在各亚核的腹下区。前腹侧核中的神经元主要是类本原神经元，它能够保存听觉神经
+纤维中的时间-位置编码；后腹侧核中主要是建立和振荡反应类型的神经元，它们能够保存听觉神经纤维中的发放率-位置编码；背侧核中主要
+是休止和累积反应类型的神经元，它们表现为非单调的发放率-强度关系。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/21/human-audio-system-neural-parts/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/12/21/human-audio-system-out-part/">人的听觉系统生理结构（1）——外周部分</a></h1>
     
     
@@ -537,336 +876,6 @@ logistic regression, linear regression, svm, etc. 这类问题统称为优化问
   
     <footer>
       <a rel="full-article" href="/blog/2012/09/26/convex-optimization-overview/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/23/EFI-and-operating-system/">EFI和操作系统</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-23T23:03:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012/09/23/EFI-and-operating-system/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前两天在98上看到一个帖子 windows 8 没法和linux共存？ 里面有一个概念就是EFI</p>
-
-<h2>什么是EFI？</h2>
-
-
-<p>EFI英文全称为Extensible Firmware Interface，中文译为可扩展固件接口，其主要目的是为了提供一组在 OS 加载之前（启动前）在
-所有平台上一致的、正确指定的启动服务。EFI最初由Intel开发，并在2002年12月所发布1.1版，后来在2005年Intel将此规范交由UEFI论坛
-来推广与发展，并更名为Unified EFI(UEFI)。</p>
-
-
-
-
-<p>EFI是一种个人电脑系统规格，用来定义操作系统与系统固件之间的软件界面，为替代BIOS的升级方案。可扩展固件接口（EFI）负责
-加电自检（POST）、连系操作系统以及提供连接操作系统与硬件的接口。UEFI在EFI基础上增加与改进了加密编码（cryptography）、
-网络认证（network authentication）与用户界面架构（User Interface Architecture）等方面的内容。EFI在软件层次中的位置如下图</br>
-<img src="/images/2012/IMAG2012092301.png">
-</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/23/EFI-and-operating-system/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/14/the-log-sum-inequanlity/">The Log Sum Inequality</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-14T21:42:00+08:00" pubdate data-updated="true">Aug 14<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/08/14/the-log-sum-inequanlity/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In  mathematics, the log sum inequality is very useful for proving several theorems in information theory.</p>
-
-
-
-
-<h2>1.Statements</h2>
-
-
-<p>Suppose ai and bi are nonnegative numbers. The log sum inequality states that</br>
-<center>$\sum_{i=1}^{n}a_{i}log \frac{a_{i}}{b_{i}} \seq a log \frac{a}{b}$,</center>
-where $a=\sum a_{i}$ and $b=\sum b_{i}$. The equality established if and only if $a_{i}/b{i}$ are equal for all $i$.
-</p>
-
-
-
-
-<h2>2.Proof</h2>
-
-
-<h3>(1)Convex functioin</h3>
-
-
-<p>In mathematics, a real-valued function F(x) defined on an interval is called convex (or convex downward or concave 
-upward) if the graph of the function lies below the line segment joining any two points of the graph. Equivalently, a 
-function is convex if its epigraph (the set of points on or above the graph of the function) is a convex set.</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/14/the-log-sum-inequanlity/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/">GMM-SVM-NAP Method in Speaker Recognition</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.Gaussian Mixture Models(GMM)</h2>
-
-
-<p>For a D-dimensional feature vector, x, the mixture density used for the likelihood function is deﬁned as</br>
-<center>$p(x|\lambda) = \sum_{i=1}^{M}w_{i}p_{i}(x)$.</center></br>
-The density is a weighted linear combination of $M$ unimodal Gaussian densities , $p_{i}(x)$</br>
-<center>$p_{i}(x) = \frac{1}{(2\pi)^{D/2}|\sum _{i}|^{1/2}} exp[-\frac{1}{2}(x-\mu_{i})^{T}(\sum _{i})^{-1}(x-\mu_{i})]$.</center></br>
-</p>
-
-
-
-
-<h2>2.Support Vector Machines(SVM)</h2>
-
-
-<p>An SVM is a two-class classifier constructed from sums of a kernel function $K(• , •)$</br>
-<center>$f(x) = \sum_{i=1}{N}\alpha_{i} t_{i} K(x,x_{i}) + d$.</center></br>
-$t_{i}$ are the ideal outputs,  $\sum_{i=1}{N}\alpha_{i} t_{i}=0$ and $\alpha_{i} > 0$,$x_{i}$ are support vectors and obtained 
-from the training set by an optimization process.</br>
-$K(. , .)$ is constrained to have certain properties (the Mercer condition), so that it can be expressed as</br>
-<center>$K(x,y) = b(x)^{T} b(y)$.</center></br>
-Kernel function examples: <a href="http://www.shamoxia.com/html/y2010/2292.html">http://www.shamoxia.com/html/y2010/2292.html</a>
-</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/08/13/GMM-SVM-NAP-Method-in-Speaker-Recognition/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/20/PCA-based-speaker-recognition/">基于主成分分析分类器的说话人识别</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-20T22:08:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/07/20/PCA-based-speaker-recognition/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.说话人分类常用算法</h2>
-
-
-<p>说话人分类是说话人识别中的一大主题，目前已经发展了很多方法，这些方法大致可以分为两类：</br>
-(1)基于概率分布的高复杂度的精确分类算法，如高斯混合模型（Gaussian Mixture Model，GMM）、隐马尔科夫
-模型（Hidden Markov Model，HMM）和支持向量机（Support Vector Machine，SVM）模型；</br>
-(2)基于模板的低复杂度的分类算法，如向量量化方法（Vector Quantization，VQ）。</br>
-第一类说话人分类算法能取得不错的效果，但他们的高复杂度使得进行说话人识别需要很长时间，不适合于实时应用。
-而第二类说话人匪类算法虽然复杂度低，但当系统中说话人的人数增加时，识别性能下降得很快。</p>
-
-
-
-
-<p>Wu Junwen，Zhang Xuegong提出了一种基于PCA的分类器（即主成分子空间（Principal Component Subspace，PCS）分类器），
-作为一种线性分类器，其复杂度低于以上第一类算法，又表现出很好的分类能力。另外，我们还可以根据截断误差子空间来构造分类器，
-称为TES（Truncation Error Subspace）分类器。这两种分类器反映了主成分分析方法的两个方面，结合两种分类器可得到混合分类器，
-称其为P&T分类器。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/20/PCA-based-speaker-recognition/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/18/MFCC-feature-extraction/">MFCC参数提取及Matalab实现</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-18T20:10:00+08:00" pubdate data-updated="true">Jul 18<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/07/18/MFCC-feature-extraction/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.概述</h2>
-
-
-<p>Mel倒谱系数（Mel-frequency cepstral coefficients，MFCC）是受人的听觉系统研究成果推动而导出的声学特征。
-研究发现，当两个音调的频率差小于临界带宽时，人就会把两个音调听成一个(屏蔽效应)。Mel刻度是对这一临界带宽的
-度量方法之一, MFCC在语音识别领域应用广泛。本文详细介绍了Mel频率倒谱系数参数的6大提取步骤。</p>
-
-
-
-
-<h2>2.什么是Mel频率倒谱系数？</h2>
-
-
-<p>Mel频率倒谱系数（Mel Frequency Cepstrum Coefficient）的缩写是MFCC，Mel频率是基于人耳听觉特性提出来的，
-它与Hz频率成非线性对应关系。Mel频率倒谱系数(MFCC)则是利用它们之间的这种关系，计算得到的Hz频谱特征。</p>
-
-
-
-
-<p>用录音设备录制一段模拟语音信号后，经由自定的取样频率(如8000 Hz、16000 Hz等)采样后转换(A/D)为数字语音信号。
-由于在时域(time domain)上语音信号的波形变化相当快速、不易观察，因此一般都会在频域(frequency domain)上来观察，
-其频谱是随着时间而缓慢变化的，因此通常可以假设在一较短时间中，其语音信号的特性是稳定的，通常我们定义这个较短
-时间为一帧(frame)，根据人的语音的音调周期值的变化，一般取10~20ms。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/07/18/MFCC-feature-extraction/">Read on &rarr;</a>
     </footer>
   
 
