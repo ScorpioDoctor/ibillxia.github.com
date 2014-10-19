@@ -182,6 +182,140 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-29T23:26:00+08:00" pubdate data-updated="true">Jun 29<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有<code>vector</code>、<code>stl_vector.h</code>、<code>vector.h</code> 等几个文件。</p>
+
+<h2>1. 容器</h2>
+
+<p>在数据结构的课程中，我们主要研究数据的特定排列方式，以利于搜索、排序等算法，几乎可以说，任何特定的数据结构都是为了实现某种特定的算法。STL 容器即由一个个特定的数据结构组成，例如向量（vector），链表（list），堆栈（stack），队列（queue），树（tree），哈希表（hash table），集合（set），映射（map）等，根据数据在容器中的排列特性，这些数据接口分为序列式容器（sequence container）和关联式容器（association container）两种，本文主要解读SGI STL中的序列式容器。</p>
+
+<p>所谓序列式容器，其中的元素可序（ordered），但未必有序（sorted）。C++ 本身提供了一个序列式容器——数组（array），STL中还提供了向量（vector），链表（list），堆栈（stack），队列（queue），优先队列（priority queue）等，其中stack和queue只是将deque（双端队列）设限而得到的，技术上可以被归为一种配接器（adaptor）。本系列文章将依次解读SGI STL各容器的关键实现细节。</p>
+
+<h2>2. vector 及其数据结构</h2>
+
+<p>在STL中，vector的空间在物理上就是连续的，而且是可以动态扩展的，这里的动态扩展，不需要用户去处理溢出的问题，而只需要关心上层逻辑。vector连续物理空间的动态扩展技术是该容器的关键，它主要分为三个步骤：配置新空间，数据移动，释放旧空间。这三个步骤执行的次数以及每次执行时的效率是影响最终 vector 效率的关键因素。为了减少执行的次数，就需要未雨绸缪，每次扩充空间时，成倍增长。而每次执行的效率，就主要是数据移动的效率了。下面，我们依次介绍vector的数据结构，使用的空间配置器和迭代器，以及常用操作。<br/>
+<strong>vector 的数据结构</strong><br/>
+vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>class _Vector_base {
+</span><span class='line'>protected:
+</span><span class='line'>  _Tp* _M_start;
+</span><span class='line'>  _Tp* _M_finish;
+</span><span class='line'>  _Tp* _M_end_of_storage;
+</span><span class='line'>};
+</span><span class='line'>class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">深入理解STL源码(2) 迭代器(Iterators)和Traits</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-21T21:46:00+08:00" pubdate data-updated="true">Jun 21<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有 <code>iterator.h</code>, <code>stl_iterator_base.h</code>, <code>concept_checks.h</code>, <code>stl_iterator.h</code>, <code>type_traits.h</code>, <code>stl_construct.h</code>, <code>stl_raw_storage_iter.h</code> 等7个文件。</p>
+
+<h2>1. 迭代器的设计思维</h2>
+
+<p>迭代器（iterators）是一种抽象的设计概念，显示程序中并没有直接对应于这个概念的实体。在 <em>Design Patterns</em> 一书中，对 iterators 模式的定义如下：提供一种方法，使之能够依序遍历某个聚合物（容器）所包含的各个元素，而又无需暴露该聚合物内部的表述方式。</p>
+
+<p>在STL中迭代器扮演着重要的角色。STL的中心思想在于：将数据容器（container）和算法（algorithm）分开，彼此独立设计，最后再通过某种方式将他们衔接在一起。容器和算法的泛型化，从技术的角度来看并不困难，C++ 的 class template 和 function template 可以分别达到目标，难点在于如何设计二者之间的衔接器。</p>
+
+<p>在STL中，起者这种衔接作用的是迭代器，它是一种行为类似指针的对象。指针的各种行为中最常见也最重要的便是内容获取（dereference）和成员访问（member access），因此迭代器最重要的工作就是对 <code>operator*</code> 和 <code>operator-&gt;</code> 进行重载。然而要对这两个操作符进行重载，就需要对容器内部的对象的数据类型和存储结构有所了解，于是在 STL 中迭代器的最终实现都是由容器本身来实现的，每种容器都有自己的迭代器实现，例如我们使用vector容器的迭代器的时候是这样用的 <code>vector&lt;int&gt;::iterator it;</code> 。而本文所讨论的迭代器是不依存于特定容器的迭代器，它在STL中主要有以下两个方面的作用（我自己的理解和总结）：</p>
+
+<blockquote><ul>
+<li>规定容器中需要实现的迭代器的类型及每种迭代器的标准接口</li>
+<li>通过Traits编程技巧实现迭代器相应型别的获取，弥补 C++ 模板参数推导的不足，为配置器提供可以获取容器中对象型别的接口</li>
+</ul>
+</blockquote>
+
+<p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器(allocator)</a></h1>
     
     
@@ -634,129 +768,6 @@ $(document).ready(function(){
   
     <footer>
       <a rel="full-article" href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/11/swap-two-variables-in-place/">原地交换两个变量的值</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-11T22:27:00+08:00" pubdate data-updated="true">Apr 11<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/11/swap-two-variables-in-place/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>引子</h2>
-
-<p>在码代码的过程中，不经意间就会遇到需要交换两个变量的情况，一般情况下都是通过新定义一个同类型的变量来中转，但自己也知道可以不用定义新变量直接原地交换，但具体如何原地交换以及其中可能隐藏的bug却了解得不是很清楚，于是乎google了一下，发现这里面还真是有很多学问呢，这里整理和总结一下。</p>
-
-<p>原地交换两个变量，最主要有加减法和异或法。</p>
-
-<p>本文完整代码链接：<a href="../upload/code/20140411.cpp">20140411.cpp</a></p>
-
-<h2>加减法</h2>
-
-<p>加减法最简单、最好理解了，设待交换的两个变量分别为 a 和 b ，首先将两者的和赋给 a ；然后将 a 与 b的差赋给 b ，这样 b 就是 a 原来的值了；最后再将 a 与 b 的差赋给 a ，这样 a 就是 b 原来的值了。具体代码如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline template &lt;class T&gt;
-</span><span class='line'>void xswap(T &a,T &b){
-</span><span class='line'>    a=a+b;
-</span><span class='line'>  //printf("a=%u\n",a);
-</span><span class='line'>    b=a-b;
-</span><span class='line'>    a=a-b;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/11/swap-two-variables-in-place/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/16/go-concurrent-programming-first-try/">Go并发编程初探</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-16T23:35:00+08:00" pubdate data-updated="true">Mar 16<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/03/16/go-concurrent-programming-first-try/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>概述</h2>
-
-<p>最近在做的一个项目，需要对大量数据进行一些基本的统计和处理，整个程序的思路很简单，但处理起来却很慢，特别是有二重循环的地方，龟速前进，眼看着16核32线程
-的服务器只有一个线程被利用，束手无策。之前一直听说Go是一门对并发编程有很好的支持的语言，七牛的许牛大力推崇Go语言，于是就开始了对Go并行编程的探索之旅。</p>
-
-
-<center><img src="/images/2014/IMAG2014031601.jpg"></center>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/16/go-concurrent-programming-first-try/">Read on &rarr;</a>
     </footer>
   
 

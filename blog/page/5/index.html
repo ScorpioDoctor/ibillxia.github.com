@@ -182,6 +182,124 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/05/08/speech-processing-in-time-domain/">语音信号处理基础学习笔记之时域处理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T23:13:00+08:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/08/speech-processing-in-time-domain/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>语音信号的分析分为时域、频域、倒谱域等，时域分析简单、运算量小、物理意义明确，但对于语音识别而言，
+更为有效的是频域的分析方法，那么为什么还有进行时域的分析呢？</p>
+
+
+
+
+<p>语音信号具有时变特性，但在短时内可以看做是平稳的，所以语音的时域分析是建立在“短时”的条件下的，经研究统计，
+语音信号在帧长为10ms~30ms内是相对平稳的。</p>
+
+
+
+
+<p>语音信号是模拟信号，在进行处理之前，要进行数字化，模拟信号数字化的一般方法是采样，按照Nyquist采样定理进行
+采样（一般在8K~10KHz）后，在进行量化（一般用8bit，也有16bit等）和编码，变为数字信号。</p>
+
+
+
+
+<p>在语音信号数字化之后，就可以开始对其进行处理了，首先是预处理，由于语音信号的平均功率谱受声门激励和口鼻辐射的影响，
+高频端大约在800Hz以上按6dB/倍频程跌落，为此要在预处理中进行预加重。预加重的目的是提升高频部分，是信号变得平坦，
+以便于进行频谱分析或声道参数分析。预加重可以用具有6dB/倍频程的提升高频特性的预加重数字滤波器实现。预处理的另一
+方面工作是分帧和加窗：分帧的帧长一般在10ms~30ms，分帧既可以是连续的，也可以是有部分over-lap；短时分析的实质是
+对信号加窗，一般采用Hamming窗，其他的还有矩形窗、汉宁窗等，如下图所示。
+<center><img src="/images/2013/IMAG2013050801.png"></center>
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/08/speech-processing-in-time-domain/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/01/go-hiking-International-Labour-Day/">五一登高远足</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-01T22:01:00+08:00" pubdate data-updated="true">May 1<span>st</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/01/go-hiking-International-Labour-Day/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>五一天晴气爽，登高望远，强身健体！只可惜“不畏浮云遮望眼，只缘身在最高层” 这句诗在空气严重污染的今天已不适用了！</p>
+
+
+
+
+<p><img src="/images/2013/IMAG2013050101.jpg">
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/01/go-hiking-International-Labour-Day/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/">使用Alize等工具构建说话人识别平台</a></h1>
     
     
@@ -208,7 +326,7 @@ $(document).ready(function(){
 
 
   <div class="entry-content"><p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
-开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>.</p>
+开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>. 现在新版的 Alize 3.0 已经提供了更多的官方 demo，我也将 GitHub 的源码升级了 <a href="https://github.com/ibillxia/VoicePrintReco">VPR2.0</a>， 其中的Demos文件夹有Alize官方的4个demo和我自己写的这个demo。</p>
 
 <h3>基本流程</h3>
 
@@ -233,11 +351,11 @@ EnergyDetector.exe 基于能量检测的静音去除</p>
 
 <h4>5.Target model training</h4>
 
-<p>TrainTarget.exe 在训练好UBM的基础上训练training set和testing set的GMM</br></p>
+<p>TrainTarget.exe 在训练好UBM的基础上训练training set的GMM</br></p>
 
 <h4>6.Testing</h4>
 
-<p>ComputeTest.exe 将testing set 的GMM在training set的GMM上进行测试和打分</br></p>
+<p>ComputeTest.exe 将testing set在training set的GMM上进行测试和打分</br></p>
 
 <h4>7.Score Normalization</h4>
 
@@ -714,131 +832,6 @@ Lagrange, 1736-1813)和拉普拉斯(Pierre Simon de Laplace, 1749-1827)，当拉
   
     <footer>
       <a rel="full-article" href="/blog/2013/03/30/back-propagation-neural-networks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/27/learning-process-of-neural-networks/">神经网络的学习方法概述</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/03/27/learning-process-of-neural-networks/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文主要讨论一下神经网络的一般学习方法，主要有error-correction learning，memory-based learning， Hebbian learning，competitive learning，
-Boltzmann learning等。然后介绍一些学习的方式，如监督学习、非监督学习、强化学习等。最后是一些具体的应用领域和实际问题。</p>
-
-
-
-
-<h2>1.Knowledge Representation</h2>
-
-
-<p>好的学习方法固然重要，但知识的表示，直接影响到feature的表示，也是非常重要的，因此在正式讨论学习方法之前，我们首先谈谈知识的表示。
-首先一个问题是，什么是知识？在PRML中我们有如下定义：</br>
-<blockquote><p>Knowledge refers to stored information or models used by a person or machine to interpret, predict, and appropriately respond to the outside world.</p><footer><strong>Fischler and Firschein</strong> <cite>Intelligence: The Eye，the Brain and the Computer</cite></footer></blockquote>
-</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/27/learning-process-of-neural-networks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/24/classes-of-neural-networks/">神经网络模型分类</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T23:07:00+08:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/03/24/classes-of-neural-networks/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文主要介绍一下几种不同类型的神经网络模型，主要有前馈神经网络，反馈神经网络，自组织神经网络，随机神经网络</p>
-
-
-
-
-<h2>1.前馈神经网络</h2>
-
-
-<h4>1)自适应线性神经网络(Adaline)</h4>
-
-
-<p>自适应线性神经网络（Adaptive Linear，简称Adaline) 是由威德罗（Widrow）和霍夫（Hoff）首先提出的。它与感知器的主要不同之处在于
-其神经元有一个线性激活函数，这允许输出可以是任意值，而不仅仅只是像感知器中那样只能取0或1。它采用的是W—H学习法则，也称最小均方差(LMS)
-规则对权值进行训练。自适应线性元件的主要用途是线性逼近一个函数式而进行模式联想。</p>
-
-
-
-
-<h4>2)单层感知器</h4>
-
-
-<p>单层感知器（Perceptron）是由美国计算机科学家罗森布拉特（F.Roseblatt）于1957年提出的。它是一个具有单层神经元的网络，由线性阈值
-逻辑单元所组成。它的输入可以是非离散量，而且可以通过学习而得到，这使单层感知器在神经网络研究中有着重要的意义和地位：它提出了自组织、
-自学习的思想，对能够解决的问题，有一个收敛的算法，并从数学上给出了严格的证明。</p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/24/classes-of-neural-networks/">Read on &rarr;</a>
     </footer>
   
 

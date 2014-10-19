@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SPro | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/spro/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-10-07T15:43:22+08:00</updated>
+  <updated>2014-10-19T22:04:43+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -19,7 +19,7 @@
     <updated>2013-04-26T22:07:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc</id>
     <content type="html"><![CDATA[<p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
-开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>.</p>
+开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>. 现在新版的 Alize 3.0 已经提供了更多的官方 demo，我也将 GitHub 的源码升级了 <a href="https://github.com/ibillxia/VoicePrintReco">VPR2.0</a>， 其中的Demos文件夹有Alize官方的4个demo和我自己写的这个demo。</p>
 
 <h3>基本流程</h3>
 
@@ -44,11 +44,11 @@ EnergyDetector.exe 基于能量检测的静音去除</p>
 
 <h4>5.Target model training</h4>
 
-<p>TrainTarget.exe 在训练好UBM的基础上训练training set和testing set的GMM</br></p>
+<p>TrainTarget.exe 在训练好UBM的基础上训练training set的GMM</br></p>
 
 <h4>6.Testing</h4>
 
-<p>ComputeTest.exe 将testing set 的GMM在training set的GMM上进行测试和打分</br></p>
+<p>ComputeTest.exe 将testing set在training set的GMM上进行测试和打分</br></p>
 
 <h4>7.Score Normalization</h4>
 

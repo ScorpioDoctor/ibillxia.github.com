@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C++ | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-10-07T15:43:22+08:00</updated>
+  <updated>2014-10-19T22:04:43+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,337 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(5.2) 算法之数值算法]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/"/>
+    <updated>2014-10-19T20:28:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms</id>
+    <content type="html"><![CDATA[<p>本文主要介绍STL中的数值算法，主要涉及到的源码文件有 <code>stl_numberic.h</code>、<code>numeric</code>、<code>stl_relops.h</code> 等。</p>
+
+<p>STL 数值算法主要包含以下几个算法（来自<a href="http://www.cplusplus.com/reference/numeric/">C++文档</a>）：</p>
+
+<ul>
+<li>accumulate: Accumulate values in range</li>
+<li>adjacent_difference: Compute adjacent difference of range</li>
+<li>inner_product: Compute cumulative inner product of range</li>
+<li>partial_sum: Compute partial sums of range</li>
+<li>iota: Store increasing sequence</li>
+<li>power: power(x,n) 1 multiply by x n times (not in C++ standard)</li>
+</ul>
+
+
+<p>下面一一介绍每个算法的实现。</p>
+
+<h3>1. accumulate</h3>
+
+<p>该算法计算 init 和区间 [first, last) 内所有元素的总和。注意，必须提供 init 的初始值，这样即使 first=last 区间为空，仍能得到一个明确定义的值。当 init=0 时，即为计算 [first, last) 区间内所有元素的总和。具体实现有两个版本，如下：</p>
+
+<p>```
+template <class _InputIterator, class _Tp>
+<em>Tp accumulate(</em>InputIterator <strong>first, _InputIterator </strong>last, <em>Tp <strong>init){
+  </strong>STL_REQUIRES(</em>InputIterator, _InputIterator); // concept check
+  for ( ; <strong>first != </strong>last; ++__first)</p>
+
+<pre><code>__init = __init + *__first; // 求和
+</code></pre>
+
+<p>  return <strong>init;
+}
+template <class _InputIterator, class _Tp, class _BinaryOperation>
+<em>Tp accumulate(</em>InputIterator </strong>first, <em>InputIterator __last, </em>Tp <strong>init, _BinaryOperation </strong>binary_op){
+  <strong>STL_REQUIRES(<em>InputIterator, </em>InputIterator); // concept check
+  for ( ; </strong>first != <strong>last; ++</strong>first)</p>
+
+<pre><code>__init = __binary_op(__init, *__first); // 指定二元操作
+</code></pre>
+
+<p>  return <em><em>init;
+}
+```
+第二个版本通过仿函数参数 </em>binary_op 指定操作类型，可以实现其他方式的累计，例如累乘等（令init=1，</em>binary_op=multiply）。</p>
+
+<h3>2. adjacent_difference</h3>
+
+<p>该算法用来计算区间 [first, last) 中相邻元素的差（或其他指定运算，结果[i]=当前元素[i]的值-前驱元素[i-1]的值），该算法也有两个版本，一个是指定运算为差，另一个传入仿函数(参数 _binary_op)指定具体运算，这里贴出第二个版本：</p>
+
+<p>```
+template <class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOperation>
+<em>OutputIterator
+__adjacent_difference(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
+
+<pre><code>                  _OutputIterator __result, _Tp*, _BinaryOperation __binary_op) {
+</code></pre>
+
+<p>  _Tp <strong>value = *</strong>first;
+  while (++<strong>first != </strong>last) { // 先 ++ ，再比较</p>
+
+<pre><code>_Tp __tmp = *__first; // 取第i+1个元素的值
+*++__result = __binary_op(__tmp, __value);
+__value = __tmp; // 保存第i个元素的值
+</code></pre>
+
+<p>  }
+  return ++<strong>result;
+}
+template <class _InputIterator, class _OutputIterator, class _BinaryOperation>
+<em>OutputIterator adjacent_difference(</em>InputIterator </strong>first, _InputIterator __last,</p>
+
+<pre><code>                _OutputIterator __result, _BinaryOperation __binary_op) {
+</code></pre>
+
+<p>  if (<strong>first == </strong>last) return <strong>result; // 区间为空，直接返回
+  *</strong>result = *<strong>first; // 第一个元素没有前驱，直接将当前值赋给结果
+  return </strong>adjacent_difference(<strong>first, </strong>last, __result,</p>
+
+<pre><code>                           __VALUE_TYPE(__first), __binary_op);
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>3. inner_product</h3>
+
+<p>该算法实现区间 [first1, last1) 和区间 [first2, first2+(last1-first1) ) 的一般内积（generalized inner product），公式为$init = init+(<em>i) * (</em>(first2+(i-first1)))$同样需要提供 init 的值（理由同accumulate）。另外还有一个版本，提供两个仿函数，分别指定上面公式中的加法和乘法。第一个版本的代码如下：
+```
+template <class _InputIterator1, class _InputIterator2, class _Tp>
+<em>Tp inner_product(</em>InputIterator1 <strong>first1, _InputIterator1 </strong>last1,</p>
+
+<pre><code>              _InputIterator2 __first2, _Tp __init) {
+</code></pre>
+
+<p>  for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
+
+<pre><code>__init = __init + (*__first1 * *__first2);
+</code></pre>
+
+<p>  return __init;
+}
+```
+可以看到，这里其实没有判断第二个区间是否越界，所以在调用时需要我们自己注意，但一般来说计算内积的两个区间都是相同长度的。</p>
+
+<h3>4. partial_sum</h3>
+
+<p>该算法用来计算局部总和，将 <code>*first</code> 赋值给 <code>*result</code>，将 <code>*frist+*(first+1)</code> 赋值给 <code>*(result+1)</code>，依次类推，即有 <code>result[i]=sum(*first..*(first+i))</code>，这是默认的操作为加法的版本，还有一个版本可以通过仿函数指定操作，以下是默认版本：
+```
+template <class _InputIterator, class _OutputIterator, class _Tp>
+<em>OutputIterator __partial_sum(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
+
+<pre><code>          _OutputIterator __result, _Tp*) {
+</code></pre>
+
+<p>  _Tp <strong>value = *</strong>first;
+  while (++<strong>first != </strong>last) {</p>
+
+<pre><code>__value = __value + *__first;
+*++__result = __value; // result 先++，再提领、赋值
+</code></pre>
+
+<p>  }
+  return ++<strong>result;
+}
+template <class _InputIterator, class _OutputIterator>
+<em>OutputIterator partial_sum(</em>InputIterator </strong>first, _InputIterator __last,</p>
+
+<pre><code>        _OutputIterator __result){
+</code></pre>
+
+<p>  if (<strong>first == </strong>last) return <strong>result;
+  *</strong>result = *<strong>first; // 第一项直接赋值
+  return </strong>partial_sum(<strong>first, </strong>last, <strong>result, </strong>VALUE_TYPE(__first));
+}
+```</p>
+
+<h3>5. itoa</h3>
+
+<p>该算法不是C++/STL标准，主要作用是将区间 [first, last) 的值赋值为 value,value+1,value+2,... 如下：
+```
+template <class _ForwardIter, class _Tp>
+void iota(<em>ForwardIter __first, </em>ForwardIter <strong>last, _Tp </strong>value){
+  while (<strong>first != </strong>last)</p>
+
+<pre><code>*__first++ = __value++;
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>6. power</h3>
+
+<p>该算法也不是C++/STL标准，作用在于实现 x 的 n 次方的计算，通过将n分解为2的幂来计算。还有一个版本是用户可以指定运算，而不一定是乘法。默认版本如下：
+```
+template <class _Tp, class _Integer, class _MonoidOperation>
+<em>Tp __power(</em>Tp <strong>x, _Integer </strong>n, _MonoidOperation <strong>opr){ // func1：幂方的具体实现
+  if (</strong>n == 0)</p>
+
+<pre><code>return identity_element(__opr);
+</code></pre>
+
+<p>  else {</p>
+
+<pre><code>while ((__n &amp; 1) == 0) { // 二进制末尾为0
+  __n &gt;&gt;= 1; // n/2
+  __x = __opr(__x, __x); // 乘方
+}
+_Tp __result = __x;
+__n &gt;&gt;= 1;
+while (__n != 0) {
+  __x = __opr(__x, __x); // 乘方
+  if ((__n &amp; 1) != 0) // 二进制末尾为1
+    __result = __opr(__result, __x); // 乘入结果
+  __n &gt;&gt;= 1;
+}
+return __result;
+</code></pre>
+
+<p>  }
+}
+template <class _Tp, class _Integer>
+inline <em>Tp __power(</em>Tp <strong>x, _Integer </strong>n){ // func2
+  return <strong>power(</strong>x, <strong>n, multiplies<_Tp>()); // 调用func3
+}
+template <class _Tp, class _Integer, class _MonoidOperation>
+inline <em>Tp power(</em>Tp </strong>x, <em>Integer __n, </em>MonoidOperation <strong>opr){ // func3
+  return </strong>power(<strong>x, </strong>n, <strong>opr); // 调用func1
+}
+template <class _Tp, class _Integer>
+inline <em>Tp power(</em>Tp </strong>x, _Integer <strong>n){
+  return </strong>power(<strong>x, </strong>n); // 调用func2
+}
+```
+饶了几道弯，主要看 func1实现即可。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(5.1) 算法]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/"/>
+    <updated>2014-10-12T21:30:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview</id>
+    <content type="html"><![CDATA[<h2>1. 算法概述</h2>
+
+<p>算法（Algorithm）是一个计算的具体步骤，常用于计算、数据处理和自动推理。Donald Knuth 在他的著作 The Art of Computer Programming 里对算法的特征归纳（来自wiki）：</p>
+
+<ul>
+<li>输入：一个算法必须有零个或以上输入量。</li>
+<li>输出：一个算法应有一个或以上输出量，输出量是算法计算的结果。</li>
+<li>明确性：算法的描述必须无歧义，以保证算法的实际执行结果是精确地符合要求或期望，通常要求实际运行结果是确定的。</li>
+<li>有限性：依据图灵的定义，一个算法是能够被任何图灵完备系统模拟的一串运算，而图灵机只有有限个状态、有限个输入符号和有限个转移函数（指令）。而一些定义更规定算法必须在有限个步骤内完成任务。</li>
+<li>有效性：又称可行性。能够实现，算法中描述的操作都是可以通过已经实现的基本运算执行有限次来实现。</li>
+</ul>
+
+
+<p>算法的核心是创建问题抽象的模型和明确求解目标，常见的算法有分治法、贪婪算法、动态规划、平摊分析等。再好的编程技巧，也无法让一个笨拙的算法起死回生，选择了错误的算法，便注定了失败的命运。</p>
+
+<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模$n$的函数$f(n)$，算法的时间复杂度也因此记做：<br/>
+$T(n) = O(f(n))$<br/>
+算法执行时间的增长率与$f(n)$的增长率正相关，称作渐近时间复杂度（Asymptotic Time Complexity），简称时间复杂度。
+常见的时间复杂度有：常数阶$O(1)$,对数阶$O(log<em>{2}n)$,线性阶$O(n)$, 线性对数阶$O(nlog</em>{2}n)$,平方阶$O(n<sup>{2})$，立方阶$O(n<sup>{3})$</sup></sup> ，...， k次方阶$O(n<sup>{k})$,指数阶$O(2<sup>{n})$。随着问题规模$n$的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</sup></sup></p>
+
+<p>算法的<strong>空间复杂度</strong>是指算法需要消耗的空间资源。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
+
+<!-- more -->
+
+
+<h2>2. STL 算法概览</h2>
+
+<p>很多算法能用来解决特定问题（如排序、查找、复制、比较、组合等），并获得数学上的性能分析与证明，这样的算法非常具有复用性，STL 的算法组件就总结了70+ 个极具复用价值的算法，包括排序（sorting）、查找（searching）、排列组合（permutation）等，以及用于数据移动、复制、删除、比较、组合、运算等算法。</p>
+
+<p>某些特定的算法与特定的数据结构相关，例如二叉查找树和红黑树便是为了解决查找问题而发展出来的特殊数据结构，hashtable 拥有快速查找能力，又例如 max-heap 可以协助完成 heap sort，几乎可以说，特定的数据结构是为了实现某种特定的算法。这类与特定数据结构相关的算法，在前几篇介绍容器的文章中都有提到，而接下来几篇文章所要介绍的算法则是无特殊条件限制的空间中的某一段元素区间的算法，即泛型算法。</p>
+
+<h4>2.1 STL 算法的一般形式</h4>
+
+<p>所有泛型算法的前两个参数都是一对迭代器（iterators），通常称为 first 和 last，用以标识算法的操作区间，STL 习惯采用前闭后开区间表示法，写成 <code>[first, last)</code> ，当 <code>frist==last</code> 时，表示的是空区间。这个 <code>[first, last)</code> 的必要条件是，必须能够进过 increment （累加）操作的反复运用，从 first 到 last，编译器本身无法强求这一点，如果这个条件不成立，会导致无法预料的结果。</p>
+
+<p>前面讲<a href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">迭代器</a>时我们知道，STL有5类迭代器，他们是input、output、forward、bidirectional、random_access。_每个 STL 算法的声明，都表现出它所需要的最低程度的迭代器类型，例如 <code>find()</code> 需要一个 inputIterators 是最低要求，但也可以接受更高类型的，如 forwardIterators、bidirectionalIterators、randomAccessIterators，但如果传给它一个outputIterators，则会导致错误。将无效的迭代器传给某个算法，虽然是一种错误，却不能保证在编译时期就被捕捉出来，因为所谓的迭代器型别并不是真实的型别，他们只是 function template 的一种型别参数（type parameters）。</p>
+
+<p>许多 STL 算法都有很多个版本，除了默认的只包含迭代器参数的实现之外，还有一个可以传入仿函数（functor）参数的版本，例如 <code>unique()</code> 缺省情况下使用 <code>equality</code> 操作符来比较两个相邻的元素，但如果这些元素的型别并未提供 <code>equality</code> 操作符，或如果用户希望定义自己的 <code>equality</code> 操作符，便可以传一个仿函数给另一个版本的 <code>unique()</code> ，有些算法干脆将这样的两个版本分为两个不同名的实体，如 <code>find_if()</code>、<code>replace_if()</code> 等。</p>
+
+<h4>2.2 质变算法与非质变算法</h4>
+
+<p>所谓<strong>质变算法</strong>（mutating algorithms），是指算法运算过程中，会更改区间<code>[first, last)</code>内（迭代器所指）的元素内容，诸如复制（copy）、互换（swap）、替换（replace）、填充（fill）、删除（remove）、排列组合（permutation）、分割（partition）、随机重排（random shuffling）等，都属于此类。通常质变算法提供两个版本，一个是就地（in-place）进行，另一个是copy（另地进行）版本，将操作对象复制一份副本，然后在副本上进行修改并返回该副本。copy版一般以 <code>_copy</code> 作为函数名后缀，例如 <code>replace_copy()</code> 等。但并不是所有的质变算法都提供copy版，例如 sort 就没有。如果我们一定要使用 copy 版，需要我们自己先 copy 一份副本，然后再将副本传给相应的算法。</p>
+
+<p>所谓<strong>非质变算法</strong>（nonmutating algorithms），是指算法运算过程中不会更改区间<code>[first, last)</code>内的元素内容，诸如查找（find）、匹配（search）、计数（count）、巡访（for_each）_、比较（equal，mismatch）、寻找极值（max、min）等。</p>
+
+<h4>2.3 STL 算法的分类</h4>
+
+<p>STL 算法的实现主要在 <code>stl_algobase.h</code>、<code>stl_algo.h</code>、<code>stl_numeric.h</code> 这3个文件中，其中 <code>stl_numeric.h</code> 主要是数值（numeric）算法，包括 <code>adjecent_difference()</code>、<code>accumulate()</code>、<code>inner_product()</code>、<code>partial_sum()</code> 等，相关接口封装在 <code>&lt;numeric&gt;</code> 中。而其他算法如复制、填充、交换、求极值、排列、排序、分割等等算法则在剩下的那两个文件中，相关接口则封装在 <code>&lt;algorithm&gt;</code> 中。C++ 的 <a href="http://www.cplusplus.com/reference/algorithm/">官方文档</a> 将 STL 算法分为以下几类：</p>
+
+<ul>
+<li>Non-modifying sequence operations  非质变操作，查找、计数等</li>
+<li>Modifying sequence operations  质变操作，复制、交换、替换、填充、删除、逆转、旋转等</li>
+<li>Partitions 分割</li>
+<li>Sorting 排序</li>
+<li>Binary search (operating on partitioned/sorted ranges) 二分查找</li>
+<li>Merge (operating on sorted ranges) 合并</li>
+<li>Heap、Min/max、Other 堆算法、极值、其他等</li>
+</ul>
+
+
+<p>后续文章将分别介绍这些算法的具体实现。</p>
+
+<h2>3. 算法的泛化</h2>
+
+<p>上文提到过，很多算法是与底层的数据结构相关的，如何将算法独立于其所处理的数据结构之外，使它能够处理任何数据结构，或者在未知的数据结构（也许是 array，也许是vector，也许是list，也许是deque）上正确地实现操作，并不那么简单。其关键在于，需要把操作对象的型别加以抽象化，把操作对象的标示法和区间目标的移动行为抽象化。如此，整个算法也就在一个抽象层面了，这个过程称为算法的泛型化（generalized），简称泛化。</p>
+
+<p>下面以查找算法的泛化过程为例详细介绍算法泛化的奇妙。对于查找算法，我们首先想到的是在一个整型数组中查找指定元素，一个基本的实现如下：</p>
+
+<p>```
+int<em> find(int</em> arrayHead, int arraySize, int value){</p>
+
+<pre><code>for(int i=0; i &lt; arraySize; i++){
+    if(arrayHead[i] == value) break;
+}
+return &amp;(arrayHead[i]);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>该函数在数组中查找指定值的元素，返回找到的第一个符合条件的元素的地址，如果没有找到就返回最后一个元素的下一个位置（称为end）。当没有找到时，这里为什么要返回地址值（end）而不返回null呢？这是为了方便调用后续的泛型算法，但实际上该算法本身还是与容器相关的，而且暴露了很多容器的实现细节（如arraySize等）。为了让该算法适用于所有类型的容器，其操作应该更抽象化，可以让 find 接受两个指针作为参数，标识出一个操作区间，如下：</p>
+
+<p>```
+int<em> find(int</em> begin, int* end, int value){</p>
+
+<pre><code>while(begin != end &amp;&amp; *begin != value) ++begin;
+return begin;
+</code></pre>
+
+<p>}
+```</p>
+
+<p>该函数在区间 <code>[begin, end)</code> 内查找 value，并返回一个指针。这样做之后，已经隐藏了容器内部特性了，但不足的是，要求元素的数据类型为整型，我们可以通过模板参数来解决这个问题：</p>
+
+<p>```
+template<typename T>
+T<em> find(T</em> begin, T* end, const T&amp; value){</p>
+
+<pre><code>// 用到了operator !=,*,++
+while(begin != end &amp;&amp; *begin != value) ++begin;
+return begin; // 会引发copy行为
+</code></pre>
+
+<p>}
+```</p>
+
+<p>除了参数模板化之外，值得注意的是其中待查找的对象是以常引用的方式传递，这样对于大对象非常有利。于是，现在的find函数几乎适用于任何容器——只要该容器允许指针，而指针又都支持inequality（判断不相等）操作符、dereference（取值）操作符、（prefix）increment（前置式递增）操作符、copy（复制）行为这四种操作。</p>
+
+<p>但这个版本还不够泛化，因为参数被限制为指针，而那些支持以上四种操作、行为很像指针的某些对象就无法使用 find 了。在STL中有迭代器，它是一种行为类似指针的对象，是一种smart pointers，使用迭代器实现 find 如下：</p>
+
+<p>```
+template<class Iterator, class T>
+Iterator find(Iterator begin, Iterator end, const T&amp; value){</p>
+
+<pre><code>while(begin != end &amp;&amp; *begin != value) ++begin;
+return begin;
+</code></pre>
+
+<p>}
+```</p>
+
+<p>这便是一个完全泛化的find 函数，它与STL中的find函数几乎一模一样（不同之处可自行查看STL源码）。了解和理解了STL算法的泛化过程，就很容易看懂STL中很多其他的算法了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(4.5) 关联式容器之hashset和hashmap]]></title>
@@ -479,405 +810,6 @@ public:
 <h2>3. multimap</h2>
 
 <p>multimap 与 map 的关系和 multiset 与 set 的关系一样，即 multimap 允许键值（key）重复，插入操作使用 RB-tree 的 <code>insert_equal</code> ，其他都和 map 一样，这里就不贴源代码了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(4.2) 关联式容器之set和multiset]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/"/>
-    <updated>2014-08-17T21:30:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要有 <code>stl_set.h</code>、 <code>stl_multiset.h</code>、 <code>set.h</code>、 <code>multiset.h</code>、 <code>set</code> 等文件。</p>
-
-<h2>1. set 简介</h2>
-
-<p>set 即集合，相比于其他容器有些特别。首先是它的每个元素是唯一的，即不允许有相同的值出现。其次，作为一种关联容器，set 的元素不像 map 那样可以同时拥有实值（value）和键值（key），set 元素的键值就是实值，实值就是键值。<br/>
-由于 set 的实质和键值相同，共用同一个内存空间，而 set 的底层容器为红黑树（中序遍历有序），因此不能对其键值进行修改，否则会破坏其有序特性。为避免非法修改操作，在SGI STL的实现中，<code>set&lt;T&gt;::iterator</code> 被定义为 RB-tree 底层的 const_iterator，_杜绝写入操作。set 与 list 有一个相似的地方是，元素插入、删除后，之前的迭代器依然有效（被删除的那个元素的迭代器除外）。<br/>
-我们知道集合有一些特殊的操作，诸如并、交、差等，在STL的 set 中，默认也提供了这些操作，如交集 <code>set_intersection</code> 、联集 <code>set_union</code> 、差集 <code>set_difference</code> 和对称差集 <code>set_symmetric_difference</code> 等。与之前那些线性容器不同的是，这些 set 的操作并不是在 set 内部实现的，而是放在了算法模块（algorithm）中，其具体实现在后面的算法章节中会具体介绍。</p>
-
-<h2>2. set 的实现</h2>
-
-<p>前面多次提到 set 的底层采用 RB-tree 容器，这是因为 RB-tree 是一种比较高效的平衡二叉搜索树，能够很好的满足元素值唯一的条件，而且查找效率高。由于 RB-tree 已实现了很多操作，因此 set 基本上只是对 RB-tree 进行了一层简单的封装。下面是其实现的主要代码：</p>
-
-<!-- more -->
-
-
-<p>```
-template <class _Key, class _Compare, class _Alloc>
-class set {
-public:
-  typedef <em>Key     key_type;
-  typedef </em>Key     value_type; // 实值与键值同类型
-private:
-  typedef <em>Rb_tree&lt;key_type, value_type, </em>Identity<value_type>, key_compare, <em>Alloc> </em>Rep_type;
-  <em>Rep_type </em>M_t;  // 底层使用红黑树作为容器
-  set() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
-  set(const set&lt;<em>Key,</em>Compare,<em>Alloc>&amp; __x) : </em>M_t(<strong>x._M_t) {}  // 拷贝构造函数
-  pair&lt;iterator,bool> insert(const value_type&amp; </strong>x) { // 插入操作</p>
-
-<pre><code>pair&lt;typename _Rep_type::iterator, bool&gt; __p = _M_t.insert_unique(__x); 
-return pair&lt;iterator, bool&gt;(__p.first, __p.second);
-</code></pre>
-
-<p>  }
-  void erase(iterator __position) { // 删除操作</p>
-
-<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
-_M_t.erase((_Rep_iterator&amp;)__position); 
-</code></pre>
-
-<p>  }
-  void clear() { <em>M_t.clear(); } // 清空操作
-  iterator find(const key_type&amp; __x) const { return </em>M_t.find(<strong>x); } // 查找
-  size_type count(const key_type&amp; </strong>x) const { // 计数</p>
-
-<pre><code>return _M_t.find(__x) == _M_t.end() ? 0 : 1;
-</code></pre>
-
-<p>  }
-};
-template <class _Key, class _Compare, class _Alloc>
-inline bool operator==(const set&lt;<em>Key,</em>Compare,_Alloc>&amp; __x,</p>
-
-<pre><code>                   const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较相等操作符
-</code></pre>
-
-<p>  return <strong>x._M_t == </strong>y.<em>M_t;
-}
-template <class _Key, class _Compare, class _Alloc>
-inline bool operator&lt;(const set&lt;</em>Key,<em>Compare,</em>Alloc>&amp; __x,</p>
-
-<pre><code>                  const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较大小操作符
-</code></pre>
-
-<p>  return <strong>x._M_t &lt; </strong>y.<em>M_t;
-}
-<code>``
-可以看到基本都是调用</code></em>M_t<code>的方法来实现的，而这里的</code>_M_t` 是一个红黑树对象。</p>
-
-<h2>3. multiset</h2>
-
-<p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。<br/>
-```
-template <class _Key, class _Compare, class _Alloc>
-class multiset {
-public:
-  multiset(const value_type<em> __first, const value_type</em> __last)</p>
-
-<pre><code>: _M_t(_Compare(), allocator_type())
-{ _M_t.insert_equal(__first, __last); } // 构造函数
-</code></pre>
-
-<p>  iterator insert(const value_type&amp; __x) { // 插入操作</p>
-
-<pre><code>return _M_t.insert_equal(__x);
-</code></pre>
-
-<p>  }
-  iterator insert(iterator <strong>position, const value_type&amp; </strong>x) {</p>
-
-<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
-return _M_t.insert_equal((_Rep_iterator&amp;)__position, __x);
-</code></pre>
-
-<p>  }
-  void insert(const value_type<em> __first, const value_type</em> __last) {</p>
-
-<pre><code>_M_t.insert_equal(__first, __last);
-</code></pre>
-
-<p>  }
-  void insert(const_iterator <strong>first, const_iterator </strong>last) {</p>
-
-<pre><code>_M_t.insert_equal(__first, __last);
-</code></pre>
-
-<p>  }
-};
-```
-其他部分基本与 set 一样。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(4.1) 关联式容器之红黑树]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree/"/>
-    <updated>2014-08-03T21:30:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_tree.h</code> 这个文件。</p>
-
-<h2>0. 关联式容器</h2>
-
-<p>之前几篇文章详细介绍了SGI STL中序列式容器的实现，并提到过STL中还有一类关联式的容器。标准的STL管理师容器分为 set（集合）和map（映射表）两大类，以及这两大类的衍生体multiset（多键集合）和multimap（多键映射表），这些容器的底层机制均以RB-Tree（红黑树）完成。RB-Tree是一种非常高效的数据结构，它本质上是一种平衡的二叉搜索树，因而其查找的平均时间复杂度为元素总个数的对数（即logN）。在STL中RB-Tree是一个独立的容器，但并没有对用户的公开接口，仅提供给STL的set和map使用。<br/>
-SGI STL在标准STL之外，还提供了一类关联式容器——hash table（哈希表），以及以此为低层机制的hash set（散列集合）、hash map（散列映射表）、hash multiset（散列多键集合）和hash multimap（散列多键映射表）。相比于RB-Tree，hash table的时间效率更高，插入、删除、查找的时间复杂度均为常数时间，但需要比元素总个数多得多的空间。<br/>
-本文接下来主要介绍树及RB-Tree相关的内容，后续文章将具体介绍SGI STL中set、map、hash table的实现。</p>
-
-<h2>1. 树与二叉搜索树</h2>
-
-<p>树是一种非常常见而且实用的数据结构，几乎所有的操作系统都将文件存放在树状结构里，几乎所有编译器需要实现一个表达式树（expression tree），文件压缩所用的哈夫曼算法也需要用到树状结构，数据库所使用的B-tree则是一种相当复杂的树状结构。<br/>
-关于树的一些基本概念相信大家都比较熟悉，这里就不赘述了，如果需要可以google或看wikipedia，这里重点重温一下数据结构里的二叉搜索树、平衡二叉搜索树、AVL树。<br/>
-<strong>二叉搜索树</strong>：任何节点的键值大于其<strong>左子树</strong>中<strong>每一个</strong>节点的键值，并小于其<strong>右子树</strong>中的<strong>每一个</strong>节点的键值。根据二叉搜索树的定义可知，按照中序遍历该树可以得到一个有序的序列。平均情况下，二叉搜索树可以提供对数时间的插入和访问。其插入和查找的算法也很简单，每次与根节点的键值进行比较，小于根节点的键值则往根节点的左子树插入或查找，大于则往右子树插入或查找，无论是递归实现还是非递归实现都很简单。<br/>
-<strong>平衡二叉搜索树</strong>：上面提到二叉搜索数的<strong>平均</strong>性能为对数时间，这是因为二叉搜索树的深度与数据插入的顺序有关，如果插入的数据本身就比较有序，那么就会产生一个深度过大的树，甚至会退化为一个链表的结构，这中情况下，其查找的效率就是线性时间了。平衡二叉搜索树就是为了解决这个问题而产生的，“平衡”的意义是，没有任何一个节点过深。不同的平衡条件造就出不同的效率表现，以及不同的实现复杂度，如 <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL-Tree</a>、<a href="http://en.wikipedia.org/wiki/Red%E2%80%93black_tree">RB-Tree</a>、<a href="http://en.wikipedia.org/wiki/AA_tree">AA-Tree</a> _等。他们都比简单的二叉搜索树要复杂，特别是插入和删除操作，但他们可以避免高度不平衡的情况，因而查找时间较快。</p>
-
-<!-- more -->
-
-
-<p><strong>AVL树</strong>：AVL-tree（Adelson-Velskii-Landis tree）是一个加上了“额外平衡条件”的二叉搜索树，是一种高度平衡的二叉搜索树，它的这个额外的条件为：任何节点的左右子树高度相差最多1。该条件能够保证整棵树的高度为logN，但其插入和删除的操作也相对比较复杂，因为这些操作可能导致树的失衡，需要调整（或旋转）树的结构，使其保持平衡。插入时出现失衡的情况有如下四种（其中X为最小失衡子树的根节点）：</p>
-
-<blockquote><ol>
-<li>插入点位于X的左子节点的左子树——左左；</li>
-<li>插入点位于X的左子节点的右子树——左右；</li>
-<li>插入点位于X的右子节点的左子树——右左；</li>
-<li>插入点位于X的右子节点的右子树——右右。</li>
-</ol>
-</blockquote>
-
-<p>情况1和4对称，称为外侧插入，可以采用单旋转操作调整恢复平衡；2和3对称，称为内侧插入，可以采用双旋转操作调整恢复平衡：先经过一次旋转变成左左或右右，然后再经过一次旋转恢复平衡。1和2的实例如下图：<br/>
-<img src="/images/2014/IMAG2014080301.jpg"><br/>
-图中从中间到最右情况1的恢复平衡的旋转方法，只是其中节点3为新插入的元素；而最左到最右是情况2的恢复平衡的旋转方法，其中节点4为新插入的元素。情况3和4分别与2和1对称，其调整方法也很类似，就不赘述了。<br/>
-RB-tree是另一种被广泛使用的平衡二叉搜索树，也是SGI STL唯一实现的一种搜索树，作为关联式容器的底层容器。RB-tree的平衡条件不同于AVL-tree，但同样运用了单旋转和双旋转的恢复平衡的机制，下面我们详细介绍RB-tree的实现。</p>
-
-<h2>2. RB-tree的定义及数据结构</h2>
-
-<p>所谓RB-tree，不仅仅是一个二叉搜索树，而且必须满足以下规则：</p>
-
-<blockquote><ol>
-<li>每个节点不是红色就是黑色；</li>
-<li>根节点为黑色；</li>
-<li>每个叶子节点（NIL）为黑色；</li>
-<li>如果节点为红，其左右子节点必为黑；</li>
-<li>对每个节点，从该节点到其子孙中的叶子节点的所有路径上所包含的黑节点数目相同。</li>
-</ol>
-</blockquote>
-
-<p>上面的这些约束保证了这个树大致上是平衡的，这也决定了红黑树的插入、删除、查询等操作是比较快速的。 根据规则5，新增节点必须为红色；根据规则4，新增节点之父节点必须为黑色。当新增节点根据二叉搜索树的规则到达其插入点时，却未能符合上述条件时，就必须调整颜色并旋转树形。下图是一个典型的RB-tree（来自wiki）：<br/>
-<img src="/images/2014/IMAG2014080302.png"><br/>
-SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构如下：
-```
-typedef bool <em>Rb_tree_Color_type;
-const </em>Rb_tree_Color_type <em>S_rb_tree_red = false;
-const </em>Rb_tree_Color_type <em>S_rb_tree_black = true;
-//======================================
-struct </em>Rb_tree_node_base { // 节点的定义
-  typedef <em>Rb_tree_Color_type </em>Color_type;
-  typedef <em>Rb_tree_node_base* </em>Base_ptr;
-  <em>Color_type </em>M_color; // 节点颜色，实际为一个bool型变量
-  <em>Base_ptr </em>M_parent; // 指向父节点，方便遍历
-  <em>Base_ptr </em>M_left;
-  <em>Base_ptr </em>M_right;</p>
-
-<p>  static <em>Base_ptr </em>S_minimum(_Base_ptr __x) {</p>
-
-<pre><code>while (__x-&gt;_M_left != 0) __x = __x-&gt;_M_left;
-return __x;
-</code></pre>
-
-<p>  }
-  static <em>Base_ptr </em>S_maximum(_Base_ptr __x) {</p>
-
-<pre><code>while (__x-&gt;_M_right != 0) __x = __x-&gt;_M_right;
-return __x;
-</code></pre>
-
-<p>  }
-};
-//======================================
-template <class _Value> struct <em>Rb_tree_node : public </em>Rb_tree_node_base { // 节点的定义
-  typedef <em>Rb_tree_node<_Value>* </em>Link_type;
-  <em>Value </em>M_value_field;
-};
-<code>
-其中每个节点主要包含一个标志颜色的bool变量 `_M_color`，3个节点指针 `_M_parent` , `_M_left` , `_M_right`，2个成员函数 `_S_minimum` 和 `_S_maximum` （分别求取最小（最左）、最大（最右）节点）。  
-而RB-tree的定义如下：  
-</code>
-template <class _Tp, class _Alloc> struct <em>Rb_tree_base { // RB-tree的定义
-  typedef </em>Alloc allocator_type;
-  allocator_type get_allocator() const { return allocator_type(); }
-  <em>Rb_tree_base(const allocator_type&amp;)  : </em>M_header(0) { <em>M_header = </em>M_get_node(); } // 构造函数
-  ~<em>Rb_tree_base() { </em>M_put_node(<em>M_header); } // 析构函数
-protected:
-  </em>Rb_tree_node<_Tp><em> <em>M_header; // 根节点
-  typedef simple_alloc&lt;</em>Rb_tree_node<_Tp>, <em>Alloc> </em>Alloc_type; // 空间配置器
-  _Rb_tree_node<_Tp></em> <em>M_get_node()  { return </em>Alloc_type::allocate(1); } // 分配一个节点的空间
-  void <em>M_put_node(</em>Rb_tree_node<_Tp>* <strong>p) { _Alloc_type::deallocate(</strong>p, 1); } // 释放<em><em>p节点的空间
-};
-//======================================
-template &lt;class </em>Key, class </em>Value, class <em>KeyOfValue, class </em>Compare,</p>
-
-<pre><code>      class _Alloc = __STL_DEFAULT_ALLOCATOR(_Value) &gt;
-</code></pre>
-
-<p>class <em>Rb_tree : protected </em>Rb_tree_base&lt;<em>Value, </em>Alloc> {
-  typedef <em>Rb_tree_base&lt;</em>Value, <em>Alloc> </em>Base;
-// ...
-};
-<code>``
-可以看到RB-tree的空间配置器是</code>simple_alloc<code>配置器，按</code>_Rb_tree_node` 节点大小分配空间，每次分配或释放一个节点的空间。</p>
-
-<h2>3. RB-tree的迭代器</h2>
-
-<p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator--）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下： <br/>
-<code>
-struct _Rb_tree_base_iterator {
-  typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
-  typedef bidirectional_iterator_tag iterator_category;
-  void _M_increment()  { }
-  void _M_decrement()  { }
-};
-template &lt;class _Value, class _Ref, class _Ptr&gt;
-struct _Rb_tree_iterator : public _Rb_tree_base_iterator {
-  _Self&amp; operator++() { _M_increment(); return *this; }
-  _Self&amp; operator--() { _M_decrement(); return *this; }
-};
-</code>
-可以看到RB-tree的自增和自减操作是使用基迭代器的increment和decrement来实现的，这里仅分析自增操作的实现（自减操作类似的）。RB-tree的自增操作实际上是寻找中序遍历下当前节点的后一个节点，其代码如下：<br/>
-```
-  void _M_increment()  { // 自增操作，中序遍历的下一个节点</p>
-
-<pre><code>if (_M_node-&gt;_M_right != 0) { // 当前节点有右子树
-  _M_node = _M_node-&gt;_M_right;
-  while (_M_node-&gt;_M_left != 0) // 右子树的最左节点即为所求
-    _M_node = _M_node-&gt;_M_left;
-} else { // 当前节点没有右子树，找父节点且父节点的右子树不包含当前节点的祖先节点
-  _Base_ptr __y = _M_node-&gt;_M_parent;
-  while (_M_node == __y-&gt;_M_right) { // 当前节点在父节点的右子树中就继续往父节点的父节点找
-    _M_node = __y;
-    __y = __y-&gt;_M_parent;
-  }
-  if (_M_node-&gt;_M_right != __y)
-    _M_node = __y;
-}
-</code></pre>
-
-<p>  }
-```<br/>
-下面几节主要介绍一下RB-tree的基本操作。</p>
-
-<h2>4. RB-tree的插入操作</h2>
-
-<h4>4.1 基本插入操作</h4>
-
-<p>RB-tree提供两种插入操作，<code>insert_unique()</code> 和 <code>insert_equal()</code>，顾名思义，前者表示被插入的节点的键值在树中是唯一的（如果已经存在，就不需要插入了），后者表示可以存在键值相同的节点。这两个函数都有多个版本，下面以后者的最简单版本（单一参数：被插入的节点的键值）为实例进行介绍。下面是 <code>insert_equal</code> 的实现：
-```
-<em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc> ::insert_equal(const <em>Value&amp; __v) {
-  </em>Link_type <strong>y = <em>M_header;
-  </em>Link_type </strong>x = _M_root(); // 从根节点开始
-  while (__x != 0) { // 往下寻找插入点</p>
-
-<pre><code>__y = __x;
-// 比较，当前节点的键值比插入值大往左子树找，否则往右子树找
-__x = _M_key_compare(_KeyOfValue()(__v), _S_key(__x)) ? _S_left(__x) : _S_right(__x); 
-</code></pre>
-
-<p>  }
-  return <em>M_insert(<strong>x, </strong>y, __v); // 真正的插入操作，x为新插入节点，y为x的父节点，v为新值
-}
-//真正的插入操作，主要是对RB-tree及新节点的成员变量的设置
-</em>Rb_tree&lt;<em>Key,</em>Value,<em>KeyOfValue,</em>Compare,<em>Alloc> ::</em>M_insert(<em>Base_ptr __x</em>, <em>Base_ptr __y</em>, const <em>Value&amp; __v) {
-  </em>Link_type <strong>x = (_Link_type) </strong>x<em>;
-  </em>Link_type <strong>y = (_Link_type) </strong>y<em>;
-  </em>Link_type <strong>z;
-  if (</strong>y == <em>M_header || __x != 0 || </em>M_key_compare(<em>KeyOfValue()(__v), </em>S_key(__y))) {</p>
-
-<pre><code>__z = _M_create_node(__v); // 创建新节点
-_S_left(__y) = __z;     // makes _M_leftmost() = __z, when __y == _M_header
-if (__y == _M_header) { // y为header
-  _M_root() = __z;
-  _M_rightmost() = __z;
-} else if (__y == _M_leftmost()) // y为最左节点
-  _M_leftmost() = __z;  // maintain _M_leftmost() pointing to min node
-</code></pre>
-
-<p>  } else {</p>
-
-<pre><code>__z = _M_create_node(__v); // 创建新节点。???为什么不放到if-else上面???
-_S_right(__y) = __z; // 新节点为y的右孩子
-if (__y == _M_rightmost()) // y为最右节点
-  _M_rightmost() = __z; // maintain _M_rightmost() pointing to max node
-</code></pre>
-
-<p>  }
-  <em>S_parent(<strong>z) = </strong>y; // 设定新节点的父节点
-  </em>S_left(<strong>z) = 0;
-  _S_right(</strong>z) = 0;
-  <em>Rb_tree_rebalance(__z, </em>M_header-><em>M_parent); // 调整RB-tree使之恢复平衡
-  ++</em>M_node_count;
-  return iterator(<em>_z); // 返回指向新节点的迭代器
-}
-<code>``
-至此新节点插入完成。然而，由于新节点的插入，可能会引起RB-tree的性质4,5的破坏，需要对RB-tree进行旋转并对相关节点重新着色，这都是在</code></em>Rb_tree_rebalance` 这个函数中实现的，下面就主要介绍RB-tree是如何恢复平衡。</p>
-
-<h4>4.2 调整RB-tree使之恢复平衡</h4>
-
-<p>RB-tree的调整与AVL-tree类似但更复杂，因为不仅仅需要旋转，还需要考虑节点的颜色是否符合要求。破坏RB-tree性质4的可能起因是插入了一个红色节点、将一个黑色节点变为红色或者是旋转，而破坏性质5的可能原因是插入一个黑色的节点、节点颜色的改变（红变黑或黑变红）或者是旋转。<br/>
-在讨论 RB-tree 插入操作之前必须明白一点，那就是新插入的节点的颜色必为红色（调整前），因为插入黑点会增加某条路径上黑结点的数目，从而导致整棵树黑高度的不平衡。但如果新结点的父结点为红色时（如下图所示），将会违反红黑树的性质：一条路径上不能出现父子同为红色结点。这时就需要通过一系列操作来使红黑树保持平衡。为了清楚地表示插入操作以下在结点中使用“N”字表示一个新插入的结点，使用“P”字表示新插入点的父结点，使用“U”字表示“P”结点的兄弟结点，使用“G”字表示“P”结点的父结点。插入操作分为以下几种情况：<br/>
-<strong>1）、树为空</strong><br/>
-此时，新插入节点为根节点，上面说过新插入节点均为红色，这不符合RB-tree的性质2，只需要将新节点重新改为黑色即可。<br/>
-<strong>2）、黑父</strong><br/>
-如果新节点的父结点为黑色结点，那么插入一个红点将不会影响红黑树的平衡，此时插入操作完成。红黑树比AVL树优秀的地方之一在于黑父的情况比较常见，从而使红黑树需要旋转的几率相对AVL树来说会少一些。<br/>
-<strong>3）、红父</strong><br/>
-这种情况就比较复杂。由于父节点为红，所以祖父节点必为黑色。由于新节点和父节点均为红，所以需要重新着色或进行旋转，此时就需要考虑叔父节点的颜色，进而可能需要考虑祖父、祖先节点的颜色。
-<strong>3.1）、叔父为红</strong>
-只要将父和叔结点变为黑色，将祖父结点变为红色即可，如下图所示：<br/>
-<img src="/images/2014/IMAG2014080303.png"><br/>
-但由于祖父结点的父结点有可能为红色，从而违反红黑树性质。此时必须将祖父结点作为新的判定点<strong>继续向上</strong>（迭代）进行平衡操作。<br/>
-<strong>3.2）、叔父为黑</strong><br/>
-当叔父结点为黑色时，需要进行旋转，有4中情况（类似AVL），以下图示了所有的旋转可能：<br/>
-<img src="/images/2014/IMAG2014080304.png"><br/>
-可以观察到，当旋转完成后，新的旋转根全部为黑色，此时不需要再向上回溯进行平衡操作，插入操作完成。篇幅原因，相关代码这里就不粘贴出来了，要注意的一点就是case1和case2的变色方案是一样的，虽然从上图中看一个是P由红变黑，一个是N由红变黑，但实际上在case2中，经过一次旋转后，迭代器所指向的节点已经发生改变，这样刚好使得这两个case的变色方案相同，均为P由红变黑而G由黑变红。case3与case4的变色方案也是类似的。</p>
-
-<h2>5. RB-tree的删除操作</h2>
-
-<p>相比于插入操作，RB-tree的删除操作更加复杂。在侯捷的书上并没有讲删除操作，而在算法导论上是有专门的一节内容的，wiki上也有详细的讲述。限于篇幅，这里指讲解一个大概的思路，更详细的介绍请参见wiki或算法导论。RB-tree删除操作的基本思路是这样的，首先按照一般的二叉搜索树进行节点的删除，然后对RB-tree相关节点进行变色或旋转。<br/>
-一般的二叉搜索树删除节点的基本思路是：首先找到待删除节点位置，设为D。如果D同时有左右子树，那么用D的后继（右孩子的最左子节点，该后继最多有一个子节点——右孩子）替代D（<strong>注意</strong>：这里的替代是只key的替代，color不变，仍为D的color），从而将删除位置转移到该后继节点（成为新的D，为叶子节点或只有右孩子）。于是，我们只需要讨论删除只有一个儿子的节点的情况(如果它两个儿子都为空，即均为叶子，我们任意将其中一个看作它的儿子)，设这个儿子节点为N，这仍然需要分三种情况：<br/>
-<strong>1）D为红</strong><br/>
-这种情况比较简单。由于D为红色，所以它的父亲和儿子一定是黑色的，我们可以简单的用它的黑色儿子替换它，并不会破坏性质3和性质4。通过被删除节点的所有路径只是少了一个红色节点，这样可以继续保证性质5。<br/>
-  <strong>2）D为黑且N为红</strong><br/>
-如果只是去除这个黑色节点，用它的红色儿子顶替上来的话，会破坏性质5，可能会破坏性质4，但是如果我们重绘它的儿子为黑色，则曾经通过它的所有路径将通过它的黑色儿子，这样可以继续保持性质5，同时也满足性质4。<br/>
-<strong>3）D为黑且N为黑</strong><br/>
-这是一种复杂的情况。我们首先把要删除的节点D替换为它的（右）儿子N，在新树中（D被N覆盖），设N的父节点为P，兄弟为S，SL为S的左儿子，SR为S的右儿子。此时，以N为根节点的子树的黑高度减少了一，与S为根节点的子树的黑高度不一致，破坏了性质5。为了恢复，可以分为如下情形：<br/>
-<strong>3.1）N为根节点</strong><br/>
-已经满足所有性质，不需要调整。<br/>
-<strong>3.2） N是它父亲P的左儿子</strong><br/>
-<strong>case1、S为红色</strong>：将P改为红色，S改为黑色，以P为中心左旋，旋转后<strong>SL为新的S</strong>，SL和SR是新的S的左右孩子，此时case1就转化为了case2或case3或case4；<br/>
-注：case2~4中S均为黑色（否则是case1）。<br/>
-<strong>case2、SL、SR同为黑色</strong>：将S改为红色，这样黑高度失衡的节点变为P，转到3.1）重新开始判断和调整；<br/>
-<strong>case3、SR为黑</strong>：此时SL为红（否则是case2）。将S改为红色，SL改为黑色，然后以S为中心右旋，旋转后SL为新的S，而原S成为SR且为红色，这就将case3变成了case4；<br/>
-<strong>case4、SR为红</strong>：以P为中心左旋，然后交换P和S的颜色，最后将SR改为黑色，即可完成调整。可以看到调整过程与SL的颜色无关。<br/>
-<strong>3.3）N是它父亲P的右儿子</strong><br/>
-与3.2）类似，这里就不详细展开了。</p>
-
-<h2>6. RB-tree的查询操作</h2>
-
-<p>RB-tree是一个二叉搜索树，元素的查询是其拿手项目，非常简单，以下是RB-tree提供的查询操作：
-```
-template <class _Key, class _Value, class _KeyOfValue, class _Compare, class _Alloc>
-typename <em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::iterator
-<em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::find(const <em>Key&amp; __k) {
-  </em>Link_type <strong>y = _M_header;      // Last node which is not less than </strong>k.
-  <em>Link_type __x = </em>M_root();      // Current node.</p>
-
-<p>  while (__x != 0) // x为NIL时推出循环</p>
-
-<pre><code>if (!_M_key_compare(_S_key(__x), __k))
-  __y = __x, __x = _S_left(__x); // 往左子树找（赋值运算优先于逗号运算，y是x的父节点）
-else
-  __x = _S_right(__x); // 往右子树找
-</code></pre>
-
-<p>  iterator <strong>j = iterator(</strong>y); <br/>
-  return (<strong>j == end() || _M_key_compare(</strong>k, <em>S_key(__j.</em>M_node))) ?</p>
-
-<pre><code> end() : __j; // 没找到返回end()，否则返回相应节点的指针（迭代器）
-</code></pre>
-
-<p>}
-```</p>
-
-<h2>小结</h2>
-
-<p>关于RB-tree基本就介绍到这里了，主要是RB-tree的定义、数据结构、插入删除和查找等基本操作，其中最主要也最困难的就是插入和删除操作中恢复平衡的方法。另外，还介绍了二叉搜索树的基本概念和高度平衡的AVL树，可以看到，AVL树保持平衡的方法非常简单易懂，而RB-tree由于引入了节点的颜色属性，使得理解起来相对比较困难，那么问题就来了，为什么不用AVL-tree而用RB-tree作为set和map的低层容器呢？<br/>
-这个问题要问STL的实现者了，其实AVL-tree和RB-tree的平均性能在 <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL-tree的wiki</a> _上是有严格的数学公式的，AVL的平均高度为 $1.44logN$ ，而RB-tree的平均高度为 $2logN$ ，这些数据的来历也有相关的论文，感兴趣的可以更深入的看看。</p>
 ]]></content>
   </entry>
   

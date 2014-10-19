@@ -182,6 +182,244 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/03/07/11-zju-program-test-solution/">11年浙大复试机试题解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T19:56:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/07/11-zju-program-test-solution/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+11年浙大研究生复试机试题解
+</p>
+
+
+
+
+<h3>A题：A+B for Matrices （ 九度1001）</h3>
+
+
+<p>水题</p>
+
+
+
+
+<figure class='code'><figcaption><span>Problem A </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
+</span><span class='line'>int m,n,a[10][10],b[10][10];
+</span><span class='line'>int main()
+</span><span class='line'>{
+</span><span class='line'>    int i,j,cnt;
+</span><span class='line'>    while(scanf("%d",&m)&&m>0){
+</span><span class='line'>        scanf("%d",&n);
+</span><span class='line'>        for(i=0;i&lt;m;i++)
+</span><span class='line'>            for(j=0;j&lt;n;j++)
+</span><span class='line'>                scanf("%d",a[i]+j);
+</span><span class='line'>        for(i=0;i&lt;m;i++)
+</span><span class='line'>            for(j=0;j&lt;n;j++){
+</span><span class='line'>                scanf("%d",b[i]+j);
+</span><span class='line'>                a[i][j]+=b[i][j];
+</span><span class='line'>            }
+</span><span class='line'>        cnt=0;
+</span><span class='line'>        for(i=0;i&lt;m;i++){
+</span><span class='line'>            for(j=0;j&lt;n;j++)
+</span><span class='line'>                if(a[i][j])break;
+</span><span class='line'>            if(j==n)cnt++;
+</span><span class='line'>        }
+</span><span class='line'>        for(i=0;i&lt;n;i++){
+</span><span class='line'>            for(j=0;j&lt;m;j++)
+</span><span class='line'>                if(a[j][i])break;
+</span><span class='line'>            if(j==m)cnt++;
+</span><span class='line'>        }
+</span><span class='line'>        printf("%d\n",cnt);
+</span><span class='line'>    }
+</span><span class='line'>    return 0;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/07/11-zju-program-test-solution/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/07/10-zju-program-test-solution/">10年浙大复试机试题解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/03/07/10-zju-program-test-solution/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+10年浙大研究生复试机试题解
+</p>
+
+
+
+
+<h3>A题：A+B（hdoj3787）（九度1003）</h3>
+
+
+<p>水题，不解释，直接上代码：</p>
+
+
+
+
+<figure class='code'><figcaption><span>Problem A </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
+</span><span class='line'>long a,b;
+</span><span class='line'>int main()
+</span><span class='line'>{
+</span><span class='line'>    int i,f;
+</span><span class='line'>    char s[30];
+</span><span class='line'>    while(scanf("%s",s)!=EOF){
+</span><span class='line'>        a=b=0;
+</span><span class='line'>        if(s[0]=='-'){f=-1;i=1;}
+</span><span class='line'>        else {f=1;i=0;}
+</span><span class='line'>        while(s[i]){
+</span><span class='line'>            if(s[i]!=',')a=a*10+s[i]-'0';
+</span><span class='line'>            i++;
+</span><span class='line'>        }
+</span><span class='line'>        a=a*f;
+</span><span class='line'>        getchar();
+</span><span class='line'>        scanf("%s",s);
+</span><span class='line'>        if(s[0]=='-'){f=-1;i=1;}
+</span><span class='line'>        else {f=1;i=0;}
+</span><span class='line'>        while(s[i]){
+</span><span class='line'>            if(s[i]!=',')b=b*10+s[i]-'0';
+</span><span class='line'>            i++;
+</span><span class='line'>        }
+</span><span class='line'>        b=b*f;
+</span><span class='line'>        printf("%d\n",a+b);
+</span><span class='line'>    }
+</span><span class='line'>    return 0;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/07/10-zju-program-test-solution/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/03/05/09-zju-program-test-solution/">09年浙大复试机试题解</a></h1>
     
     
@@ -866,152 +1104,6 @@ $(document).ready(function(){
   
     <footer>
       <a rel="full-article" href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/03/Exception-handling-mechanism-in-c/">C语言中的异常处理机制</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-05-03T11:09:00+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2011</time>
-        
-         | <a href="/blog/2011/05/03/Exception-handling-mechanism-in-c/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.概述</h2>
-
-
-<p>什么是异常？异常一般指的是程序运行期（Run-Time）发生的非正常情况。异常一般是不可预测的，如：内存不足、打开文件失败、
-范围溢出等。UNIX 使用信号给出异常，并当发生异常时转跳到信号处理过程进行异常处理。DOS下的信号对比UNIX系统而言相对较少。</p>
-
-
-
-
-<p>我们知道，不管是在c++还是在java中，异常都被认为是一种很优雅的处理错误的机制。而如果想在c语言中使用异常就比较麻烦，
-但是我们仍然可以使用c语言中强大的setjmp和longjmp函数实现类似于c++的异常处理机制。</p>
-
-
-
-
-<p>异常处理的核心思想是，把功能模块代码与系统中可能出现错误的处理代码分离开来，以此来达到使我们的代码组织起来更美观、
-逻辑上更清晰，并且同时从根本上来提高我们软件系统长时间稳定运行的可靠性。那么，现在回过头来看，实际上在计算机系统的硬件
-设计中，操作系统的总体设计中，早期的许多面向结构化程序设计语言中(例如C语言)，都有异常处理的机制和方法的广泛运用。</p>
-
-
-
-
-<h2>2.基于goto语句的异常处理</h2>
-
-
-<p>goto语句，程序员朋友们对它太熟悉了，它是C语言中使用最为灵活的一条语句，由它也充分体现出了C语言的许多特点或者说是优点。
-它虽然是一条高级语言中提供的语句，但是它一般却直接对应一条“无条件直接跳转的机器指令”，所以说它非常地特别，它引起过许多
-争议，但是这条语句仍然一直被保留了下来，即便是今天的C++语言中，也有对它的支持(虽然不建议使用它)。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011/05/03/Exception-handling-mechanism-in-c/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/03/introduce-to-assert-in-c-language/">C语言断言简介</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-05-03T10:31:00+08:00" pubdate data-updated="true">May 3<span>rd</span>, 2011</time>
-        
-         | <a href="/blog/2011/05/03/introduce-to-assert-in-c-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.概述</h2>
-
-
-<p> 断言是对某种假设条件进行检查（可理解为若条件成立则无动作，否则应报告），它可以快速发现并定位软件问题，
-同时对系统错误进行自动报警。断言可以对在系统中隐藏很深，用其它手段极难发现的问题进行定位，从而缩短软件问题定位时间，
-提高系统的可测性。实际应用时，可根据具体情况灵活地设计断言。</p>
-
-
-
-
-<h2>2.标准断言机制</h2>
-
-
-<p>原型定义：</p>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;assert.h>
-</span><span class='line'>void assert( int expression_r_r_r );</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<p>assert的作用是现计算表达式 expression_r_r_r ，如果其值为假（即为0），
-那么它先向stderr打印一条出错信息，然后通过调用 abort来终止程序运行。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011/05/03/introduce-to-assert-in-c-language/">Read on &rarr;</a>
     </footer>
   
 

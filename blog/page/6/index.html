@@ -182,6 +182,131 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/03/27/learning-process-of-neural-networks/">神经网络的学习方法概述</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/03/27/learning-process-of-neural-networks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文主要讨论一下神经网络的一般学习方法，主要有error-correction learning，memory-based learning， Hebbian learning，competitive learning，
+Boltzmann learning等。然后介绍一些学习的方式，如监督学习、非监督学习、强化学习等。最后是一些具体的应用领域和实际问题。</p>
+
+
+
+
+<h2>1.Knowledge Representation</h2>
+
+
+<p>好的学习方法固然重要，但知识的表示，直接影响到feature的表示，也是非常重要的，因此在正式讨论学习方法之前，我们首先谈谈知识的表示。
+首先一个问题是，什么是知识？在PRML中我们有如下定义：</br>
+<blockquote><p>Knowledge refers to stored information or models used by a person or machine to interpret, predict, and appropriately respond to the outside world.</p><footer><strong>Fischler and Firschein</strong> <cite>Intelligence: The Eye，the Brain and the Computer</cite></footer></blockquote>
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/27/learning-process-of-neural-networks/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/24/classes-of-neural-networks/">神经网络模型分类</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-24T23:07:00+08:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/03/24/classes-of-neural-networks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文主要介绍一下几种不同类型的神经网络模型，主要有前馈神经网络，反馈神经网络，自组织神经网络，随机神经网络</p>
+
+
+
+
+<h2>1.前馈神经网络</h2>
+
+
+<h4>1)自适应线性神经网络(Adaline)</h4>
+
+
+<p>自适应线性神经网络（Adaptive Linear，简称Adaline) 是由威德罗（Widrow）和霍夫（Hoff）首先提出的。它与感知器的主要不同之处在于
+其神经元有一个线性激活函数，这允许输出可以是任意值，而不仅仅只是像感知器中那样只能取0或1。它采用的是W—H学习法则，也称最小均方差(LMS)
+规则对权值进行训练。自适应线性元件的主要用途是线性逼近一个函数式而进行模式联想。</p>
+
+
+
+
+<h4>2)单层感知器</h4>
+
+
+<p>单层感知器（Perceptron）是由美国计算机科学家罗森布拉特（F.Roseblatt）于1957年提出的。它是一个具有单层神经元的网络，由线性阈值
+逻辑单元所组成。它的输入可以是非离散量，而且可以通过学习而得到，这使单层感知器在神经网络研究中有着重要的意义和地位：它提出了自组织、
+自学习的思想，对能够解决的问题，有一个收敛的算法，并从数学上给出了严格的证明。</p>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/24/classes-of-neural-networks/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2013/03/20/basics-of-neural-networks/">神经网络简介</a></h1>
     
     
@@ -727,156 +852,6 @@ and the same lower-level concepts can help to define many higher-level concepts.
 
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/22/BCI-based-animal-robot-summarize/">基于BCI的动物机器人研究分析与展望</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/10/22/BCI-based-animal-robot-summarize/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>摘  要</h3>
-
-
-<p>动物机器人已经成为机器人技术领域的重要研究方向之一，动物运动制导是当今神经、信息和机器人等科学交叉研究的一个热点。
-本文结合基于BCI的大鼠动物机器人的实例来介绍有关动物机器人的研究进展、研究方法，并对其发展前景进行展望。</p>
-
-
-
-
-<h3>关键字</h3>
-
-
-<p>脑机接口；动物机器人；大鼠</p>
-
-
-
-
-<h3>0 前言</h3>
-
-
-<p>在科技日益发达的现代信息社会，我们对机器人已经不再陌生，比如：科幻片中的高级智能化的机器人、自动化生产线上的工业
-机器人、大型展馆里的导航服务机器人、太空中火星上的“勇气号”探险机器人等等。然而，它们的任何一个动作都是由电脑程序来
-完成的，而且所有动作都是程序固定的，不能够灵活，而且一旦能量耗尽将会滞留原地，进退维谷，可谓“出师未捷身先死”，在很多
-方面都不如动物灵活、敏捷，而且所消耗的能量也不能靠自身解决。</p>
-
-
-
-
-<p>回眸历史，人类利用动物来替代自己进行艰苦的工作，甚至人力所不能及的工作，己经有近万年了。在这近万年的历史里，产生了战马、
-耕牛、狩猎犬和信鸽等执行特殊任务的动物。但这些动物所执行的任务较为单一，智力含量较为低下，若是动物能够完全受控于人类，
-将是非常完美的设想。</p>
-
-
-
-
-<p>基于BCI (Brain-Computer Interface，脑-机接口)的动物机器人既很好地解决了微型机器人携带能量不足的问题，同时可以通过
-人工控制来执行一些特殊的、复杂的任务，还具有人类赋予的智能。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/10/22/BCI-based-animal-robot-summarize/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/26/convex-optimization-overview/">凸优化简介</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-26T23:03:00+08:00" pubdate data-updated="true">Sep 26<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/09/26/convex-optimization-overview/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在machine learning 的很多问题中，我们最终往往要求解某个函数的最优值。用数学术语表示就是，
-给定一个函数 $f: R<sup>{n}</sup> \rightarrow R$，求 $ x \in R<sup>{n}</sup> $使得$f(x)$ 取得最小（大）值。例如least-square,
-logistic regression, linear regression, svm, etc. 这类问题统称为优化问题。</p>
-
-<h2>1.引言</h2>
-
-
-<p>在一般情况下，求解任意一个函数的全局最优值是很困难的。但是对于一种特定类型的函数——凸函数（convex function），
-我们可以很有效的求解其全局最优值。这里的“有效”是指在实际问题求解中，能在多项式复杂度的时间里求解。
-人们将这类函数的最值问题称为凸优化问题（Convex Optimal Problem）。下面我从凸集和凸函数讲起，然后
-介绍凸优化的一般描述和典型问题举例。</p>
-
-
-
-
-<h2>2.凸集及其实例</h2>
-
-
-<p><strong>凸集的定义</strong>：一个集合$C$是凸集，当且仅当对任意$x,y\in C$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
-<center>$\theta x + (1-\theta)y \in C$.</center>
-其几何意义在于，在集合C中任取两个点，连接两点的直线段上的任一点也在集合C中。下图是凸集和非凸集的例子：</br>
-<img src="/images/201209026/IMAG20120902601.jpg">
-</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/09/26/convex-optimization-overview/">Read on &rarr;</a>
-    </footer>
   
 
 

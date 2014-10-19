@@ -182,6 +182,353 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/">深入理解STL源码(5.2) 算法之数值算法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-19T20:28:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文主要介绍STL中的数值算法，主要涉及到的源码文件有 <code>stl_numberic.h</code>、<code>numeric</code>、<code>stl_relops.h</code> 等。</p>
+
+<p>STL 数值算法主要包含以下几个算法（来自<a href="http://www.cplusplus.com/reference/numeric/">C++文档</a>）：</p>
+
+<ul>
+<li>accumulate: Accumulate values in range</li>
+<li>adjacent_difference: Compute adjacent difference of range</li>
+<li>inner_product: Compute cumulative inner product of range</li>
+<li>partial_sum: Compute partial sums of range</li>
+<li>iota: Store increasing sequence</li>
+<li>power: power(x,n) 1 multiply by x n times (not in C++ standard)</li>
+</ul>
+
+
+<p>下面一一介绍每个算法的实现。</p>
+
+<h3>1. accumulate</h3>
+
+<p>该算法计算 init 和区间 [first, last) 内所有元素的总和。注意，必须提供 init 的初始值，这样即使 first=last 区间为空，仍能得到一个明确定义的值。当 init=0 时，即为计算 [first, last) 区间内所有元素的总和。具体实现有两个版本，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIterator, class _Tp&gt;
+</span><span class='line'>_Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp __init){
+</span><span class='line'>  __STL_REQUIRES(_InputIterator, _InputIterator); // concept check
+</span><span class='line'>  for ( ; __first != __last; ++__first)
+</span><span class='line'>    __init = __init + *__first; // 求和
+</span><span class='line'>  return __init;
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _InputIterator, class _Tp, class _BinaryOperation&gt;
+</span><span class='line'>_Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp __init, _BinaryOperation __binary_op){
+</span><span class='line'>  __STL_REQUIRES(_InputIterator, _InputIterator); // concept check
+</span><span class='line'>  for ( ; __first != __last; ++__first)
+</span><span class='line'>    __init = __binary_op(__init, *__first); // 指定二元操作
+</span><span class='line'>  return __init;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>第二个版本通过仿函数参数 <em>binary_op 指定操作类型，可以实现其他方式的累计，例如累乘等（令init=1，</em>binary_op=multiply）。</p>
+
+<h3>2. adjacent_difference</h3>
+
+<p>该算法用来计算区间 [first, last) 中相邻元素的差（或其他指定运算，结果[i]=当前元素[i]的值-前驱元素[i-1]的值），该算法也有两个版本，一个是指定运算为差，另一个传入仿函数(参数 _binary_op)指定具体运算，这里贴出第二个版本：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOperation&gt;
+</span><span class='line'>_OutputIterator
+</span><span class='line'>__adjacent_difference(_InputIterator __first, _InputIterator __last, 
+</span><span class='line'>                      _OutputIterator __result, _Tp*, _BinaryOperation __binary_op) {
+</span><span class='line'>  _Tp __value = *__first;
+</span><span class='line'>  while (++__first != __last) { // 先 ++ ，再比较
+</span><span class='line'>    _Tp __tmp = *__first; // 取第i+1个元素的值
+</span><span class='line'>    *++__result = __binary_op(__tmp, __value);
+</span><span class='line'>    __value = __tmp; // 保存第i个元素的值
+</span><span class='line'>  }
+</span><span class='line'>  return ++__result;
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _InputIterator, class _OutputIterator, class _BinaryOperation&gt;
+</span><span class='line'>_OutputIterator adjacent_difference(_InputIterator __first, _InputIterator __last,
+</span><span class='line'>                    _OutputIterator __result, _BinaryOperation __binary_op) {
+</span><span class='line'>  if (__first == __last) return __result; // 区间为空，直接返回
+</span><span class='line'>  *__result = *__first; // 第一个元素没有前驱，直接将当前值赋给结果
+</span><span class='line'>  return __adjacent_difference(__first, __last, __result,
+</span><span class='line'>                               __VALUE_TYPE(__first), __binary_op);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. inner_product</h3>
+
+<p>该算法实现区间 [first1, last1) 和区间 [first2, first2+(last1-first1) ) 的一般内积（generalized inner product），公式为$init = init+(<em>i) * (</em>(first2+(i-first1)))$同样需要提供 init 的值（理由同accumulate）。另外还有一个版本，提供两个仿函数，分别指定上面公式中的加法和乘法。第一个版本的代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIterator1, class _InputIterator2, class _Tp&gt;
+</span><span class='line'>_Tp inner_product(_InputIterator1 __first1, _InputIterator1 __last1,
+</span><span class='line'>                  _InputIterator2 __first2, _Tp __init) {
+</span><span class='line'>  for ( ; __first1 != __last1; ++__first1, ++__first2)
+</span><span class='line'>    __init = __init + (*__first1 * *__first2);
+</span><span class='line'>  return __init;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到，这里其实没有判断第二个区间是否越界，所以在调用时需要我们自己注意，但一般来说计算内积的两个区间都是相同长度的。</p>
+
+<h3>4. partial_sum</h3>
+
+<p>该算法用来计算局部总和，将 <code>*first</code> 赋值给 <code>*result</code>，将 <code>*frist+*(first+1)</code> 赋值给 <code>*(result+1)</code>，依次类推，即有 <code>result[i]=sum(*first..*(first+i))</code>，这是默认的操作为加法的版本，还有一个版本可以通过仿函数指定操作，以下是默认版本：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIterator, class _OutputIterator, class _Tp&gt;
+</span><span class='line'>_OutputIterator __partial_sum(_InputIterator __first, _InputIterator __last,
+</span><span class='line'>              _OutputIterator __result, _Tp*) {
+</span><span class='line'>  _Tp __value = *__first;
+</span><span class='line'>  while (++__first != __last) {
+</span><span class='line'>    __value = __value + *__first;
+</span><span class='line'>    *++__result = __value; // result 先++，再提领、赋值
+</span><span class='line'>  }
+</span><span class='line'>  return ++__result;
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _InputIterator, class _OutputIterator&gt;
+</span><span class='line'>_OutputIterator partial_sum(_InputIterator __first, _InputIterator __last,
+</span><span class='line'>            _OutputIterator __result){
+</span><span class='line'>  if (__first == __last) return __result;
+</span><span class='line'>  *__result = *__first; // 第一项直接赋值
+</span><span class='line'>  return __partial_sum(__first, __last, __result, __VALUE_TYPE(__first));
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5. itoa</h3>
+
+<p>该算法不是C++/STL标准，主要作用是将区间 [first, last) 的值赋值为 value,value+1,value+2,&#8230; 如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _ForwardIter, class _Tp&gt;
+</span><span class='line'>void iota(_ForwardIter __first, _ForwardIter __last, _Tp __value){
+</span><span class='line'>  while (__first != __last)
+</span><span class='line'>    *__first++ = __value++;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>6. power</h3>
+
+<p>该算法也不是C++/STL标准，作用在于实现 x 的 n 次方的计算，通过将n分解为2的幂来计算。还有一个版本是用户可以指定运算，而不一定是乘法。默认版本如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Integer, class _MonoidOperation&gt;
+</span><span class='line'>_Tp __power(_Tp __x, _Integer __n, _MonoidOperation __opr){ // func1：幂方的具体实现
+</span><span class='line'>  if (__n == 0)
+</span><span class='line'>    return identity_element(__opr);
+</span><span class='line'>  else {
+</span><span class='line'>    while ((__n & 1) == 0) { // 二进制末尾为0
+</span><span class='line'>      __n &gt;&gt;= 1; // n/2
+</span><span class='line'>      __x = __opr(__x, __x); // 乘方
+</span><span class='line'>    }
+</span><span class='line'>    _Tp __result = __x;
+</span><span class='line'>    __n &gt;&gt;= 1;
+</span><span class='line'>    while (__n != 0) {
+</span><span class='line'>      __x = __opr(__x, __x); // 乘方
+</span><span class='line'>      if ((__n & 1) != 0) // 二进制末尾为1
+</span><span class='line'>        __result = __opr(__result, __x); // 乘入结果
+</span><span class='line'>      __n &gt;&gt;= 1;
+</span><span class='line'>    }
+</span><span class='line'>    return __result;
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Integer&gt;
+</span><span class='line'>inline _Tp __power(_Tp __x, _Integer __n){ // func2
+</span><span class='line'>  return __power(__x, __n, multiplies&lt;_Tp&gt;()); // 调用func3
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Integer, class _MonoidOperation&gt;
+</span><span class='line'>inline _Tp power(_Tp __x, _Integer __n, _MonoidOperation __opr){ // func3
+</span><span class='line'>  return __power(__x, __n, __opr); // 调用func1
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _Tp, class _Integer&gt;
+</span><span class='line'>inline _Tp power(_Tp __x, _Integer __n){
+</span><span class='line'>  return __power(__x, __n); // 调用func2
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>饶了几道弯，主要看 func1实现即可。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/">深入理解STL源码(5.1) 算法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-12T21:30:00+08:00" pubdate data-updated="true">Oct 12<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1. 算法概述</h2>
+
+<p>算法（Algorithm）是一个计算的具体步骤，常用于计算、数据处理和自动推理。Donald Knuth 在他的著作 The Art of Computer Programming 里对算法的特征归纳（来自wiki）：</p>
+
+<ul>
+<li>输入：一个算法必须有零个或以上输入量。</li>
+<li>输出：一个算法应有一个或以上输出量，输出量是算法计算的结果。</li>
+<li>明确性：算法的描述必须无歧义，以保证算法的实际执行结果是精确地符合要求或期望，通常要求实际运行结果是确定的。</li>
+<li>有限性：依据图灵的定义，一个算法是能够被任何图灵完备系统模拟的一串运算，而图灵机只有有限个状态、有限个输入符号和有限个转移函数（指令）。而一些定义更规定算法必须在有限个步骤内完成任务。</li>
+<li>有效性：又称可行性。能够实现，算法中描述的操作都是可以通过已经实现的基本运算执行有限次来实现。</li>
+</ul>
+
+
+<p>算法的核心是创建问题抽象的模型和明确求解目标，常见的算法有分治法、贪婪算法、动态规划、平摊分析等。再好的编程技巧，也无法让一个笨拙的算法起死回生，选择了错误的算法，便注定了失败的命运。</p>
+
+<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模$n$的函数$f(n)$，算法的时间复杂度也因此记做：<br/>
+$T(n) = O(f(n))$<br/>
+算法执行时间的增长率与$f(n)$的增长率正相关，称作渐近时间复杂度（Asymptotic Time Complexity），简称时间复杂度。
+常见的时间复杂度有：常数阶$O(1)$,对数阶$O(log<em>{2}n)$,线性阶$O(n)$, 线性对数阶$O(nlog</em>{2}n)$,平方阶$O(n<sup>{2})$，立方阶$O(n<sup>{3})$</sup></sup> ，&#8230;， k次方阶$O(n<sup>{k})$,指数阶$O(2<sup>{n})$。随着问题规模$n$的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</sup></sup></p>
+
+<p>算法的<strong>空间复杂度</strong>是指算法需要消耗的空间资源。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/">深入理解STL源码(4.5) 关联式容器之hashset和hashmap</a></h1>
     
     
@@ -735,140 +1082,6 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
   
     <footer>
       <a rel="full-article" href="/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-29T23:26:00+08:00" pubdate data-updated="true">Jun 29<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有<code>vector</code>、<code>stl_vector.h</code>、<code>vector.h</code> 等几个文件。</p>
-
-<h2>1. 容器</h2>
-
-<p>在数据结构的课程中，我们主要研究数据的特定排列方式，以利于搜索、排序等算法，几乎可以说，任何特定的数据结构都是为了实现某种特定的算法。STL 容器即由一个个特定的数据结构组成，例如向量（vector），链表（list），堆栈（stack），队列（queue），树（tree），哈希表（hash table），集合（set），映射（map）等，根据数据在容器中的排列特性，这些数据接口分为序列式容器（sequence container）和关联式容器（association container）两种，本文主要解读SGI STL中的序列式容器。</p>
-
-<p>所谓序列式容器，其中的元素可序（ordered），但未必有序（sorted）。C++ 本身提供了一个序列式容器——数组（array），STL中还提供了向量（vector），链表（list），堆栈（stack），队列（queue），优先队列（priority queue）等，其中stack和queue只是将deque（双端队列）设限而得到的，技术上可以被归为一种配接器（adaptor）。本系列文章将依次解读SGI STL各容器的关键实现细节。</p>
-
-<h2>2. vector 及其数据结构</h2>
-
-<p>在STL中，vector的空间在物理上就是连续的，而且是可以动态扩展的，这里的动态扩展，不需要用户去处理溢出的问题，而只需要关心上层逻辑。vector连续物理空间的动态扩展技术是该容器的关键，它主要分为三个步骤：配置新空间，数据移动，释放旧空间。这三个步骤执行的次数以及每次执行时的效率是影响最终 vector 效率的关键因素。为了减少执行的次数，就需要未雨绸缪，每次扩充空间时，成倍增长。而每次执行的效率，就主要是数据移动的效率了。下面，我们依次介绍vector的数据结构，使用的空间配置器和迭代器，以及常用操作。<br/>
-<strong>vector 的数据结构</strong><br/>
-vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>class _Vector_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp* _M_start;
-</span><span class='line'>  _Tp* _M_finish;
-</span><span class='line'>  _Tp* _M_end_of_storage;
-</span><span class='line'>};
-</span><span class='line'>class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">深入理解STL源码(2) 迭代器(Iterators)和Traits</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-21T21:46:00+08:00" pubdate data-updated="true">Jun 21<span>st</span>, 2014</time>
-        
-         | <a href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有 <code>iterator.h</code>, <code>stl_iterator_base.h</code>, <code>concept_checks.h</code>, <code>stl_iterator.h</code>, <code>type_traits.h</code>, <code>stl_construct.h</code>, <code>stl_raw_storage_iter.h</code> 等7个文件。</p>
-
-<h2>1. 迭代器的设计思维</h2>
-
-<p>迭代器（iterators）是一种抽象的设计概念，显示程序中并没有直接对应于这个概念的实体。在 <em>Design Patterns</em> 一书中，对 iterators 模式的定义如下：提供一种方法，使之能够依序遍历某个聚合物（容器）所包含的各个元素，而又无需暴露该聚合物内部的表述方式。</p>
-
-<p>在STL中迭代器扮演着重要的角色。STL的中心思想在于：将数据容器（container）和算法（algorithm）分开，彼此独立设计，最后再通过某种方式将他们衔接在一起。容器和算法的泛型化，从技术的角度来看并不困难，C++ 的 class template 和 function template 可以分别达到目标，难点在于如何设计二者之间的衔接器。</p>
-
-<p>在STL中，起者这种衔接作用的是迭代器，它是一种行为类似指针的对象。指针的各种行为中最常见也最重要的便是内容获取（dereference）和成员访问（member access），因此迭代器最重要的工作就是对 <code>operator*</code> 和 <code>operator-&gt;</code> 进行重载。然而要对这两个操作符进行重载，就需要对容器内部的对象的数据类型和存储结构有所了解，于是在 STL 中迭代器的最终实现都是由容器本身来实现的，每种容器都有自己的迭代器实现，例如我们使用vector容器的迭代器的时候是这样用的 <code>vector&lt;int&gt;::iterator it;</code> 。而本文所讨论的迭代器是不依存于特定容器的迭代器，它在STL中主要有以下两个方面的作用（我自己的理解和总结）：</p>
-
-<blockquote><ul>
-<li>规定容器中需要实现的迭代器的类型及每种迭代器的标准接口</li>
-<li>通过Traits编程技巧实现迭代器相应型别的获取，弥补 C++ 模板参数推导的不足，为配置器提供可以获取容器中对象型别的接口</li>
-</ul>
-</blockquote>
-
-<p>其中前一个没啥好解释的。关于第二个，后面第3节会详细介绍，那就是Traits编程技巧。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">Read on &rarr;</a>
     </footer>
   
 

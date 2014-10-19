@@ -182,6 +182,156 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/10/22/BCI-based-animal-robot-summarize/">基于BCI的动物机器人研究分析与展望</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/10/22/BCI-based-animal-robot-summarize/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>摘  要</h3>
+
+
+<p>动物机器人已经成为机器人技术领域的重要研究方向之一，动物运动制导是当今神经、信息和机器人等科学交叉研究的一个热点。
+本文结合基于BCI的大鼠动物机器人的实例来介绍有关动物机器人的研究进展、研究方法，并对其发展前景进行展望。</p>
+
+
+
+
+<h3>关键字</h3>
+
+
+<p>脑机接口；动物机器人；大鼠</p>
+
+
+
+
+<h3>0 前言</h3>
+
+
+<p>在科技日益发达的现代信息社会，我们对机器人已经不再陌生，比如：科幻片中的高级智能化的机器人、自动化生产线上的工业
+机器人、大型展馆里的导航服务机器人、太空中火星上的“勇气号”探险机器人等等。然而，它们的任何一个动作都是由电脑程序来
+完成的，而且所有动作都是程序固定的，不能够灵活，而且一旦能量耗尽将会滞留原地，进退维谷，可谓“出师未捷身先死”，在很多
+方面都不如动物灵活、敏捷，而且所消耗的能量也不能靠自身解决。</p>
+
+
+
+
+<p>回眸历史，人类利用动物来替代自己进行艰苦的工作，甚至人力所不能及的工作，己经有近万年了。在这近万年的历史里，产生了战马、
+耕牛、狩猎犬和信鸽等执行特殊任务的动物。但这些动物所执行的任务较为单一，智力含量较为低下，若是动物能够完全受控于人类，
+将是非常完美的设想。</p>
+
+
+
+
+<p>基于BCI (Brain-Computer Interface，脑-机接口)的动物机器人既很好地解决了微型机器人携带能量不足的问题，同时可以通过
+人工控制来执行一些特殊的、复杂的任务，还具有人类赋予的智能。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/10/22/BCI-based-animal-robot-summarize/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/26/convex-optimization-overview/">凸优化简介</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-26T23:03:00+08:00" pubdate data-updated="true">Sep 26<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/09/26/convex-optimization-overview/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在machine learning 的很多问题中，我们最终往往要求解某个函数的最优值。用数学术语表示就是，
+给定一个函数 $f: R<sup>{n}</sup> \rightarrow R$，求 $ x \in R<sup>{n}</sup> $使得$f(x)$ 取得最小（大）值。例如least-square,
+logistic regression, linear regression, svm, etc. 这类问题统称为优化问题。</p>
+
+<h2>1.引言</h2>
+
+
+<p>在一般情况下，求解任意一个函数的全局最优值是很困难的。但是对于一种特定类型的函数——凸函数（convex function），
+我们可以很有效的求解其全局最优值。这里的“有效”是指在实际问题求解中，能在多项式复杂度的时间里求解。
+人们将这类函数的最值问题称为凸优化问题（Convex Optimal Problem）。下面我从凸集和凸函数讲起，然后
+介绍凸优化的一般描述和典型问题举例。</p>
+
+
+
+
+<h2>2.凸集及其实例</h2>
+
+
+<p><strong>凸集的定义</strong>：一个集合$C$是凸集，当且仅当对任意$x,y\in C$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
+<center>$\theta x + (1-\theta)y \in C$.</center>
+其几何意义在于，在集合C中任取两个点，连接两点的直线段上的任一点也在集合C中。下图是凸集和非凸集的例子：</br>
+<img src="/images/201209026/IMAG20120902601.jpg">
+</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/26/convex-optimization-overview/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/09/23/EFI-and-operating-system/">EFI和操作系统</a></h1>
     
     
@@ -713,244 +863,6 @@ matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则�
 
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/07/11-zju-program-test-solution/">11年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-07T19:56:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/07/11-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-11年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：A+B for Matrices （ 九度1001）</h3>
-
-
-<p>水题</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>int m,n,a[10][10],b[10][10];
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int i,j,cnt;
-</span><span class='line'>    while(scanf("%d",&m)&&m>0){
-</span><span class='line'>        scanf("%d",&n);
-</span><span class='line'>        for(i=0;i&lt;m;i++)
-</span><span class='line'>            for(j=0;j&lt;n;j++)
-</span><span class='line'>                scanf("%d",a[i]+j);
-</span><span class='line'>        for(i=0;i&lt;m;i++)
-</span><span class='line'>            for(j=0;j&lt;n;j++){
-</span><span class='line'>                scanf("%d",b[i]+j);
-</span><span class='line'>                a[i][j]+=b[i][j];
-</span><span class='line'>            }
-</span><span class='line'>        cnt=0;
-</span><span class='line'>        for(i=0;i&lt;m;i++){
-</span><span class='line'>            for(j=0;j&lt;n;j++)
-</span><span class='line'>                if(a[i][j])break;
-</span><span class='line'>            if(j==n)cnt++;
-</span><span class='line'>        }
-</span><span class='line'>        for(i=0;i&lt;n;i++){
-</span><span class='line'>            for(j=0;j&lt;m;j++)
-</span><span class='line'>                if(a[j][i])break;
-</span><span class='line'>            if(j==m)cnt++;
-</span><span class='line'>        }
-</span><span class='line'>        printf("%d\n",cnt);
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/07/11-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/07/10-zju-program-test-solution/">10年浙大复试机试题解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/03/07/10-zju-program-test-solution/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>
-10年浙大研究生复试机试题解
-</p>
-
-
-
-
-<h3>A题：A+B（hdoj3787）（九度1003）</h3>
-
-
-<p>水题，不解释，直接上代码：</p>
-
-
-
-
-<figure class='code'><figcaption><span>Problem A </span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>long a,b;
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    int i,f;
-</span><span class='line'>    char s[30];
-</span><span class='line'>    while(scanf("%s",s)!=EOF){
-</span><span class='line'>        a=b=0;
-</span><span class='line'>        if(s[0]=='-'){f=-1;i=1;}
-</span><span class='line'>        else {f=1;i=0;}
-</span><span class='line'>        while(s[i]){
-</span><span class='line'>            if(s[i]!=',')a=a*10+s[i]-'0';
-</span><span class='line'>            i++;
-</span><span class='line'>        }
-</span><span class='line'>        a=a*f;
-</span><span class='line'>        getchar();
-</span><span class='line'>        scanf("%s",s);
-</span><span class='line'>        if(s[0]=='-'){f=-1;i=1;}
-</span><span class='line'>        else {f=1;i=0;}
-</span><span class='line'>        while(s[i]){
-</span><span class='line'>            if(s[i]!=',')b=b*10+s[i]-'0';
-</span><span class='line'>            i++;
-</span><span class='line'>        }
-</span><span class='line'>        b=b*f;
-</span><span class='line'>        printf("%d\n",a+b);
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/07/10-zju-program-test-solution/">Read on &rarr;</a>
-    </footer>
   
 
 
