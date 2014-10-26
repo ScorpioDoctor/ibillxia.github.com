@@ -182,6 +182,95 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">深入理解STL源码(3.2) 序列式容器之list</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-06T22:03:00+08:00" pubdate data-updated="true">Jul 6<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有<code>list</code>、<code>stl_list.h</code>、<code>list.h</code> 等几个文件。</p>
+
+<h2>1. list 和 slist</h2>
+
+<p>STL中也实现了链表这种数据结构，list是STL标准的双向链表，而slit是SGI的单链表。相比于vector的连续线性空间而言，list即有有点也有缺点：优点是空间分配更灵活，对任何位置的插入删除操作都是常数时间；缺点是排序不方便。list和vector是比较常用的线性容器，那么什么时候用哪一种容器呢，需要视元素的多少、元素构造的复杂度（是否为POD数据）以及元素存取行为的特性而定。限于篇幅，本文主要介绍list的内容，关于单链表slist可以参见源码和侯捷的书。</p>
+
+<h2>2. list 的数据结构</h2>
+
+<p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_node_base {
+</span><span class='line'>  _List_node_base* _M_next;
+</span><span class='line'>  _List_node_base* _M_prev;
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct _List_node : public _List_node_base {  // node 的定义
+</span><span class='line'>  _Tp _M_data;
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
+</span><span class='line'>class _List_base {
+</span><span class='line'>protected:
+</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
+</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; {
+</span><span class='line'>public:
+</span><span class='line'>  typedef _List_node&lt;_Tp&gt; _Node;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></h1>
     
     
@@ -705,69 +794,6 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
   
     <footer>
       <a rel="full-article" href="/blog/2014/04/28/configure-twitter-bootstrap-theme-in-octopress/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">全排列及某排列的后继的求解及其STL实现的分析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在Leetcode上有好几道全排列相关的题，一直以来只是会写基于递归的全排列生成算法，遇到这几道题后，搜了下一些非递归的实现方法，发现其实全排列的生成还是很有规律的有木有！这里就总结一下递归和非递归的全排列生成方法，并分析一下 STL 的实现。</p>
-
-<p>递归和非递归实现全排列生成的方法也分别有多种，递归法有基于交换的，有基于链接的，还有回溯，非递归法有排序、回溯、求模等，关于所有这些方法的具体实现参见 <a href="http://mengliao.blog.51cto.com/876134/824079">全排列的六种算法</a>. 本文只实现一种递归和一种非递归算法，并在最后对 STL 的非递归算法进行分析。</p>
-
-<p>本文的全部代码下载：<a href="http://ibillxia.github.io/upload/code/20140424.cpp">code</a>.</p>
-
-<h2>递归法求全排列</h2>
-
-<p>递归法的基本思路是这样的：</p>
-
-<blockquote><p>首先选一个元素排在第一个（有 n 中选法）；
-然后递归的对剩下的所有元素进行全排列；
-直到一个元素的全排列是其本身。</p></blockquote>
-
-<p>假设给定的元素序列为 &lt;e1, e2, &#8230;, en>，其全排列表示为 P(e1, e2, &#8230;, en)，则对递归的第一步展开有：</p>
-
-<blockquote><p>P(e1, e2, &#8230;, en) = {
-&lt;e1, P(e2, e3, &#8230;, en)>,
-&lt;e2, P(e1, e3, &#8230;, en)>,
-&#8230; &#8230;
-&lt;en, P(e1, e2, &#8230;, e(n-1))> }</p></blockquote>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">Read on &rarr;</a>
     </footer>
   
 

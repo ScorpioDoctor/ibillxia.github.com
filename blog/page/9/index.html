@@ -182,6 +182,70 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/">盘点10大生不逢时科技创业公司：创意过于超前</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-07T18:00:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>据国外媒体报道，有句形容创业公司的老话说，“太早也是个错误。” 这绝对是个事实，在很多伟大的科技公司成立之前，相同的创意已经存在，
+但是因为时机不对，结果没有形成气候。下文将点评10大生不逢时的科技创业公司，这些公司的项目是创新的，但是因为出现得太早，市场尚未做
+好准备，所以最终失败。</p>
+
+
+<center><img src="/images/2011/IMAG2011050701.jpg"></center>
+
+
+<p>同类型的公司在数年后取得辉煌成绩，产生数亿美元价值，曾经创立这10大创业公司的企业家难免懊恼不已，因为这些创意和产品都是他们曾
+经历的。但是，这就是人生。以下是10大生不逢时的科技创业公司：</p>
+
+
+
+
+<h4>1.SixDegrees.com</h4>
+
+
+<p>这是第一个为用户提供社交体验的网站，该网站想揭示的原理是：最多通过6个人你就能够认识世界上任何一个人。在1997年成立以后，该网站
+经历了一段时间的高速增长，但是由于人们对社交网站还不适应，所以最终淡出人们视线。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2011/05/03/Exception-handling-mechanism-in-c/">C语言中的异常处理机制</a></h1>
     
     
@@ -785,66 +849,6 @@ LinkedIn有着商业范儿的严肃简洁，只有一些基本的联络和互动
   
     <footer>
       <a rel="full-article" href="/blog/2010/10/16/something-about-idle-in-linux-kernel-analysis/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/24/PHP-string-filter-methods-for-safety/">PHP字符串安全过滤全攻略</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-24T13:28:00+08:00" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
-        
-         | <a href="/blog/2010/09/24/PHP-string-filter-methods-for-safety/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>php安全过滤是防止注入的第一道防线，不得大意。提到PHP的安全过滤，不得不提的两个东西是set_magic_quotes_runtime 和 magic_quotes_gpc。</p>
-
-
-
-
-<p>set_magic_quotes_runtime() 可以让程序员在代码中动态开启或关闭 magic_quotes_runtime，set_magic_quotes_runtime(1) 表示开启，
-set_magic_quotes_runtime(0) 则表示关闭。当set_magic_quotes_runtime(1)时，从数据库或通过fread之类的函数读取的文本，将自动对&#8217; &#8220;和\自动
-加上反斜杠\进行转义，防止溢出。这在对数据库的数据进行转移的时候非常有用。但在一般情况下，应当将其关闭，否则从数据库读取出来的数据单引
-号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 set_magic_quotes_runtime(0); 强制关闭 
-magic_quotes_runtime 。</p>
-
-
-
-
-<p>magic_quotes_gpc 和 magic_quotes_runtime 的区别在于，magic_quotes_gpc 是对通过GET、POST、COOKIE传递的数据进行转义，一般在数据入库前
-要先进行转义，magic_quotes_gpc不能在代码中动态开启或关 闭，需要到php.ini将magic_quotes_gpc设置为on或off，代码中可以用get_magic_quotes_gpc
-获取 magic_quotes_gpc的状态。当magic_quotes_gpc为off时，需要手工对数据进行addslashes，代码如下：</p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2010/09/24/PHP-string-filter-methods-for-safety/">Read on &rarr;</a>
     </footer>
   
 

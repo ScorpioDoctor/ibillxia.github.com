@@ -182,6 +182,69 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">全排列及某排列的后继的求解及其STL实现的分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在Leetcode上有好几道全排列相关的题，一直以来只是会写基于递归的全排列生成算法，遇到这几道题后，搜了下一些非递归的实现方法，发现其实全排列的生成还是很有规律的有木有！这里就总结一下递归和非递归的全排列生成方法，并分析一下 STL 的实现。</p>
+
+<p>递归和非递归实现全排列生成的方法也分别有多种，递归法有基于交换的，有基于链接的，还有回溯，非递归法有排序、回溯、求模等，关于所有这些方法的具体实现参见 <a href="http://mengliao.blog.51cto.com/876134/824079">全排列的六种算法</a>. 本文只实现一种递归和一种非递归算法，并在最后对 STL 的非递归算法进行分析。</p>
+
+<p>本文的全部代码下载：<a href="http://ibillxia.github.io/upload/code/20140424.cpp">code</a>.</p>
+
+<h2>递归法求全排列</h2>
+
+<p>递归法的基本思路是这样的：</p>
+
+<blockquote><p>首先选一个元素排在第一个（有 n 中选法）；
+然后递归的对剩下的所有元素进行全排列；
+直到一个元素的全排列是其本身。</p></blockquote>
+
+<p>假设给定的元素序列为 &lt;e1, e2, &#8230;, en>，其全排列表示为 P(e1, e2, &#8230;, en)，则对递归的第一步展开有：</p>
+
+<blockquote><p>P(e1, e2, &#8230;, en) = {
+&lt;e1, P(e2, e3, &#8230;, en)>,
+&lt;e2, P(e1, e3, &#8230;, en)>,
+&#8230; &#8230;
+&lt;en, P(e1, e2, &#8230;, e(n-1))> }</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/04/11/swap-two-variables-in-place/">原地交换两个变量的值</a></h1>
     
     
@@ -729,57 +792,6 @@ MIDI接口：MIDI接口是为了连接舞台上的synthesizer、键盘、道具�
   
     <footer>
       <a rel="full-article" href="/blog/2013/09/08/brief-introduction-of-alsa-and-oss-and-its-comparision/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/">PCM WAVE格式详解及用C语言实现wave文件的读取</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-20T20:07:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.PCM Wave格式详解</h2>
-
-
-<p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
-一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个&#8221;fmt&#8221;子数据块和一个“data”子
-数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center><img src="/images/2013/IMAG2013072001.gif"></center>
-</p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/">Read on &rarr;</a>
     </footer>
   
 

@@ -182,6 +182,83 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2012/04/25/matlab-code-optimization/">Matlab代码优化方法几则</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-25T20:07:00+08:00" pubdate data-updated="true">Apr 25<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/04/25/matlab-code-optimization/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>1.计算向量、矩阵化，尽量减少for循环</br>
+因为MATLAB本来就是矩阵实验室的意思，他提供了极其强大而灵活的矩阵运算能力，你就没必要自己再用自己编写的for循环去实现矩阵运算的功能了。
+另外由于matlab是一种解释性语言，所以最忌讳直接使用循环语句。但在有些情况下，使用for循环可以提高程序的易读性，在效率提高不是很明显的
+情况下可以选择使用for循环。</p>
+
+
+
+
+<p>2.循环内大数组预先定义&#8211;预先分配空间</br>
+这一点原则是极其重要的，以至于在编写m程序时编辑器会给出提示“&#8217;ver&#8217; might be growing inside a loop.Consider prealloacting for speed.”</p>
+
+
+
+
+<p>3.尽可能利用matlab内部提供的函数</br>
+因为matlab内部提供的函数绝对是各种问题的最优算法，那写程序都是他们大师级人物写出来的，程序应该说相当高效，有现成的为什么不用那！
+这个原则就不用实际的程序测试了。</p>
+
+
+
+
+<p>4. 利用内置函数自动记录运行结果</br>
+matlab生成的结果变量只贮存在内存空间中，一旦matlab关闭则会丢失，很多时候需要手工将这些结果存储到我们需要的文件中。事实上，matlab提供
+了很多函数可以自动记录结果，如fprintf可以将数据写入txt文件，xlswrite可以将数据写入excel文件等等。这样自动化的命令可以缩减大量时间，
+从而提高效率。</p>
+
+
+
+
+<p>5. 在迫不得已要使用较多循环而每一步都很耗时的时候，可以将每一步的结果保存成mat文件，然后在循环的开头用if语句与exist函数进行判断，
+如果该文件存在的话，就直接进入下一次循环。这样做的好处是不会因为断电、电脑死机或误操作等原因而重头从第一个循环再次运行。</p>
+
+
+
+
+<p>6. 同时运行多的matlab进程。现在的电脑一般都是多核，一般一个matlab进程会占用一个cpu，因此可以在多核电脑上同时打开多个matlab窗口，
+从而执行不同的命令。如四核电脑上可以打开三个matlab窗口分别运行不同的程序，cpu的占用率约为80%，这样既加快了进度，又不会影响电脑的使用。</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2012/03/07/11-zju-program-test-solution/">11年浙大复试机试题解</a></h1>
     
     
@@ -1040,70 +1117,6 @@ $(document).ready(function(){
   
     <footer>
       <a rel="full-article" href="/blog/2011/07/19/75-mottos-to-make-you-calm-down/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/">盘点10大生不逢时科技创业公司：创意过于超前</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-05-07T18:00:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>据国外媒体报道，有句形容创业公司的老话说，“太早也是个错误。” 这绝对是个事实，在很多伟大的科技公司成立之前，相同的创意已经存在，
-但是因为时机不对，结果没有形成气候。下文将点评10大生不逢时的科技创业公司，这些公司的项目是创新的，但是因为出现得太早，市场尚未做
-好准备，所以最终失败。</p>
-
-
-<center><img src="/images/2011/IMAG2011050701.jpg"></center>
-
-
-<p>同类型的公司在数年后取得辉煌成绩，产生数亿美元价值，曾经创立这10大创业公司的企业家难免懊恼不已，因为这些创意和产品都是他们曾
-经历的。但是，这就是人生。以下是10大生不逢时的科技创业公司：</p>
-
-
-
-
-<h4>1.SixDegrees.com</h4>
-
-
-<p>这是第一个为用户提供社交体验的网站，该网站想揭示的原理是：最多通过6个人你就能够认识世界上任何一个人。在1997年成立以后，该网站
-经历了一段时间的高速增长，但是由于人们对社交网站还不适应，所以最终淡出人们视线。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011/05/07/10-born-at-the-wrong-time-companies-innovation-too-advanced/">Read on &rarr;</a>
     </footer>
   
 

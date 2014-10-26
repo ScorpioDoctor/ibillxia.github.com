@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: STL | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/stl/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-10-19T22:04:43+08:00</updated>
+  <updated>2014-10-26T22:27:09+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,270 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(5.3) 算法之基本算法algobase]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/"/>
+    <updated>2014-10-25T21:13:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase</id>
+    <content type="html"><![CDATA[<p>本文主要介绍STL中的数值算法，主要涉及到的源码文件有 <code>stl_algobase.h</code> 等。</p>
+
+<p>在 <code>stl_algobase.h</code> 中定义的算法都比较简单基础，主要涉及区间相等判断、区间填充、求极值、交换、拷贝、字典序比较等算法，而其他诸如查找、计数、排序、旋转等算法则在文件 <code>stl_algo.h</code> 中实现。在algobase基本算法中，除了字典序比较、复制/拷贝算法外，其他都比较简单，这里先依次介绍这些简单的算法，然后再介绍字典序比较和拷贝算法。</p>
+
+<h2>1. 交换、填充等简单算法</h2>
+
+<p>由于这里很多算法比较简单（基本都在10行以内，甚至很多就一行代码），就不一一粘贴代码了。</p>
+
+<p><strong>iter_swap</strong> ：将两个 ForwardIterators 所指的对象对调，通过申请一个临时变量、三次赋值，就完成了。</p>
+
+<p><strong>min/max</strong> ：求两个数中的小、大者，还有一个版本可以指定的比较方法（仿函数）。</p>
+
+<p><strong>fill</strong> ：将 <code>[first, last)</code> 内的所有元素改填为新值 value。</p>
+
+<p><strong>fill_n</strong> ：将 <code>[first, last)</code> 内的前n个元素改填为新值 value，返回迭代器指向被填入的最后一个元素的下一位置。</p>
+
+<p><strong>mismatch</strong> ：用来平行比较两个序列，指出两者之间的第一个不匹配点，返回一对迭代器（Iterators Pair），分别指向两序列中的不匹配点。</p>
+
+<p><strong>equal</strong> ：判断两个序列在 <code>[first, last)</code> 区间内相等，如果第二个序列元素较多，将不予考虑，只有两个序列在各自区间内对应相等才返回true，否则返回false。</p>
+
+<!-- more -->
+
+
+<h2>2. 字典序比较</h2>
+
+<p><code>lexicographical_compare</code> 以“字典序排列方式”对两个序列 <code>[first, last)</code> 和 <code>[first2, last2)</code> 进行比较。比较操作针对两个序列中的对应位置上的元素进行，直到某一对不相等或同时到达尾部或仁义序列到达尾部。该算法其实并不复杂，但有一点值得注意，那就当且仅当第一个序列字典序小于第二个序列时才返回true，以下是各种情况下的返回值：</p>
+
+<ul>
+<li>发现不相等，如果<strong>第一序列元素较小，返回true</strong>，否则返回false；</li>
+<li>到达last1而尚未到达last2，返回true；</li>
+<li>到达last2而尚未到达last1，返回false；</li>
+<li>同时到达last1和last2，返回false。</li>
+</ul>
+
+
+<p>源码如下：
+```
+template <class _InputIter1, class _InputIter2>
+bool lexicographical_compare(<em>InputIter1 __first1, </em>InputIter1 <strong>last1, _InputIter2 </strong>first2, _InputIter2 <strong>last2) {
+  for ( ; </strong>first1 != <strong>last1 &amp;&amp; </strong>first2 != <strong>last2; ++</strong>first1, ++__first2) {</p>
+
+<pre><code>if (*__first1 &lt; *__first2)
+  return true;
+if (*__first2 &lt; *__first1)
+  return false;
+</code></pre>
+
+<p>  }
+  return <strong>first1 == </strong>last1 &amp;&amp; <strong>first2 != </strong>last2;
+}
+```</p>
+
+<p>除了这个默认的版本外，还有一个版本提供比较方法（仿函数）的参数。另外，对于纯字符串的比较，SGI STL还做了进一步优化，使用原生指针和C标准函数 <code>memcmp()</code> 进行比较，如下：</p>
+
+<p>```
+inline bool
+lexicographical_compare(const unsigned char<em> __first1, const unsigned char</em> __last1,</p>
+
+<pre><code>                    const unsigned char* __first2,const unsigned char* __last2) {
+</code></pre>
+
+<p>  const size_t <strong>len1 = </strong>last1 - <strong>first1;
+  const size_t </strong>len2 = <strong>last2 - </strong>first2;
+  const int <strong>result = memcmp(</strong>first1, <strong>first2, min(</strong>len1, <strong>len2));
+  return </strong>result != 0 ? <strong>result &lt; 0 : </strong>len1 &lt; __len2;
+}
+```</p>
+
+<h2>3. 复制/拷贝算法</h2>
+
+<p>在很多应用程序中，复制copy是一个很常见的操作，特别是在赋值的时候。对于稍微复杂的对象，在不同的语言中赋值时会有一些差别，有的编程语言赋值仅仅是对等号右边的对象的一个引用，而并没有正真的产生一个新的对象，更不用说对象中可能包含的对象成员，例如Python当中的赋值、浅拷贝copy和深拷贝deepcopy等。</p>
+
+<p>而STL 中的copy，除了简单的单一对象的拷贝之外，还有序列区间的拷贝等，这里就涉及到空间分配和时间效率问题。在C++中，复制操作主要是运用assignment operator（复制运算符） 或 copy constructor（拷贝构造函数），在STL的copy算法中使用的是前者，而对于某些具有trivial assignment operator的数据，则可以使用内存直接复制行为（例如C标准库函数memmove、memcpy等），就能极大的节省时间。SGI STL用尽各种办法，包括函数重载、型别特性、偏特化（partial specialization）等技巧（关于偏特化请参见 <a href="http://www.jellythink.com/archives/410">C++模板特化与偏特化</a>），无所不用其极地加强效率。</p>
+
+<p>除了上面提到的元素型别、偏特化等问题，还有元素复制顺序的问题。copy 算法是将原始区间 <code>[first, last)</code> 内的元素复制到目标区间 <code>[result, result+last-first)</code> 区间内，复制时既可以从 first 开始往 last 复制，但也可以从 last-1开始向 first 复制，后者在 STL 另取名为 copy_backward_。从后往前复制的好处在于，不用担心目标区间与原始区间有重叠，因为如果有重叠区域，那么简单的 copy 时，对于原始数据而言 <code>[result, last)</code> 区间的数据在被复制前被修改了，从而得不到预期的结果。当然，有一种情况使用 copy 不用担心这个问题，那就是对于迭代器为原生指针，使用 memmove （而不是 memcpy，关于二者的区别参见 <a href="http://stackoverflow.com/questions/4415910/memcpy-vs-memmove">memcpy() vs memmove()</a>）进行复制，此时 memmove 会先将整个区间复制下来，没有被覆盖的危险。</p>
+
+<p>在介绍 copy 算法的源码具体实现前，根据源码及其注释再做一个简单的小结：copy 算法中的一些辅助函数有两个目的，其一是对于简单的数据类型尽量使用 memmove，其二是对于具有 RandomAccessIterators 的对象使用一个计数器来进行循环；除此之外，SGI STL针对编译器是否具有函数模板偏特化、类模板偏特化等进行了适配。下面是 copy 的源码，其中添加了比较详细具体的注释：</p>
+
+<p>```
+// 首先是几个与偏特化无关的公用的3个函数
+template <class _InputIter, class _OutputIter, class _Distance>
+inline <em>OutputIter
+__copy(</em>InputIter <strong>first, _InputIter </strong>last,</p>
+
+<pre><code>   _OutputIter __result,input_iterator_tag, _Distance*){
+</code></pre>
+
+<p>  for ( ; <strong>first != </strong>last; ++<strong>result, ++</strong>first) // 使用迭代器遍历和复制</p>
+
+<pre><code>*__result = *__first;
+</code></pre>
+
+<p>  return <strong>result;
+}
+template <class _RandomAccessIter, class _OutputIter, class _Distance>
+inline _OutputIter
+</strong>copy(<em>RandomAccessIter __first, </em>RandomAccessIter __last,</p>
+
+<pre><code>   _OutputIter __result, random_access_iterator_tag, _Distance*){
+</code></pre>
+
+<p>  for (_Distance <strong>n = </strong>last - <strong>first; </strong>n > 0; --__n) { //对于随机访问迭代器，使用一个计数器n</p>
+
+<pre><code>*__result = *__first;
+++__first;
+++__result;
+</code></pre>
+
+<p>  }
+  return <strong>result;
+}
+template <class _Tp>
+inline _Tp*
+</strong>copy_trivial(const <em>Tp* __first, const </em>Tp<em> <em>_last, </em>Tp</em> <strong>result) {
+  memmove(</strong>result, <strong>first, sizeof(_Tp) * (</strong>last - <strong>first)); // 直接使用 memmove
+  return </strong>result + (<strong>last - </strong>first);
+}
+//============== __STL_FUNCTION_TMPL_PARTIAL_ORDER 对于具有函数模板偏特性的编译器</p>
+
+<h1>if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)</h1>
+
+<p>template <class _InputIter, class _OutputIter>
+inline <em>OutputIter
+__copy_aux2(</em>InputIter <strong>first, _InputIter </strong>last, <em>OutputIter <strong>result, </strong>false_type) { // false_type 的重载版
+  return <strong>copy(</strong>first, <strong>last, </strong>result, <strong>ITERATOR_CATEGORY(</strong>first), <strong>DISTANCE_TYPE(</strong>first));
+}
+template <class _InputIter, class _OutputIter>
+inline </em>OutputIter
+<strong>copy_aux2(_InputIter </strong>first, <em>InputIter __last, </em>OutputIter <strong>result, </strong>true_type) { // true_type 的重载版
+  return <strong>copy(</strong>first, <strong>last, </strong>result, <strong>ITERATOR_CATEGORY(</strong>first), <strong>DISTANCE_TYPE(</strong>first));
+}</p>
+
+<h1>ifndef <strong>USLC</strong></h1>
+
+<p>template <class _Tp>
+inline <em>Tp*
+__copy_aux2(</em>Tp<em> <em>_first, </em>Tp</em> <strong>last, _Tp* </strong>result, <strong>true_type) { // 原生指针的重载版
+  return </strong>copy_trivial(<strong>first, </strong>last, __result);
+}</p>
+
+<h1>endif /<em> <strong>USLC</strong> </em>/</h1>
+
+<p>template <class _Tp>
+inline <em>Tp*
+__copy_aux2(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result, <strong>true_type) { // 常量指针的重载版
+  return </strong>copy_trivial(<strong>first, </strong>last, <strong>result);
+}
+template <class _InputIter, class _OutputIter, class _Tp>
+inline _OutputIter
+</strong>copy_aux(<em>InputIter __first, </em>InputIter <strong>last, _OutputIter </strong>result, <em>Tp*) {
+  typedef typename __type_traits<_Tp>::has_trivial_assignment_operator </em>Trivial;
+  return <strong>copy_aux2(</strong>first, <strong>last, </strong>result, <em>Trivial());
+}
+template <class _InputIter, class _OutputIter>
+inline </em>OutputIter
+copy(<em>InputIter __first, </em>InputIter <strong>last, _OutputIter </strong>result) { //最终的对外接口
+  return <strong>copy_aux(</strong>first, <strong>last, </strong>result, <strong>VALUE_TYPE(</strong>first));
+}
+//============== __STL_CLASS_PARTIAL_SPECIALIZATION 对于具有类模板偏特性的编译器</p>
+
+<h1>elif defined(__STL_CLASS_PARTIAL_SPECIALIZATION)</h1>
+
+<p>template <class _InputIter, class _OutputIter, class _BoolType>
+struct <strong>copy_dispatch { // 类1，泛化版
+  static <em>OutputIter copy(</em>InputIter </strong>first, <em>InputIter __last, </em>OutputIter __result) {</p>
+
+<pre><code>typedef typename iterator_traits&lt;_InputIter&gt;::iterator_category _Category;
+typedef typename iterator_traits&lt;_InputIter&gt;::difference_type _Distance;
+return __copy(__first, __last, __result, _Category(), (_Distance*) 0);
+</code></pre>
+
+<p>  }
+};
+template <class _Tp>
+struct <strong>copy_dispatch&lt;<em>Tp*, </em>Tp*, </strong>true_type>{ // 类2，特化版
+  static <em>Tp* copy(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result) {</p>
+
+<pre><code>return __copy_trivial(__first, __last, __result);
+</code></pre>
+
+<p>  }
+};
+template <class _Tp>
+struct <strong>copy_dispatch<const _Tp*, _Tp*, __true_type>{ // 类3，特化版
+  static <em>Tp* copy(const </em>Tp* </strong>first, const <em>Tp* __last, </em>Tp* __result) {</p>
+
+<pre><code>return __copy_trivial(__first, __last, __result);
+</code></pre>
+
+<p>  }
+};
+template <class _InputIter, class _OutputIter>
+inline <em>OutputIter
+copy(</em>InputIter <strong>first, _InputIter </strong>last, <em>OutputIter __result) { // 对外接口
+  typedef typename iterator_traits<_InputIter>::value_type </em>Tp;
+  typedef typename <strong>type_traits<_Tp>::has_trivial_assignment_operator _Trivial;
+  return </strong>copy_dispatch&lt;<em>InputIter, </em>OutputIter, _Trivial></p>
+
+<pre><code>::copy(__first, __last, __result);
+</code></pre>
+
+<p>}
+//============== 其他，完全不具有偏特化特性的情况</p>
+
+<h1>else /<em> __STL_CLASS_PARTIAL_SPECIALIZATION </em>/</h1>
+
+<p>template <class _InputIter, class _OutputIter>
+inline <em>OutputIter
+copy(</em>InputIter <strong>first, _InputIter </strong>last, _OutputIter <strong>result){ // 对外接口，泛化版
+  return </strong>copy(<strong>first, </strong>last, <strong>result, </strong>ITERATOR_CATEGORY(<strong>first), </strong>DISTANCE_TYPE(__first));
+}</p>
+
+<h1>define <em>_SGI_STL_DECLARE_COPY_TRIVIAL(</em>Tp)                                \</h1>
+
+<p>  inline <em>Tp* copy(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result) { \ // 对外接口，特化版</p>
+
+<pre><code>memmove(__result, __first, sizeof(_Tp) * (__last - __first));          \
+return __result + (__last - __first);                                  \
+</code></pre>
+
+<p>  }</p>
+
+<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(char)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(signed char)
+<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned char)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(short)
+<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned short)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(int)
+<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned int)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(long)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long)</p>
+
+<h1>ifdef __STL_HAS_WCHAR_T</h1>
+
+<p>__SGI_STL_DECLARE_COPY_TRIVIAL(wchar_t)</p>
+
+<h1>endif</h1>
+
+<h1>ifdef _STL_LONG_LONG</h1>
+
+<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(long long)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long long)</p>
+
+<h1>endif</h1>
+
+<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(float)
+</strong>SGI_STL_DECLARE_COPY_TRIVIAL(double)
+__SGI_STL_DECLARE_COPY_TRIVIAL(long double)</p>
+
+<h1>undef __SGI_STL_DECLARE_COPY_TRIVIAL</h1>
+
+<h1>endif /<em> __STL_CLASS_PARTIAL_SPECIALIZATION </em>/</h1>
+
+<p>```</p>
+
+<p>以上是 copy 的完整代码，关于复制还有两个接口，一个是 <code>copy_n</code>，另一个是 <code>copy_backward</code>，前者复制区间 <code>[first, last)</code> 中前 n 个元素，后者从last-1 往 first 复制，这里就不详细展开了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(5.2) 算法之数值算法]]></title>
@@ -57,10 +321,14 @@ template <class _InputIterator, class _Tp, class _BinaryOperation>
 <pre><code>__init = __binary_op(__init, *__first); // 指定二元操作
 </code></pre>
 
-<p>  return <em><em>init;
+<p>  return __init;
 }
-```
-第二个版本通过仿函数参数 </em>binary_op 指定操作类型，可以实现其他方式的累计，例如累乘等（令init=1，</em>binary_op=multiply）。</p>
+```</p>
+
+<!-- more -->
+
+
+<p>第二个版本通过仿函数参数 <em>binary_op 指定操作类型，可以实现其他方式的累计，例如累乘等（令init=1，</em>binary_op=multiply）。</p>
 
 <h3>2. adjacent_difference</h3>
 
@@ -705,111 +973,6 @@ inline size_t <strong>stl_hash_string(const char* </strong>s) { // 将字符串�
 };
 ```
 关于函数调用操作符的更多介绍，可以参见我的另一篇文章 【<a href="http://ibillxia.github.io/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a>】。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(4.3) 关联式容器之map和multimap]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/"/>
-    <updated>2014-08-31T21:30:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_map.h</code>、<code>stl_multimap.h</code>、<code>stl_pair.h</code>、<code>map.h</code>、 <code>multimap.h</code>、 <code>map</code>  等文件。</p>
-
-<h2>1. map 简介</h2>
-
-<p>map 的特性是，所有元素都是键值对，用一个 pair 表示，pair 的第一个元素是键值（key），第二个元素是实值（value），map 不允许两个元素的键值相同。<br/>
-与 set 类似的，map 也不允许修改 key 的值，但不同的是可以修改 value 的值，因此 map 的迭代器既不是一种 constant iterators，也不是一种 mutable iterators。同样的，map的插入和删除操作不影响操作之前定义的迭代器的使用（被删除的那个元素除外）。<br/>
-与 set 不同的是，map 没有交、并、差等运算，只有插入、删除、查找、比较等基本操作。</p>
-
-<h2>2. map 的实现</h2>
-
-<p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：<br/>
-<code>
-template &lt;class _T1, class _T2&gt;
-struct pair {
-  typedef _T1 first_type;
-  typedef _T2 second_type;
-  _T1 first; // 两个成员 first 和 second
-  _T2 second;
-  pair() : first(_T1()), second(_T2()) {} // 构造函数
-  pair(const _T1&amp; __a, const _T2&amp; __b) : first(__a), second(__b) {} // 拷贝构造函数
-};
-template &lt;class _T1, class _T2&gt;
-inline bool operator==(const pair&lt;_T1, _T2&gt;&amp; __x, const pair&lt;_T1, _T2&gt;&amp; __y) { // 相等比较
-  return __x.first == __y.first &amp;&amp; __x.second == __y.second;
-}
-template &lt;class _T1, class _T2&gt;
-inline bool operator&lt;(const pair&lt;_T1, _T2&gt;&amp; __x, const pair&lt;_T1, _T2&gt;&amp; __y) { // 大小比较
-  return __x.first &lt; __y.first || (!(__y.first &lt; __x.first) &amp;&amp; __x.second &lt; __y.second);
-}
-template &lt;class _T1, class _T2&gt;
-inline pair&lt;_T1, _T2&gt; make_pair(const _T1&amp; __x, const _T2&amp; __y) { // 创建一个 pair
-  return pair&lt;_T1, _T2&gt;(__x, __y);
-}
-</code></p>
-
-<!-- more -->
-
-
-<p>然后是 map 的定义，大体上和 set 差不多，只是在使用 RB-tree 作为容器时，传入的模板参数是一个 pair，主要代码如下：<br/>
-```
-template <class _Key, class _Tp, class _Compare, class _Alloc>
-class map {
-public:
-  typedef <em>Key                  key_type;
-  typedef </em>Tp                   data_type;
-  typedef <em>Tp                   mapped_type;
-  typedef pair<const _Key, _Tp> value_type;
-  typedef </em>Compare              key_compare;
-  // 一个用于键值比较的内部类
-  class value_compare : public binary_function&lt;value_type, value_type, bool> {
-  friend class map&lt;<em>Key,</em>Tp,<em>Compare,</em>Alloc>;
-  protected :</p>
-
-<pre><code>_Compare comp;
-value_compare(_Compare __c) : comp(__c) {}
-</code></pre>
-
-<p>  public:</p>
-
-<pre><code>bool operator()(const value_type&amp; __x, const value_type&amp; __y) const {
-  return comp(__x.first, __y.first);
-}
-</code></pre>
-
-<p>  };
-private:
-  typedef <em>Rb_tree&lt;key_type, value_type, </em>Select1st<value_type>,</p>
-
-<pre><code>key_compare, _Alloc&gt; _Rep_type; // 这里的value_type是一个pair&lt;const _Key, _Tp&gt;
-</code></pre>
-
-<p>  <em>Rep_type </em>M_t;  // 用红黑树作为底层容器
-public:
-  map() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
-  bool empty() const { return <em>M_t.empty(); } // 判断是否为空
-  size_type size() const { return </em>M_t.size(); } // 获取元素个数
-  map(const value_type<em> __first, const value_type</em> __last)</p>
-
-<pre><code>: _M_t(_Compare(), allocator_type())
-{ _M_t.insert_unique(__first, __last); } // 构造函数，使用insert_unique，键值不允许重复
-</code></pre>
-
-<p>  void insert(const value_type<em> __first, const value_type</em> __last) { // 插入操作</p>
-
-<pre><code>_M_t.insert_unique(__first, __last);
-</code></pre>
-
-<p>  }
-  void erase(iterator <strong>position) { _M_t.erase(</strong>position); } // 删除操作
-  iterator find(const key_type&amp; <strong>x) { return _M_t.find(</strong>x); } // 查找操作
-};
-```
-可以看到，基本也是对底层容器 RB-tree 的一个简单的封装。</p>
-
-<h2>3. multimap</h2>
-
-<p>multimap 与 map 的关系和 multiset 与 set 的关系一样，即 multimap 允许键值（key）重复，插入操作使用 RB-tree 的 <code>insert_equal</code> ，其他都和 map 一样，这里就不贴源代码了。</p>
 ]]></content>
   </entry>
   

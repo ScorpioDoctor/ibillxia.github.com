@@ -182,6 +182,74 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/">基于UML的图书管理系统的需求分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-18T10:06:00+08:00" pubdate data-updated="true">Jul 18<span>th</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一个图书馆的图书资料库在正常运转中总是面对大量的读者信息、书籍信息以及两者相互作用产生的借书信息、还书信息。
+图书馆作为一个信息资源的集散地，图书和用户借阅资料繁多，包含着很多的信息数据。图书管理系统的开发和应用主要通过
+两个步骤来实现：首先是基于系统功能的需求分析，其次是系统模型的设计和实现。
+</p>
+
+
+
+
+<h2>1.需求分析</h2>
+
+
+<p>需求分析是软件工程过程的一个重要阶段,其中一个主要任务是确定系统的功能需求,采用面向对象方法,基于UML的可视化
+系统需求分析,因为有用户的积极参与,既可以加快设计者对于问题的理解,又能够在系统描述方面减少语义差异,保证分析的
+正确性。需求分析的目标就是建立需求模型,即从功能需求出发建立用例模型, UML的用例视图从用户的需求中提取,以盒图的
+方式描述待开发的系统的功能需求。每个用例都指定了客户的需求即他们需要系统干什么。用例图为设计活动不仅记录需求
+而且还提供了一种挖掘的信息, 它记录了需求到设计结果之间的映射关系,能够确保设计结果具有明确的根据或者说具有可
+维护性,基于UML的软件开发过程是以用例驱动的。</p>
+
+
+
+
+<p>首先我们进行角色识别，角色识别的任务是找出所有可能与系统发生交互行为的外部实体、对象、系统。它们的行为不受系统控制，
+但是可以提供输入给系统。对于一所大学的图书管理系统，基本的功能是完成图书的借阅和相关信息的管理，服务的对象有本科生，
+研究生，教师，及其他学校的学生，还有社会人员，这些人可归结为一类即读者。而为帮助读者顺利完成借还书的可以是工作人员，
+可以是自动借还书机，他们可以归结为一类即图书管理人员。因此对于一个图书管理系统主要有两类角色，读者、图书管理员。</p>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/07/18/UML-based-library-management-system-requirement-analysis-and-system-design/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/">怎么过有意义的日子-俞敏洪</a></h1>
     
     
@@ -827,65 +895,6 @@ print &#8216;Instance&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + conve
   
     <footer>
       <a rel="full-article" href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/06/05/io-buffer-in-c-language/">C语言输入输出缓冲区</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true">Jun 5<span>th</span>, 2009</time>
-        
-         | <a href="/blog/2009/06/05/io-buffer-in-c-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>原文链接：<a href="http://blog.csdn.net/cxyol/archive/2006/03/18/628324.aspx">http://blog.csdn.net/cxyol/archive/2006/03/18/628324.aspx</a></p>
-
-<h2>1.输入输出缓冲区的概念（C++用的多一些）</h2>
-
-
-<p>我想以一个例子说明，比如我想把一篇文章以字符序列的方式输出到计算机显示器屏幕上，
-那么我的程序内存作为数据源而显示器驱动程序作为数据目标，如果数据源直接对数据目标发送数据的话。
-数据目标获得第一个字符，便将它显示。然后从端口读取下一个字符，可是这时就不能保证数据源向端口
-发送的恰好是第二个字符（也许是第三个，而第二个已经在数据目标显示时发送过了）。
-这样的话就不能保证输出的数据能完整的被数据目标所接受并处理。</p>
-
-
-<p>为了解决这个问题，我们需要在数据源与数据目标中间放置一个保存完整数据内容的区域，
-那就是 “缓冲区”。这样的话， 数据源可以不考虑数据目标正在处理哪部分数据，只要把数据输出到缓冲区就可以了，
-数据目标也可以不考虑数据源的发送频率，只是从缓冲区中依次取出下一个数据。
-从而保证了数据发送的完整性，同时也提高了程序的效率。<p>
-<p>当然getch(),getche()没有用到缓冲区。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/06/05/io-buffer-in-c-language/">Read on &rarr;</a>
     </footer>
   
 
