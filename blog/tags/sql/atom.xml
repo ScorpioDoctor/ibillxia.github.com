@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SQL | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/sql/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-10-26T22:31:03+08:00</updated>
+  <updated>2014-10-27T22:32:02+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -438,9 +438,10 @@ UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select
 
 <p>例 51 取消 LILI 的存取 STUDENTS 表的特权。 
 <div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>REVOKE ALL ON STUDENTS FROM LILI CASCADE</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>REVOKE ALL ON STUDENTS FROM LILI CASCADE</span></code></pre></td></tr></table></div></figure></notextile></div>
+</p>
 
-<p>本文来自: 脚本之家(www.jb51.net) 详细出处参考：http://www.jb51.net/article/8863_3.htm</p>
+本文来自: 脚本之家[www.jb51.net](http://www.jb51.net/article/8863_3.htm)
 
 ]]></content>
   </entry>
