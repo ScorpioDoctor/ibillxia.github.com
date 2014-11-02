@@ -182,6 +182,63 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/">深入理解STL源码(5.4) 算法之复杂算法algorithm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-01T10:33:00+08:00" pubdate data-updated="true">Nov 1<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文主要介绍STL中的稍微复杂的算法，主要涉及到的源码文件有 <code>stl_algo.h</code> 等。</p>
+
+<p>在文件 <code>stl_algo.h</code> 中有很多常用的算法，包括查找、计数、旋转、删除、排序、合并、集合的交并等运算、求极值、排列组合等等，本文将按源码中各算法的实现顺序来介绍其具体实现细节。由于本文涉及到的算法和相关代码太多，在文中就尽量不贴出代码了，详细的代码及相关注释请参见 <a href="http://ibillxia.github.io/upload/code/stl_algo.h">stl_algo.h</a>。</p>
+
+<p><strong>1. 求三个数的中值 median</strong><br/>
+该算法比较简单，几个if-else语句就解决了。该函数只提供内部算法使用，并不对外提供接口，也不是STL标准中的算法，限于篇幅这里就不贴代码了。另外，该算法有两个版本，一个是使用默认的大小比较，另一个是可以指定比较函数。</p>
+
+<p><strong>2. for_each</strong><br/>
+也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first) __f(*__first);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/">深入理解STL源码(5.3) 算法之基本算法algobase</a></h1>
     
     
@@ -207,7 +264,7 @@ $(document).ready(function(){
   </header>
 
 
-  <div class="entry-content"><p>本文主要介绍STL中的数值算法，主要涉及到的源码文件有 <code>stl_algobase.h</code> 等。</p>
+  <div class="entry-content"><p>本文主要介绍STL中的基本算法，主要涉及到的源码文件有 <code>stl_algobase.h</code> 等。</p>
 
 <p>在 <code>stl_algobase.h</code> 中定义的算法都比较简单基础，主要涉及区间相等判断、区间填充、求极值、交换、拷贝、字典序比较等算法，而其他诸如查找、计数、排序、旋转等算法则在文件 <code>stl_algo.h</code> 中实现。在algobase基本算法中，除了字典序比较、复制/拷贝算法外，其他都比较简单，这里先依次介绍这些简单的算法，然后再介绍字典序比较和拷贝算法。</p>
 
@@ -782,91 +839,6 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
   
     <footer>
       <a rel="full-article" href="/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-13T20:46:00+08:00" pubdate data-updated="true">Jul 13<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有<code>deque</code>、<code>stl_deque.h</code>、<code>deque.h</code>、<code>stack</code>、<code>stl_stack.h</code>、<code>queue</code>、<code>stl_queue.h</code> 等几个文件。</p>
-
-<h2>1. deque 概述</h2>
-
-<p>前面分别介绍了连续式存储的序列容器vector和以节点为单位链接起来的非连续存储的序列容器list，这两者各有优缺点，而且刚好是优缺互补的，那么何不将二者结合利用对方的优点来弥补己方的不足呢，于是这就有了强大的deque。</p>
-
-<p>没错，与我们在数据结构中学到的固定连续空间的双端队列不同，STL中的deque是分段连续的空间通过list链接而成的序列容器，它结合了vector与list的存储特性，但与vector和list都不同的是deque只能在首部或尾部进行插入和删除操作，这个限制在一定程度上简化了deque实现的难度。由于使用分段连续空间链接的方式，所以deque不存在vector那样“因旧空间不足而重新配置新的更大的空间，然后复制元素，再释放原空间”的情形，也不会有list那样每次都只配置一个元素的空间而导致时间性能和空间的利用率低下。</p>
-
-<h2>2. deque 的数据结构</h2>
-
-<p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
-</span><span class='line'>  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp** _M_map; // 指向缓冲区的指针数组首地址
-</span><span class='line'>  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
-</span><span class='line'>  iterator _M_start; // 指向第一个缓冲区的第一个元素
-</span><span class='line'>  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
-</span><span class='line'>};
-</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
-</span><span class='line'>protected:  // Internal typedefs
-</span><span class='line'>  typedef pointer* _Map_pointer;
-</span><span class='line'>  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">Read on &rarr;</a>
     </footer>
   
 
