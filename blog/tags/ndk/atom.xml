@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: NDK | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/ndk/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-02T22:19:57+08:00</updated>
+  <updated>2014-11-03T21:59:19+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 
 <p>什么是 Android NDK 呢？ NDK(Native Development Kit) 是一个允许开发者用一些本地语言(C/C++)编写 Android App 的部分功能的工具集。对于一些特定的 App，NDK 非常有利于我们直接使用现成的用 C/C++ 编写的代码库（但对于大多数 App 来说，NDK 是没有必要的）。使用 NDK 进行 C/C++ Android 开发的基本结构和流程如下图（来自<a href="http://shihongzhi.com/ndk/">shihongzhi博客</a> ）：</p>
 
-<center> <img src="/images/2014/IMAG2014050401.jpg"> </center>
+<center> {% img /images/2014/IMAG2014050401.jpg %} </center>
 
 
 <p>在开始之前，这里要提醒大家：NDK 对大多数 App 而言是不会有太多的好处的，在 Android 上使用原生 C/C++ 代码并不会很明显的提升应用的性能，但却增加了你开发应用的复杂度。所以，仅仅在需要使用 NDK 时才使用它 —— 不要因为你更喜欢用 C/C++。典型的 NDK 应用场景是一些 CPU 操作密集而不需要太多内存的场合，如信号处理、物理模拟等等，很多这些处理过程都已经封装到了 Android 系统内部，所以当你不确定是否要使用本地 C/C++ 代码时，先看看你的需求，以及 Android 框架中的 API 是否已经提供你需要的功能。</p>
@@ -174,7 +174,7 @@ public void onCreate(Bundle savedInstanceState)
 ```</p>
 
 <p>另外，还需要设计对应的 layout xml 文件，具体见源码压缩包。 最后上一张运行效果截图：
-<img src="/images/2014/IMAG2014050402.png">
+{% img /images/2014/IMAG2014050402.png %}
 图中输入的两个数的和超过了 int 能表示的最大值，出现上溢，但返回的是最大值。如果输入的两个数本身就超出范围将出现
 <code>Unfortunately, HelloJni has stopped.</code> 的异常的对话框。实际过程中，究竟在哪一步检测并处理异常，还是一个值得商讨的问题。如果是引用第三方的库，可能需要对相应的接口提供充分的测试，对于可以并且方便在 native code 层面解决的异常就在 native code 层面上处理掉，实在不行也要在 Java API 层面上解决掉，比如这里需要在 Java 中判断输入参数本身的合法性。</p>
 ]]></content>
