@@ -4,7 +4,7 @@
   <title><![CDATA[Category: View | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/view/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-03T22:31:14+08:00</updated>
+  <updated>2014-11-04T22:18:11+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -33,7 +33,7 @@
 也是『纽约时报』畅销书『长尾理论』及『免费：商业的未来』的作者。</p>
 
 
-<center>{% img /images/2014/IMAG2014022301.jpg %}</center>
+<center><img src="/images/2014/IMAG2014022301.jpg"></center>
 
 
 <p>『创客：新工业革命』一书以独特的视角分析了传统的制造业在汹涌澎湃的互联网浪潮中发生的翻天覆地的变化。在互联网这个广阔媒介的
@@ -55,7 +55,7 @@
 <p>长尾（The Long Tail），或译长尾效应，最初由克里斯·安德森（Chris Anderson）于2004年发表于自家的<a href="http://www.wired.com/wired/archive/12.10/tail.html">杂志</a>，
 用来描述诸如亚马逊公司、Netflix和Real.com/Rhapsody之类的网站之商业和经济模式。是指那些不受到重视的、销量小但种类多的产品或服务
 由于总量巨大，累积起来的总收益超过主流产品的现象。下图中纵轴为“人气”，横轴为“产品”，黄色部分即为长尾。
-<center>{% img /images/2014/IMAG2014022302.png %}</center>
+<center><img src="/images/2014/IMAG2014022302.png"></center>
 在互联网领域，长尾效应尤为显著。比如亚马逊上的书籍的销售情况，<a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=400940">Erik</a>等
 用指数曲线研究了亚马逊网站的书本销售量和销售排名的关系，并发现亚马逊40%的书本销售来自于**本地书店里不卖**的书本。在亚马逊这个案例上，
 可应用“长尾”概念解释：它一半左右的销售来自于比较热门的商品，而另一半却来自相对不那么热门的商品。这跟传统
@@ -140,7 +140,7 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 
 
 
-<center>{% img /images/2013/IMAG2013111101.jpg %}</center>
+<center><img src="/images/2013/IMAG2013111101.jpg"></center>
 
 
 
@@ -198,7 +198,7 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 “让你爽到极致”“生理反应”“就要给你想要的”…哈哈哈哈[哈哈][哈哈] 不过话糙理直 ①学会在夹缝中生存发展 ②能够把握住深层次的需求痛点 “我们就是为了方总来的” [围观][围观]』
 （<a href="http://weibo.com/3410997984/Ai5JJ4AfO">微博</a>）上次在一个创业圆桌分享会上见识过了方总，这次方师兄从自己苦逼的创业历程讲如何在业务迁移中保持竞争力，
 要变，还要是绝活！给挣扎在创业道路上同样苦逼奋斗的年轻创业者们一个很好的警示。
-<center>{% img /images/2013/IMAG2013111102.jpg %}</center>
+<center><img src="/images/2013/IMAG2013111102.jpg"></center>
 </p>
 
 
@@ -224,7 +224,7 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 理解商业逻辑；以用户思维分析问题、以互联网思维解决问题，未必需要技术。2. 用户的痛点：痛点是用户解决不了的问题、承受不了的成本、麻烦快要死的事，更可能不存在。
 “发现比想更重要”。』（<a href="http://e.weibo.com/2863376813/Ai6zi2jXi">微博</a>）。辉哥@Fenng 吐槽了很多，把很多公司贬为“狗屎”，也从“问题与痛点”深入细致的
 分析了在创业过程中，创业者们在解决问题和消除痛点时要思考的一些问题。
-<center>{% img /images/2013/IMAG2013111103.jpg %}</center>
+<center><img src="/images/2013/IMAG2013111103.jpg"></center>
 </p>
 
 
@@ -336,7 +336,7 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 
 
 
-<center>{% img /images/2013/IMAG2013103001.jpeg %}</center>
+<center><img src="/images/2013/IMAG2013103001.jpeg"></center>
 
 
 
@@ -526,7 +526,7 @@ inWatch智能腕表：提供时间、音乐、上网、拨打电话等功能，�
 好准备，所以最终失败。</p>
 
 
-<center>{% img /images/2011/IMAG2011050701.jpg %}</center>
+<center><img src="/images/2011/IMAG2011050701.jpg"></center>
 
 
 <p>同类型的公司在数年后取得辉煌成绩，产生数亿美元价值，曾经创立这10大创业公司的企业家难免懊恼不已，因为这些创意和产品都是他们曾
@@ -643,7 +643,7 @@ inWatch智能腕表：提供时间、音乐、上网、拨打电话等功能，�
     <content type="html"><![CDATA[<h3>微博首先是媒体</h3>
 
 
-<center>{% img /images/2011/IMAG2011041701.jpg %}</center>
+<center><img src="/images/2011/IMAG2011041701.jpg"></center>
 
 
 <p>但更确切点说，它是自媒体。它即是名人、权威们的自媒体，也是草根们的自媒体。在中国，草根现在靠着微薄，也有了些话语权，但声音还比较稚嫩，

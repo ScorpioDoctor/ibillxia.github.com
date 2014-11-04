@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-03T22:31:14+08:00</updated>
+  <updated>2014-11-04T22:18:11+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -174,15 +174,17 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 <p><strong>16. 排序 sort</strong><br/>
 排序算法是STL中最重要也最复杂的算法，总代码量大概是600行（实际上还不止，因为还有调用其他函数，如partition、merge等），占整个文件的1/5。该算法接受两个随机存取迭代器参数，将区间内的元素以渐增的顺序排列，重载版本则允许用户指定一个仿函数作为排序标准。STL的所有关系型容器都拥有自动排序功能（因为底层是RB-tree，属于有序搜索树），不需要用到这个sort算法，而序列式容器中的stack、queue和priority-queue都有特定的出入限制，不允许排序，剩下vector、deque和list、slist，前两者的迭代器都是随机存取迭代器，可以使用sort算法，而list是双向迭代器，slist是前向迭代器，都不适合使用sort算法，如果要对list或slist排序，需要使用list或slist自己实现的sort函数。</p>
 
-<p><code>insert_sort</code> 插入排序：在序列长度较小时（STL中设置的是长度小于16时），使用线性插入排序。</p>
+<p><code>insert_sort</code> 插入排序：在序列长度较小时（STL中设置的是长度小于16时），使用线性（而不是二分）插入排序。</p>
 
-<p><code>sort</code> 快速排序：在序列较长时，将序列分割为一个个小的区间，使得区间整体上有序，然后使用插入排序对整体进行排序。</p>
+<p><code>sort</code> 快速排序：在序列较长时，将序列分割为一个个小的区间，使得区间与区间之间整体上有序，然后使用线性插入排序对整体进行排序。（这与我们通常所理解的快速排序还是有很大区别的，最后整体上进行直接插入排序，实际效果与对每个子区间分别进行插入排序的效果是一样的）</p>
 
-<p><code>stable_sort</code> 稳定排序：一种思路实际上为归并排序，时间复杂度仍为 $O(nlogn)$，另外还有一种是所谓的merge sort，我表示没看懂%>_&lt;%。</p>
+<p><code>stable_sort</code> 稳定排序：实际上为归并排序，或称为merge sort，时间复杂度仍为 $O(nlogn)$。当子区间长度小于15时，让然是直接用插入排序；当子能够申请到O(n)的buffer时，借助buffer进行merge sort，否则使用inplace merge进行stable sort。而关于merge算法的内容，还在后文。</p>
 
-<p><code>partial_sort</code> 使用堆进行排序，但具体原理还没完全弄明白，给跪了。</p>
+<p><code>partial_sort</code> 使用堆进行排序，但具体原理还没完全弄明白，给跪了（貌似是只对前半部分排序了-_-）。</p>
 
-<p>先看到这儿吧，后面再继续补充，这两天看得实在是要吐了-_-#</p>
+<p>先看到这儿吧，这两天看得实在是要吐了-_-#</p>
+
+<p>11.04 更新。</p>
 ]]></content>
   </entry>
   

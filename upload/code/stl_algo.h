@@ -1492,11 +1492,11 @@ inline void sort(_RandomAccessIter __first, _RandomAccessIter __last,
 }
 
 // stable_sort() and its auxiliary functions.
-// 稳定排序算法，基本思想是归并排序
+// 稳定排序算法，基本思想是归并排序，或者说是merge sort
 template <class _RandomAccessIter>
 void __inplace_stable_sort(_RandomAccessIter __first,
                            _RandomAccessIter __last) {
-  if (__last - __first < 15) {
+  if (__last - __first < 15) { // 这里为啥直接用15？不用一个变量来表示？？为啥不是前面定义过的__stl_threshold=16？？？
     __insertion_sort(__first, __last);
     return;
   }
@@ -1537,7 +1537,7 @@ void __merge_sort_loop(_RandomAccessIter1 __first,
                      __result);
     __first += __two_step;
   }
-  // 最后不整除的部分
+  // 最后不整除的部分（主要是针对[first+step_size,last)这个区间）
   __step_size = min(_Distance(__last - __first), __step_size);
   merge(__first, __first + __step_size, __first + __step_size, __last,
         __result);
@@ -1585,10 +1585,10 @@ void __chunk_insertion_sort(_RandomAccessIter __first,
                             _Distance __chunk_size, _Compare __comp)
 {
   while (__last - __first >= __chunk_size) {
-    __insertion_sort(__first, __first + __chunk_size, __comp);
-    __first += __chunk_size;
+    __insertion_sort(__first, __first + __chunk_size, __comp); // 对每个子区间进行插入排序
+    __first += __chunk_size; // 区间的起始位置在变
   }
-  __insertion_sort(__first, __last, __comp);
+  __insertion_sort(__first, __last, __comp); // 最后一个子区间进行插入排序
 }
 // 借助buffer的有序子序列合并
 template <class _RandomAccessIter, class _Pointer, class _Distance>
@@ -1600,7 +1600,7 @@ void __merge_sort_with_buffer(_RandomAccessIter __first,
 
   _Distance __step_size = __stl_chunk_size;
   __chunk_insertion_sort(__first, __last, __step_size); // 分段插入排序
-  // 上一句之后[first,last) 不是有序了么，下面这个循环是干嘛的呢？
+  // 有序子序列合并，每循环一次子序列长度变2倍
   while (__step_size < __len) {
     __merge_sort_loop(__first, __last, __buffer, __step_size);
     __step_size *= 2;
@@ -1608,7 +1608,7 @@ void __merge_sort_with_buffer(_RandomAccessIter __first,
     __step_size *= 2;
   }
 }
-// 同上
+// 同上+compare
 template <class _RandomAccessIter, class _Pointer, class _Distance,
           class _Compare>
 void __merge_sort_with_buffer(_RandomAccessIter __first, 
@@ -1634,7 +1634,7 @@ void __stable_sort_adaptive(_RandomAccessIter __first,
                             _Distance __buffer_size) {
   _Distance __len = (__last - __first + 1) / 2;
   _RandomAccessIter __middle = __first + __len;
-  if (__len > __buffer_size) { // 递归调用
+  if (__len > __buffer_size) { // 递归调用，将区间平均切分为两份
     __stable_sort_adaptive(__first, __middle, __buffer, __buffer_size);
     __stable_sort_adaptive(__middle, __last, __buffer, __buffer_size);
   }
@@ -1643,7 +1643,7 @@ void __stable_sort_adaptive(_RandomAccessIter __first,
     __merge_sort_with_buffer(__middle, __last, __buffer, (_Distance*)0);
   }
   __merge_adaptive(__first, __middle, __last, _Distance(__middle - __first), 
-                   _Distance(__last - __middle), __buffer, __buffer_size);
+                   _Distance(__last - __middle), __buffer, __buffer_size); // 区间合并
 }
 // 同上+compare
 template <class _RandomAccessIter, class _Pointer, class _Distance, 
@@ -1723,9 +1723,9 @@ inline void stable_sort(_RandomAccessIter __first,
 template <class _RandomAccessIter, class _Tp>
 void __partial_sort(_RandomAccessIter __first, _RandomAccessIter __middle,
                     _RandomAccessIter __last, _Tp*) {
-  make_heap(__first, __middle); // 前半部分建堆
+  make_heap(__first, __middle); // 前半部分建堆，大根堆，父节点大于子女节点
   for (_RandomAccessIter __i = __middle; __i < __last; ++__i) // 后半部分
-    if (*__i < *__first) // 将小于堆顶值的元素i插入堆中，而堆中某个较大的元素给i
+    if (*__i < *__first) // 将堆顶元素pop出来并存入i所在位置，而将*i的值push到堆中并adjust
       __pop_heap(__first, __middle, __i, _Tp(*__i),
                  __DISTANCE_TYPE(__first));
   sort_heap(__first, __middle); // 前半部分进行heap sort
