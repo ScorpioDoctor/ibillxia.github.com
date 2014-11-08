@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-04T22:18:11+08:00</updated>
+  <updated>2014-11-08T22:52:43+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -167,15 +167,27 @@
 
 <p><code>insert_sort</code> 插入排序：在序列长度较小时（STL中设置的是长度小于16时），使用线性（而不是二分）插入排序。</p>
 
-<p><code>sort</code> 快速排序：在序列较长时，将序列分割为一个个小的区间，使得区间与区间之间整体上有序，然后使用线性插入排序对整体进行排序。（这与我们通常所理解的快速排序还是有很大区别的，最后整体上进行直接插入排序，实际效果与对每个子区间分别进行插入排序的效果是一样的）</p>
+<p><code>sort</code> 排序：在序列较长时，将序列分割为一个个小的区间，使得区间与区间之间整体上有序，然后使用线性插入排序对整体进行排序。（这与我们通常所理解的快速排序还是有很大区别的，最后整体上进行直接插入排序，实际效果与对每个子区间分别进行插入排序的效果是一样的，效率依然是非常高的）</p>
 
-<p><code>stable_sort</code> 稳定排序：实际上为归并排序，或称为merge sort，时间复杂度仍为 $O(nlogn)$。当子区间长度小于15时，让然是直接用插入排序；当子能够申请到O(n)的buffer时，借助buffer进行merge sort，否则使用inplace merge进行stable sort。而关于merge算法的内容，还在后文。</p>
+<p><code>stable_sort</code> 稳定排序：实际上为归并排序，或称为merge sort，时间复杂度仍为 $O(nlogn)$。当子区间长度小于15时，让然是直接用插入排序；当子能够申请到O(n)的buffer时，借助buffer进行merge sort，否则使用inplace merge进行stable sort。而关于两种（with buffer和inplace的）merge的算法的内容，在后文中介绍。</p>
 
-<p><code>partial_sort</code> 使用堆进行排序，但具体原理还没完全弄明白，给跪了（貌似是只对前半部分排序了-_-）。</p>
+<p><code>partial_sort</code> 部分排序：使用堆进行排序，功能是将序列 <code>[first, last)</code> 中的较小的 middle-first 个元素排序并放在区间 <code>[first, middle)</code> 中，而其余的 last-middle 个元素仍然是无序的。整个算法分为两个大的步骤，首先是将middle前的元素构建一个max-heap，将middle及之后的元素中比max-heap堆顶小的元素与堆顶对调并调整堆，从而得到middle前的元素都比middle后的元素小；然后使用heap sort对middle之前的元素进行排序。</p>
 
-<p>先看到这儿吧，这两天看得实在是要吐了-_-#</p>
+<p><strong>17. 第n大的数 nth_element</strong>
+该算法的功能是求一个序列中排行第n大的元素，具体实现时是使用 partition 将搜索范围逐步缩小，直到不足3个元素的区间后，进行insert-sort，最后第n大的元素就位于序列的第n个位置（该算法的迭代器也要求是随机存取的迭代器）。</p>
 
-<p>11.04 更新。</p>
+<p><strong>18. 二分查找 binary_search</strong>
+该系列算法的前提条件是序列<strong>已经有序</strong>，迭代器至少是ForwardIterators。</p>
+
+<p><code>lower_bound</code> ：二分查找 val，存在则返回指向该元素的迭代器，否则返回最小的不小于 val 的元素的迭代器，即在不破坏次序的情况下val可插入的第一个位置。</p>
+
+<p><code>upper_bound</code> ： 二分查找 val，存在则返回该元素的下一个元素的迭代器，否则返回最小的不小于 val的元素的迭代器，及在不破坏次序的前提下，val可插入的最后一个位置。</p>
+
+<p><code>equal_range</code> ：二分查找 val，返回值为 val 的区间 <code>[i,j)</code>，其中 i 是 <code>lower_bound</code>，而 j 是 <code>upper_bound</code>。</p>
+
+<p><code>binary_search</code> ：二分查找，找到返回true，否则返回false。实际上使用的是 <code>lower_bound</code> 来实现的。</p>
+
+<p>2014.11.08 更新。</p>
 ]]></content>
   </entry>
   

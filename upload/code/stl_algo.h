@@ -1726,9 +1726,9 @@ void __partial_sort(_RandomAccessIter __first, _RandomAccessIter __middle,
   make_heap(__first, __middle); // 前半部分建堆，大根堆，父节点大于子女节点
   for (_RandomAccessIter __i = __middle; __i < __last; ++__i) // 后半部分
     if (*__i < *__first) // 将堆顶元素pop出来并存入i所在位置，而将*i的值push到堆中并adjust
-      __pop_heap(__first, __middle, __i, _Tp(*__i),
-                 __DISTANCE_TYPE(__first));
-  sort_heap(__first, __middle); // 前半部分进行heap sort
+      __pop_heap(__first, __middle, __i, _Tp(*__i), // 最后的效果是，比较大的元素都调整到middle之后了
+                 __DISTANCE_TYPE(__first)); // 而比较小的元素仍然留在堆中
+  sort_heap(__first, __middle); // 前半部分较小的元素进行heap sort
 }
 // 对外接口
 template <class _RandomAccessIter>
@@ -1762,7 +1762,7 @@ inline void partial_sort(_RandomAccessIter __first,
       typename iterator_traits<_RandomAccessIter>::value_type);
   __partial_sort(__first, __middle, __last, __VALUE_TYPE(__first), __comp);
 }
-// 非质变版本
+// 非质变版本，先进行copy，剩下的和质变版本一样
 template <class _InputIter, class _RandomAccessIter, class _Distance,
           class _Tp>
 _RandomAccessIter __partial_sort_copy(_InputIter __first,
@@ -1772,7 +1772,7 @@ _RandomAccessIter __partial_sort_copy(_InputIter __first,
                                       _Distance*, _Tp*) {
   if (__result_first == __result_last) return __result_last;
   _RandomAccessIter __result_real_last = __result_first;
-  while(__first != __last && __result_real_last != __result_last) {
+  while(__first != __last && __result_real_last != __result_last) { // 进行拷贝
     *__result_real_last = *__first;
     ++__result_real_last;
     ++__first;
@@ -1788,7 +1788,7 @@ _RandomAccessIter __partial_sort_copy(_InputIter __first,
   sort_heap(__result_first, __result_real_last);
   return __result_real_last;
 }
-
+// 对外接口
 template <class _InputIter, class _RandomAccessIter>
 inline _RandomAccessIter
 partial_sort_copy(_InputIter __first, _InputIter __last,
@@ -1806,7 +1806,7 @@ partial_sort_copy(_InputIter __first, _InputIter __last,
                              __DISTANCE_TYPE(__result_first),
                              __VALUE_TYPE(__first));
 }
-
+// 同上上+compare
 template <class _InputIter, class _RandomAccessIter, class _Compare,
           class _Distance, class _Tp>
 _RandomAccessIter __partial_sort_copy(_InputIter __first,
@@ -1833,7 +1833,7 @@ _RandomAccessIter __partial_sort_copy(_InputIter __first,
   sort_heap(__result_first, __result_real_last, __comp);
   return __result_real_last;
 }
-
+// 同上，对外接口
 template <class _InputIter, class _RandomAccessIter, class _Compare>
 inline _RandomAccessIter
 partial_sort_copy(_InputIter __first, _InputIter __last,
@@ -1853,11 +1853,11 @@ partial_sort_copy(_InputIter __first, _InputIter __last,
 }
 
 // nth_element() and its auxiliary functions.  
-
+// 第n大数，使用partition算法缩小搜索范围直至找到
 template <class _RandomAccessIter, class _Tp>
 void __nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
                    _RandomAccessIter __last, _Tp*) {
-  while (__last - __first > 3) {
+  while (__last - __first > 3) { // 不断的进行partition
     _RandomAccessIter __cut =
       __unguarded_partition(__first, __last,
                             _Tp(__median(*__first,
@@ -1868,9 +1868,9 @@ void __nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
     else 
       __last = __cut;
   }
-  __insertion_sort(__first, __last);
+  __insertion_sort(__first, __last); // 在不到3个元素时，进行排序，结果第n大元素位于第n个位置
 }
-
+// 同上，对外接口
 template <class _RandomAccessIter>
 inline void nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
                         _RandomAccessIter __last) {
@@ -1879,7 +1879,7 @@ inline void nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
                  _LessThanComparable);
   __nth_element(__first, __nth, __last, __VALUE_TYPE(__first));
 }
-
+// 同上上+compare
 template <class _RandomAccessIter, class _Tp, class _Compare>
 void __nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
                    _RandomAccessIter __last, _Tp*, _Compare __comp) {
@@ -1898,7 +1898,7 @@ void __nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
   }
   __insertion_sort(__first, __last, __comp);
 }
-
+// 同上上+compare
 template <class _RandomAccessIter, class _Compare>
 inline void nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
                         _RandomAccessIter __last, _Compare __comp) {
@@ -1911,31 +1911,31 @@ inline void nth_element(_RandomAccessIter __first, _RandomAccessIter __nth,
 
 
 // Binary search (lower_bound, upper_bound, equal_range, binary_search).
-
+// 二分查找val，存在则返回对应的迭代器，否则返回最小的不小于val的元素的迭代器
 template <class _ForwardIter, class _Tp, class _Distance>
 _ForwardIter __lower_bound(_ForwardIter __first, _ForwardIter __last,
                            const _Tp& __val, _Distance*) 
 {
   _Distance __len = 0;
-  distance(__first, __last, __len);
+  distance(__first, __last, __len); // 获取区间长度
   _Distance __half;
   _ForwardIter __middle;
 
   while (__len > 0) {
-    __half = __len >> 1;
+    __half = __len >> 1; // 区间长度减半
     __middle = __first;
     advance(__middle, __half);
-    if (*__middle < __val) {
+    if (*__middle < __val) { // middle后半区间找
       __first = __middle;
       ++__first;
       __len = __len - __half - 1;
     }
-    else
+    else // middle前半区间找，*middle=val的在这部分
       __len = __half;
   }
   return __first;
 }
-
+// 同上，对外接口
 template <class _ForwardIter, class _Tp>
 inline _ForwardIter lower_bound(_ForwardIter __first, _ForwardIter __last,
 				const _Tp& __val) {
@@ -1946,7 +1946,7 @@ inline _ForwardIter lower_bound(_ForwardIter __first, _ForwardIter __last,
   return __lower_bound(__first, __last, __val,
                        __DISTANCE_TYPE(__first));
 }
-
+// 同上上+compare
 template <class _ForwardIter, class _Tp, class _Compare, class _Distance>
 _ForwardIter __lower_bound(_ForwardIter __first, _ForwardIter __last,
                               const _Tp& __val, _Compare __comp, _Distance*)
@@ -1970,7 +1970,7 @@ _ForwardIter __lower_bound(_ForwardIter __first, _ForwardIter __last,
   }
   return __first;
 }
-
+// 同上上+compare
 template <class _ForwardIter, class _Tp, class _Compare>
 inline _ForwardIter lower_bound(_ForwardIter __first, _ForwardIter __last,
                                 const _Tp& __val, _Compare __comp) {
@@ -1981,7 +1981,7 @@ inline _ForwardIter lower_bound(_ForwardIter __first, _ForwardIter __last,
   return __lower_bound(__first, __last, __val, __comp,
                        __DISTANCE_TYPE(__first));
 }
-
+// 二分查找val，存在则返回该元素的下一个元素的迭代器，否则返回最小的不小于val的元素的迭代器
 template <class _ForwardIter, class _Tp, class _Distance>
 _ForwardIter __upper_bound(_ForwardIter __first, _ForwardIter __last,
                            const _Tp& __val, _Distance*)
@@ -1995,9 +1995,9 @@ _ForwardIter __upper_bound(_ForwardIter __first, _ForwardIter __last,
     __half = __len >> 1;
     __middle = __first;
     advance(__middle, __half);
-    if (__val < *__middle)
+    if (__val < *__middle) // 在middle的前半部分找
       __len = __half;
-    else {
+    else { // 在middle的后半部分找，val=*middle的在部分
       __first = __middle;
       ++__first;
       __len = __len - __half - 1;
@@ -2005,7 +2005,7 @@ _ForwardIter __upper_bound(_ForwardIter __first, _ForwardIter __last,
   }
   return __first;
 }
-
+// 对外接口
 template <class _ForwardIter, class _Tp>
 inline _ForwardIter upper_bound(_ForwardIter __first, _ForwardIter __last,
                                 const _Tp& __val) {
@@ -2016,7 +2016,7 @@ inline _ForwardIter upper_bound(_ForwardIter __first, _ForwardIter __last,
   return __upper_bound(__first, __last, __val,
                        __DISTANCE_TYPE(__first));
 }
-
+// 同上上+compare
 template <class _ForwardIter, class _Tp, class _Compare, class _Distance>
 _ForwardIter __upper_bound(_ForwardIter __first, _ForwardIter __last,
                            const _Tp& __val, _Compare __comp, _Distance*)
@@ -2040,7 +2040,7 @@ _ForwardIter __upper_bound(_ForwardIter __first, _ForwardIter __last,
   }
   return __first;
 }
-
+// 对外接口+compare
 template <class _ForwardIter, class _Tp, class _Compare>
 inline _ForwardIter upper_bound(_ForwardIter __first, _ForwardIter __last,
                                 const _Tp& __val, _Compare __comp) {
@@ -2051,7 +2051,7 @@ inline _ForwardIter upper_bound(_ForwardIter __first, _ForwardIter __last,
   return __upper_bound(__first, __last, __val, __comp,
                        __DISTANCE_TYPE(__first));
 }
-
+// 仍然是二分查找，返回值为val可插入的位置的区间
 template <class _ForwardIter, class _Tp, class _Distance>
 pair<_ForwardIter, _ForwardIter>
 __equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
@@ -2063,7 +2063,7 @@ __equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
   _ForwardIter __middle, __left, __right;
 
   while (__len > 0) {
-    __half = __len >> 1;
+    __half = __len >> 1; // 二分
     __middle = __first;
     advance(__middle, __half);
     if (*__middle < __val) {
@@ -2073,16 +2073,16 @@ __equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
     }
     else if (__val < *__middle)
       __len = __half;
-    else {
-      __left = lower_bound(__first, __middle, __val);
+    else { // 剩下区间内的值均为val
+      __left = lower_bound(__first, __middle, __val); // 下界
       advance(__first, __len);
-      __right = upper_bound(++__middle, __first, __val);
+      __right = upper_bound(++__middle, __first, __val); // 上界
       return pair<_ForwardIter, _ForwardIter>(__left, __right);
     }
   }
   return pair<_ForwardIter, _ForwardIter>(__first, __first);
 }
-
+// 对外接口
 template <class _ForwardIter, class _Tp>
 inline pair<_ForwardIter, _ForwardIter>
 equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val) {
@@ -2093,7 +2093,7 @@ equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val) {
   return __equal_range(__first, __last, __val,
                        __DISTANCE_TYPE(__first));
 }
-
+// 同上上+compare
 template <class _ForwardIter, class _Tp, class _Compare, class _Distance>
 pair<_ForwardIter, _ForwardIter>
 __equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
@@ -2124,7 +2124,7 @@ __equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
   }
   return pair<_ForwardIter, _ForwardIter>(__first, __first);
 }           
-
+// 同上上+compare
 template <class _ForwardIter, class _Tp, class _Compare>
 inline pair<_ForwardIter, _ForwardIter>
 equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
@@ -2136,7 +2136,7 @@ equal_range(_ForwardIter __first, _ForwardIter __last, const _Tp& __val,
   return __equal_range(__first, __last, __val, __comp,
                        __DISTANCE_TYPE(__first));
 } 
-
+// 二分查找，找到返回true，否则返回false
 template <class _ForwardIter, class _Tp>
 bool binary_search(_ForwardIter __first, _ForwardIter __last,
                    const _Tp& __val) {
@@ -2147,7 +2147,7 @@ bool binary_search(_ForwardIter __first, _ForwardIter __last,
   _ForwardIter __i = lower_bound(__first, __last, __val);
   return __i != __last && !(__val < *__i);
 }
-
+// 同上+compare
 template <class _ForwardIter, class _Tp, class _Compare>
 bool binary_search(_ForwardIter __first, _ForwardIter __last,
                    const _Tp& __val,
@@ -2161,7 +2161,7 @@ bool binary_search(_ForwardIter __first, _ForwardIter __last,
 }
 
 // merge, with and without an explicitly supplied comparison function.
-
+// 合并
 template <class _InputIter1, class _InputIter2, class _OutputIter>
 _OutputIter merge(_InputIter1 __first1, _InputIter1 __last1,
                   _InputIter2 __first2, _InputIter2 __last2,
@@ -2217,7 +2217,7 @@ _OutputIter merge(_InputIter1 __first1, _InputIter1 __last1,
 }
 
 // inplace_merge and its auxiliary functions. 
-
+// 将一个序列的两半有序子序列进行合并
 template <class _BidirectionalIter, class _Distance>
 void __merge_without_buffer(_BidirectionalIter __first,
                             _BidirectionalIter __middle,
@@ -2225,7 +2225,7 @@ void __merge_without_buffer(_BidirectionalIter __first,
                             _Distance __len1, _Distance __len2) {
   if (__len1 == 0 || __len2 == 0)
     return;
-  if (__len1 + __len2 == 2) {
+  if (__len1 + __len2 == 2) { // 仅包含两个数
     if (*__middle < *__first)
       iter_swap(__first, __middle);
     return;
