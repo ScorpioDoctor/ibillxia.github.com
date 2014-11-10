@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: sort | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/sort/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-09T22:11:06+08:00</updated>
+  <updated>2014-11-10T23:44:04+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -182,10 +182,10 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 
 <p><code>partial_sort</code> 部分排序：使用堆进行排序，功能是将序列 <code>[first, last)</code> 中的较小的 middle-first 个元素排序并放在区间 <code>[first, middle)</code> 中，而其余的 last-middle 个元素仍然是无序的。整个算法分为两个大的步骤，首先是将middle前的元素构建一个max-heap，将middle及之后的元素中比max-heap堆顶小的元素与堆顶对调并调整堆，从而得到middle前的元素都比middle后的元素小；然后使用heap sort对middle之前的元素进行排序。</p>
 
-<p><strong>17. 第n大的数 nth_element</strong>
+<p><strong>17. 第n大的数 nth_element</strong><br/>
 该算法的功能是求一个序列中排行第n大的元素，具体实现时是使用 partition 将搜索范围逐步缩小，直到不足3个元素的区间后，进行insert-sort，最后第n大的元素就位于序列的第n个位置（该算法的迭代器也要求是随机存取的迭代器）。</p>
 
-<p><strong>18. 二分查找 binary_search</strong>
+<p><strong>18. 二分查找 binary_search</strong><br/>
 该系列算法的前提条件是序列已经<strong>有序</strong>，迭代器至少是ForwardIterators。</p>
 
 <p><code>lower_bound</code> ：二分查找 val，存在则返回指向该元素的迭代器，否则返回最小的不小于 val 的元素的迭代器，即在不破坏次序的情况下val可插入的第一个位置。</p>
@@ -217,19 +217,19 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 <p><strong>21. 求极值 max/min element</strong><br/>
 遍历整个区间，找到其中最大/小的元素的值，返回的是指向最大/小值的迭代器。</p>
 
-<p><strong>22. 排列的后继和前驱 next/pre permutation</strong>
+<p><strong>22. 排列的后继和前驱 next/pre permutation</strong><br/>
 关于该算法在之前的一篇文章中有详细介绍，请参见 <a href="http://ibillxia.github.io/blog/2014/04/24/next-permutation-and-analysis-of-its-stl-implementation/">全排列及某排列的后继的求解及其STL实现的分析</a> .</p>
 
-<p><strong>23. 找第一次出现的位置 find first of</strong>
+<p><strong>23. 找第一次出现的位置 find first of</strong><br/>
 在第一个序列中依次查找第二个序列中某个元素第一次出现的位置，使用一个双重循环，外循环遍历第一个序列，内循环遍历第二个序列，只要找到一个就立即返回在序列1中的位置，没有找到则返回序列1的尾迭代器。</p>
 
-<p><strong>24. 查找序列中的子序列 find end</strong>
+<p><strong>24. 查找序列中的子序列 find end</strong><br/>
 在序列1中查找是否存在序列2这样的子序列，返回最后一次查找结果。还有一个版本是针对双向迭代器的类偏特化版本。</p>
 
-<p><strong>25. 判断序列是否为堆 is heap</strong>
+<p><strong>25. 判断序列是否为堆 is heap</strong><br/>
 判断一个序列是否为堆，即不断地判断父节点是否大于其孩子节点，如果不大于则返回false，否则返回true。</p>
 
-<p><strong>26. 判断序列是否有序 is sorted</strong>
+<p><strong>26. 判断序列是否有序 is sorted</strong><br/>
 判断一个序列是否有序，只需要遍历序列并判断相邻的两个元素的大小关系是否一致即可。</p>
 
 <p>Well Done！终于看完了这些算法了！其中旋转、排序、查找、合并算法是稍微复杂的，且做了一些优化，是需要仔细阅读和体会的。

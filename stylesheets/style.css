@@ -117,3 +117,8 @@ footer.page-footer {
 	min-height: 60px;
 	background-color: #ffffff;
 }
+
+.line-numbers {
+	font-size: 14px;
+}
+
