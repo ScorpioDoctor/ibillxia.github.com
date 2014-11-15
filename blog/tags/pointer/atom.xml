@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Pointer | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/pointer/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-10T23:44:04+08:00</updated>
+  <updated>2014-11-15T15:51:14+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -80,11 +80,12 @@ printf("Subtract gives: %d\n", b);
 
 <h4>使用typedef</h4>
 
-<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a>）：</p>
+<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a> Jacob的回答）：</p>
 
-<blockquote><p>typedef   void      (*FunctionFunc)  ( );
-//         ^                ^         ^
-//     return type      type name  arguments</p></blockquote>
+<pre><code>    typedef   void      (*FunctionFunc)  ( );
+   //         ^                ^         ^
+   //     return type      type name  arguments
+</code></pre>
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
@@ -192,15 +193,8 @@ string m_str;
 
 <p>public:</p>
 
-<pre><code>void set(){
-    cin&gt;&gt;m_lf;
-    cin&gt;&gt;m_str;
-}
-
-void print(){
-    cout&lt;&lt;m_lf&lt;&lt;" ";
-    cout&lt;&lt;m_str&lt;&lt;endl;
-}
+<pre><code>void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
+void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
 </code></pre>
 
 <p>};</p>

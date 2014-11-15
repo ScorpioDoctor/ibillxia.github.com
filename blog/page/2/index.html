@@ -182,6 +182,76 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">深入理解STL源码(3.4) 序列式容器之heap和priority Queue</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-27T21:31:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件有<code>heap</code>、<code>stl_heap.h</code>、<code>heap.h</code>、<code>stl_queue.h</code>、<code>queue</code> 等几个文件。</p>
+
+<h2>1. 概述</h2>
+
+<p>前面分别介绍了三种各具特色的序列式容器 —— vector、list和deque，他们几乎可以涵盖所有类型的序列式容器了，但本文要介绍的heap则是一种比较特殊的容器。其实，在STL中heap并没有被定义为一个容器，而只是一组算法，提供给priority queue（优先队列）。故名思议，priority queue 允许用户以任何次序将元素放入容器内，但取出时一定是从优先权最高的元素开始取，binary max heap（二元大根堆）即具有这样的特性，因此如果学过max-heap再看STL中heap的算法和priority queue 的实现就会比较简单。</p>
+
+<h2>2. priority queue 的数据结构</h2>
+
+<p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), 
+</span><span class='line'>          class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
+</span><span class='line'>class priority_queue { // in stl_queue.h 文件中
+</span><span class='line'>protected:
+</span><span class='line'>  _Sequence c; // 使用vector作为数据存储的容器
+</span><span class='line'>  _Compare comp;
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+另外只需要提供一组heap算法，即元素插入和删除、获取堆顶元素等操作即可。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a></h1>
     
     
@@ -768,58 +838,6 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
   
     <footer>
       <a rel="full-article" href="/blog/2014/05/11/cpp-program-optimization-new-delete-operator/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/04/android-ndk-development/">Ubuntu 下 Android NDK 开发入门</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-04T23:53:00+08:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/05/04/android-ndk-development/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文首先介绍一下在 Ubuntu 下如何配置 Android NDK 开发环境，然后用一个简单的 hello-jni 项目来介绍 NDK 开发流程，本文的全部代码下载链接：<a href="https://ibillxia.github.io/upload/code/20140504-HelloJni.tar.gz">HelloJni.tar.gz</a>，也可以在我的 <a href="https://github.com/ibillxia/Demo/tree/master/HelloJni">GitHub</a> 上下载。</p>
-
-<h2>1. 简介</h2>
-
-<p>什么是 Android NDK 呢？ NDK(Native Development Kit) 是一个允许开发者用一些本地语言(C/C++)编写 Android App 的部分功能的工具集。对于一些特定的 App，NDK 非常有利于我们直接使用现成的用 C/C++ 编写的代码库（但对于大多数 App 来说，NDK 是没有必要的）。使用 NDK 进行 C/C++ Android 开发的基本结构和流程如下图（来自<a href="http://shihongzhi.com/ndk/">shihongzhi博客</a> ）：</p>
-
-<center> <img src="/images/2014/IMAG2014050401.jpg"> </center>
-
-
-<p>在开始之前，这里要提醒大家：NDK 对大多数 App 而言是不会有太多的好处的，在 Android 上使用原生 C/C++ 代码并不会很明显的提升应用的性能，但却增加了你开发应用的复杂度。所以，仅仅在需要使用 NDK 时才使用它 —— 不要因为你更喜欢用 C/C++。典型的 NDK 应用场景是一些 CPU 操作密集而不需要太多内存的场合，如信号处理、物理模拟等等，很多这些处理过程都已经封装到了 Android 系统内部，所以当你不确定是否要使用本地 C/C++ 代码时，先看看你的需求，以及 Android 框架中的 API 是否已经提供你需要的功能。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/04/android-ndk-development/">Read on &rarr;</a>
     </footer>
   
 

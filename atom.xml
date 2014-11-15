@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-10T23:44:04+08:00</updated>
+  <updated>2014-11-15T15:51:14+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,253 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(6) 仿函数|函数对象]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/"/>
+    <updated>2014-11-15T10:06:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects</id>
+    <content type="html"><![CDATA[<h2>1. 仿函数|函数对象概述</h2>
+
+<p>在STL的六大组件中，仿函数可说是体积最小、观念最简单、实现最容易的一个，但小兵也能立大功——他扮演一种“策略”角色，可以让STL算法具有更加灵活的“演出”。</p>
+
+<p>在STL的历史上，仿函数(functor)是早期的命名，C++标准规格定下来后采用了新的名称——函数对象(function object)。就实际意义而言，函数对象的称谓更加贴切：一种具有函数特质的对象。函数对象对调用者而言可以向函数调用一样地被调用，而对被调用者而言则是以对象所定义的函数调用操作符(function call operator)。</p>
+
+<p>在C++中，函数调用操作符是指左右小括弧 <code>()</code> ，该操作符是可以重载的。许多 STL 算法都提供了两个版本，一个用于一般情况（例如排序时使用 <code>operator&lt;</code> 以递增方式排列），一个用于特殊情况（例如排序时按照使用者自定义的大小关系进行排序）。这有点类似于C语言中的函数指针，但函数指针无法满足STL对抽象性的要求，也不能和STL其他组件（如配接器adaptor）搭配，产生更灵活的变化，关于这一点下一节将详细介绍。</p>
+
+<h2>2. 可适配(Adaptable)的关键</h2>
+
+<p>STL算法非常灵活的一个关键因素之一在于STL仿函数的可配接性(adaptability)，即函数可以被配接器修饰，彼此相积木一样地串接。为了拥有配接能力，每一个仿函数必须定义自己的相应型别(associate types)，就像迭代器如果要融入整个STL大家庭，也必须依照规定定义自己的5个相应型别一样。这样做是为了让配接器能够获得函数的一些特性。相应型别都只是一些 typedef，所有必要操作在编译期就就全部完成了，对程序的执行效率没有任何影响，不带来任何额外负担。</p>
+
+<p>仿函数相应型别主要用来表示函数的参数型别和返回值型别，为了方便，<code>stl_function.h</code> 中定义了两个基类，分别是 <code>unary_function</code> 和 <code>binary_function</code>，分别表示一元函数和二元函数，其中都是一些型别的定义，仿函数只需要继承其中一个类，就可以拥有配接能力了。</p>
+
+<!-- more -->
+
+
+<h4>2.1 unary_function</h4>
+
+<p>该类用来封装一元函数的参数型别和返回值型别，其定义非常简单：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Arg, class _Result&gt;
+</span><span class='line'>struct unary_function {
+</span><span class='line'>  typedef _Arg argument_type; // 参数型别
+</span><span class='line'>  typedef _Result result_type; // 返回值型别
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>仿函数可以继承该类，这样用户就可以取得该仿函数的参数型别，并以相同方法获得其返回值：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct negate : public unary_function&lt;_Tp,_Tp&gt; { // 仿函数 negate 继承 unary_function
+</span><span class='line'>  _Tp operator()(const _Tp& __x) const { return -__x; }
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Predicate&gt;
+</span><span class='line'>class unary_negate : public unary_function&lt;typename _Predicate::argument_type, bool&gt; {
+</span><span class='line'>protected:
+</span><span class='line'>  _Predicate _M_pred;
+</span><span class='line'>public:
+</span><span class='line'>  explicit unary_negate(const _Predicate& __x) : _M_pred(__x) {}
+</span><span class='line'>  bool operator()(const typename _Predicate::argument_type& __x) const { // 获取参数的型别argument_type
+</span><span class='line'>    return !_M_pred(__x);
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2.2 binary_function</h4>
+
+<p>该类用来封装二元函数的参数一、参数二型别和返回值类型，仅比一元函数多了一个输入参数型别的定义而已，其定义如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Arg1, class _Arg2, class _Result&gt;
+</span><span class='line'>struct binary_function {
+</span><span class='line'>  typedef _Arg1 first_argument_type; // 参数一型别
+</span><span class='line'>  typedef _Arg2 second_argument_type; // 参数二型别
+</span><span class='line'>  typedef _Result result_type; // 返回值型别
+</span><span class='line'>}; 
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; { // 仿函数 plus 继承 binary_function
+</span><span class='line'>  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x + __y; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. STL 内建仿函数</h2>
+
+<p>STL 仿函数的分类，若以操作数的个数划分，可以分为一元和二元仿函数，若以功能划分，可以分为算术运算、关系运算、逻辑运算三大类，任何应用程序欲使用STL内建的仿函数，需要包含 <code>&lt;functional&gt;</code> 头文件，而这些仿函数的实际实现都在 <code>stl_function.h</code> 中。以下按功能分别介绍。</p>
+
+<h4>3.1 算术类(Arithmetic)仿函数</h4>
+
+<p>主要包括加法(plus)、减法(minus)、乘法(multiplies)、除法(divides)、取模(modulus)、否定(negation)等运算，除了否定以一元运算其他均为二元运算，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; {
+</span><span class='line'>  _Tp operator()(const _Tp& __x, const _Tp& __y) const { return __x + __y; } // 加法，减、乘、除、取模类似
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct negate : public unary_function&lt;_Tp,_Tp&gt; {
+</span><span class='line'>  _Tp operator()(const _Tp& __x) const { return -__x; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>仿函数搭配STL算法可以很灵活，例如对vector的每个元素求连乘如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>accumulate(vct.begin(),vct.end(),1,multiplies&lt;int&gt;());</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3.2 关系运算类(Relational)仿函数</h4>
+
+<p>主要有等于(equal_to)、不等于(not_equal_to)、大于(greater)、大于等于(greater_equal)、小于(less)、小于等于(less_equal)等六种运算，每一个都是二元运算，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct equal_to : public binary_function&lt;_Tp,_Tp,bool&gt; {
+</span><span class='line'>  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x == __y; } // 相等，其他类似 !=, &gt;, &lt;, &gt;=, &lt;=
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例如，对vector进行递减顺序排序：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sort(vct.begin(),vct.end(),less&lt;int&gt;());</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3.3 逻辑运算类(Logical)仿函数</h4>
+
+<p>主要是与(logical_and)、或(logical_or)、非(logical_not)三种逻辑运算，前两者为二元运算，后者为一元运算，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct logical_and : public binary_function&lt;_Tp,_Tp,bool&gt; {
+</span><span class='line'>  bool operator()(const _Tp& __x, const _Tp& __y) const { return __x && __y; } // 与，或(||)类似
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct logical_not : public unary_function&lt;_Tp,bool&gt;{
+</span><span class='line'>  bool operator()(const _Tp& __x) const { return !__x; } // 非
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3.4 证同(identity)、选择(select)、投射(project)等非标准仿函数</h4>
+
+<p>这类仿函数都只是将参数原封不动的返回，其中某些仿函数对传回的参数有刻意的选择，或是刻意的忽略。之所以不在STL或其他泛型程序设计中直接使用原本及其简单的identity，project，select等操作，而要再划分一层出来，完全是为了间接性——间接性是抽象化的重要方法。另外，需要说明的是，这些仿函数并非C++标准，只是在SGI STL的实现中作为内部使用，一下是相关部分代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// 证同函数(identity)，任何数值通过此函数后不会有任何改变，它用于set实现中，用来指定RB-tree所需的
+</span><span class='line'>// KeyOfValue op，因为set元素的键值即实值，所以采用identity
+</span><span class='line'>template &lt;class _Tp&gt;
+</span><span class='line'>struct _Identity : public unary_function&lt;_Tp,_Tp&gt; {
+</span><span class='line'>  const _Tp& operator()(const _Tp& __x) const { return __x; }
+</span><span class='line'>};
+</span><span class='line'>// 选择函数(select)，接受一个pair返回其第一个元素，用于map实现中，用来指定RB-tree所需KeyOfValue op，
+</span><span class='line'>// 因为map以pair的第一个元素作为键值
+</span><span class='line'>template &lt;class _Pair&gt;
+</span><span class='line'>struct _Select1st : public unary_function&lt;_Pair, typename _Pair::first_type&gt; {
+</span><span class='line'>  const typename _Pair::first_type& operator()(const _Pair& __x) const {
+</span><span class='line'>    return __x.first;
+</span><span class='line'>  }
+</span><span class='line'>};
+</span><span class='line'>// 类似与select1st，接受pair返回第二个参数，SGI STL内部并未用到该函数
+</span><span class='line'>template &lt;class _Pair&gt;
+</span><span class='line'>struct _Select2nd : public unary_function&lt;_Pair, typename _Pair::second_type&gt;{
+</span><span class='line'>  const typename _Pair::second_type& operator()(const _Pair& __x) const {
+</span><span class='line'>    return __x.second;
+</span><span class='line'>  }
+</span><span class='line'>};
+</span><span class='line'>// 投射函数(project)，传回第一参数，忽略第二参数，SGI STL内部并未用到该函数
+</span><span class='line'>template &lt;class _Arg1, class _Arg2&gt;
+</span><span class='line'>struct _Project1st : public binary_function&lt;_Arg1, _Arg2, _Arg1&gt; {
+</span><span class='line'>  _Arg1 operator()(const _Arg1& __x, const _Arg2&) const { return __x; }
+</span><span class='line'>};
+</span><span class='line'>// 投射函数(project)，传回第二参数，忽略第一参数，SGI STL内部并未用到该函数
+</span><span class='line'>template &lt;class _Arg1, class _Arg2&gt;
+</span><span class='line'>struct _Project2nd : public binary_function&lt;_Arg1, _Arg2, _Arg2&gt; {
+</span><span class='line'>  _Arg2 operator()(const _Arg1&, const _Arg2& __y) const { return __y; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>除此之外，SGI STL实现中还有 <code>constant_void_fun</code>，<code>constant_unary_fun</code>， <code>constant_binary_fun</code>， <code>subtractive_rng</code>， <code>mem_fun_t</code> 等等，想深入详细了解的可以去看看源代码，还是很好理解的。</p>
+
+<p>相关文章：<br/>
+<a href="http://ibillxia.github.io/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(5.4) 算法之复杂算法algorithm]]></title>
@@ -860,14 +1107,14 @@
 
 <p>算法的核心是创建问题抽象的模型和明确求解目标，常见的算法有分治法、贪婪算法、动态规划、平摊分析等。再好的编程技巧，也无法让一个笨拙的算法起死回生，选择了错误的算法，便注定了失败的命运。</p>
 
-<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模$n$的函数$f(n)$，算法的时间复杂度也因此记做：</p>
+<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模 $n$ 的函数 $f(n)$ ，算法的时间复杂度也因此记做：</p>
 
 <center> $T(n) = O(f(n))$ </center>
 
 
 <p>
 算法执行时间的增长率与$f(n)$的增长率正相关，称作渐近时间复杂度（Asymptotic Time Complexity），简称时间复杂度。
-常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O({n}\<sup>{2})$</sup> ，立方阶 $O({n}\<sup>{3})$</sup> ，&#8230;， k次方阶 $O({n}\<sup>{k})$</sup> ,指数阶 $O({2}\<sup>{n})$</sup> 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
+常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O(n<sup>2</sup> )$ ，立方阶 $O(n<sup>3</sup> )$ ，&#8230;， k次方阶 $O( n<sup>k</sup> )$ ,指数阶 $O( 2<sup>n</sup> )$ 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
 
 <p>算法的<strong>空间复杂度</strong>是指算法需要消耗的空间资源。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
 
@@ -4035,11 +4282,12 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 
 <h4>使用typedef</h4>
 
-<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a>）：</p>
+<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a> Jacob的回答）：</p>
 
-<blockquote><p>typedef   void      (*FunctionFunc)  ( );
-//         ^                ^         ^
-//     return type      type name  arguments</p></blockquote>
+<pre><code>    typedef   void      (*FunctionFunc)  ( );
+   //         ^                ^         ^
+   //     return type      type name  arguments
+</code></pre>
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
@@ -4171,14 +4419,6 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 <span class='line-number'>46</span>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;typename InIt,typename FuncType&gt;
 </span><span class='line'>void myqsort(InIt begin, InIt end, FuncType cmp){
 </span><span class='line'>  if(begin==end||begin==end-1)return;
@@ -4209,17 +4449,9 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 </span><span class='line'>public:
 </span><span class='line'>  double m_lf;
 </span><span class='line'>  string m_str;
-</span><span class='line'>
 </span><span class='line'>public:
-</span><span class='line'>  void set(){
-</span><span class='line'>      cin&gt;&gt;m_lf;
-</span><span class='line'>      cin&gt;&gt;m_str;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  void print(){
-</span><span class='line'>      cout&lt;&lt;m_lf&lt;&lt;" ";
-</span><span class='line'>      cout&lt;&lt;m_str&lt;&lt;endl;
-</span><span class='line'>  }
+</span><span class='line'>  void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
+</span><span class='line'>  void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
 </span><span class='line'>};
 </span><span class='line'>
 </span><span class='line'>struct cmpd{
@@ -4763,228 +4995,6 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 
 
 <p>但是还是不知道之前的代码为什么会出现这个错误，已在 <a href="http://stackoverflow.com/questions/23614215/destructor-error-in-c-type-int-argument-given-to-delete-expected-pointer">StackOverFlow上提问</a>，希望能得到满意的答案。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ubuntu 下 Android NDK 开发入门]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/05/04/android-ndk-development/"/>
-    <updated>2014-05-04T23:53:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/05/04/android-ndk-development</id>
-    <content type="html"><![CDATA[<p>本文首先介绍一下在 Ubuntu 下如何配置 Android NDK 开发环境，然后用一个简单的 hello-jni 项目来介绍 NDK 开发流程，本文的全部代码下载链接：<a href="https://ibillxia.github.io/upload/code/20140504-HelloJni.tar.gz">HelloJni.tar.gz</a>，也可以在我的 <a href="https://github.com/ibillxia/Demo/tree/master/HelloJni">GitHub</a> 上下载。</p>
-
-<h2>1. 简介</h2>
-
-<p>什么是 Android NDK 呢？ NDK(Native Development Kit) 是一个允许开发者用一些本地语言(C/C++)编写 Android App 的部分功能的工具集。对于一些特定的 App，NDK 非常有利于我们直接使用现成的用 C/C++ 编写的代码库（但对于大多数 App 来说，NDK 是没有必要的）。使用 NDK 进行 C/C++ Android 开发的基本结构和流程如下图（来自<a href="http://shihongzhi.com/ndk/">shihongzhi博客</a> ）：</p>
-
-<center> <img src="http://ibillxia.github.io/images/2014/IMAG2014050401.jpg"> </center>
-
-
-<p>在开始之前，这里要提醒大家：NDK 对大多数 App 而言是不会有太多的好处的，在 Android 上使用原生 C/C++ 代码并不会很明显的提升应用的性能，但却增加了你开发应用的复杂度。所以，仅仅在需要使用 NDK 时才使用它 —— 不要因为你更喜欢用 C/C++。典型的 NDK 应用场景是一些 CPU 操作密集而不需要太多内存的场合，如信号处理、物理模拟等等，很多这些处理过程都已经封装到了 Android 系统内部，所以当你不确定是否要使用本地 C/C++ 代码时，先看看你的需求，以及 Android 框架中的 API 是否已经提供你需要的功能。</p>
-
-<!-- more -->
-
-
-<h2>2.开发环境配置</h2>
-
-<p>由于 NDK 开发过程中涉及到将 C/C++ 程序编译为动态库(.so文件)，所以首先系统中需要安装 C/C++ 的编译工具 gcc/g++，还要有 make 工具，一般情况下 Linux 系统会默认安装，如果没有安装请先安装这几个工具。然后是 Java 和 Android 开发相关环境的配置。首先需要安装 JDK，并配置 Java 的环境变量，然后是集成开发环境如 Eclipse 的安装和配置，这些也不是本文的重点，如果你没有安装，请自行 google 并安装配置好。</p>
-
-<p>下面重点讲讲 Android 相关 SDK 的安装和配置，主要涉及到 Android SDK，ADT，NDK等。要进行 Android 开发，首先需要安装 Android SDK，要在 Eclipse 中进行开发的话，还需在 Eclipse 中安装 ADT(Android Develop Tools)，在 Android 官网上提供了 SDK 和 包含 ADT 的 Eclipse 的集成开发包，可以一起下载：<a href="http://dl.google.com/android/adt/22.6.2/adt-bundle-linux-x86-20140321.zip">adt-bundle-linux-x86-20140321.zip</a>。另外，还需要安装 NDK，下载地址：<a href="http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2">android-ndk-r9d-linux-x86.tar.bz2</a>。下载完这两个压缩包后解压并移动到 /usr/local 目录下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sudo mv Downloads/adt-bundle-x86-20140321/ /usr/local/adt-x86-20140321 
-</span><span class='line'>mv Downloads/android-ndk-r9d/ /usr/local/adt-x86-20140321/ndk-r9d </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>然后配置环境变量：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sudo vim /etc/profile </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>在 /etc/profile 最后添加如下两行：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/adt-x86-20140321/sdk/tools:/usr/local/adt-x86-20140321/sdk/platform-tools:$PATH 
-</span><span class='line'>export PATH=/usr/local/adt-x86-20140321/ndk-r9d:$PATH </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>保存并退出，并用如下命令使设置生效：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>source /etc/profile </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>完了可以执行如下命令看看设置是否生效：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>echo $PATH 
-</span><span class='line'>adb --version 
-</span><span class='line'>emulator -version 
-</span><span class='line'>ndk-build --version </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>至此，开发环境已经配置完成了，接下来我们看一个 hello-jni 的例子。</p>
-
-<h2>3.NDK 开发实例 hello-jni</h2>
-
-<h4>3.1 JNI 简介</h4>
-
-<p>首先我们了解一下什么是JNI。JNI(Java Native Interface)是一种在Java虚拟机控制下执行代码的标准机制。 代码被编写成汇编程序或者C/C++程序，并组装为动态库，从而提供了一个在Java平台上调用C/C++的一种途径。 JNI主要的竞争优势在于：它在设计之初就确保了二进制的兼容性，JNI编写的应用程序兼容性以及在某些具体平台上的Java虚拟机兼容性（当谈及JNI，这里并不特别针对Dalvik；JNI由Oracle开发，适用于所有Java虚拟机）。 关于JNI的更多内容可以参见该文：<a href="http://www.importnew.com/8038.html">Android NDK介绍</a>。</p>
-
-<h4>3.2 Eclipse 配置</h4>
-
-<p>下面以参考 Android NDK 自带的 hello-jni 示例程序改写的我自己的 hello-jni 来介绍开发流程。首先打开 Eclipse 并配置 Android SDK 和 NDK 的路径。 选择 Eclipse 的如下菜单：Window =&gt; Preferences =&gt; Android，点击浏览按钮设置 SDK 路径；Window =&gt; Preferences =&gt; Android =&gt; NDK，点击浏览按钮设置 NDK 路径。接下来按照简介中的开发流程图来一步一步介绍 NDK 开发步骤。</p>
-
-<h4>3.3 创建 Android App 并添加 Native Support</h4>
-
-<p>首先用Eclipse 创建一个空的 Android App，命名为 HelloJni。在项目上点击右键，选择 Android Tools =&gt; Add Native Support&#8230; ，在弹出的对话框中填入 HelloJni 并确定，会发现项目中多了一个 jni 目录，并自动生成了 HelloJni.cpp 和 Android.mk 文件，分别是我们需要封装的native C++ 代码和编译它的 Makefile 文件。</p>
-
-<h4>3.4 编写 java API</h4>
-
-<p>原本按照图一中的流程我们需要先编写一些 C/C++ 原生的代码，但实际中，为了简便起见，我们可以使用 jdk 的 javah 工具（如果没有， <code>sudo apt-get update</code> 一下）来根据 java 调用 C/C++ API 的接口类来自动生成 jni 的头文件。因此，我们需要先做第3步的内容，这里编写的 Java API 接口 HelloCal 类（在 <code>src/io.ibillxia.hellojni</code> 路径下）如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//HelloCal.java
-</span><span class='line'>package io.ibillxia.hellojni; 
-</span><span class='line'>
-</span><span class='line'>public class HelloCal { 
-</span><span class='line'>  static { 
-</span><span class='line'>      System.loadLibrary("HelloJni"); // 加载 jni 动态库 
-</span><span class='line'>  } 
-</span><span class='line'>  
-</span><span class='line'>  public native String helloSay(); // 返回字符串 
-</span><span class='line'>  public native int helloAdd(int a,int b); // 两个整数相加 
-</span><span class='line'>  public native int helloSub(int a,int b); // 两个整数相减 
-</span><span class='line'>  public native int helloMul(int a,int b); // 两个整数相乘 
-</span><span class='line'>  public native int helloDiv(int a,int b); // 两个整数相除 
-</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h4>3.5 使用 javah 生成 jni 格式的 C/C++ API</h4>
-
-<p>编写完 java API 后在 Eclipse 中 build 一下生成对应 .class 文件，然后使用 javah 工具根据该 class 文件自动生成 jni API 的头文件。在 HelloJni App 根目录下执行如下命令：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>javah -classpath ./bin/classes -d jni io.ibillxia.hellojni.HelloCal </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>其中 <code>-classpath ./bin/classes</code> 表示类的路径，<code>-d jni</code> 表示生成的头文件存放的目录， <code>io.ibillxia.hellojni.HelloCal</code> 则是完整类名，如果不出意外，在 <code>~/workspace/HelloJni/jni</code> 目录下生成了 <code>io_ibillxia_hellojni_HelloCal.h</code> 。然后根据这个头文件的内容，编写 <code>HelloCal.cpp</code> 文件实现头文件中声明的接口，具体的头文件和 cpp 源文件内容见源码压缩包。值得一提的是，在 cpp 源文件中，对数据运算后可能产生溢出进行了判断，对于溢出异常这里处理的办法是，如果上溢则返回最大值，下溢则返回最小值。实际中，这样做可能还不是很合理，比较好的做法是，在 cpp 中处理并返回异常值，并在相应的 Java API 中针对返回的异常值进行不同的处理，即在 cpp 中只检查异常，而真正处理异常则由 Java API 来处理。</p>
-
-<p>注意，这里需要添加一下 C/C++ 的包含目录，否则会报错。选中 jni文件夹，右键选择 Properties =&gt; C/C++ General =&gt; Paths and Symbols =&gt; Includes，点击 Add 一个一个添加如下依赖库：</p>
-
-<blockquote><p>/usr/include<br/>
-/usr/include/c++/4.8<br/>
-/usr/include/c++/4.8/backward<br/>
-/usr/include/i386-linux-gnu<br/>
-/usr/include/i386-linux-gnu/c++/4.8<br/>
-/usr/lib/gcc/i686-linux-gnu/4.8/include<br/>
-/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed<br/>
-/usr/local/include<br/>
-/usr/local/adt-x86-20140321/ndk-r9d/platforms/android-19/arch-arm/usr/include</p></blockquote>
-
-<p>添加完后 build 一下，看看是否有错误，如果不出意外，应该在 <code>HelloJni/libs/armeabi/</code> 目录下生成了 <code>libHelloJni.so</code> 文件。</p>
-
-<h4>3.6 编写 Android App</h4>
-
-<p>最后是编写 Android App，并在 App 中调用 Jni 接口函数。在 <code>io.ibillxia.hellojni</code> 包中新建一个 Java 类 HelloJni ，编写如下代码（import 内容省略，具体见源码压缩包）：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//HelloJni.java
-</span><span class='line'>public class HelloJni extends Activity {
-</span><span class='line'>    /** Called when the activity is first created. */
-</span><span class='line'>    @Override
-</span><span class='line'>    public void onCreate(Bundle savedInstanceState)
-</span><span class='line'>    {
-</span><span class='line'>        super.onCreate(savedInstanceState);
-</span><span class='line'>        setContentView(R.layout.hello_jni);
-</span><span class='line'>        
-</span><span class='line'>        Button btn = (Button)findViewById(R.id.btn_cal);
-</span><span class='line'>        btn.setOnClickListener(new Button.OnClickListener() {
-</span><span class='line'>          @Override
-</span><span class='line'>          public void onClick(View v) {
-</span><span class='line'>              // TODO Auto-generated method stub
-</span><span class='line'>              TextView tv1 = (TextView) findViewById(R.id.textView1);
-</span><span class='line'>              TextView tv2 = (TextView) findViewById(R.id.textView2);
-</span><span class='line'>              TextView tv3 = (TextView) findViewById(R.id.textView3);
-</span><span class='line'>
-</span><span class='line'>              int a = Integer.parseInt(tv1.getText().toString());
-</span><span class='line'>              int b = Integer.parseInt(tv2.getText().toString());
-</span><span class='line'>              HelloCal cal = new HelloCal();
-</span><span class='line'>              int c = cal.helloAdd(a,b);
-</span><span class='line'>              String str = cal.helloSay();  
-</span><span class='line'>              tv3.setText(str + Integer.toString(c));
-</span><span class='line'>          }
-</span><span class='line'>        });
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>另外，还需要设计对应的 layout xml 文件，具体见源码压缩包。 最后上一张运行效果截图：
-<img src="http://ibillxia.github.io/images/2014/IMAG2014050402.png">
-图中输入的两个数的和超过了 int 能表示的最大值，出现上溢，但返回的是最大值。如果输入的两个数本身就超出范围将出现
-<code>Unfortunately, HelloJni has stopped.</code> 的异常的对话框。实际过程中，究竟在哪一步检测并处理异常，还是一个值得商讨的问题。如果是引用第三方的库，可能需要对相应的接口提供充分的测试，对于可以并且方便在 native code 层面解决的异常就在 native code 层面上处理掉，实在不行也要在 Java API 层面上解决掉，比如这里需要在 Java 中判断输入参数本身的合法性。</p>
 ]]></content>
   </entry>
   

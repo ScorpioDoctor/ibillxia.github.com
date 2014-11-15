@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-10T23:44:04+08:00</updated>
+  <updated>2014-11-15T15:51:14+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,187 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(6) 仿函数|函数对象]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/"/>
+    <updated>2014-11-15T10:06:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects</id>
+    <content type="html"><![CDATA[<h2>1. 仿函数|函数对象概述</h2>
+
+<p>在STL的六大组件中，仿函数可说是体积最小、观念最简单、实现最容易的一个，但小兵也能立大功——他扮演一种“策略”角色，可以让STL算法具有更加灵活的“演出”。</p>
+
+<p>在STL的历史上，仿函数(functor)是早期的命名，C++标准规格定下来后采用了新的名称——函数对象(function object)。就实际意义而言，函数对象的称谓更加贴切：一种具有函数特质的对象。函数对象对调用者而言可以向函数调用一样地被调用，而对被调用者而言则是以对象所定义的函数调用操作符(function call operator)。</p>
+
+<p>在C++中，函数调用操作符是指左右小括弧 <code>()</code> ，该操作符是可以重载的。许多 STL 算法都提供了两个版本，一个用于一般情况（例如排序时使用 <code>operator&lt;</code> 以递增方式排列），一个用于特殊情况（例如排序时按照使用者自定义的大小关系进行排序）。这有点类似于C语言中的函数指针，但函数指针无法满足STL对抽象性的要求，也不能和STL其他组件（如配接器adaptor）搭配，产生更灵活的变化，关于这一点下一节将详细介绍。</p>
+
+<h2>2. 可适配(Adaptable)的关键</h2>
+
+<p>STL算法非常灵活的一个关键因素之一在于STL仿函数的可配接性(adaptability)，即函数可以被配接器修饰，彼此相积木一样地串接。为了拥有配接能力，每一个仿函数必须定义自己的相应型别(associate types)，就像迭代器如果要融入整个STL大家庭，也必须依照规定定义自己的5个相应型别一样。这样做是为了让配接器能够获得函数的一些特性。相应型别都只是一些 typedef，所有必要操作在编译期就就全部完成了，对程序的执行效率没有任何影响，不带来任何额外负担。</p>
+
+<p>仿函数相应型别主要用来表示函数的参数型别和返回值型别，为了方便，<code>stl_function.h</code> 中定义了两个基类，分别是 <code>unary_function</code> 和 <code>binary_function</code>，分别表示一元函数和二元函数，其中都是一些型别的定义，仿函数只需要继承其中一个类，就可以拥有配接能力了。</p>
+
+<!-- more -->
+
+
+<h4>2.1 unary_function</h4>
+
+<p>该类用来封装一元函数的参数型别和返回值型别，其定义非常简单：</p>
+
+<p><code>
+template &lt;class _Arg, class _Result&gt;
+struct unary_function {
+  typedef _Arg argument_type; // 参数型别
+  typedef _Result result_type; // 返回值型别
+};
+</code></p>
+
+<p>仿函数可以继承该类，这样用户就可以取得该仿函数的参数型别，并以相同方法获得其返回值：</p>
+
+<p>```
+template <class _Tp>
+struct negate : public unary_function&lt;<em>Tp,</em>Tp> { // 仿函数 negate 继承 unary_function
+  <em>Tp operator()(const </em>Tp&amp; <strong>x) const { return -</strong>x; }
+};
+template <class _Predicate>
+class unary_negate : public unary_function<typename _Predicate::argument_type, bool> {
+protected:
+  <em>Predicate </em>M_pred;
+public:
+  explicit unary_negate(const <em>Predicate&amp; __x) : </em>M_pred(<strong>x) {}
+  bool operator()(const typename _Predicate::argument_type&amp; </strong>x) const { // 获取参数的型别argument_type</p>
+
+<pre><code>return !_M_pred(__x);
+</code></pre>
+
+<p>  }
+};
+```</p>
+
+<h4>2.2 binary_function</h4>
+
+<p>该类用来封装二元函数的参数一、参数二型别和返回值类型，仅比一元函数多了一个输入参数型别的定义而已，其定义如下：</p>
+
+<p><code>
+template &lt;class _Arg1, class _Arg2, class _Result&gt;
+struct binary_function {
+  typedef _Arg1 first_argument_type; // 参数一型别
+  typedef _Arg2 second_argument_type; // 参数二型别
+  typedef _Result result_type; // 返回值型别
+};
+template &lt;class _Tp&gt;
+struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; { // 仿函数 plus 继承 binary_function
+  _Tp operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x + __y; }
+};
+</code></p>
+
+<h2>3. STL 内建仿函数</h2>
+
+<p>STL 仿函数的分类，若以操作数的个数划分，可以分为一元和二元仿函数，若以功能划分，可以分为算术运算、关系运算、逻辑运算三大类，任何应用程序欲使用STL内建的仿函数，需要包含 <code>&lt;functional&gt;</code> 头文件，而这些仿函数的实际实现都在 <code>stl_function.h</code> 中。以下按功能分别介绍。</p>
+
+<h4>3.1 算术类(Arithmetic)仿函数</h4>
+
+<p>主要包括加法(plus)、减法(minus)、乘法(multiplies)、除法(divides)、取模(modulus)、否定(negation)等运算，除了否定以一元运算其他均为二元运算，如下：</p>
+
+<p><code>
+template &lt;class _Tp&gt;
+struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; {
+  _Tp operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x + __y; } // 加法，减、乘、除、取模类似
+};
+template &lt;class _Tp&gt;
+struct negate : public unary_function&lt;_Tp,_Tp&gt; {
+  _Tp operator()(const _Tp&amp; __x) const { return -__x; }
+};
+</code></p>
+
+<p>仿函数搭配STL算法可以很灵活，例如对vector的每个元素求连乘如下：</p>
+
+<p><code>
+accumulate(vct.begin(),vct.end(),1,multiplies&lt;int&gt;());
+</code></p>
+
+<h4>3.2 关系运算类(Relational)仿函数</h4>
+
+<p>主要有等于(equal_to)、不等于(not_equal_to)、大于(greater)、大于等于(greater_equal)、小于(less)、小于等于(less_equal)等六种运算，每一个都是二元运算，如下：</p>
+
+<p><code>
+template &lt;class _Tp&gt;
+struct equal_to : public binary_function&lt;_Tp,_Tp,bool&gt; {
+  bool operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x == __y; } // 相等，其他类似 !=, &gt;, &lt;, &gt;=, &lt;=
+};
+</code></p>
+
+<p>例如，对vector进行递减顺序排序：</p>
+
+<p><code>
+sort(vct.begin(),vct.end(),less&lt;int&gt;());
+</code></p>
+
+<h4>3.3 逻辑运算类(Logical)仿函数</h4>
+
+<p>主要是与(logical_and)、或(logical_or)、非(logical_not)三种逻辑运算，前两者为二元运算，后者为一元运算，如下：</p>
+
+<p><code>
+template &lt;class _Tp&gt;
+struct logical_and : public binary_function&lt;_Tp,_Tp,bool&gt; {
+  bool operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x &amp;&amp; __y; } // 与，或(||)类似
+};
+template &lt;class _Tp&gt;
+struct logical_not : public unary_function&lt;_Tp,bool&gt;{
+  bool operator()(const _Tp&amp; __x) const { return !__x; } // 非
+};
+</code></p>
+
+<h4>3.4 证同(identity)、选择(select)、投射(project)等非标准仿函数</h4>
+
+<p>这类仿函数都只是将参数原封不动的返回，其中某些仿函数对传回的参数有刻意的选择，或是刻意的忽略。之所以不在STL或其他泛型程序设计中直接使用原本及其简单的identity，project，select等操作，而要再划分一层出来，完全是为了间接性——间接性是抽象化的重要方法。另外，需要说明的是，这些仿函数并非C++标准，只是在SGI STL的实现中作为内部使用，一下是相关部分代码：</p>
+
+<p>```
+// 证同函数(identity)，任何数值通过此函数后不会有任何改变，它用于set实现中，用来指定RB-tree所需的
+// KeyOfValue op，因为set元素的键值即实值，所以采用identity
+template <class _Tp>
+struct <em>Identity : public unary_function&lt;</em>Tp,<em>Tp> {
+  const </em>Tp&amp; operator()(const <em>Tp&amp; <strong>x) const { return </strong>x; }
+};
+// 选择函数(select)，接受一个pair返回其第一个元素，用于map实现中，用来指定RB-tree所需KeyOfValue op，
+// 因为map以pair的第一个元素作为键值
+template <class _Pair>
+struct </em>Select1st : public unary_function&lt;<em>Pair, typename </em>Pair::first_type> {
+  const typename <em>Pair::first_type&amp; operator()(const </em>Pair&amp; __x) const {</p>
+
+<pre><code>return __x.first;
+</code></pre>
+
+<p>  }
+};
+// 类似与select1st，接受pair返回第二个参数，SGI STL内部并未用到该函数
+template <class _Pair>
+struct <em>Select2nd : public unary_function&lt;</em>Pair, typename <em>Pair::second_type>{
+  const typename </em>Pair::second_type&amp; operator()(const _Pair&amp; __x) const {</p>
+
+<pre><code>return __x.second;
+</code></pre>
+
+<p>  }
+};
+// 投射函数(project)，传回第一参数，忽略第二参数，SGI STL内部并未用到该函数
+template <class _Arg1, class _Arg2>
+struct <em>Project1st : public binary_function&lt;</em>Arg1, <em>Arg2, </em>Arg1> {
+  <em>Arg1 operator()(const </em>Arg1&amp; <strong>x, const _Arg2&amp;) const { return </strong>x; }
+};
+// 投射函数(project)，传回第二参数，忽略第一参数，SGI STL内部并未用到该函数
+template <class _Arg1, class _Arg2>
+struct <em>Project2nd : public binary_function&lt;</em>Arg1, <em>Arg2, </em>Arg2> {
+  <em>Arg2 operator()(const </em>Arg1&amp;, const _Arg2&amp; <strong>y) const { return </strong>y; }
+};
+```</p>
+
+<p>除此之外，SGI STL实现中还有 <code>constant_void_fun</code>，<code>constant_unary_fun</code>， <code>constant_binary_fun</code>， <code>subtractive_rng</code>， <code>mem_fun_t</code> 等等，想深入详细了解的可以去看看源代码，还是很好理解的。</p>
+
+<p>相关文章：<br/>
+<a href="http://ibillxia.github.io/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(5.4) 算法之复杂算法algorithm]]></title>
@@ -726,14 +907,14 @@ inline <em>Tp power(</em>Tp </strong>x, _Integer <strong>n){
 
 <p>算法的核心是创建问题抽象的模型和明确求解目标，常见的算法有分治法、贪婪算法、动态规划、平摊分析等。再好的编程技巧，也无法让一个笨拙的算法起死回生，选择了错误的算法，便注定了失败的命运。</p>
 
-<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模$n$的函数$f(n)$，算法的时间复杂度也因此记做：</p>
+<p>算法的<strong>时间复杂度</strong>是指算法需要消耗的时间资源。一般来说，计算机算法是问题规模 $n$ 的函数 $f(n)$ ，算法的时间复杂度也因此记做：</p>
 
 <center> $T(n) = O(f(n))$ </center>
 
 
 <p>
 算法执行时间的增长率与$f(n)$的增长率正相关，称作渐近时间复杂度（Asymptotic Time Complexity），简称时间复杂度。
-常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O({n}\<sup>{2})$</sup> ，立方阶 $O({n}\<sup>{3})$</sup> ，...， k次方阶 $O({n}\<sup>{k})$</sup> ,指数阶 $O({2}\<sup>{n})$</sup> 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
+常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O(n<sup>2</sup> )$ ，立方阶 $O(n<sup>3</sup> )$ ，...， k次方阶 $O( n<sup>k</sup> )$ ,指数阶 $O( 2<sup>n</sup> )$ 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
 
 <p>算法的<strong>空间复杂度</strong>是指算法需要消耗的空间资源。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
 
@@ -837,67 +1018,6 @@ return begin;
 ```</p>
 
 <p>这便是一个完全泛化的find 函数，它与STL中的find函数几乎一模一样（不同之处可自行查看STL源码）。了解和理解了STL算法的泛化过程，就很容易看懂STL中很多其他的算法了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(4.5) 关联式容器之hashset和hashmap]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/"/>
-    <updated>2014-09-27T21:30:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap</id>
-    <content type="html"><![CDATA[<p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_hash_set.h</code>、<code>stl_hash_map.h</code> 等文件。</p>
-
-<h2>1. hashset 和 hash_multi_set</h2>
-
-<p>需要说明的是，STL 标准只规范了复杂度与接口，并没有规范实现方法，但 STL 实现的版本中 set 大多以 RB-tree 为底层机制，SGI STL 在实现了以 RB-tree 为底层机制的 set 外，还实现了以 hashtable 为底层机制的 hashset。<br/>
-和 set 一样，hashset 的键值（key）和实值（value）是同一个字段，不同的是 set 默认是自动排序的，而 hashset 则是无序的。除此之外，hashset 与 set 的对外接口完全相同。<br/>
-这里还有一种称为 hash_multi_set 的集合，它同 multiset 类似，允许键值重复，而上面的 hashset 则不允许。下面是 hashset 的定义的主要代码：</p>
-
-<!-- more -->
-
-
-<p>```
-template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
-class hash_set {
-private:
-  typedef hashtable&lt;<em>Value, </em>Value, <em>HashFcn, </em>Identity<_Value>, <em>EqualKey, </em>Alloc> <em>Ht;
-  </em>Ht <em>M_ht; // 底层容器的定义
-public:
-  hash_set() : </em>M_ht(100, hasher(), key_equal(), allocator_type()) {} // 构造函数
-  iterator find(const key_type&amp; <strong>key) const { return _M_ht.find(</strong>key); } // 查找
-  size_type count(const key_type&amp; <strong>key) const { return _M_ht.count(</strong>key); } // 计数
-  size_type size() const { return <em>M_ht.size(); } // 表格大小
-  size_type max_size() const { return </em>M_ht.max_size(); }
-  bool empty() const { return <em>M_ht.empty(); } // 是否为空
-  void swap(hash_set&amp; __hs) { </em>M_ht.swap(<strong>hs.<em>M_ht); } // 交换
-  iterator begin() const { return </em>M_ht.begin(); }
-  iterator end() const { return _M_ht.end(); }
-  pair&lt;iterator, bool> insert(const value_type&amp; </strong>obj){ // 插入</p>
-
-<pre><code>  pair&lt;typename _Ht::iterator, bool&gt; __p = _M_ht.insert_unique(__obj);
-  return pair&lt;iterator,bool&gt;(__p.first, __p.second);
-</code></pre>
-
-<p>  }
-  size_type erase(const key_type&amp; <strong>key) {return _M_ht.erase(</strong>key); } // 擦除
-  void erase(iterator <strong>it) { _M_ht.erase(</strong>it); }
-  void erase(iterator <strong>f, iterator </strong>l) { <em>M_ht.erase(<strong>f, </strong>l); }
-  void clear() { </em>M_ht.clear(); } // 清空
-};
-template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
-inline bool operator==(const hash_set&lt;<em>Value,</em>HashFcn,<em>EqualKey,</em>Alloc>&amp; __hs1,</p>
-
-<pre><code>       const hash_set&lt;_Value,_HashFcn,_EqualKey,_Alloc&gt;&amp; __hs2) {
-</code></pre>
-
-<p>  return <strong>hs1._M_ht == </strong>hs2._M_ht;
-}
-```</p>
-
-<h2>2. hashmap 和 hash_multi_map</h2>
-
-<p>hashmap 是以 hashtable 为底层容器的 map，而 map 是同时拥有实值（value）和键值（key），且不允许键值重复。<br/>
-而 hash_multi_map 是以 hashtable 为底层容器的 map，且允许键值重复。</p>
 ]]></content>
   </entry>
   

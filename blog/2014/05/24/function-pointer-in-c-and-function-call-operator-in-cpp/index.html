@@ -286,11 +286,12 @@ $(document).ready(function(){
 
 <h4>使用typedef</h4>
 
-<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a>）：</p>
+<p>在C语言中，对于函数指针，我们可以使用 <code>typedef</code> 将其定义为一种数据类型，这样我们就可以定义这种类型的变量了，就像使用普通的变量类型一样。下面是一个具体的定义（来自<a href="http://stackoverflow.com/questions/4295432/typedef-function-pointer">stackoverflow</a> Jacob的回答）：</p>
 
-<blockquote><p>typedef   void      (*FunctionFunc)  ( );
-//         ^                ^         ^
-//     return type      type name  arguments</p></blockquote>
+<pre><code>    typedef   void      (*FunctionFunc)  ( );
+   //         ^                ^         ^
+   //     return type      type name  arguments
+</code></pre>
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
@@ -422,14 +423,6 @@ $(document).ready(function(){
 <span class='line-number'>46</span>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;typename InIt,typename FuncType&gt;
 </span><span class='line'>void myqsort(InIt begin, InIt end, FuncType cmp){
 </span><span class='line'>  if(begin==end||begin==end-1)return;
@@ -460,17 +453,9 @@ $(document).ready(function(){
 </span><span class='line'>public:
 </span><span class='line'>  double m_lf;
 </span><span class='line'>  string m_str;
-</span><span class='line'>
 </span><span class='line'>public:
-</span><span class='line'>  void set(){
-</span><span class='line'>      cin&gt;&gt;m_lf;
-</span><span class='line'>      cin&gt;&gt;m_str;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  void print(){
-</span><span class='line'>      cout&lt;&lt;m_lf&lt;&lt;" ";
-</span><span class='line'>      cout&lt;&lt;m_str&lt;&lt;endl;
-</span><span class='line'>  }
+</span><span class='line'>  void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
+</span><span class='line'>  void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
 </span><span class='line'>};
 </span><span class='line'>
 </span><span class='line'>struct cmpd{

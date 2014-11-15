@@ -182,6 +182,92 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2010/07/21/php-send-email/">PHP发送邮件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-21T10:05:00+08:00" pubdate data-updated="true">Jul 21<span>st</span>, 2010</time>
+        
+         | <a href="/blog/2010/07/21/php-send-email/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>现在很多主机空间都是IIS上执行PHP程序，大多不能直接用mail()发送邮件，有了这个类只要你有注册过邮箱，
+就可以随意的发送邮件，速度也不慢哦。</p>
+
+
+
+
+<p>先给一个具体的使用示例：</p>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
+</span><span class='line'>require (FILE_DIR."smtp.php"); 
+</span><span class='line'>$smtpserver = "smtp.xxx.com";//SMTP服务器 
+</span><span class='line'>$smtpserverport =25;//SMTP服务器端口 
+</span><span class='line'>$smtpusermail = "xxxxx@xxx.com";//SMTP服务器的用户邮箱 
+</span><span class='line'>$smtpemailto = "aaaaa@xxx.com";//发送给谁 
+</span><span class='line'>$smtpuser = "xxxxx";//SMTP服务器的用户帐号 
+</span><span class='line'>$smtppass = "xxxxx";//SMTP服务器的用户密码 
+</span><span class='line'>$mailsubject = "Test Subject";//邮件主题 
+</span><span class='line'>$mailbody = "&lt;h1>This is a test mail&lt;/h1>";//邮件内容 
+</span><span class='line'>$mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件 
+</span><span class='line'>$smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证. 
+</span><span class='line'>$smtp->debug = TRUE;//是否显示发送的调试信息 
+</span><span class='line'>$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype); 
+</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2010/07/21/php-send-email/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2010/07/19/ucenter-sync-login-mechanism/">UCenter同步登陆机制</a></h1>
     
     
@@ -792,84 +878,9 @@ print &#8216;Instance&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + conve
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/">C语言编译过程全解析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-05-28T19:45:00+08:00" pubdate data-updated="true">May 28<span>th</span>, 2009</time>
-        
-         | <a href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>0.内容摘要</h2>
-
-
-<p>C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，
-深入了解整个编译过程对工程师理解应用程序的编写是有很大帮助的，希望大家可以多了解一些，
-在遇到问题时多思考、多实践。 </p>
-
-
-
-
-<p>一般情况下，我们只需要知道分成编译和连接两个阶段:</br>
-&nbsp;&nbsp;&nbsp;&nbsp;·编译阶段将源程序（*.c)转换成为目标代码（一般是obj文件，至于具体过程就是上面说的那些阶段）；</br>
-&nbsp;&nbsp;&nbsp;&nbsp;·连接阶段是把源程序转换成的目标代码（obj文件）与你程序里面调用的库函数对应的代码连接起来形成
-对应的可执行文件（exe文件）就可以了，其他的都需要在实践中多多体会才能有更深的理解。</br>
-编译的概念：编译程序读取源程序（字符流），对之进行词法和语法的分析，
-将高级语言指令转换为功能等效的汇编代码，再由汇编程序转换为机器语言，
-并且按照操作系统对可执行文件格式的要求链接生成可执行程序。</p>
-
-
-
-
-<p>编译的完整过程：C源程序->预编译处理(.c)->编译、优化程序（.s、.asm）->
-汇编程序(.obj、.o、.a、.ko)->链接程序（.exe、.elf、.axf等）。</p>
-
-
-
-
-<h2>1.编译预处理</h2>
-
-
-<p>读取c源程序，对其中的伪指令（以#开头的指令）和特殊符号进行处理
-伪指令主要包括以下四个方面：</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
+    
+    <li class="previous"><a href="/blog/page/12/">&larr; Older</a></li>
     
     <li><a href="/blog/archives">Blog Archives</a></li>
     
