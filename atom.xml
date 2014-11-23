@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-15T15:51:14+08:00</updated>
+  <updated>2014-11-23T23:02:58+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,282 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码(7) 配接器adaptor]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/11/23/insight-into-stl-7-adaptor/"/>
+    <updated>2014-11-23T20:21:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/11/23/insight-into-stl-7-adaptor</id>
+    <content type="html"><![CDATA[<h2>1. 概述</h2>
+
+<p>适配器（adaptor/adapter）在STL组件的灵活运用功能上，扮演着轴承、转换器的角色，将一种容器或迭代器装换或封装成另一种容器或迭代器，例如基于deque容器的stack和queue。Adaptor这个概念，实际上是一种设计模式（design pattern），是《Design Pattern》一书中提及到的23个设计模式之一，其中对adaptor的定义如下：</p>
+
+<blockquote><p>将一个class的接口转换为另一个class的接口，使原本因接口不兼容而不能合作的classes，可以一起运作。</p></blockquote>
+
+<p>在STL中，除了上面提到的容器或迭代器的适配器之外，还可以对函数或更广义的仿函数使用适配器，改变其接口，这种称为function adaptor，相应的针对容器或迭代器的适配器则分别称为container adaptor，iterator adaptor，下面将分别介绍这三种适配器。</p>
+
+<h2>2. 容器适配器</h2>
+
+<p>容器适配器相对而言比较简单，比较典型的就是上面提到的低层由deque构成的stack和queue，其基本实现原理是，在 stack 和 queue 内部定义一个 protected 的 deque 类型的成员变量，然后只对外提供 deque 的部分功能或其异构，如 stack 的 push 和 pop 都是从 deque 的尾部进行插入和删除，而 queue 的 push 和 pop 分别是从尾部和头部进行插入和删除，这样 stack 和 queue 都可以看做是适配器，作用于容器 deque 之上的适配器。关于 stack 和 queue 的具体内容请参见之前将容器的文章 <a href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a>。</p>
+
+<!-- more -->
+
+
+<h2>3. 迭代器适配器</h2>
+
+<p>STL提供了许多作用于迭代器之上的适配器，如 insert iterator，reverse iterator，iostream iterator等，相关源代码主要在 <code>stl_iterator.h</code> 文件中。</p>
+
+<h4>3.1 insert iterator</h4>
+
+<p>其中 insert iterator 是将一般的迭代器的赋值（assign）操作变为插入（insert）操作，而其他的自增和自减操作则不做任何处理的返回当前迭代器本身，包括从尾部插入的 <code>back_insert_iterator</code> 和从头部插入的 <code>front_insert_iterator</code> ，尾部插入的 insert iterator 的定义主要内容如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Container&gt; 
+</span><span class='line'>class back_insert_iterator {
+</span><span class='line'>public:
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;&
+</span><span class='line'>  operator=(const typename _Container::value_type& __value) { // 赋值变为尾部插入
+</span><span class='line'>    container-&gt;push_back(__value);
+</span><span class='line'>    return *this;
+</span><span class='line'>  }
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator*() { return *this; } // 一下操作均返回迭代器本身
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++() { return *this; }
+</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++(int) { return *this; }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3.2 reverse iterator</h4>
+
+<p>reverse iterator 则将一般的迭代器的行进方向逆转，是原本应该前进的 <code>operator++</code> 变为后退操作，而 <code>operator--</code> 变为前进操作，这样做对于需要从尾部开始遍历的算法非常有用。该迭代器的主要定义如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Iterator&gt;
+</span><span class='line'>class reverse_iterator {
+</span><span class='line'>protected:
+</span><span class='line'>  _Iterator current;
+</span><span class='line'>public:
+</span><span class='line'>  typedef _Iterator iterator_type;
+</span><span class='line'>  typedef reverse_iterator&lt;_Iterator&gt; _Self;
+</span><span class='line'>public:
+</span><span class='line'>  _Self& operator++() { --current; return *this; } // 前置自增变为自减
+</span><span class='line'>  _Self operator++(int) { _Self __tmp = *this; --current; return __tmp; }
+</span><span class='line'>  _Self& operator--() { ++current; return *this; } // 前置自减变为自增
+</span><span class='line'>  _Self operator--(int) { _Self __tmp = *this; ++current; return __tmp; }
+</span><span class='line'>  _Self operator+(difference_type __n) const { return _Self(current - __n); }
+</span><span class='line'>  _Self& operator+=(difference_type __n) { current -= __n; return *this; }
+</span><span class='line'>  _Self operator-(difference_type __n) const { return _Self(current + __n); }
+</span><span class='line'>  _Self& operator-=(difference_type __n) { current += __n; return *this; }
+</span><span class='line'>  reference operator[](difference_type __n) const { return *(*this + __n); }  
+</span><span class='line'>}; </span></code></pre></td></tr></table></div></figure>
+
+
+<p>这种逆向的迭代器只用于那些具有双向迭代器的容器（如vector，list，deque等，而slist，stack，queue，priority queue等则不行）或需要逆向遍历的算法（如copy backward等）。</p>
+
+<h4>3.3  iostream iterator</h4>
+
+<p>iostream iterator 则将迭代器绑定到某个 iostream 对象上，有 <code>istream_iterator</code> 和 <code>ostream_iterator</code> ，分别拥有输入和输出功能。</p>
+
+<p>以 istream iterator 为例，它将迭代器绑定到一个输入数据流对象（istream object）上，其实就是在 istream iterator 内部维护一个 istream member，用户对这个 istream iterator 所做的 <code>operator++</code> 操作会被该迭代器变为这个 istream member 的输入操作 <code>operator&gt;&gt;</code>，这个迭代器是一个 input iterator，没有 <code>operator--</code> 操作，核心实现如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _CharT = char, class _Traits = char_traits&lt;_CharT&gt;,
+</span><span class='line'>          class _Dist = ptrdiff_t&gt; 
+</span><span class='line'>class istream_iterator {
+</span><span class='line'>public:
+</span><span class='line'>  typedef _CharT                         char_type;
+</span><span class='line'>  typedef _Traits                        traits_type;
+</span><span class='line'>  typedef basic_istream&lt;_CharT, _Traits&gt; istream_type;
+</span><span class='line'>  reference operator*() const { return _M_value; }
+</span><span class='line'>  pointer operator-&gt;() const { return &(operator*()); }
+</span><span class='line'>  istream_iterator& operator++() { _M_read(); return *this; } // ++ 变为 &gt;&gt;
+</span><span class='line'>  istream_iterator operator++(int)  { istream_iterator __tmp = *this; _M_read(); return __tmp; }
+</span><span class='line'>  bool _M_equal(const istream_iterator& __x) const
+</span><span class='line'>    { return (_M_ok == __x._M_ok) && (!_M_ok || _M_stream == __x._M_stream); }
+</span><span class='line'>private:
+</span><span class='line'>  istream_type* _M_stream;
+</span><span class='line'>  _Tp _M_value;
+</span><span class='line'>  bool _M_ok;
+</span><span class='line'>  void _M_read() {
+</span><span class='line'>    _M_ok = (_M_stream && *_M_stream) ? true : false;
+</span><span class='line'>    if (_M_ok) {
+</span><span class='line'>      *_M_stream &gt;&gt; _M_value; // 转变为输入操作（&gt;&gt;）
+</span><span class='line'>      _M_ok = *_M_stream ? true : false;
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到以上的迭代器均非一般意义上的迭代器了，而是一个经过适配了的特殊的迭代器。</p>
+
+<h2>4. 仿函数适配器</h2>
+
+<p>从上文中我们看到，container adaptor 内含一个container 的成员，iterator 内含一个 iterator 或 iostream 成员，然后对这些成员的标准接口进行了一定的改造，从而使之变成一个新的 container 或 iterator，满足新的应用环境的要求。而仿函数的适配器也是类似的，其实就是在 function adaptor 内部定义了一个成员变量，它是原始 functor 的一个对象，相关源代码主要在 <code>stl_function.h</code> 文件中。</p>
+
+<p>STL中标准的 functor adaptor 包括对返回值进行逻辑否定的 <code>not1</code>，<code>not2</code>；对参数进行绑定的 <code>bind1st</code>，<code>bind2nd</code>；用于函数合成的 <code>compose1</code>，<code>compose2</code> （非STL标准，SGI私有）；用于函数指针的 <code>ptr_fun</code>；用于成员函数指针的 <code>mem_fun</code>，<code>mem_fun_ref</code> 等。其中逻辑否定、参数绑定、函数合成的比较简单，如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// not1其实是对unary_negate函数的一个简单的封装，定义了一个unary_negate类型匿名对象（函数）
+</span><span class='line'>inline unary_negate&lt;_Predicate&gt; // 实际效果：!pred(param)
+</span><span class='line'>not1(const _Predicate& __pred){ return unary_negate&lt;_Predicate&gt;(__pred);} 
+</span><span class='line'>inline binary_negate&lt;_Predicate&gt; // 实际效果：!pred(param1,param2)
+</span><span class='line'>not2(const _Predicate& __pred){ return binary_negate&lt;_Predicate&gt;(__pred); }
+</span><span class='line'>inline binder1st&lt;_Operation&gt; // 实际效果：op(x,param)
+</span><span class='line'>bind1st(const _Operation& __fn, const _Tp& __x) {
+</span><span class='line'>  return binder1st&lt;_Operation&gt;(__fn, _Arg1_type(__x));
+</span><span class='line'>}
+</span><span class='line'>inline binder2nd&lt;_Operation&gt; // 实际效果：op(param,x)
+</span><span class='line'>bind2nd(const _Operation& __fn, const _Tp& __x) { 
+</span><span class='line'>  return binder2nd&lt;_Operation&gt;(__fn, _Arg2_type(__x));
+</span><span class='line'>}
+</span><span class='line'>inline unary_compose&lt;_Operation1,_Operation2&gt; // 实际效果：op1(op2(param))
+</span><span class='line'>compose1(const _Operation1& __fn1, const _Operation2& __fn2) {
+</span><span class='line'>  return unary_compose&lt;_Operation1,_Operation2&gt;(__fn1, __fn2);
+</span><span class='line'>}
+</span><span class='line'>inline binary_compose&lt;_Operation1, _Operation2, _Operation3&gt; // 实际效果：op1(op2(param),op3(param))
+</span><span class='line'>compose2(const _Operation1& __fn1, const _Operation2& __fn2, const _Operation3& __fn3) {
+</span><span class='line'>  return binary_compose&lt;_Operation1,_Operation2,_Operation3&gt;
+</span><span class='line'>    (__fn1, __fn2, __fn3);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用于函数指针的 <code>ptr_fun</code> 适配器使得我们可以将一般函数当做仿函数使用，就像原生指针可以当做迭代器传给STL算法一样，它的实际效果相当如 <code>fp(param)</code> 或 <code>fp(param1,param2)</code> ，前者定义如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Arg, class _Result&gt;
+</span><span class='line'>class pointer_to_unary_function : public unary_function&lt;_Arg, _Result&gt; {
+</span><span class='line'>protected:
+</span><span class='line'>  _Result (*_M_ptr)(_Arg);
+</span><span class='line'>public:
+</span><span class='line'>  pointer_to_unary_function() {}
+</span><span class='line'>  explicit pointer_to_unary_function(_Result (*__x)(_Arg)) : _M_ptr(__x) {}
+</span><span class='line'>  _Result operator()(_Arg __x) const { return _M_ptr(__x); }
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Arg, class _Result&gt;
+</span><span class='line'>inline pointer_to_unary_function&lt;_Arg, _Result&gt; // 返回值型别
+</span><span class='line'>ptr_fun(_Result (*__x)(_Arg)) { // 对pointer_to_unary_function 的封装
+</span><span class='line'>  return pointer_to_unary_function&lt;_Arg, _Result&gt;(__x);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用于成员函数指针的 <code>mem_fun</code> 适配器使得我们可以将成员函数当做仿函数使用，于是成员函数可以搭配各种泛型算法，而当使用父类的虚拟成员函数作为仿函数时，还可以使用泛型算法完成所谓的多态调用（polymorphic function call），这是泛型（genericity）与多态（polymorphism）之间的结合。另外需要注意的是，虽然多态可以对指针或引用起作用，但STL容器只支持“实值语意”，不支持“引用语意”，及容器的内容应该为实值而非引用（类似于<code>vecotr&lt;X&amp;&gt; vc</code> 这种）。一下是 <code>mem_fun</code> 的具体定义（还有很多个版本，这里只是最简单的一个）：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// 无任何参数，通过pointer调用，non-const成员函数
+</span><span class='line'>template &lt;class _Ret, class _Tp&gt;
+</span><span class='line'>class mem_fun_t : public unary_function&lt;_Tp*,_Ret&gt; {
+</span><span class='line'>public:
+</span><span class='line'>  explicit mem_fun_t(_Ret (_Tp::*__pf)()) : _M_f(__pf) {}
+</span><span class='line'>  _Ret operator()(_Tp* __p) const { return (__p-&gt;*_M_f)(); }
+</span><span class='line'>private:
+</span><span class='line'>  _Ret (_Tp::*_M_f)();
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _Ret, class _Tp&gt;
+</span><span class='line'>inline mem_fun_t&lt;_Ret,_Tp&gt; // 返回类型
+</span><span class='line'>mem_fun(_Ret (_Tp::*__f)()) { return mem_fun_t&lt;_Ret,_Tp&gt;(__f); } // mem_fun_t的匿名对象</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>推荐阅读：</h2>
+
+<p><a href="http://sourcemaking.com/design_patterns/adapter">Adapter Design Pattern</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(6) 仿函数|函数对象]]></title>
@@ -4643,358 +4919,6 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 
 <p>（4）实现类型通用的函数<br/>
 如果不借助C++模板这样的机制，C语言内联是无法实现这样的功能的，而只能针对不同的数据类型定义不同名的函数。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C++ 应用程序性能优化之 new/delete 操作符]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator/"/>
-    <updated>2014-05-11T20:33:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/05/11/cpp-program-optimization-new-delete-operator</id>
-    <content type="html"><![CDATA[<h2>1.概述</h2>
-
-<p>C++ 程序的存储空间可以分为静态/全局存储区、栈区和堆区。下图展示了一个典型的Linux C/C++ 程序内存空间布局：</p>
-
-<center><img src="http://ibillxia.github.io/images/2014/IMAG2014051101.png"></center>
-
-
-<p>其中，每一部分的具体涵义如下：<br/>
-- <strong>代码段（.text）</strong>：这里存放的是CPU要执行的指令。代码段是可共享的，相同的代码在内存中只会有一个拷贝，同时这个段是<strong>只读</strong>的，防止程序由于错误而修改自身的指令。<br/>
-- <strong>初始化数据段（.data）</strong>：这里存放的是程序中需要明确赋初始值的变量，例如位于所有函数之外的全局变量：<code>int val=100;</code> 。 需要强调的是，以上两段都是位于程序的可执行文件中，内核在调用 exec 函数启动该程序时从源程序文件中读入。<br/>
-- <strong>未初始化数据段（.bss）</strong>：位于这一段中的数据，内核在执行该程序前，将其初始化为0或者null。例如出现在任何函数之外的全局变量：<code>int sum;</code><br/>
-- <strong>堆（Heap）</strong>：这个段用于在程序中进行动态内存申请，例如经常用到的 malloc，new 系列函数就是从这个段中申请内存。<br/>
-- <strong>栈（Stack）</strong>：函数中的局部变量以及在函数调用过程中产生的临时变量都保存在此段中。<br/>
-静态/全局存储区和栈区一般在程序编译阶段决定；而堆区则随着程序的运行而动态变化，每一次程序运行都会有不同的行为，因此动态内存管理对于一个程序在运行过程中占用的内存大小及程序运行性能有非常重要的影响。 本文主要探讨在C++中如何管理动态内存，以及如何使用 C++ 的语言特性来提高动态内存的管理效率，减少错误的发生。</p>
-
-<!-- more -->
-
-
-<h2>2. new/delete 操作符</h2>
-
-<h4>2.1 C++内置new/delete的原型</h4>
-
-<p>一般来说 C++ 的运行库提供了默认的全局 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的实现，程序也可以用自定义的实现来取代运行库的实现。 下面是 C++ 标准中定义的 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的声明（位于 <code>include/c++/new</code> 文件中）：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>namespace std {
-</span><span class='line'>  class bad_alloc : public exception {
-</span><span class='line'>    public:
-</span><span class='line'>      bad_alloc() throw() { }
-</span><span class='line'>      virtual ~bad_alloc() throw();
-</span><span class='line'>      virtual const char* what() const throw();
-</span><span class='line'>  };
-</span><span class='line'>  struct nothrow_t { };
-</span><span class='line'>  extern const nothrow_t nothrow;
-</span><span class='line'>  typedef void (*new_handler)();
-</span><span class='line'>  new_handler set_new_handler(new_handler) throw();
-</span><span class='line'>} // namespace std
-</span><span class='line'>
-</span><span class='line'>void* operator new(std::size_t) throw (std::bad_alloc);  // (1)
-</span><span class='line'>void* operator new[](std::size_t) throw (std::bad_alloc);
-</span><span class='line'>void operator delete(void*) throw();
-</span><span class='line'>void operator delete[](void*) throw();
-</span><span class='line'>void* operator new(std::size_t, const std::nothrow_t&) throw();  // (2)
-</span><span class='line'>void* operator new[](std::size_t, const std::nothrow_t&) throw();
-</span><span class='line'>void operator delete(void*, const std::nothrow_t&) throw();
-</span><span class='line'>void operator delete[](void*, const std::nothrow_t&) throw();
-</span><span class='line'>// Default placement versions of operator new.
-</span><span class='line'>inline void* operator new(std::size_t, void* __p) throw() { return __p; }  // (3)
-</span><span class='line'>inline void* operator new[](std::size_t, void* __p) throw() { return __p; }
-</span><span class='line'>// Default placement versions of operator delete.
-</span><span class='line'>inline void  operator delete  (void*, void*) throw() { }
-</span><span class='line'>inline void  operator delete[](void*, void*) throw() { }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中最后的 <code>inline</code> 函数是 <code>placement</code> 版本的 new/delete 操作，其特点在于分配的内存块的起始地址由用户给定（通过参数 <code>void* __p</code>）。 而前面两种 <code>new/delete</code> （(1)和(2)处）是系统决定待分配内存块的起始地址，区别在于：第一个在分配失败是会抛出 <code>bad_alloc</code> 异常（这是C++标准要求的）；而第二个则不抛出异常，返回0。 很多应用程序都没有处理内存分配的失败情况，但相对于一个需要长期稳定运行的系统来说，这种处理是必不可少的。 应用程序可以通过捕获 <code>bad_alloc</code> 异常或者检查返回值来检查内存分配是否成功，而更好的方法是使用C++中的 <code>new_handler()</code> 函数。 C++规定 <code>new_handler</code> 要执行如下操作中的一种：</p>
-
-<ul>
-<li>使 <code>new</code> 有更多的内存可用，然后返回</li>
-<li>抛出一个 <code>bad_alloc</code> 或其派生类的异常</li>
-<li>调用 <code>abort()</code> 或者 <code>exit()</code> 退出</li>
-</ul>
-
-
-<h4>2.2 使用 <code>new_handler</code> 自定义异常处理</h4>
-
-<p>下面看一个例子，看看如何使用 <code>new_handler</code> 处理内存分配失败的情况：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;new&gt;
-</span><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;Windows.h&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>char *gPool = NULL;
-</span><span class='line'>void my_new_handler();
-</span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>    set_new_handler(my_new_handler);
-</span><span class='line'>    gPool = new char[512*1024*1024];
-</span><span class='line'>    if(gPool!=NULL){
-</span><span class='line'>        printf("Preserve 512MB memory at %x.\n",gPool);
-</span><span class='line'>    }
-</span><span class='line'>    char *p = NULL;
-</span><span class='line'>    for(int i=0;i&lt;4;i++){
-</span><span class='line'>        p = new char[512*1024*1024];
-</span><span class='line'>        printf("%d * 512M, p = %x\n",i+1,p);
-</span><span class='line'>        Sleep(5000); // 休眠5s
-</span><span class='line'>    }
-</span><span class='line'>    printf("Done.\n");
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>void my_new_handler(){
-</span><span class='line'>    if(gPool!=NULL){
-</span><span class='line'>        printf("try to get more memory...\n");
-</span><span class='line'>        delete[] gPool; // 释放512MB内存空间
-</span><span class='line'>        gPool = NULL;
-</span><span class='line'>        return;
-</span><span class='line'>    }else{
-</span><span class='line'>        printf("I can not help...\n");
-</span><span class='line'>        throw bad_alloc();  // 分配失败，抛出异常
-</span><span class='line'>    }
-</span><span class='line'>    return;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 Windows 上编译并运行（使用Code::Blocks 13.12 IDE），得到如下输出：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Preserve 512MB memory at 7e0020.
-</span><span class='line'>1 * 512M, p = 207f0020
-</span><span class='line'>2 * 512M, p = 40800020
-</span><span class='line'>try to get more memory...
-</span><span class='line'>3 * 512M, p = 7e0020
-</span><span class='line'>I can not help...
-</span><span class='line'>terminate called after throwing an instance of 'std::bad_alloc'
-</span><span class='line'>  what():  std::bad_alloc
-</span><span class='line'>
-</span><span class='line'>This application has requested the Runtime to terminate it in an unusual way.
-</span><span class='line'>Please contact the application's support team for more information.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 Windows 的 win32 程序中，一个进程可以访问的内存空间是 4GB，但可以用来动态分配的最大内存是 2GB，因而上面的程序执行到第3次（为神马不是第4次？）动态内存分配时由于内存不够，调用了 <code>my_new_handler</code> 获得了内存（可以看到第3次分配的内存的地址和Preserve的内存地址是一样的），而当执行第4次内存分配时，<code>gPool</code> 已被分配，于是 <code>my_new_handler</code> 中抛出了 <code>bad_alloc</code> 异常，导致程序退出。 另外，在程序实际运行过程当中，会发现任务管理器中内存占用不会往上飙，这可能是因为操作系统的动态内存管理策略在作怪，不会说你一申请就立马全部给你，只是建立了一个映射表，只有当你真正用的时候才会给你。</p>
-
-<h4>2.3 使用 placement new</h4>
-
-<p>在 C++ 内置 <code>new/delete</code> 中最后的一种是 placement 形式的 <code>new/delete</code> ，即分配的内存地址有用户给定。下面是一个最简单的实例：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;cstdio&gt;
-</span><span class='line'>#include &lt;new&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    char buffer[100];
-</span><span class='line'>    char *p = new(buffer) char[20]; // call placement new
-</span><span class='line'>    printf("Address of buffer: %x, and p: %x.\n",buffer,p);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>// output: Address of buffer: 28feb8, and p: 28feb8.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以看到 <code>buffer</code> 和 <code>p</code> 的地址是一样的。在大型应用程序中，我们可以充分利用 <code>placement new</code> 的特性，实现自己管理（分配、释放等）本应用的内存空间，基本思路就是： 首先申请一大片内存，然后对每个小的动态内存分配都使用 <code>placement new</code> 的方式进行申请。</p>
-
-<h4>2.4 重载 placement new</h4>
-
-<p>在 <code>new</code> 操作符中，除了可以使用自定义申请的内存的大小及位置，我们还可以通过重载系统的 <code>new/delete</code> 操作符来加入其它一些附加参数，但仍称之为 <code>placement new</code> 。例如：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;new&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>#define DEBUG
-</span><span class='line'>#ifdef DEBUG
-</span><span class='line'>// 自定义 new 操作符
-</span><span class='line'>void *operator new[](unsigned int n, const char* file, int line){
-</span><span class='line'>    printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-</span><span class='line'>    return ::operator new(n);
-</span><span class='line'>}
-</span><span class='line'>// 自定义 delete 操作符
-</span><span class='line'>// void operator delete(void *p,const char *file, int line){
-</span><span class='line'>void operator delete[](void *p,const char *file, int line){
-</span><span class='line'>    printf("delete at file %s, in line %d\n",file,line);
-</span><span class='line'>    ::operator delete(p);
-</span><span class='line'>    return;
-</span><span class='line'>}
-</span><span class='line'>// 宏定义，必须放在重载函数之后
-</span><span class='line'>#define new new(__FILE__, __LINE__)
-</span><span class='line'>#define delete delete(__FILE__, __LINE__)
-</span><span class='line'>#endif
-</span><span class='line'>int main(){
-</span><span class='line'>    char *p = new char[10];
-</span><span class='line'>    //delete p;  // delete 的重载还有问题 "error: type 'int' argument given to 'delete', expected pointer"
-</span><span class='line'>    delete[] p;  // 直接报语法错误，"error: expected primary-expression before ']' token"
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>// output: Alloc size: 10 at file D:\Programs\test\main.cpp, in line 22</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这在 <code>DEBUG</code> 模式下非常好使。</p>
-
-<p>更新：关于 <code>placement new</code> 的 demo 改为如下代码后就没问题了：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;new&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>#define DEBUG
-</span><span class='line'>#ifdef DEBUG
-</span><span class='line'>// 自定义 new 操作符
-</span><span class='line'>void *operator new[](unsigned int n, const char* file, int line){
-</span><span class='line'>    printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-</span><span class='line'>    return ::operator new(n);
-</span><span class='line'>}
-</span><span class='line'>// 自定义 delete 操作符
-</span><span class='line'>void operator delete(void *p,char *file, int line){
-</span><span class='line'>    printf("Delete at file %s, in line %d\n",file,line);
-</span><span class='line'>    ::operator delete(p);
-</span><span class='line'>    return;
-</span><span class='line'>}
-</span><span class='line'>// 宏定义，必须放在重载函数之后
-</span><span class='line'>#define new new(__FILE__, __LINE__)
-</span><span class='line'>#define delete(ptr) delete(ptr,__FILE__, __LINE__)
-</span><span class='line'>#endif
-</span><span class='line'>int main(){
-</span><span class='line'>    char *p = new char[10];
-</span><span class='line'>    operator delete(p);
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是还是不知道之前的代码为什么会出现这个错误，已在 <a href="http://stackoverflow.com/questions/23614215/destructor-error-in-c-type-int-argument-given-to-delete-expected-pointer">StackOverFlow上提问</a>，希望能得到满意的答案。</p>
 ]]></content>
   </entry>
   
