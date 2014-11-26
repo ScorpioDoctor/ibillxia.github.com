@@ -4,7 +4,7 @@
   <title><![CDATA[Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-23T23:02:58+08:00</updated>
+  <updated>2014-11-26T19:24:23+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码系列文章归档]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/11/26/insight-into-stl-archive/"/>
+    <updated>2014-11-26T18:19:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/11/26/insight-into-stl-archive</id>
+    <content type="html"><![CDATA[<p>前后花了大概快六个月的时间（从6月8日到11月23），终于把侯捷的《STL 源码剖析》看完了，同时也把 SGI 实现 STL 的最新版本看完了。在这段时间里，几乎是每个周末花大约一天的时间来看书和代码，并将相应内容在博客中加以归纳和总结。由于基本上都是在周末抽时间看的，所以周期拉得比较长，但收获还是挺多的，其中印象比较深刻的是 STL 中的迭代器与型别萃取、空间配置与内存池的实现、双端队列 (deque)  的实现、红黑树的实现、排序等算法的实现、类与函数的偏特化、函数对象与适配器等等，对 STL 的整体架构也有了比较深入的认识。这段时间也经历了很多事情，看书和代码的过程中也遇到了很多问题，有些经过反复琢磨自己解决了，还有些仍未完全弄清楚，需要再回过头去看一遍。另外，在看书和代码的过程中，基本没有去写代码、去实践，只停留在理论上，再看一遍的时候可以写些测试的代码或自己实现一个相应的模块或功能。</p>
+
+<p>这里再把之前写的深入理解 STL 源码的系列文章进行一个归档：</p>
+
+<h4>STL 简介</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/08/stl-source-insight-0-stl-overview/">深入理解STL源码(0) STL简介</a></li>
+</ol>
+
+
+<h4>STL 空间配置器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器(allocator)</a></li>
+</ol>
+
+
+<h4>STL 迭代器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">深入理解STL源码(2) 迭代器(Iterators)和Traits</a></li>
+</ol>
+
+
+<h4>STL 容器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">深入理解STL源码(3.2) 序列式容器之list</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">深入理解STL源码(3.4) 序列式容器之heap和priority queue</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree/">深入理解STL源码(4.1) 关联式容器之红黑树</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/">深入理解STL源码(4.2) 关联式容器之set和multiset</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">深入理解STL源码(4.4) 关联式容器之hashtable</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/">深入理解STL源码(4.5) 关联式容器之hashset和hashmap</a></li>
+</ol>
+
+
+<h4>STL 算法</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/">深入理解STL源码(5.1) 算法</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/">深入理解STL源码(5.2) 算法之数值算法</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/">深入理解STL源码(5.3) 算法之基本算法algobase</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/">深入理解STL源码(5.4) 算法之复杂算法algorithm</a></li>
+</ol>
+
+
+<h4>STL 函数对象</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/">深入理解STL源码(6) 仿函数|函数对象</a></li>
+</ol>
+
+
+<h4>STL 适配器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/11/23/insight-into-stl-7-adaptor/">深入理解STL源码(7) 配接器adaptor</a></li>
+</ol>
+
+
+<p>接下来，还需要花大量时间来重温一遍，对之前文章中的一些遗留问题进行梳理和解答。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(7) 配接器adaptor]]></title>
@@ -4746,179 +4819,6 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 
 
 <p>完整的代码及测试输入可以通过以下链接打包下载：<a href="https://ibillxia.github.io/upload/code/20140525.tar.gz">code-2014-05-25</a>。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解C语言的define和内联函数]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/05/17/insight-into-define-and-inline-function-in-c/"/>
-    <updated>2014-05-17T22:43:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/05/17/insight-into-define-and-inline-function-in-c</id>
-    <content type="html"><![CDATA[<h2>概述</h2>
-
-<p>在 <code>Robert C.Searcord</code> 的 <em>The</em> <em>Cert</em> <em>C</em> <em>Secure</em> <em>Coding</em> <em>Standard</em> 一书中，关于宏定义的规范中第一条就是</p>
-
-<blockquote><p>用内联函数或静态函数替代与函数相似的宏</p></blockquote>
-
-<p>这个规范非常实用。内联函数是C99标准中新增的，当宏定义和内联函数可以互换时，应该优先考虑选择内联函数，这也是为什么在C++标准库函数中 <code>max</code>, <code>min</code>, <code>swap</code> 等都是通过内联函数来实现的原因。 宏定义是完全原封不动的很SB的替换，而内联函数则并非简单的文本替换，而是按函数调用的方式展开。关于内联函数相对于宏替换的优点，在wiki有如下几点的总结：</p>
-
-<ul>
-<li>宏调用并不执行类型检查，甚至连正常参数也不检查，但是函数调用却要检查。</li>
-<li>C语言的宏使用的是文本替换，可能导致无法预料的后果，因为需要重新计算参数和操作顺序。</li>
-<li>在宏中的编译错误很难发现，因为它们引用的是扩展的代码，而不是程序员键入的。</li>
-<li>许多结构体使用宏或者使用不同的语法来表达很难理解。内联函数使用与普通函数相同的语言，可以随意的内联和不内联。</li>
-<li>内联代码的调试信息通常比扩展的宏代码更有用。</li>
-</ul>
-
-
-<p>其中前面两条很好理解，相信大家应该不陌生，这里主要通过具体讨论一个该书中提到的一个程序实例来感受一下后面几点。</p>
-
-<!-- more -->
-
-
-<h2>宏定义引起的运行时错误</h2>
-
-<p>下面我们看一个稍微复杂的例子，这个例子是在运行时才出现另我们感到意外的错误（这里的运行时错误并不是指 <code>Runtime Error</code>，么么哒）。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h&gt;
-</span><span class='line'>
-</span><span class='line'>int count=0;
-</span><span class='line'>
-</span><span class='line'>void g(void){
-</span><span class='line'>    printf("Called g, count=%d.\n",count);
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>#define EXEC_BUMP(func) (func(),++count)
-</span><span class='line'>typedef void(*exec_func)(void);  // 定义函数指针类型
-</span><span class='line'>inline void exec_bump(exec_func f){
-</span><span class='line'>    f();
-</span><span class='line'>    ++count;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>int main(void)
-</span><span class='line'>{
-</span><span class='line'>    int count=0;
-</span><span class='line'>    while(count++&lt;10){
-</span><span class='line'>        //EXEC_BUMP(g);  // (1) 宏定义实现
-</span><span class='line'>      exec_bump(g);    // (2) 内联实现
-</span><span class='line'>    }
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用宏定义的实现得到输出如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Called g, count=0.
-</span><span class='line'>Called g, count=0.
-</span><span class='line'>Called g, count=0.
-</span><span class='line'>Called g, count=0.
-</span><span class='line'>Called g, count=0.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这并不是我们想要的结果。而使用内联函数实现得到的输出如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Called g, count=0.
-</span><span class='line'>Called g, count=1.
-</span><span class='line'>Called g, count=2.
-</span><span class='line'>Called g, count=3.
-</span><span class='line'>Called g, count=4.
-</span><span class='line'>Called g, count=5.
-</span><span class='line'>Called g, count=6.
-</span><span class='line'>Called g, count=7.
-</span><span class='line'>Called g, count=8.
-</span><span class='line'>Called g, count=9.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这才是我们想要的结果。根据这两个输出结果，我们可以分析宏定义和内联的区别。通过宏定义时，直接使用 <code>(g(),++count);</code> 替换 <code>EXEC_BUMP(g);</code> 即可，这样每次调用 <code>g()</code> 函数时输出的 <code>count</code> 是全局的变量，所以都是0；而调用完 <code>g()</code> 函数之后，对局部变量 <code>count</code> 进行了自加操作，所以循环了5次。然而使用内联函数实现时，是按照函数调用的方式展开的，首先将全局变量和内联函数的传入参数压栈，然后是执行函数体，最后参数出栈；因此，内联函数中调用 <code>g()</code> 函数时输出的 <code>count</code> 也是全局变量，而且在内联函数中的 <code>++count</code> 也是对全局变量的操作，因此每次调用时输出的计数变量是递增的。  由此，我们可以更清楚的理解内联函数的替换原理了，它是由编译器显式地将函数调用中的压栈、函数体、出栈等步骤生成到可执行文件中，而不是像普通函数那样，函数体与调用该函数的代码部分是分离的，在调用内联函数时不需要跳转，因而执行效率会比普通的函数要高。（然而，如果函数本身代码较多，如果使用内联，就会在可执行文件中多个地方有该内联函数的函数体，这样可执行文件的大小就会比不使用内联的大。因此，一般不会将函数体复杂的函数定义为内联函数，除非特殊情况下，为了运行时间性能的考虑）</p>
-
-<h2>宏定义的典型应用场景</h2>
-
-<p>上面主要是对宏定义的贬低和歧视，其实宏定义也并非毫无用武之地，下面几种情况下宏定义还是不可替代的：</p>
-
-<p>（1）用于实现局部函数 <br/>
-此时无法用内联函数替代宏定义。因为宏定义代码块中的自动变量可以和引用宏的前后代码块互为使用，即宏引用前的代码快中的自动变量可以在宏中直接使用，而宏中定义的自动变量可以在宏引用的代码块之后使用。例如，比较常见是：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h&gt;
-</span><span class='line'>#define FOR(i,n) for(int i=0;i&lt;n;i++)  // 宏定义部分
-</span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>  int a[]={1,2,3,4,5};
-</span><span class='line'>  FOR(j,5) // 宏引用，这里j是在宏中才定义的自动变量
-</span><span class='line'>      printf("%d ",a[j]);  // 但是可以在宏引用之后的代码中使用
-</span><span class='line'>  return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中对临时变量 <code>j</code> 的声明是在宏中定义的，可以在宏调用完后使用这个变量。同样的，也可以在宏定义前声明临时变量，而直接在宏中使用（不需要作为参数传递给宏）。</p>
-
-<p>（2）宏可以支持某种形式的惰式计算<br/>
-例如：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#define SELECT(s,v1,v2) ((s)?(v1):(v2))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这个是无法用内联实现的。</p>
-
-<p>(3)宏定义可以产生编译时常量<br/>
-例如：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#define ADD(a,b) ((a)+(b))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>调用 <code>ADD(3,4)</code> 会产生一个常量表达式 <code>3+4</code> ，而内联无此效果。</p>
-
-<p>（4）实现类型通用的函数<br/>
-如果不借助C++模板这样的机制，C语言内联是无法实现这样的功能的，而只能针对不同的数据类型定义不同名的函数。</p>
 ]]></content>
   </entry>
   

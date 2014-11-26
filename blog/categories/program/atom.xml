@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Program | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/program/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2014-11-23T23:02:58+08:00</updated>
+  <updated>2014-11-26T19:24:23+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[深入理解STL源码系列文章归档]]></title>
+    <link href="http://ibillxia.github.io/blog/2014/11/26/insight-into-stl-archive/"/>
+    <updated>2014-11-26T18:19:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2014/11/26/insight-into-stl-archive</id>
+    <content type="html"><![CDATA[<p>前后花了大概快六个月的时间（从6月8日到11月23），终于把侯捷的《STL 源码剖析》看完了，同时也把 SGI 实现 STL 的最新版本看完了。在这段时间里，几乎是每个周末花大约一天的时间来看书和代码，并将相应内容在博客中加以归纳和总结。由于基本上都是在周末抽时间看的，所以周期拉得比较长，但收获还是挺多的，其中印象比较深刻的是 STL 中的迭代器与型别萃取、空间配置与内存池的实现、双端队列 (deque)  的实现、红黑树的实现、排序等算法的实现、类与函数的偏特化、函数对象与适配器等等，对 STL 的整体架构也有了比较深入的认识。这段时间也经历了很多事情，看书和代码的过程中也遇到了很多问题，有些经过反复琢磨自己解决了，还有些仍未完全弄清楚，需要再回过头去看一遍。另外，在看书和代码的过程中，基本没有去写代码、去实践，只停留在理论上，再看一遍的时候可以写些测试的代码或自己实现一个相应的模块或功能。</p>
+
+<p>这里再把之前写的深入理解 STL 源码的系列文章进行一个归档：</p>
+
+<h4>STL 简介</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/08/stl-source-insight-0-stl-overview/">深入理解STL源码(0) STL简介</a></li>
+</ol>
+
+
+<h4>STL 空间配置器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器(allocator)</a></li>
+</ol>
+
+
+<h4>STL 迭代器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/21/stl-source-insight-2-iterators-and-traits/">深入理解STL源码(2) 迭代器(Iterators)和Traits</a></li>
+</ol>
+
+
+<h4>STL 容器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">深入理解STL源码(3.2) 序列式容器之list</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">深入理解STL源码(3.4) 序列式容器之heap和priority queue</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree/">深入理解STL源码(4.1) 关联式容器之红黑树</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/">深入理解STL源码(4.2) 关联式容器之set和multiset</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">深入理解STL源码(4.4) 关联式容器之hashtable</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/">深入理解STL源码(4.5) 关联式容器之hashset和hashmap</a></li>
+</ol>
+
+
+<h4>STL 算法</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/">深入理解STL源码(5.1) 算法</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/">深入理解STL源码(5.2) 算法之数值算法</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/">深入理解STL源码(5.3) 算法之基本算法algobase</a></li>
+<li><a href="http://ibillxia.github.io/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/">深入理解STL源码(5.4) 算法之复杂算法algorithm</a></li>
+</ol>
+
+
+<h4>STL 函数对象</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/">深入理解STL源码(6) 仿函数|函数对象</a></li>
+</ol>
+
+
+<h4>STL 适配器</h4>
+
+<ol>
+<li><a href="http://ibillxia.github.io/blog/2014/11/23/insight-into-stl-7-adaptor/">深入理解STL源码(7) 配接器adaptor</a></li>
+</ol>
+
+
+<p>接下来，还需要花大量时间来重温一遍，对之前文章中的一些遗留问题进行梳理和解答。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[深入理解STL源码(7) 配接器adaptor]]></title>
@@ -873,211 +946,6 @@ __SGI_STL_DECLARE_COPY_TRIVIAL(long double)</p>
 <p>```</p>
 
 <p>以上是 copy 的完整代码，关于复制还有两个接口，一个是 <code>copy_n</code>，另一个是 <code>copy_backward</code>，前者复制区间 <code>[first, last)</code> 中前 n 个元素，后者从last-1 往 first 复制，这里就不详细展开了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[深入理解STL源码(5.2) 算法之数值算法]]></title>
-    <link href="http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/"/>
-    <updated>2014-10-19T20:28:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms</id>
-    <content type="html"><![CDATA[<p>本文主要介绍STL中的数值算法，主要涉及到的源码文件有 <code>stl_numberic.h</code>、<code>numeric</code>、<code>stl_relops.h</code> 等。</p>
-
-<p>STL 数值算法主要包含以下几个算法（来自<a href="http://www.cplusplus.com/reference/numeric/">C++文档</a>）：</p>
-
-<ul>
-<li>accumulate: Accumulate values in range</li>
-<li>adjacent_difference: Compute adjacent difference of range</li>
-<li>inner_product: Compute cumulative inner product of range</li>
-<li>partial_sum: Compute partial sums of range</li>
-<li>iota: Store increasing sequence</li>
-<li>power: power(x,n) 1 multiply by x n times (not in C++ standard)</li>
-</ul>
-
-
-<p>下面一一介绍每个算法的实现。</p>
-
-<h3>1. accumulate</h3>
-
-<p>该算法计算 init 和区间 [first, last) 内所有元素的总和。注意，必须提供 init 的初始值，这样即使 first=last 区间为空，仍能得到一个明确定义的值。当 init=0 时，即为计算 [first, last) 区间内所有元素的总和。具体实现有两个版本，如下：</p>
-
-<p>```
-template <class _InputIterator, class _Tp>
-<em>Tp accumulate(</em>InputIterator <strong>first, _InputIterator </strong>last, <em>Tp <strong>init){
-  </strong>STL_REQUIRES(</em>InputIterator, _InputIterator); // concept check
-  for ( ; <strong>first != </strong>last; ++__first)</p>
-
-<pre><code>__init = __init + *__first; // 求和
-</code></pre>
-
-<p>  return <strong>init;
-}
-template <class _InputIterator, class _Tp, class _BinaryOperation>
-<em>Tp accumulate(</em>InputIterator </strong>first, <em>InputIterator __last, </em>Tp <strong>init, _BinaryOperation </strong>binary_op){
-  <strong>STL_REQUIRES(<em>InputIterator, </em>InputIterator); // concept check
-  for ( ; </strong>first != <strong>last; ++</strong>first)</p>
-
-<pre><code>__init = __binary_op(__init, *__first); // 指定二元操作
-</code></pre>
-
-<p>  return __init;
-}
-```</p>
-
-<!-- more -->
-
-
-<p>第二个版本通过仿函数参数 <em>binary_op 指定操作类型，可以实现其他方式的累计，例如累乘等（令init=1，</em>binary_op=multiply）。</p>
-
-<h3>2. adjacent_difference</h3>
-
-<p>该算法用来计算区间 [first, last) 中相邻元素的差（或其他指定运算，结果[i]=当前元素[i]的值-前驱元素[i-1]的值），该算法也有两个版本，一个是指定运算为差，另一个传入仿函数(参数 _binary_op)指定具体运算，这里贴出第二个版本：</p>
-
-<p>```
-template <class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOperation>
-<em>OutputIterator
-__adjacent_difference(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
-
-<pre><code>                  _OutputIterator __result, _Tp*, _BinaryOperation __binary_op) {
-</code></pre>
-
-<p>  _Tp <strong>value = *</strong>first;
-  while (++<strong>first != </strong>last) { // 先 ++ ，再比较</p>
-
-<pre><code>_Tp __tmp = *__first; // 取第i+1个元素的值
-*++__result = __binary_op(__tmp, __value);
-__value = __tmp; // 保存第i个元素的值
-</code></pre>
-
-<p>  }
-  return ++<strong>result;
-}
-template <class _InputIterator, class _OutputIterator, class _BinaryOperation>
-<em>OutputIterator adjacent_difference(</em>InputIterator </strong>first, _InputIterator __last,</p>
-
-<pre><code>                _OutputIterator __result, _BinaryOperation __binary_op) {
-</code></pre>
-
-<p>  if (<strong>first == </strong>last) return <strong>result; // 区间为空，直接返回
-  *</strong>result = *<strong>first; // 第一个元素没有前驱，直接将当前值赋给结果
-  return </strong>adjacent_difference(<strong>first, </strong>last, __result,</p>
-
-<pre><code>                           __VALUE_TYPE(__first), __binary_op);
-</code></pre>
-
-<p>}
-```</p>
-
-<h3>3. inner_product</h3>
-
-<p>该算法实现区间 [first1, last1) 和区间 [first2, first2+(last1-first1) ) 的一般内积（generalized inner product），公式为$init = init+(<em>i) * (</em>(first2+(i-first1)))$同样需要提供 init 的值（理由同accumulate）。另外还有一个版本，提供两个仿函数，分别指定上面公式中的加法和乘法。第一个版本的代码如下：
-```
-template <class _InputIterator1, class _InputIterator2, class _Tp>
-<em>Tp inner_product(</em>InputIterator1 <strong>first1, _InputIterator1 </strong>last1,</p>
-
-<pre><code>              _InputIterator2 __first2, _Tp __init) {
-</code></pre>
-
-<p>  for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
-
-<pre><code>__init = __init + (*__first1 * *__first2);
-</code></pre>
-
-<p>  return __init;
-}
-```
-可以看到，这里其实没有判断第二个区间是否越界，所以在调用时需要我们自己注意，但一般来说计算内积的两个区间都是相同长度的。</p>
-
-<h3>4. partial_sum</h3>
-
-<p>该算法用来计算局部总和，将 <code>*first</code> 赋值给 <code>*result</code>，将 <code>*frist+*(first+1)</code> 赋值给 <code>*(result+1)</code>，依次类推，即有 <code>result[i]=sum(*first..*(first+i))</code>，这是默认的操作为加法的版本，还有一个版本可以通过仿函数指定操作，以下是默认版本：
-```
-template <class _InputIterator, class _OutputIterator, class _Tp>
-<em>OutputIterator __partial_sum(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
-
-<pre><code>          _OutputIterator __result, _Tp*) {
-</code></pre>
-
-<p>  _Tp <strong>value = *</strong>first;
-  while (++<strong>first != </strong>last) {</p>
-
-<pre><code>__value = __value + *__first;
-*++__result = __value; // result 先++，再提领、赋值
-</code></pre>
-
-<p>  }
-  return ++<strong>result;
-}
-template <class _InputIterator, class _OutputIterator>
-<em>OutputIterator partial_sum(</em>InputIterator </strong>first, _InputIterator __last,</p>
-
-<pre><code>        _OutputIterator __result){
-</code></pre>
-
-<p>  if (<strong>first == </strong>last) return <strong>result;
-  *</strong>result = *<strong>first; // 第一项直接赋值
-  return </strong>partial_sum(<strong>first, </strong>last, <strong>result, </strong>VALUE_TYPE(__first));
-}
-```</p>
-
-<h3>5. itoa</h3>
-
-<p>该算法不是C++/STL标准，主要作用是将区间 [first, last) 的值赋值为 value,value+1,value+2,... 如下：
-```
-template <class _ForwardIter, class _Tp>
-void iota(<em>ForwardIter __first, </em>ForwardIter <strong>last, _Tp </strong>value){
-  while (<strong>first != </strong>last)</p>
-
-<pre><code>*__first++ = __value++;
-</code></pre>
-
-<p>}
-```</p>
-
-<h3>6. power</h3>
-
-<p>该算法也不是C++/STL标准，作用在于实现 x 的 n 次方的计算，通过将n分解为2的幂来计算。还有一个版本是用户可以指定运算，而不一定是乘法。默认版本如下：
-```
-template <class _Tp, class _Integer, class _MonoidOperation>
-<em>Tp __power(</em>Tp <strong>x, _Integer </strong>n, _MonoidOperation <strong>opr){ // func1：幂方的具体实现
-  if (</strong>n == 0)</p>
-
-<pre><code>return identity_element(__opr);
-</code></pre>
-
-<p>  else {</p>
-
-<pre><code>while ((__n &amp; 1) == 0) { // 二进制末尾为0
-  __n &gt;&gt;= 1; // n/2
-  __x = __opr(__x, __x); // 乘方
-}
-_Tp __result = __x;
-__n &gt;&gt;= 1;
-while (__n != 0) {
-  __x = __opr(__x, __x); // 乘方
-  if ((__n &amp; 1) != 0) // 二进制末尾为1
-    __result = __opr(__result, __x); // 乘入结果
-  __n &gt;&gt;= 1;
-}
-return __result;
-</code></pre>
-
-<p>  }
-}
-template <class _Tp, class _Integer>
-inline <em>Tp __power(</em>Tp <strong>x, _Integer </strong>n){ // func2
-  return <strong>power(</strong>x, <strong>n, multiplies<_Tp>()); // 调用func3
-}
-template <class _Tp, class _Integer, class _MonoidOperation>
-inline <em>Tp power(</em>Tp </strong>x, <em>Integer __n, </em>MonoidOperation <strong>opr){ // func3
-  return </strong>power(<strong>x, </strong>n, <strong>opr); // 调用func1
-}
-template <class _Tp, class _Integer>
-inline <em>Tp power(</em>Tp </strong>x, _Integer <strong>n){
-  return </strong>power(<strong>x, </strong>n); // 调用func2
-}
-```
-饶了几道弯，主要看 func1实现即可。</p>
 ]]></content>
   </entry>
   

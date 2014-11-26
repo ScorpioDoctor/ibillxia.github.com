@@ -182,6 +182,74 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Sql Server数据库常用的命令语句</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-20T14:44:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2009</time>
+        
+         | <a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>1. 查看数据库的版本 </br>
+select @@version</p>
+
+
+
+
+<p>2. 查看数据库所在机器操作系统参数 </br>
+exec master..xp_msver</p>
+
+
+
+
+<p>3. 查看数据库启动的参数 </br>
+sp_configure</p>
+
+
+
+
+<p>4. 查看数据库启动时间 </br>
+select convert(varchar(30),login_time,120) from   master..sysprocesses where spid=1</br>
+查看数据库服务器名和实例名 </br>
+print &#8216;Server Name&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + convert(varchar(30),@@SERVERNAME) </br>
+print &#8216;Instance&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;: &#8217; + convert(varchar(30),@@SERVICENAME) </p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2009/06/05/io-buffer-in-c-language/">C语言输入输出缓冲区</a></h1>
     
     
