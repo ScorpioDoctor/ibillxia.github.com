@@ -182,6 +182,105 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-31T21:30:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_map.h</code>、<code>stl_multimap.h</code>、<code>stl_pair.h</code>、<code>map.h</code>、 <code>multimap.h</code>、 <code>map</code>  等文件。</p>
+
+<h2>1. map 简介</h2>
+
+<p>map 的特性是，所有元素都是键值对，用一个 pair 表示，pair 的第一个元素是键值（key），第二个元素是实值（value），map 不允许两个元素的键值相同。<br/>
+与 set 类似的，map 也不允许修改 key 的值，但不同的是可以修改 value 的值，因此 map 的迭代器既不是一种 constant iterators，也不是一种 mutable iterators。同样的，map的插入和删除操作不影响操作之前定义的迭代器的使用（被删除的那个元素除外）。<br/>
+与 set 不同的是，map 没有交、并、差等运算，只有插入、删除、查找、比较等基本操作。</p>
+
+<h2>2. map 的实现</h2>
+
+<p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _T1, class _T2&gt;
+</span><span class='line'>struct pair {
+</span><span class='line'>  typedef _T1 first_type;
+</span><span class='line'>  typedef _T2 second_type;
+</span><span class='line'>  _T1 first; // 两个成员 first 和 second
+</span><span class='line'>  _T2 second;
+</span><span class='line'>  pair() : first(_T1()), second(_T2()) {} // 构造函数
+</span><span class='line'>  pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {} // 拷贝构造函数
+</span><span class='line'>};
+</span><span class='line'>template &lt;class _T1, class _T2&gt;
+</span><span class='line'>inline bool operator==(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 相等比较
+</span><span class='line'>  return __x.first == __y.first && __x.second == __y.second; 
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _T1, class _T2&gt;
+</span><span class='line'>inline bool operator&lt;(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 大小比较
+</span><span class='line'>  return __x.first &lt; __y.first || (!(__y.first &lt; __x.first) && __x.second &lt; __y.second); 
+</span><span class='line'>}
+</span><span class='line'>template &lt;class _T1, class _T2&gt;
+</span><span class='line'>inline pair&lt;_T1, _T2&gt; make_pair(const _T1& __x, const _T2& __y) { // 创建一个 pair
+</span><span class='line'>  return pair&lt;_T1, _T2&gt;(__x, __y);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/">深入理解STL源码(4.2) 关联式容器之set和multiset</a></h1>
     
     
@@ -782,55 +881,6 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
   
     <footer>
       <a rel="full-article" href="/blog/2014/06/08/stl-source-insight-0-stl-overview/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-24T21:27:00+08:00" pubdate data-updated="true">May 24<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>概述</h2>
-
-<p>在编程过程中，一些特殊的时候，我们需要向一个函数传递另一个函数的地址（比如在快速排序中，我们需要传入两个元素大小比较的函数的地址），此时在C语言中一般是通过传递一个函数指针来实现。最近在看《STL源码剖析》一书，上面提到，在C++中其实可以通过另一种方式实现，那就是函数调用操作符<code>()</code> 。本文首先介绍一下C语言中函数指针的用法，然后再介绍C++中函数调用操作符的用法。</p>
-
-<h2>C语言中的函数指针</h2>
-
-<p>我们先直接看一个例子吧。这个例子比较全面而且简单，其中的函数指针是带参数且有返回值的函数指针，而且还有把函数指针作为参数来传递的代码。这个例子来自 <a href="http://blog.jobbole.com/44639/">jobbole伯乐在线</a>，代码如下：</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">Read on &rarr;</a>
     </footer>
   
 

@@ -182,6 +182,53 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/12/06/world-most-famous-musicians-and-there-works/">你不可不知道的音乐大师及其名作</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-06T20:17:00+08:00" pubdate data-updated="true">Dec 6<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/12/06/world-most-famous-musicians-and-there-works/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>豆瓣链接：<a href="http://book.douban.com/subject/1263924/">你不可不知道的音乐大师及其名作</a></p>
+
+<p>花了接近两个月的时间，终于把这本厚达623页的书看完了，这本书主要讲述了31位在音乐史上赫赫有名、贡献卓著的音乐大师的生平及其著名代表作，主要是西方古典音乐大师，包括我们耳熟能详的巴赫、海顿、莫扎特、贝多芬、舒伯特、肖邦等等，本文整理一下书中这些音乐大师及其代表作。</p>
+
+<p><strong>1、巴赫</strong>（约翰·塞巴斯蒂安·巴赫，1685-1750，音乐之父）：1685年3月21日，出生于今日德国埃森纳赫的一个音乐世家，10岁是父母双亡，也是在这个年龄就开始担任教堂的“女高音”。巴赫的职业生涯可以分为三个阶段——魏玛时代、科腾时代和莱比锡时代。魏玛时代的创作风格洋溢着青春的热情，科腾时代主要是管弦乐与室内乐的创作，而莱比锡时代主要是为宗教奉献的。<strong>代表作</strong>有《D大调前凑曲与赋格曲》、《A大调前凑曲与赋格曲》、《G小调赋格曲》、《C大调托卡塔、慢板与赋格曲》、《勃兰登堡协凑曲》、《管弦乐组曲》、《无伴凑大提琴组曲》、《无伴凑小提琴凑名曲和组曲》、《平均律钢琴曲集》、《约翰受难曲》、《马太受难曲》等。我个人比较喜欢的还是他的《E调前奏曲》、《B小调帕蒂塔 - Ⅵ 布列舞曲》、《G大调小步舞曲》和《布兰登堡舞曲》等。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/06/world-most-famous-musicians-and-there-works/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/11/26/insight-into-stl-archive/">深入理解STL源码系列文章归档</a></h1>
     
     
@@ -771,105 +818,6 @@ $(document).ready(function(){
   
     <footer>
       <a rel="full-article" href="/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-08-31T21:30:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2014</time>
-        
-         | <a href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_map.h</code>、<code>stl_multimap.h</code>、<code>stl_pair.h</code>、<code>map.h</code>、 <code>multimap.h</code>、 <code>map</code>  等文件。</p>
-
-<h2>1. map 简介</h2>
-
-<p>map 的特性是，所有元素都是键值对，用一个 pair 表示，pair 的第一个元素是键值（key），第二个元素是实值（value），map 不允许两个元素的键值相同。<br/>
-与 set 类似的，map 也不允许修改 key 的值，但不同的是可以修改 value 的值，因此 map 的迭代器既不是一种 constant iterators，也不是一种 mutable iterators。同样的，map的插入和删除操作不影响操作之前定义的迭代器的使用（被删除的那个元素除外）。<br/>
-与 set 不同的是，map 没有交、并、差等运算，只有插入、删除、查找、比较等基本操作。</p>
-
-<h2>2. map 的实现</h2>
-
-<p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>struct pair {
-</span><span class='line'>  typedef _T1 first_type;
-</span><span class='line'>  typedef _T2 second_type;
-</span><span class='line'>  _T1 first; // 两个成员 first 和 second
-</span><span class='line'>  _T2 second;
-</span><span class='line'>  pair() : first(_T1()), second(_T2()) {} // 构造函数
-</span><span class='line'>  pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {} // 拷贝构造函数
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline bool operator==(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 相等比较
-</span><span class='line'>  return __x.first == __y.first && __x.second == __y.second; 
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline bool operator&lt;(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 大小比较
-</span><span class='line'>  return __x.first &lt; __y.first || (!(__y.first &lt; __x.first) && __x.second &lt; __y.second); 
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline pair&lt;_T1, _T2&gt; make_pair(const _T1& __x, const _T2& __y) { // 创建一个 pair
-</span><span class='line'>  return pair&lt;_T1, _T2&gt;(__x, __y);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">Read on &rarr;</a>
     </footer>
   
 
