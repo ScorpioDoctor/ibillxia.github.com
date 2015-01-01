@@ -182,6 +182,69 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">深入理解STL源码(4.4) 关联式容器之hashtable</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-13T21:30:00+08:00" pubdate data-updated="true">Sep 13<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文涉及到 SGI STL 源码的文件主要是 <code>stl_hashtable.h</code>、<code>stl_hash_fun.h</code> 等文件。</p>
+
+<h2>1. hashtable 简介</h2>
+
+<p>在数据结构中我们知道，有种数据结构的插入、删除、查找等操作的性能是常数时间，但需要比元素个数更多的空间，这种数据结构就是哈希表。哈希表的基本思想是，将数据存储在与其数值大小相关的地方，比如对该数取模，然后存储在以余数为下表的数组中。但这样会出现一个问题，就是可能会有多个数据被映射到同一个存储位置，即出现了所谓的“碰撞”。哈希表的主要内容就是解决“碰撞”问题，一般而言有以下几种方法：线性探测、二次探测、开链等。</p>
+
+<h4>线性探测</h4>
+
+<p>简单而言，就是在出现“碰撞”后，寻找当前位置以后的空档，然后存入。如果找到尾部都没有空档，则从头部重新开始找。只要空间大小比元素个数大，总能找到的。相应的，元素的查找和删除也与普通的数组不同，查找如果直接定位到相应位置并找到或是空档，就可以确定存在或不存在，而如果定位到当前位置非空且与待查找的元素不同，则要依序寻找后续位置的元素，直到找到或移到了空档。删除则是采用懒惰删除策略，即只标记删除记号，实际删除操作则待表格重新整理时再进行。</p>
+
+<h4>二次探测</h4>
+
+<p>与线性探测类似，但向后寻找的策略是探测距当前位置为平方数的位置，即 $index = H+i<em><sup>{2}$</sup> </em>。但这样会有一个问题，那就是能否保证每次探测的是不同的位置，即是否存在某次插入时，探测完一圈后回到自己而出现死循环。</p>
+
+<h4>开链</h4>
+
+<p>这种方法是将出现冲突的元素放在一个链表中，而哈希表中只存储这些链表的首地址。SGI STL中就是使用这种方法来解决“碰撞”的。</p>
+
+<h2>2. hashtable 的数据结构</h2>
+
+<p>由于使用开链的方法解决冲突，所以要维护两种数据结构，一个是 hash table，在 STL 中称为 buckets，用 vector 作为容器；另一个是链表，这里没有使用 list 或 slist 这些现成的数据结构，而是使用自定义 <code>__hashtable_node</code> ，相关定义具体如下：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></h1>
     
     
@@ -820,73 +883,6 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/08/stl-source-insight-0-stl-overview/">深入理解STL源码(0) STL简介</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-08T21:39:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2014</time>
-        
-         | <a href="/blog/2014/06/08/stl-source-insight-0-stl-overview/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>0. 两个问题</h2>
-
-<p>在介绍 STL 之前，先讨论两个问题：为什么要剖析 STL 源代码？如何剖析 STL 源代码？</p>
-
-<p>首先是为什么要剖析 STL 源代码呢？ 有人会说，会使用 STL 不就性了，为什么一定要知道其内部的机制呢？ 对于大多数程序猿来说，确实没有必要去阅读或分析 STL 的源代码，但如果要想提升自己的编程修养，要相让自己编码的思想境界提升一个档次，还是很有必要读读 STL 这样的大师制作。阅读和分析之后，你会明白STL是如何分配和管理内存的（特别是对vector、string、deque等动态数据结构），是如何实现各种数据结构（特别是红黑树等比较复杂的数据结构）和相关算法的，又是如何将这些组件融合起来实现高内聚低耦合的。或许用《洋葱》的几句歌词获取最能表达你的明白这些问题之后的心情：</p>
-
-<blockquote><p>如果你愿意一层一层<br/>
-一层的剥开我的心<br/>
-你会发现<br/>
-你会讶异<br/>
-你是我<br/>
-最压抑<br/>
-最深处的秘密</p>
-
-<p>如果你愿意一层一层<br/>
-一层的剥开我的心<br/>
-你会鼻酸<br/>
-你会流泪<br/>
-只要你能<br/>
-听到我<br/>
-看到我的全心全意</p></blockquote>
-
-<p>那么，如何剖析源代码呢？其实歌词中已经蕴含这答案了，那就是“一层一层一层的剥开”。当然，我这里说的一层一层不是说要一个函数step in 到底，而是说要按层次解读：首先从最外层结构框架着手，从整体上把握；然后从细处着笔，一个组件一个组件的来分析；在分析每个组件时，也是先把握改组件的全貌及其与其他组件的关联关系，然后在深入组件内部，了解其实现。在阅读和分析源码的过程中，首先要理解其功能，然后在看它是如何实现的。切忌纠缠于代码的细节或陷入源码而不能自拔，即坠入“不识庐山真面目，只缘身在此山中”的深渊！</p>
-
-<p>因此，本文的目的在于，站在STL这座大山的山顶，一窥其全貌。随后的文章则深入每个组件，细细观赏每一处的风景。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/08/stl-source-insight-0-stl-overview/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/3/">&larr; Older</a></li>
@@ -910,7 +906,7 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 </p>
 <hr>
 <p>
-  Copyright &copy; 2009 - 2014 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 
