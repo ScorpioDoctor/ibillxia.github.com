@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -497,14 +485,16 @@ $(document).ready(function(){
 
 <p>首先下载适用于 Octopress 的 <a href="https://github.com/bkutil/bootstrap-theme">Bootstrap主题</a> 并解压缩到博客的 .theme 目录，然后安装：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake install['bootstrap']</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake install<span class="o">[</span><span class="s1">&#39;bootstrap&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>安装的过程中可能会提示有 sass 或其他依赖库的语法错误神马的，这是因为 sass 的版本过低，可以通过如下命令来跟新：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle update sass</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle update sass
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -625,20 +615,21 @@ $(document).ready(function(){
 
 <p>加减法最简单、最好理解了，设待交换的两个变量分别为 a 和 b ，首先将两者的和赋给 a ；然后将 a 与 b的差赋给 b ，这样 b 就是 a 原来的值了；最后再将 a 与 b 的差赋给 a ，这样 a 就是 b 原来的值了。具体代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline template &lt;class T&gt;
-</span><span class='line'>void xswap(T &a,T &b){
-</span><span class='line'>    a=a+b;
-</span><span class='line'>  //printf("a=%u\n",a);
-</span><span class='line'>    b=a-b;
-</span><span class='line'>    a=a-b;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">xswap</span><span class="p">(</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">//printf(&quot;a=%u\n&quot;,a);</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 

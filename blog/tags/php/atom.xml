@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: PHP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/php/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -599,10 +599,10 @@ exit;
     <link href="http://ibillxia.github.io/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail/"/>
     <updated>2010-08-04T21:38:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail</id>
-    <content type="html"><![CDATA[<p>call_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
+    <content type="html"><![CDATA[<p>call\_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 function a($b,$c)
 {</p>
 
@@ -614,7 +614,7 @@ echo $c;
 call_user_func('a', "111","222");
 call_user_func('a', "333","444");
 //显示 111 222 333 444
-{% endcodeblock %}</p>
+```</p>
 
 <!--more-->
 
@@ -622,7 +622,7 @@ call_user_func('a', "333","444");
 <p>调用类内部的方法比较奇怪，居然用的是array，不知道开发者是如何考虑的，当然省去了new，也是满有新意的:</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 class a {</p>
 
 <pre><code>function b($c) 
@@ -634,12 +634,12 @@ class a {</p>
 <p>}
 call_user_func(array("a", "b"),"111");
 //显示 111
-{% endcodeblock %}</p>
+```</p>
 
 <p>call_user_func_array函数和call_user_func很相似，只不过是换了一种方式传递了参数，让参数的结构更清晰:</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 unction a($b, $c)
 {</p>
 
@@ -650,12 +650,12 @@ echo $c;
 <p>}
 call_user_func_array('a', array("111", "222"));
 //显示 111 222
-{% endcodeblock %}</p>
+```</p>
 
 <p>call_user_func_array函数也可以调用类内部的方法的</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 Class ClassA {</p>
 
 <pre><code>function bc($b, $c) {
@@ -667,12 +667,12 @@ Class ClassA {</p>
 <p>}
 call_user_func_array(array('ClassA','bc'), array("111", "222"));
 //显示 333
-{% endcodeblock %}</p>
+```</p>
 
 <p>call_user_func函数和call_user_func_array函数都支持引用，这让他们和普通的函数调用更趋于功能一致:</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 function a(&amp;$b)
 {</p>
 
@@ -685,12 +685,12 @@ call_user_func('a', &amp;$c);
 echo $c;//显示 1
 call_user_func_array('a', array(&amp;$c));
 echo $c;//显示 2
-{% endcodeblock %}</p>
+```</p>
 
 <p>一个可以用于调试输出的例子：</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 function debug($var, $val)
 {</p>
 
@@ -711,12 +711,12 @@ $host = $_SERVER["SERVER_NAME"];</p>
 <p>call_user_func_array('debug', array("host", $host));
 call_user_func_array('debug', array("c", $c));
 call_user_func_array('debug', array("<em>POST", $</em>POST));
-{% endcodeblock %}</p>
+```</p>
 
 <p>另外，如果和伪重载结合，还可以这样用：</p>
 
 
-<p>{% codeblock %}
+<p>``` php
 function otest1 ($a)
 {</p>
 
@@ -752,7 +752,7 @@ call_user_func_array( 'otest'.$num, $args );
 <p>}</p>
 
 <p>otest(1,2);  //调用第一个函数，输出：一个参数
-{% endcodeblock %}</p>
+```</p>
 ]]></content>
   </entry>
   

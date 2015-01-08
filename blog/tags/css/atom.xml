@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: CSS | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/css/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -26,7 +26,7 @@
 
 <p>相关的 HTML 代码很简单，在source/_include/custom/footer.html中添加如下代码：</p>
 
-<p>```</p>
+<p>``` html</p>
 
 <p id = "back-top">
     <a href="#top"><span></span>Back to Top</a>
@@ -40,7 +40,7 @@
 
 <p>对应的 CSS 样式的设置如下：（这段代码同样的放在source/_include/custom/footer.html文件中）</p>
 
-<p>```</p>
+<p>``` css</p>
 
 
 
@@ -57,7 +57,7 @@
 
 <p>HTML 和 CSS 样式设置好了之后，最后就是添加 JavaScript 事件响应代码了，这里是基于 jQuery 实现的。代码如下：（这段代码还是放在source/_include/custom/footer.html文件中）</p>
 
-<p>```</p>
+<p>``` js</p>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 

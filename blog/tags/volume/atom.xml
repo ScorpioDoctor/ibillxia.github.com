@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Volume | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/volume/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -50,7 +50,7 @@
 <p>音量计算的Python实现如下：</p>
 
 
-<p>{% codeblock %}
+<p>``` py3
 import math
 import numpy as np</p>
 
@@ -84,12 +84,12 @@ for i in range(frameNum):
 return volume
 </code></pre>
 
-<p>{% endcodeblock %}</p>
+<p>```</p>
 
 <p>对于给定语音文件aeiou.wav，利用上面的函数计算音量曲线的代码如下：</p>
 
 
-<p>{% codeblock %}
+<p>``` py3
 import wave
 import pylab as pl
 import numpy as np
@@ -130,7 +130,7 @@ pl.plot(time2, volume12, c="g")
 pl.ylabel("Decibel(dB)")
 pl.xlabel("time (seconds)")
 pl.show()
-{% endcodeblock %}</p>
+```</p>
 
 <p>运行以上程序得到下图：
 <center>{% img /images/2013/IMAG2013051501.png %}</center>

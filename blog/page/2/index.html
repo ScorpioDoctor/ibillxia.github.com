@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -282,7 +270,7 @@ $(document).ready(function(){
 
 <p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -303,27 +291,28 @@ $(document).ready(function(){
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>struct pair {
-</span><span class='line'>  typedef _T1 first_type;
-</span><span class='line'>  typedef _T2 second_type;
-</span><span class='line'>  _T1 first; // 两个成员 first 和 second
-</span><span class='line'>  _T2 second;
-</span><span class='line'>  pair() : first(_T1()), second(_T2()) {} // 构造函数
-</span><span class='line'>  pair(const _T1& __a, const _T2& __b) : first(__a), second(__b) {} // 拷贝构造函数
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline bool operator==(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 相等比较
-</span><span class='line'>  return __x.first == __y.first && __x.second == __y.second; 
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline bool operator&lt;(const pair&lt;_T1, _T2&gt;& __x, const pair&lt;_T1, _T2&gt;& __y) { // 大小比较
-</span><span class='line'>  return __x.first &lt; __y.first || (!(__y.first &lt; __x.first) && __x.second &lt; __y.second); 
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _T1, class _T2&gt;
-</span><span class='line'>inline pair&lt;_T1, _T2&gt; make_pair(const _T1& __x, const _T2& __y) { // 创建一个 pair
-</span><span class='line'>  return pair&lt;_T1, _T2&gt;(__x, __y);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_T1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_T2</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">pair</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_T1</span> <span class="n">first_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_T2</span> <span class="n">second_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_T1</span> <span class="n">first</span><span class="p">;</span> <span class="c1">// 两个成员 first 和 second</span>
+</span><span class='line'>  <span class="n">_T2</span> <span class="n">second</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">pair</span><span class="p">()</span> <span class="o">:</span> <span class="n">first</span><span class="p">(</span><span class="n">_T1</span><span class="p">()),</span> <span class="n">second</span><span class="p">(</span><span class="n">_T2</span><span class="p">())</span> <span class="p">{}</span> <span class="c1">// 构造函数</span>
+</span><span class='line'>  <span class="n">pair</span><span class="p">(</span><span class="k">const</span> <span class="n">_T1</span><span class="o">&amp;</span> <span class="n">__a</span><span class="p">,</span> <span class="k">const</span> <span class="n">_T2</span><span class="o">&amp;</span> <span class="n">__b</span><span class="p">)</span> <span class="o">:</span> <span class="n">first</span><span class="p">(</span><span class="n">__a</span><span class="p">),</span> <span class="n">second</span><span class="p">(</span><span class="n">__b</span><span class="p">)</span> <span class="p">{}</span> <span class="c1">// 拷贝构造函数</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_T1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_T2</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 相等比较</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="n">__y</span><span class="p">.</span><span class="n">first</span> <span class="o">&amp;&amp;</span> <span class="n">__x</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="n">__y</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_T1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_T2</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span> <span class="k">const</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 大小比较</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;</span> <span class="n">__y</span><span class="p">.</span><span class="n">first</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">__y</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;</span> <span class="n">__x</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">__x</span><span class="p">.</span><span class="n">second</span> <span class="o">&lt;</span> <span class="n">__y</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_T1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_T2</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;</span> <span class="n">make_pair</span><span class="p">(</span><span class="k">const</span> <span class="n">_T1</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">,</span> <span class="k">const</span> <span class="n">_T2</span><span class="o">&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 创建一个 pair</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">_T1</span><span class="p">,</span> <span class="n">_T2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">__x</span><span class="p">,</span> <span class="n">__y</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
@@ -488,20 +477,21 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 
 <p>要实现priority queue的功能，binary search tree（BST）也可以作为其底层机制，但这样的话元素的插入就需要O(logN)的平均复杂度，而且要求元素的大小比较随机，才能使树比较平衡。而binary heap是一种完全二叉树的结构，而且可以使用vector来存储：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector&lt;_Tp&gt;), 
-</span><span class='line'>          class _Compare __STL_DEPENDENT_DEFAULT_TMPL(less&lt;typename _Sequence::value_type&gt;) &gt;
-</span><span class='line'>class priority_queue { // in stl_queue.h 文件中
-</span><span class='line'>protected:
-</span><span class='line'>  _Sequence c; // 使用vector作为数据存储的容器
-</span><span class='line'>  _Compare comp;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Sequence</span> <span class="n">__STL_DEPENDENT_DEFAULT_TMPL</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">),</span>
+</span><span class='line'>          <span class="k">class</span> <span class="nc">_Compare</span> <span class="n">__STL_DEPENDENT_DEFAULT_TMPL</span><span class="p">(</span><span class="n">less</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_Sequence</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">priority_queue</span> <span class="p">{</span> <span class="c1">// in stl_queue.h 文件中</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Sequence</span> <span class="n">c</span><span class="p">;</span> <span class="c1">// 使用vector作为数据存储的容器</span>
+</span><span class='line'>  <span class="n">_Compare</span> <span class="n">comp</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>
@@ -560,7 +550,7 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 
 <p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -575,21 +565,22 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
-</span><span class='line'>  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp** _M_map; // 指向缓冲区的指针数组首地址
-</span><span class='line'>  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
-</span><span class='line'>  iterator _M_start; // 指向第一个缓冲区的第一个元素
-</span><span class='line'>  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
-</span><span class='line'>};
-</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
-</span><span class='line'>protected:  // Internal typedefs
-</span><span class='line'>  typedef pointer* _Map_pointer;
-</span><span class='line'>  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="n">size_t</span> <span class="n">__deque_buf_size</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__size</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 计算缓冲区的大小</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__size</span> <span class="o">&lt;</span> <span class="mi">512</span> <span class="o">?</span> <span class="n">size_t</span><span class="p">(</span><span class="mi">512</span> <span class="o">/</span> <span class="n">__size</span><span class="p">)</span> <span class="o">:</span> <span class="n">size_t</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">_Deque_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">**</span> <span class="n">_M_map</span><span class="p">;</span> <span class="c1">// 指向缓冲区的指针数组首地址</span>
+</span><span class='line'>  <span class="n">size_t</span> <span class="n">_M_map_size</span><span class="p">;</span>  <span class="c1">// 指向缓冲区的指针数组的大小</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">_M_start</span><span class="p">;</span> <span class="c1">// 指向第一个缓冲区的第一个元素</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">_M_finish</span><span class="p">;</span> <span class="c1">// 指向最后一个缓冲区的最后一个元素</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">deque</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Deque_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>  <span class="c1">// Internal typedefs</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">pointer</span><span class="o">*</span> <span class="n">_Map_pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_buffer_size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__deque_buf_size</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">));</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 </div>
@@ -643,7 +634,7 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 
 <p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -661,24 +652,25 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_node_base {
-</span><span class='line'>  _List_node_base* _M_next;
-</span><span class='line'>  _List_node_base* _M_prev;
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>struct _List_node : public _List_node_base {  // node 的定义
-</span><span class='line'>  _Tp _M_data;
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>class _List_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
-</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; {
-</span><span class='line'>public:
-</span><span class='line'>  typedef _List_node&lt;_Tp&gt; _Node;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">_List_node_base</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">_M_next</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">_M_prev</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">_List_node</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_List_node_base</span> <span class="p">{</span>  <span class="c1">// node 的定义</span>
+</span><span class='line'>  <span class="n">_Tp</span> <span class="n">_M_data</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_List_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_node</span><span class="p">;</span> <span class="c1">// 只要一个指针就可以表示整个双向链表</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span> <span class="o">=</span> <span class="n">__STL_DEFAULT_ALLOCATOR</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">list</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_List_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="n">_Node</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 </div>
@@ -736,7 +728,7 @@ SGI STL在标准STL之外，还提供了一类关联式容器——hash table（
 <strong>vector 的数据结构</strong><br/>
 vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -745,15 +737,16 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>class _Vector_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp* _M_start;
-</span><span class='line'>  _Tp* _M_finish;
-</span><span class='line'>  _Tp* _M_end_of_storage;
-</span><span class='line'>};
-</span><span class='line'>class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_Vector_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_start</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_end_of_storage</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">vector</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Vector_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span><span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 </div>
@@ -860,14 +853,15 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 
 <p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Foo { ... };
-</span><span class='line'>Foo* pf = new Foo;
-</span><span class='line'>...
-</span><span class='line'>delete pf;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+</span><span class='line'><span class="n">Foo</span><span class="o">*</span> <span class="n">pf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Foo</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="k">delete</span> <span class="n">pf</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Allocator 的作用相当于operator new 和operator delete的功能，只是它考虑得更加细致周全。SGI STL 中考虑到了内存分配失败的异常处理，内置轻量级内存池（主要用于处理小块内存的分配，应对内存碎片问题）实现， 多线程中的内存分配处理（主要是针对内存池的互斥访问）等，本文就主要分析 SGI STL 中在这三个方面是如何处理的。在介绍着三个方面之前，我们先来看看 Allocator的标准接口。</p>

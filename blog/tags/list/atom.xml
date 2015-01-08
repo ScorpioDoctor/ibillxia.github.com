@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: list | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/list/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -27,7 +27,7 @@
 <h2>2. list 的数据结构</h2>
 
 <p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：<br/>
-<code>
+<code>cpp
 struct _List_node_base {
   _List_node_base* _M_next;
   _List_node_base* _M_prev;
@@ -56,7 +56,7 @@ public:
 <h2>3. list 的配置器</h2>
 
 <p>list缺省使用 alloc （即 <code>__STL_DEFAULT_ALLOCATOR</code>） 作为空间配置器，并据此定义了另外一个 <code>list_node_allocator</code> ，并定义了<code>_M_get_node</code>和<code>_M_put_node</code>  两个函数，分别用于分配和释放空间，为的是更方便的以节点大小为配置单位。除此之外，还定义了两个<code>_M_create_node</code> 函数，在分配空间的同时调用元素的构建函数对其进行初始化：<br/>
-```
+``` cpp
 template <class _Tp, class _Alloc>
 class <em>List_base {
 protected:
@@ -92,7 +92,7 @@ return __p;
 <h2>4. list 的迭代器</h2>
 
 <p>由于list的节点在内存中不一定连续存储，其迭代器不能像vector那样使用普通指针了，由于list是双向的链表，迭代器必须具备前移、后移的能力，所以它的迭代器是BidirectionalIterators，即双向的可增可减的，以下是list的迭代器的设计：<br/>
-<code>
+<code>cpp
 struct _List_iterator_base {
   typedef bidirectional_iterator_tag iterator_category;
   _List_node_base* _M_node;
@@ -116,7 +116,7 @@ list有一个重要性质，插入操作（insert）和接合操作（splice）�
 <p>list的常用操作有很多，例如最基本的<code>push_front</code>、<code>push_back</code>、<code>pop_front</code>、<code>pop_back</code> 等，这里主要介绍一下<code>clear</code>、<code>remove</code>、<code>unique</code>、<code>transfer</code> 这几个。<br/>
 <strong>（1）clear</strong><br/>
 clear 函数的作用是清楚整个list的所有节点。<br/>
-```
+``` cpp
 void clear() { <em>Base::clear(); }
 void </em>List_base&lt;<em>Tp,</em>Alloc>::clear() {
   <em>List_node<_Tp>* __cur = (</em>List_node<_Tp>*) <em>M_node-></em>M_next;
@@ -135,7 +135,7 @@ _M_put_node(__tmp); // 释放当前节点的空间
 <code>
 **（2）remove**  
 remove 函数的作用是将数值为value的所有元素移除。  
-</code>
+</code> cpp
 void list&lt;<em>Tp, </em>Alloc>::remove(const _Tp&amp; <strong>value) {
   iterator </strong>first = begin();
   iterator <strong>last = end();
@@ -152,7 +152,7 @@ __first = __next;
 <code>
 **（3）unique**  
 unique函数的作用是移除相同的**连续**元素，只有“连续而且相同”的元素，才回被移除到只剩一个。  
-</code>
+</code> cpp
 void list&lt;<em>Tp, </em>Alloc>::unique() {
   iterator <strong>first = begin();
   iterator </strong>last = end();
@@ -172,7 +172,7 @@ __next = __first;
 <code>
 **（4）transfer**  
 transfer的作用是将 [first, last) 内的所有元素移动到 position 之前。它是一个私有函数，它为其他常用操作如 splice、sort、merge 等的实现提供了便利。  
-</code>
+</code> cpp
 protected:
   void transfer(iterator <strong>position, iterator </strong>first, iterator __last) {</p>
 

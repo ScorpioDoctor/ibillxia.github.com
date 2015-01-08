@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -244,7 +232,7 @@ $(document).ready(function(){
 
 <p>硬件信息概要，要加sudo使用根权限并输入密码，不加short参数可以查看详细信息</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -270,37 +258,38 @@ $(document).ready(function(){
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ sudo lshw -short 
-</span><span class='line'>[sudo] password for ibillxia:         
-</span><span class='line'>H/W path    Device   Class      Description
-</span><span class='line'>===========================================
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>sudo lshw -short
+</span><span class='line'><span class="o">[</span>sudo<span class="o">]</span> password <span class="k">for </span>ibillxia:
+</span><span class='line'>H/W path    Device   Class      <span class="nv">Description</span>
+</span><span class='line'><span class="o">===========================================</span>
 </span><span class='line'>                     system     Computer
 </span><span class='line'>/0                   bus        Motherboard
 </span><span class='line'>/0/0                 memory     15GiB System memory
-</span><span class='line'>/0/1                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/2                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/3                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/4                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/5                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/6                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/7                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/8                 processor  Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
-</span><span class='line'>/0/100               bridge     440FX - 82441FX PMC [Natoma]
-</span><span class='line'>/0/100/1             bridge     82371SB PIIX3 ISA [Natoma/Triton II]
-</span><span class='line'>/0/100/1.1           storage    82371SB PIIX3 IDE [Natoma/Triton II]
-</span><span class='line'>/0/100/1.2           bus        82371SB PIIX3 USB [Natoma/Triton II]
+</span><span class='line'>/0/1                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/2                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/3                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/4                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/5                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/6                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/7                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/8                 processor  Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>/0/100               bridge     440FX - 82441FX PMC <span class="o">[</span>Natoma<span class="o">]</span>
+</span><span class='line'>/0/100/1             bridge     82371SB PIIX3 ISA <span class="o">[</span>Natoma/Triton II<span class="o">]</span>
+</span><span class='line'>/0/100/1.1           storage    82371SB PIIX3 IDE <span class="o">[</span>Natoma/Triton II<span class="o">]</span>
+</span><span class='line'>/0/100/1.2           bus        82371SB PIIX3 USB <span class="o">[</span>Natoma/Triton II<span class="o">]</span>
 </span><span class='line'>/0/100/1.3           bridge     82371AB/EB/MB PIIX4 ACPI
 </span><span class='line'>/0/100/2             display    GD 5446
 </span><span class='line'>/0/100/3             network    Virtio network device
 </span><span class='line'>/0/100/4             storage    Virtio block device
 </span><span class='line'>/0/100/5             memory     RAM memory
 </span><span class='line'>/1          eth0     network    Ethernet interface
-</span><span class='line'>/2          gretap0  network    Ethernet interface</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>/2          gretap0  network    Ethernet interface
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>查看cpu信息，E5-2630 8核2.30GHz，本文只摘取第1个核的信息</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -327,12 +316,12 @@ $(document).ready(function(){
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ cat /proc/cpuinfo 
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>cat /proc/cpuinfo
 </span><span class='line'>processor       : 0
 </span><span class='line'>vendor_id       : GenuineIntel
 </span><span class='line'>cpu family      : 6
 </span><span class='line'>model           : 45
-</span><span class='line'>model name      : Intel(R) Xeon(R) CPU E5-2630 0 @ 2.30GHz
+</span><span class='line'>model name      : Intel<span class="o">(</span>R<span class="o">)</span> Xeon<span class="o">(</span>R<span class="o">)</span> CPU E5-2630 0 @ 2.30GHz
 </span><span class='line'>stepping        : 7
 </span><span class='line'>microcode       : 0x1
 </span><span class='line'>cpu MHz         : 2299.998
@@ -353,12 +342,13 @@ $(document).ready(function(){
 </span><span class='line'>clflush size    : 64
 </span><span class='line'>cache_alignment : 64
 </span><span class='line'>address sizes   : 40 bits physical, 48 bits virtual
-</span><span class='line'>power management:</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>power management:
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>查看内存信息，共16GB内存</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -402,7 +392,7 @@ $(document).ready(function(){
 <span class='line-number'>42</span>
 <span class='line-number'>43</span>
 <span class='line-number'>44</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ cat /proc/meminfo                                                                                                                                                                                                                             
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>cat /proc/meminfo
 </span><span class='line'>MemTotal:       16433708 kB
 </span><span class='line'>MemFree:         8506472 kB
 </span><span class='line'>Buffers:          332884 kB
@@ -410,10 +400,10 @@ $(document).ready(function(){
 </span><span class='line'>SwapCached:            0 kB
 </span><span class='line'>Active:          3936496 kB
 </span><span class='line'>Inactive:        2222980 kB
-</span><span class='line'>Active(anon):    2093920 kB
-</span><span class='line'>Inactive(anon):    10856 kB
-</span><span class='line'>Active(file):    1842576 kB
-</span><span class='line'>Inactive(file):  2212124 kB
+</span><span class='line'>Active<span class="o">(</span>anon<span class="o">)</span>:    2093920 kB
+</span><span class='line'>Inactive<span class="o">(</span>anon<span class="o">)</span>:    10856 kB
+</span><span class='line'>Active<span class="o">(</span>file<span class="o">)</span>:    1842576 kB
+</span><span class='line'>Inactive<span class="o">(</span>file<span class="o">)</span>:  2212124 kB
 </span><span class='line'>Unevictable:        5552 kB
 </span><span class='line'>Mlocked:            5552 kB
 </span><span class='line'>SwapTotal:             0 kB
@@ -445,24 +435,26 @@ $(document).ready(function(){
 </span><span class='line'>Hugepagesize:       2048 kB
 </span><span class='line'>DirectMap4k:      245748 kB
 </span><span class='line'>DirectMap2M:     7094272 kB
-</span><span class='line'>DirectMap1G:     9437184 kB</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>DirectMap1G:     9437184 kB
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>硬盘测速，才219kB/s，不是一般的慢啊</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ dd if=/dev/zero of=test bs=64k count=2k oflag=dsync
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span><span class="nb">test </span><span class="nv">bs</span><span class="o">=</span>64k <span class="nv">count</span><span class="o">=</span>2k <span class="nv">oflag</span><span class="o">=</span>dsync
 </span><span class='line'>2048+0 records in
 </span><span class='line'>2048+0 records out
-</span><span class='line'>134217728 bytes (134 MB) copied, 612.942 s, 219 kB/s</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>134217728 bytes <span class="o">(</span>134 MB<span class="o">)</span> copied, 612.942 s, 219 kB/s
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>网速测试，一般般</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -497,41 +489,42 @@ $(document).ready(function(){
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ ping www.github.com  # 测试1
-</span><span class='line'>PING github.com (192.30.252.129) 56(84) bytes of data.
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=1 ttl=54 time=73.2 ms
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=2 ttl=54 time=75.9 ms
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=3 ttl=54 time=72.4 ms
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=4 ttl=54 time=72.3 ms
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=5 ttl=54 time=66.2 ms
-</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com (192.30.252.129): icmp_req=6 ttl=54 time=66.1 ms
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>ping www.github.com  <span class="c"># 测试1</span>
+</span><span class='line'>PING github.com <span class="o">(</span>192.30.252.129<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>1 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>73.2 ms
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>2 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>75.9 ms
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>3 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>72.4 ms
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>4 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>72.3 ms
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>5 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>66.2 ms
+</span><span class='line'>64 bytes from ip1b-lb3-prd.iad.github.com <span class="o">(</span>192.30.252.129<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>6 <span class="nv">ttl</span><span class="o">=</span>54 <span class="nb">time</span><span class="o">=</span>66.1 ms
 </span><span class='line'>^C
 </span><span class='line'>--- github.com ping statistics ---
-</span><span class='line'>6 packets transmitted, 6 received, 0% packet loss, time 5001ms
-</span><span class='line'>rtt min/avg/max/mdev = 66.117/71.077/75.947/3.656 ms
-</span><span class='line'>ibillxia@vm-0:~$ ping www.stackoverflow.com    # 测试2
-</span><span class='line'>PING stackoverflow.com (198.252.206.140) 56(84) bytes of data.
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=1 ttl=49 time=76.1 ms
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=2 ttl=49 time=88.4 ms
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=3 ttl=49 time=75.1 ms
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=4 ttl=49 time=75.1 ms
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=5 ttl=49 time=75.3 ms
-</span><span class='line'>64 bytes from stackoverflow.com (198.252.206.140): icmp_req=6 ttl=49 time=82.6 ms
+</span><span class='line'>6 packets transmitted, 6 received, 0% packet loss, <span class="nb">time </span>5001ms
+</span><span class='line'>rtt min/avg/max/mdev <span class="o">=</span> 66.117/71.077/75.947/3.656 ms
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>ping www.stackoverflow.com    <span class="c"># 测试2</span>
+</span><span class='line'>PING stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>1 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>76.1 ms
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>2 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>88.4 ms
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>3 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>75.1 ms
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>4 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>75.1 ms
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>5 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>75.3 ms
+</span><span class='line'>64 bytes from stackoverflow.com <span class="o">(</span>198.252.206.140<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>6 <span class="nv">ttl</span><span class="o">=</span>49 <span class="nb">time</span><span class="o">=</span>82.6 ms
 </span><span class='line'>^C
 </span><span class='line'>--- stackoverflow.com ping statistics ---
-</span><span class='line'>6 packets transmitted, 6 received, 0% packet loss, time 5005ms
-</span><span class='line'>rtt min/avg/max/mdev = 75.130/78.813/88.437/5.061 ms
-</span><span class='line'>ibillxia@vm-0:~$ ping www.facebook.com     # 测试3
-</span><span class='line'>PING star.c10r.facebook.com (31.13.77.81) 56(84) bytes of data.
-</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com (31.13.77.81): icmp_req=1 ttl=81 time=153 ms
-</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com (31.13.77.81): icmp_req=2 ttl=81 time=153 ms
-</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com (31.13.77.81): icmp_req=3 ttl=81 time=153 ms
-</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com (31.13.77.81): icmp_req=4 ttl=81 time=153 ms
-</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com (31.13.77.81): icmp_req=5 ttl=81 time=153 ms
+</span><span class='line'>6 packets transmitted, 6 received, 0% packet loss, <span class="nb">time </span>5005ms
+</span><span class='line'>rtt min/avg/max/mdev <span class="o">=</span> 75.130/78.813/88.437/5.061 ms
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>ping www.facebook.com     <span class="c"># 测试3</span>
+</span><span class='line'>PING star.c10r.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span> 56<span class="o">(</span>84<span class="o">)</span> bytes of data.
+</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>1 <span class="nv">ttl</span><span class="o">=</span>81 <span class="nb">time</span><span class="o">=</span>153 ms
+</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>2 <span class="nv">ttl</span><span class="o">=</span>81 <span class="nb">time</span><span class="o">=</span>153 ms
+</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>3 <span class="nv">ttl</span><span class="o">=</span>81 <span class="nb">time</span><span class="o">=</span>153 ms
+</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>4 <span class="nv">ttl</span><span class="o">=</span>81 <span class="nb">time</span><span class="o">=</span>153 ms
+</span><span class='line'>64 bytes from edge-star-shv-06-sjc1.facebook.com <span class="o">(</span>31.13.77.81<span class="o">)</span>: <span class="nv">icmp_req</span><span class="o">=</span>5 <span class="nv">ttl</span><span class="o">=</span>81 <span class="nb">time</span><span class="o">=</span>153 ms
 </span><span class='line'>^C
 </span><span class='line'>--- star.c10r.facebook.com ping statistics ---
-</span><span class='line'>6 packets transmitted, 5 received, 16% packet loss, time 5006ms
-</span><span class='line'>rtt min/avg/max/mdev = 153.577/153.740/153.951/0.449 ms</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>6 packets transmitted, 5 received, 16% packet loss, <span class="nb">time </span>5006ms
+</span><span class='line'>rtt min/avg/max/mdev <span class="o">=</span> 153.577/153.740/153.951/0.449 ms
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -541,7 +534,7 @@ $(document).ready(function(){
 
 <p>查看linux内核版本、系统体系结构及预安装软件版本</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -550,20 +543,21 @@ $(document).ready(function(){
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ uname -a 
-</span><span class='line'>Linux vm-0.ibillxia.koding.kd.io 3.13.0-5-generic #20 SMP Mon Jan 20 19:56:12 PST 2014 x86_64 x86_64 x86_64 GNU/Linux
-</span><span class='line'>ibillxia@vm-0:~$ git --version
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>uname -a
+</span><span class='line'>Linux vm-0.ibillxia.koding.kd.io 3.13.0-5-generic <span class="c">#20 SMP Mon Jan 20 19:56:12 PST 2014 x86_64 x86_64 x86_64 GNU/Linux</span>
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>git --version
 </span><span class='line'>git version 1.8.1.2
-</span><span class='line'>ibillxia@vm-0:~$ mysql --version
-</span><span class='line'>mysql  Ver 14.14 Distrib 5.5.32, for debian-linux-gnu (x86_64) using readline 6.2
-</span><span class='line'>ibillxia@vm-0:~$ apache2 -v
-</span><span class='line'>Server version: Apache/2.2.22 (Ubuntu)
-</span><span class='line'>Server built:   Jul 12 2013 13:18:14</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>mysql --version
+</span><span class='line'>mysql  Ver 14.14 Distrib 5.5.32, <span class="k">for </span>debian-linux-gnu <span class="o">(</span>x86_64<span class="o">)</span> using readline 6.2
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>apache2 -v
+</span><span class='line'>Server version: Apache/2.2.22 <span class="o">(</span>Ubuntu<span class="o">)</span>
+</span><span class='line'>Server built:   Jul 12 2013 13:18:14
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>常用编程语言版本</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -602,45 +596,46 @@ $(document).ready(function(){
 <span class='line-number'>37</span>
 <span class='line-number'>38</span>
 <span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ibillxia@vm-0:~$ gcc --version
-</span><span class='line'>gcc (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
-</span><span class='line'>Copyright (C) 2012 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>gcc --version
+</span><span class='line'>gcc <span class="o">(</span>Ubuntu/Linaro 4.7.3-1ubuntu1<span class="o">)</span> 4.7.3
+</span><span class='line'>Copyright <span class="o">(</span>C<span class="o">)</span> 2012 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the <span class="nb">source </span><span class="k">for </span>copying conditions.  There is NO
+</span><span class='line'>warranty; not even <span class="k">for </span>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 </span><span class='line'>
-</span><span class='line'>ibillxia@vm-0:~$ g++ --version
-</span><span class='line'>g++ (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3
-</span><span class='line'>Copyright (C) 2012 Free Software Foundation, Inc.
-</span><span class='line'>This is free software; see the source for copying conditions.  There is NO
-</span><span class='line'>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>g++ --version
+</span><span class='line'>g++ <span class="o">(</span>Ubuntu/Linaro 4.7.3-1ubuntu1<span class="o">)</span> 4.7.3
+</span><span class='line'>Copyright <span class="o">(</span>C<span class="o">)</span> 2012 Free Software Foundation, Inc.
+</span><span class='line'>This is free software; see the <span class="nb">source </span><span class="k">for </span>copying conditions.  There is NO
+</span><span class='line'>warranty; not even <span class="k">for </span>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 </span><span class='line'>
-</span><span class='line'>ibillxia@vm-0:~$ java -version
-</span><span class='line'>java version "1.7.0_25"
-</span><span class='line'>OpenJDK Runtime Environment (IcedTea 2.3.10) (7u25-2.3.10-1ubuntu0.13.04.2)
-</span><span class='line'>OpenJDK 64-Bit Server VM (build 23.7-b01, mixed mode)
-</span><span class='line'>ibillxia@vm-0:~$ go version  
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>java -version
+</span><span class='line'>java version <span class="s2">&quot;1.7.0_25&quot;</span>
+</span><span class='line'>OpenJDK Runtime Environment <span class="o">(</span>IcedTea 2.3.10<span class="o">)</span> <span class="o">(</span>7u25-2.3.10-1ubuntu0.13.04.2<span class="o">)</span>
+</span><span class='line'>OpenJDK 64-Bit Server VM <span class="o">(</span>build 23.7-b01, mixed mode<span class="o">)</span>
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>go version
 </span><span class='line'>go version go1.1.1 linux/amd64
-</span><span class='line'>ibillxia@vm-0:~$ ruby --version
-</span><span class='line'>ruby 1.9.3p194 (2012-04-20 revision 35410) [x86_64-linux]
-</span><span class='line'>ibillxia@vm-0:~$ php --version
-</span><span class='line'>PHP 5.4.9-4ubuntu2.3 (cli) (built: Sep  4 2013 19:32:25) 
-</span><span class='line'>Copyright (c) 1997-2012 The PHP Group
-</span><span class='line'>Zend Engine v2.4.0, Copyright (c) 1998-2012 Zend Technologies
-</span><span class='line'>ibillxia@vm-0:~$ python --version                                                                                                                                                                                                                                     
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>ruby --version
+</span><span class='line'>ruby 1.9.3p194 <span class="o">(</span>2012-04-20 revision 35410<span class="o">)</span> <span class="o">[</span>x86_64-linux<span class="o">]</span>
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>php --version
+</span><span class='line'>PHP 5.4.9-4ubuntu2.3 <span class="o">(</span>cli<span class="o">)</span> <span class="o">(</span>built: Sep  4 2013 19:32:25<span class="o">)</span>
+</span><span class='line'>Copyright <span class="o">(</span>c<span class="o">)</span> 1997-2012 The PHP Group
+</span><span class='line'>Zend Engine v2.4.0, Copyright <span class="o">(</span>c<span class="o">)</span> 1998-2012 Zend Technologies
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>python --version
 </span><span class='line'>Python 2.7.4
-</span><span class='line'>ibillxia@vm-0:~$ perl --version
-</span><span class='line'> 
-</span><span class='line'>This is perl 5, version 14, subversion 2 (v5.14.2) built for x86_64-linux-gnu-thread-multi
-</span><span class='line'>(with 80 registered patches, see perl -V for more detail)
-</span><span class='line'> 
+</span><span class='line'>ibillxia@vm-0:~<span class="nv">$ </span>perl --version
+</span><span class='line'>
+</span><span class='line'>This is perl 5, version 14, subversion 2 <span class="o">(</span>v5.14.2<span class="o">)</span> built <span class="k">for </span>x86_64-linux-gnu-thread-multi
+</span><span class='line'><span class="o">(</span>with 80 registered patches, see perl -V <span class="k">for </span>more detail<span class="o">)</span>
+</span><span class='line'>
 </span><span class='line'>Copyright 1987-2011, Larry Wall
-</span><span class='line'> 
+</span><span class='line'>
 </span><span class='line'>Perl may be copied only under the terms of either the Artistic License or the
-</span><span class='line'>GNU General Public License, which may be found in the Perl 5 source kit.
-</span><span class='line'> 
-</span><span class='line'>Complete documentation for Perl, including FAQ lists, should be found on
-</span><span class='line'>this system using "man perl" or "perldoc perl".  If you have access to the
-</span><span class='line'>Internet, point your browser at http://www.perl.org/, the Perl Home Page.</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>GNU General Public License, which may be found in the Perl 5 <span class="nb">source </span>kit.
+</span><span class='line'>
+</span><span class='line'>Complete documentation <span class="k">for </span>Perl, including FAQ lists, should be found on
+</span><span class='line'>this system using <span class="s2">&quot;man perl&quot;</span> or <span class="s2">&quot;perldoc perl&quot;</span>.  If you have access to the
+</span><span class='line'>Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -703,7 +698,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

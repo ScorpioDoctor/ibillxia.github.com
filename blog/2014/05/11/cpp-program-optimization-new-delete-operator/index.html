@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -229,7 +217,7 @@ $(document).ready(function(){
 
 <p>一般来说 C++ 的运行库提供了默认的全局 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的实现，程序也可以用自定义的实现来取代运行库的实现。 下面是 C++ 标准中定义的 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的声明（位于 <code>include/c++/new</code> 文件中）：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -256,33 +244,34 @@ $(document).ready(function(){
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>namespace std {
-</span><span class='line'>  class bad_alloc : public exception {
-</span><span class='line'>    public:
-</span><span class='line'>      bad_alloc() throw() { }
-</span><span class='line'>      virtual ~bad_alloc() throw();
-</span><span class='line'>      virtual const char* what() const throw();
-</span><span class='line'>  };
-</span><span class='line'>  struct nothrow_t { };
-</span><span class='line'>  extern const nothrow_t nothrow;
-</span><span class='line'>  typedef void (*new_handler)();
-</span><span class='line'>  new_handler set_new_handler(new_handler) throw();
-</span><span class='line'>} // namespace std
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">bad_alloc</span> <span class="o">:</span> <span class="k">public</span> <span class="n">exception</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>      <span class="n">bad_alloc</span><span class="p">()</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>      <span class="k">virtual</span> <span class="o">~</span><span class="n">bad_alloc</span><span class="p">()</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'>      <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>  <span class="k">struct</span> <span class="n">nothrow_t</span> <span class="p">{</span> <span class="p">};</span>
+</span><span class='line'>  <span class="k">extern</span> <span class="k">const</span> <span class="n">nothrow_t</span> <span class="n">nothrow</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">new_handler</span><span class="p">)();</span>
+</span><span class='line'>  <span class="n">new_handler</span> <span class="n">set_new_handler</span><span class="p">(</span><span class="n">new_handler</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span> <span class="c1">// namespace std</span>
 </span><span class='line'>
-</span><span class='line'>void* operator new(std::size_t) throw (std::bad_alloc);  // (1)
-</span><span class='line'>void* operator new[](std::size_t) throw (std::bad_alloc);
-</span><span class='line'>void operator delete(void*) throw();
-</span><span class='line'>void operator delete[](void*) throw();
-</span><span class='line'>void* operator new(std::size_t, const std::nothrow_t&) throw();  // (2)
-</span><span class='line'>void* operator new[](std::size_t, const std::nothrow_t&) throw();
-</span><span class='line'>void operator delete(void*, const std::nothrow_t&) throw();
-</span><span class='line'>void operator delete[](void*, const std::nothrow_t&) throw();
-</span><span class='line'>// Default placement versions of operator new.
-</span><span class='line'>inline void* operator new(std::size_t, void* __p) throw() { return __p; }  // (3)
-</span><span class='line'>inline void* operator new[](std::size_t, void* __p) throw() { return __p; }
-</span><span class='line'>// Default placement versions of operator delete.
-</span><span class='line'>inline void  operator delete  (void*, void*) throw() { }
-</span><span class='line'>inline void  operator delete[](void*, void*) throw() { }</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>  <span class="c1">// (1)</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>  <span class="c1">// (2)</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="c1">// Default placement versions of operator new.</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// (3)</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="c1">// Default placement versions of operator delete.</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span>  <span class="k">operator</span> <span class="k">delete</span>  <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span>  <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中最后的 <code>inline</code> 函数是 <code>placement</code> 版本的 new/delete 操作，其特点在于分配的内存块的起始地址由用户给定（通过参数 <code>void* __p</code>）。 而前面两种 <code>new/delete</code> （(1)和(2)处）是系统决定待分配内存块的起始地址，区别在于：第一个在分配失败是会抛出 <code>bad_alloc</code> 异常（这是C++标准要求的）；而第二个则不抛出异常，返回0。 很多应用程序都没有处理内存分配的失败情况，但相对于一个需要长期稳定运行的系统来说，这种处理是必不可少的。 应用程序可以通过捕获 <code>bad_alloc</code> 异常或者检查返回值来检查内存分配是否成功，而更好的方法是使用C++中的 <code>new_handler()</code> 函数。 C++规定 <code>new_handler</code> 要执行如下操作中的一种：</p>
@@ -298,7 +287,7 @@ $(document).ready(function(){
 
 <p>下面看一个例子，看看如何使用 <code>new_handler</code> 处理内存分配失败的情况：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -333,46 +322,47 @@ $(document).ready(function(){
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;new&gt;
-</span><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;Windows.h&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>char *gPool = NULL;
-</span><span class='line'>void my_new_handler();
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include&lt;new&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;cstdio&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;Windows.h&gt;</span>
+</span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="n">gPool</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">my_new_handler</span><span class="p">();</span>
 </span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>    set_new_handler(my_new_handler);
-</span><span class='line'>    gPool = new char[512*1024*1024];
-</span><span class='line'>    if(gPool!=NULL){
-</span><span class='line'>        printf("Preserve 512MB memory at %x.\n",gPool);
-</span><span class='line'>    }
-</span><span class='line'>    char *p = NULL;
-</span><span class='line'>    for(int i=0;i&lt;4;i++){
-</span><span class='line'>        p = new char[512*1024*1024];
-</span><span class='line'>        printf("%d * 512M, p = %x\n",i+1,p);
-</span><span class='line'>        Sleep(5000); // 休眠5s
-</span><span class='line'>    }
-</span><span class='line'>    printf("Done.\n");
-</span><span class='line'>    return 0;
-</span><span class='line'>}
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">set_new_handler</span><span class="p">(</span><span class="n">my_new_handler</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">gPool</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">512</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">gPool</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Preserve 512MB memory at %x.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">gPool</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">512</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d * 512M, p = %x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">Sleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span> <span class="c1">// 休眠5s</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Done.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>void my_new_handler(){
-</span><span class='line'>    if(gPool!=NULL){
-</span><span class='line'>        printf("try to get more memory...\n");
-</span><span class='line'>        delete[] gPool; // 释放512MB内存空间
-</span><span class='line'>        gPool = NULL;
-</span><span class='line'>        return;
-</span><span class='line'>    }else{
-</span><span class='line'>        printf("I can not help...\n");
-</span><span class='line'>        throw bad_alloc();  // 分配失败，抛出异常
-</span><span class='line'>    }
-</span><span class='line'>    return;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kt">void</span> <span class="n">my_new_handler</span><span class="p">(){</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">gPool</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">){</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;try to get more memory...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">delete</span><span class="p">[]</span> <span class="n">gPool</span><span class="p">;</span> <span class="c1">// 释放512MB内存空间</span>
+</span><span class='line'>        <span class="n">gPool</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;I can not help...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="n">bad_alloc</span><span class="p">();</span>  <span class="c1">// 分配失败，抛出异常</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在 Windows 上编译并运行（使用Code::Blocks 13.12 IDE），得到如下输出：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -383,17 +373,18 @@ $(document).ready(function(){
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Preserve 512MB memory at 7e0020.
-</span><span class='line'>1 * 512M, p = 207f0020
-</span><span class='line'>2 * 512M, p = 40800020
-</span><span class='line'>try to get more memory...
-</span><span class='line'>3 * 512M, p = 7e0020
-</span><span class='line'>I can not help...
-</span><span class='line'>terminate called after throwing an instance of 'std::bad_alloc'
-</span><span class='line'>  what():  std::bad_alloc
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Preserve</span> <span class="mi">512</span><span class="n">MB</span> <span class="n">memory</span> <span class="n">at</span> <span class="mf">7e0020</span><span class="p">.</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">207f</span><span class="mo">0020</span>
+</span><span class='line'><span class="mi">2</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">40800020</span>
+</span><span class='line'><span class="k">try</span> <span class="n">to</span> <span class="n">get</span> <span class="n">more</span> <span class="n">memory</span><span class="p">...</span>
+</span><span class='line'><span class="mi">3</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">7e0020</span>
+</span><span class='line'><span class="n">I</span> <span class="n">can</span> <span class="n">not</span> <span class="n">help</span><span class="p">...</span>
+</span><span class='line'><span class="n">terminate</span> <span class="n">called</span> <span class="n">after</span> <span class="n">throwing</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="err">&#39;</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="err">&#39;</span>
+</span><span class='line'>  <span class="n">what</span><span class="p">()</span><span class="o">:</span>  <span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span>
 </span><span class='line'>
-</span><span class='line'>This application has requested the Runtime to terminate it in an unusual way.
-</span><span class='line'>Please contact the application's support team for more information.</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="n">This</span> <span class="n">application</span> <span class="n">has</span> <span class="n">requested</span> <span class="n">the</span> <span class="n">Runtime</span> <span class="n">to</span> <span class="n">terminate</span> <span class="n">it</span> <span class="n">in</span> <span class="n">an</span> <span class="n">unusual</span> <span class="n">way</span><span class="p">.</span>
+</span><span class='line'><span class="n">Please</span> <span class="n">contact</span> <span class="n">the</span> <span class="n">application</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">support</span> <span class="n">team</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在 Windows 的 win32 程序中，一个进程可以访问的内存空间是 4GB，但可以用来动态分配的最大内存是 2GB，因而上面的程序执行到第3次（为神马不是第4次？）动态内存分配时由于内存不够，调用了 <code>my_new_handler</code> 获得了内存（可以看到第3次分配的内存的地址和Preserve的内存地址是一样的），而当执行第4次内存分配时，<code>gPool</code> 已被分配，于是 <code>my_new_handler</code> 中抛出了 <code>bad_alloc</code> 异常，导致程序退出。 另外，在程序实际运行过程当中，会发现任务管理器中内存占用不会往上飙，这可能是因为操作系统的动态内存管理策略在作怪，不会说你一申请就立马全部给你，只是建立了一个映射表，只有当你真正用的时候才会给你。</p>
@@ -402,7 +393,7 @@ $(document).ready(function(){
 
 <p>在 C++ 内置 <code>new/delete</code> 中最后的一种是 placement 形式的 <code>new/delete</code> ，即分配的内存地址有用户给定。下面是一个最简单的实例：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -414,18 +405,19 @@ $(document).ready(function(){
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;cstdio&gt;
-</span><span class='line'>#include &lt;new&gt;
-</span><span class='line'>using namespace std;
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;cstdio&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;new&gt;</span>
+</span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    char buffer[100];
-</span><span class='line'>    char *p = new(buffer) char[20]; // call placement new
-</span><span class='line'>    printf("Address of buffer: %x, and p: %x.\n",buffer,p);
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>// output: Address of buffer: 28feb8, and p: 28feb8.</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="kt">char</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span> <span class="c1">// call placement new</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Address of buffer: %x, and p: %x.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">buffer</span><span class="p">,</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// output: Address of buffer: 28feb8, and p: 28feb8.</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到 <code>buffer</code> 和 <code>p</code> 的地址是一样的。在大型应用程序中，我们可以充分利用 <code>placement new</code> 的特性，实现自己管理（分配、释放等）本应用的内存空间，基本思路就是： 首先申请一大片内存，然后对每个小的动态内存分配都使用 <code>placement new</code> 的方式进行申请。</p>
@@ -434,7 +426,7 @@ $(document).ready(function(){
 
 <p>在 <code>new</code> 操作符中，除了可以使用自定义申请的内存的大小及位置，我们还可以通过重载系统的 <code>new/delete</code> 操作符来加入其它一些附加参数，但仍称之为 <code>placement new</code> 。例如：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -462,41 +454,42 @@ $(document).ready(function(){
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;new&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>#define DEBUG
-</span><span class='line'>#ifdef DEBUG
-</span><span class='line'>// 自定义 new 操作符
-</span><span class='line'>void *operator new[](unsigned int n, const char* file, int line){
-</span><span class='line'>    printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-</span><span class='line'>    return ::operator new(n);
-</span><span class='line'>}
-</span><span class='line'>// 自定义 delete 操作符
-</span><span class='line'>// void operator delete(void *p,const char *file, int line){
-</span><span class='line'>void operator delete[](void *p,const char *file, int line){
-</span><span class='line'>    printf("delete at file %s, in line %d\n",file,line);
-</span><span class='line'>    ::operator delete(p);
-</span><span class='line'>    return;
-</span><span class='line'>}
-</span><span class='line'>// 宏定义，必须放在重载函数之后
-</span><span class='line'>#define new new(__FILE__, __LINE__)
-</span><span class='line'>#define delete delete(__FILE__, __LINE__)
-</span><span class='line'>#endif
-</span><span class='line'>int main(){
-</span><span class='line'>    char *p = new char[10];
-</span><span class='line'>    //delete p;  // delete 的重载还有问题 "error: type 'int' argument given to 'delete', expected pointer"
-</span><span class='line'>    delete[] p;  // 直接报语法错误，"error: expected primary-expression before ']' token"
-</span><span class='line'>    return 0;
-</span><span class='line'>}
-</span><span class='line'>// output: Alloc size: 10 at file D:\Programs\test\main.cpp, in line 22</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include&lt;cstdio&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;new&gt;</span>
+</span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#define DEBUG</span>
+</span><span class='line'><span class="cp">#ifdef DEBUG</span>
+</span><span class='line'><span class="c1">// 自定义 new 操作符</span>
+</span><span class='line'><span class="kt">void</span> <span class="o">*</span><span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="kt">int</span> <span class="n">line</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Alloc size: %d at file %s, in line %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">file</span><span class="p">,</span><span class="n">line</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 自定义 delete 操作符</span>
+</span><span class='line'><span class="c1">// void operator delete(void *p,const char *file, int line){</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span> <span class="kt">int</span> <span class="n">line</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;delete at file %s, in line %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">file</span><span class="p">,</span><span class="n">line</span><span class="p">);</span>
+</span><span class='line'>    <span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 宏定义，必须放在重载函数之后</span>
+</span><span class='line'><span class="cp">#define new new(__FILE__, __LINE__)</span>
+</span><span class='line'><span class="cp">#define delete delete(__FILE__, __LINE__)</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span><span class='line'>    <span class="c1">//delete p;  // delete 的重载还有问题 &quot;error: type &#39;int&#39; argument given to &#39;delete&#39;, expected pointer&quot;</span>
+</span><span class='line'>    <span class="k">delete</span><span class="p">[]</span> <span class="n">p</span><span class="p">;</span>  <span class="c1">// 直接报语法错误，&quot;error: expected primary-expression before &#39;]&#39; token&quot;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// output: Alloc size: 10 at file D:\Programs\test\main.cpp, in line 22</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这在 <code>DEBUG</code> 模式下非常好使。</p>
 
 <p>更新：关于 <code>placement new</code> 的 demo 改为如下代码后就没问题了：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -521,31 +514,32 @@ $(document).ready(function(){
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;cstdio&gt;
-</span><span class='line'>#include&lt;new&gt;
-</span><span class='line'>using namespace std;
-</span><span class='line'>#define DEBUG
-</span><span class='line'>#ifdef DEBUG
-</span><span class='line'>// 自定义 new 操作符
-</span><span class='line'>void *operator new[](unsigned int n, const char* file, int line){
-</span><span class='line'>    printf("Alloc size: %d at file %s, in line %d\n",n,file,line);
-</span><span class='line'>    return ::operator new(n);
-</span><span class='line'>}
-</span><span class='line'>// 自定义 delete 操作符
-</span><span class='line'>void operator delete(void *p,char *file, int line){
-</span><span class='line'>    printf("Delete at file %s, in line %d\n",file,line);
-</span><span class='line'>    ::operator delete(p);
-</span><span class='line'>    return;
-</span><span class='line'>}
-</span><span class='line'>// 宏定义，必须放在重载函数之后
-</span><span class='line'>#define new new(__FILE__, __LINE__)
-</span><span class='line'>#define delete(ptr) delete(ptr,__FILE__, __LINE__)
-</span><span class='line'>#endif
-</span><span class='line'>int main(){
-</span><span class='line'>    char *p = new char[10];
-</span><span class='line'>    operator delete(p);
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include&lt;cstdio&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;new&gt;</span>
+</span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#define DEBUG</span>
+</span><span class='line'><span class="cp">#ifdef DEBUG</span>
+</span><span class='line'><span class="c1">// 自定义 new 操作符</span>
+</span><span class='line'><span class="kt">void</span> <span class="o">*</span><span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="kt">int</span> <span class="n">line</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Alloc size: %d at file %s, in line %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">file</span><span class="p">,</span><span class="n">line</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 自定义 delete 操作符</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span> <span class="kt">int</span> <span class="n">line</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Delete at file %s, in line %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">file</span><span class="p">,</span><span class="n">line</span><span class="p">);</span>
+</span><span class='line'>    <span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 宏定义，必须放在重载函数之后</span>
+</span><span class='line'><span class="cp">#define new new(__FILE__, __LINE__)</span>
+</span><span class='line'><span class="cp">#define delete(ptr) delete(ptr,__FILE__, __LINE__)</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>但是还是不知道之前的代码为什么会出现这个错误，已在 <a href="http://stackoverflow.com/questions/23614215/destructor-error-in-c-type-int-argument-given-to-delete-expected-pointer">StackOverFlow上提问</a>，希望能得到满意的答案。</p>
@@ -587,7 +581,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

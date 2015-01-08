@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -209,14 +197,15 @@ $(document).ready(function(){
 
 <p>在C++中，一个对象的内存配置和释放一般都包含两个步骤，对于内存的配置，首先是调用operator new来配置内存，然后调用对象的类的构造函数进行初始化；而对于内存释放，首先是调用析构函数，然后调用 operator delete进行释放。 如以下代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Foo { ... };
-</span><span class='line'>Foo* pf = new Foo;
-</span><span class='line'>...
-</span><span class='line'>delete pf;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+</span><span class='line'><span class="n">Foo</span><span class="o">*</span> <span class="n">pf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Foo</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="k">delete</span> <span class="n">pf</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Allocator 的作用相当于operator new 和operator delete的功能，只是它考虑得更加细致周全。SGI STL 中考虑到了内存分配失败的异常处理，内置轻量级内存池（主要用于处理小块内存的分配，应对内存碎片问题）实现， 多线程中的内存分配处理（主要是针对内存池的互斥访问）等，本文就主要分析 SGI STL 中在这三个方面是如何处理的。在介绍着三个方面之前，我们先来看看 Allocator的标准接口。</p>
@@ -228,7 +217,7 @@ $(document).ready(function(){
 
 <p>在 SGI STL 中，Allocator的实现主要在文件<code>alloc.h</code> 和 <code>stl_alloc.h</code> 文件中。根据 STL 规范，Allocator 需提供如下的一些接口（见 <code>stl_alloc.h</code> 文件的第588行开始的class template allocator）：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -256,39 +245,40 @@ $(document).ready(function(){
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// 标识数据类型的成员变量，关于中间的6个变量的涵义见后续文章（关于Traits编程技巧）
-</span><span class='line'>typedef alloc _Alloc;
-</span><span class='line'>typedef size_t     size_type;
-</span><span class='line'>typedef ptrdiff_t  difference_type;
-</span><span class='line'>typedef _Tp*       pointer;
-</span><span class='line'>typedef const _Tp* const_pointer;
-</span><span class='line'>typedef _Tp&       reference;
-</span><span class='line'>typedef const _Tp& const_reference;
-</span><span class='line'>typedef _Tp        value_type;
-</span><span class='line'>template &lt;class _Tp1&gt; struct rebind {
-</span><span class='line'>  typedef allocator&lt;_Tp1&gt; other;
-</span><span class='line'>}; // 一个嵌套的class template，仅包含一个成员变量 other
-</span><span class='line'>// 成员函数
-</span><span class='line'>allocator() __STL_NOTHROW {}  // 默认构造函数，其中__STL_NOTHROW 在 stl_config.h中定义，要么为空，要么为 throw()
-</span><span class='line'>allocator(const allocator&) __STL_NOTHROW {}  // 拷贝构造函数
-</span><span class='line'>template &lt;class _Tp1&gt; allocator(const allocator&lt;_Tp1&gt;&) __STL_NOTHROW {} // 泛化的拷贝构造函数
-</span><span class='line'>~allocator() __STL_NOTHROW {} // 析构函数
-</span><span class='line'>pointer address(reference __x) const { return &__x; } // 返回对象的地址
-</span><span class='line'>const_pointer address(const_reference __x) const { return &__x; }  // 返回const对象的地址
-</span><span class='line'>_Tp* allocate(size_type __n, const void* = 0) {
-</span><span class='line'>  return __n != 0 ? static_cast&lt;_Tp*&gt;(_Alloc::allocate(__n * sizeof(_Tp))) : 0; 
-</span><span class='line'>  // 配置空间，如果申请的空间块数不为0，那么调用 _Alloc 也即 alloc 的 allocate 函数来分配内存，
-</span><span class='line'>} //这里的 alloc 在 SGI STL 中默认使用的是__default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt;这个实现（见第402行）
-</span><span class='line'>void deallocate(pointer __p, size_type __n) { _Alloc::deallocate(__p, __n * sizeof(_Tp)); } // 释放空间
-</span><span class='line'>size_type max_size() const __STL_NOTHROW  // max_size() 函数，返回可成功配置的最大值
-</span><span class='line'>    { return size_t(-1) / sizeof(_Tp); }  //这里没看懂，这里的size_t(-1)是什么意思？
-</span><span class='line'>void construct(pointer __p, const _Tp& __val) { new(__p) _Tp(__val); } // 调用 new 来给新变量分配空间并赋值
-</span><span class='line'>void destroy(pointer __p) { __p-&gt;~_Tp(); } // 调用 _Tp 的析构函数来释放空间</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 标识数据类型的成员变量，关于中间的6个变量的涵义见后续文章（关于Traits编程技巧）</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">alloc</span> <span class="n">_Alloc</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">size_t</span>     <span class="n">size_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">ptrdiff_t</span>  <span class="n">difference_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">_Tp</span><span class="o">*</span>       <span class="n">pointer</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">const_pointer</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">_Tp</span><span class="o">&amp;</span>       <span class="n">reference</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">const_reference</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">_Tp</span>        <span class="n">value_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp1</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">rebind</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">allocator</span><span class="o">&lt;</span><span class="n">_Tp1</span><span class="o">&gt;</span> <span class="n">other</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span> <span class="c1">// 一个嵌套的class template，仅包含一个成员变量 other</span>
+</span><span class='line'><span class="c1">// 成员函数</span>
+</span><span class='line'><span class="n">allocator</span><span class="p">()</span> <span class="n">__STL_NOTHROW</span> <span class="p">{}</span>  <span class="c1">// 默认构造函数，其中__STL_NOTHROW 在 stl_config.h中定义，要么为空，要么为 throw()</span>
+</span><span class='line'><span class="n">allocator</span><span class="p">(</span><span class="k">const</span> <span class="n">allocator</span><span class="o">&amp;</span><span class="p">)</span> <span class="n">__STL_NOTHROW</span> <span class="p">{}</span>  <span class="c1">// 拷贝构造函数</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp1</span><span class="o">&gt;</span> <span class="n">allocator</span><span class="p">(</span><span class="k">const</span> <span class="n">allocator</span><span class="o">&lt;</span><span class="n">_Tp1</span><span class="o">&gt;&amp;</span><span class="p">)</span> <span class="n">__STL_NOTHROW</span> <span class="p">{}</span> <span class="c1">// 泛化的拷贝构造函数</span>
+</span><span class='line'><span class="o">~</span><span class="n">allocator</span><span class="p">()</span> <span class="n">__STL_NOTHROW</span> <span class="p">{}</span> <span class="c1">// 析构函数</span>
+</span><span class='line'><span class="n">pointer</span> <span class="n">address</span><span class="p">(</span><span class="n">reference</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">__x</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// 返回对象的地址</span>
+</span><span class='line'><span class="n">const_pointer</span> <span class="n">address</span><span class="p">(</span><span class="n">const_reference</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&amp;</span><span class="n">__x</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// 返回const对象的地址</span>
+</span><span class='line'><span class="n">_Tp</span><span class="o">*</span> <span class="n">allocate</span><span class="p">(</span><span class="n">size_type</span> <span class="n">__n</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__n</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">_Alloc</span><span class="o">::</span><span class="n">allocate</span><span class="p">(</span><span class="n">__n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)))</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// 配置空间，如果申请的空间块数不为0，那么调用 _Alloc 也即 alloc 的 allocate 函数来分配内存，</span>
+</span><span class='line'><span class="p">}</span> <span class="c1">//这里的 alloc 在 SGI STL 中默认使用的是__default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt;这个实现（见第402行）</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">deallocate</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">__n</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Alloc</span><span class="o">::</span><span class="n">deallocate</span><span class="p">(</span><span class="n">__p</span><span class="p">,</span> <span class="n">__n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">));</span> <span class="p">}</span> <span class="c1">// 释放空间</span>
+</span><span class='line'><span class="n">size_type</span> <span class="n">max_size</span><span class="p">()</span> <span class="k">const</span> <span class="n">__STL_NOTHROW</span>  <span class="c1">// max_size() 函数，返回可成功配置的最大值</span>
+</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="n">size_t</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">//这里没看懂，这里的size_t(-1)是什么意思？</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">construct</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__val</span><span class="p">)</span> <span class="p">{</span> <span class="k">new</span><span class="p">(</span><span class="n">__p</span><span class="p">)</span> <span class="n">_Tp</span><span class="p">(</span><span class="n">__val</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 调用 new 来给新变量分配空间并赋值</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">destroy</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">)</span> <span class="p">{</span> <span class="n">__p</span><span class="o">-&gt;~</span><span class="n">_Tp</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// 调用 _Tp 的析构函数来释放空间</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在SGI STL中设计了如下几个空间分配的 class template：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -299,17 +289,18 @@ $(document).ready(function(){
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;int __inst&gt; class __malloc_alloc_template // Malloc-based allocator.  Typically slower than default alloc
-</span><span class='line'>typedef __malloc_alloc_template&lt;0&gt; malloc_alloc
-</span><span class='line'>template&lt;class _Tp, class _Alloc&gt; class simple_alloc
-</span><span class='line'>template &lt;class _Alloc&gt; class debug_alloc
-</span><span class='line'>template &lt;bool threads, int inst&gt; class __default_alloc_template // Default node allocator.
-</span><span class='line'>typedef __default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt; alloc
-</span><span class='line'>typedef __default_alloc_template&lt;false, 0&gt; single_client_alloc
-</span><span class='line'>template &lt;class _Tp&gt;class allocator
-</span><span class='line'>template&lt;&gt;class allocator&lt;void&gt;
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;struct __allocator
-</span><span class='line'>template &lt;class _Alloc&gt;class __allocator&lt;void, _Alloc&gt;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">__inst</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">__malloc_alloc_template</span> <span class="c1">// Malloc-based allocator.  Typically slower than default alloc</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">__malloc_alloc_template</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">malloc_alloc</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">simple_alloc</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">debug_alloc</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">threads</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inst</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">__default_alloc_template</span> <span class="c1">// Default node allocator.</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">__default_alloc_template</span><span class="o">&lt;</span><span class="n">__NODE_ALLOCATOR_THREADS</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">alloc</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">__default_alloc_template</span><span class="o">&lt;</span><span class="kc">false</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">single_client_alloc</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">allocator</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;&gt;</span><span class="k">class</span> <span class="nc">allocator</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span><span class="k">struct</span> <span class="n">__allocator</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">__allocator</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中<code>simple_alloc</code> , <code>debug_alloc</code> , <code>allocator</code> 和 <code>__allocator</code>  的实现都比较简单，都是对其他适配器的一个简单封装（因为实际上还是调用其他配置器的方法，如 <code>_Alloc::allocate</code> ）。而真正内容比较充实的是 <code>__malloc_alloc_template</code> 和 <code>__default_alloc_template</code> 这两个配置器，这两个配置器就是 SGI STL 配置器的精华所在。其中 <code>__malloc_alloc_template</code> 是SGI STL 的第一层配置器，只是对系统的 <code>malloc</code> , <code>realloc</code> 函数的一个简单封装，并考虑到了分配失败后的异常处理。而 <code>__default_alloc_template</code> 是SGI STL 的第二层配置器，在第一层配置器的基础上还考虑了内存碎片的问题，通过内置一个轻量级的内存池。下文将先介绍第一级配置器的异常处理机制，然后介绍第二级配置器的内存池实现，及在多线程环境下内存池互斥访问的机制。</p>
@@ -318,7 +309,7 @@ $(document).ready(function(){
 
 <p>内存分配失败一般是由于out-of-memory(oom)，SGI STL 本身并不会去处理oom问题，而只是提供一个 private 的函数指针成员和一个 public 的设置该函数指针的方法，让用户来自定义异常处理逻辑：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -329,22 +320,23 @@ $(document).ready(function(){
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private:
-</span><span class='line'>#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
-</span><span class='line'>  static void (* __malloc_alloc_oom_handler)();  // 函数指针
-</span><span class='line'>#endif
-</span><span class='line'>public:
-</span><span class='line'>  static void (* __set_malloc_handler(void (*__f)()))() // 设置函数指针的public方法
-</span><span class='line'>  {
-</span><span class='line'>    void (* __old)() = __malloc_alloc_oom_handler;
-</span><span class='line'>    __malloc_alloc_oom_handler = __f;
-</span><span class='line'>    return(__old);
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'><span class="cp">#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">)();</span>  <span class="c1">// 函数指针</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__set_malloc_handler</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">__f</span><span class="p">)()))()</span> <span class="c1">// 设置函数指针的public方法</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__old</span><span class="p">)()</span> <span class="o">=</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__malloc_alloc_oom_handler</span> <span class="o">=</span> <span class="n">__f</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span><span class="p">(</span><span class="n">__old</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>如果用户没有调用该方法来设置异常处理函数，那么就不做任何异常处理，仅仅是想标准错误流输出一句out of memory并退出程序（对于使用new和C++特性的情况而言，则是抛出一个<code>std::bad_alloc()</code>异常）， 因为该函数指针的缺省值为0，此时对应的异常处理是 <code>__THROW_BAD_ALLOC</code>：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -363,25 +355,26 @@ $(document).ready(function(){
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// line 152 ~ 155
-</span><span class='line'>#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
-</span><span class='line'>template &lt;int __inst&gt;
-</span><span class='line'>void (* __malloc_alloc_template&lt;__inst&gt;::__malloc_alloc_oom_handler)() = 0;
-</span><span class='line'>#endif
-</span><span class='line'>// in _S_oom_malloc and _S_oom_realloc
-</span><span class='line'>__my_malloc_handler = __malloc_alloc_oom_handler;
-</span><span class='line'>if (0 == __my_malloc_handler) { __THROW_BAD_ALLOC; }
-</span><span class='line'>// in preprocess, line 41 ~ 50
-</span><span class='line'>#ifndef __THROW_BAD_ALLOC
-</span><span class='line'>#  if defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)
-</span><span class='line'>#    include &lt;stdio.h&gt;
-</span><span class='line'>#    include &lt;stdlib.h&gt;
-</span><span class='line'>#    define __THROW_BAD_ALLOC fprintf(stderr, "out of memory\n"); exit(1)
-</span><span class='line'>#  else /* Standard conforming out-of-memory handling */
-</span><span class='line'>#    include &lt;new&gt;
-</span><span class='line'>#    define __THROW_BAD_ALLOC throw std::bad_alloc()
-</span><span class='line'>#  endif
-</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// line 152 ~ 155</span>
+</span><span class='line'><span class="cp">#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="kt">int</span> <span class="n">__inst</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__malloc_alloc_template</span><span class="o">&lt;</span><span class="n">__inst</span><span class="o">&gt;::</span><span class="n">__malloc_alloc_oom_handler</span><span class="p">)()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="c1">// in _S_oom_malloc and _S_oom_realloc</span>
+</span><span class='line'><span class="n">__my_malloc_handler</span> <span class="o">=</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">__my_malloc_handler</span><span class="p">)</span> <span class="p">{</span> <span class="n">__THROW_BAD_ALLOC</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="c1">// in preprocess, line 41 ~ 50</span>
+</span><span class='line'><span class="cp">#ifndef __THROW_BAD_ALLOC</span>
+</span><span class='line'><span class="cp">#  if defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)</span>
+</span><span class='line'><span class="cp">#    include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#    include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#    define __THROW_BAD_ALLOC fprintf(stderr, &quot;out of memory\n&quot;); exit(1)</span>
+</span><span class='line'><span class="cp">#  else </span><span class="cm">/* Standard conforming out-of-memory handling */</span><span class="cp"></span>
+</span><span class='line'><span class="cp">#    include &lt;new&gt;</span>
+</span><span class='line'><span class="cp">#    define __THROW_BAD_ALLOC throw std::bad_alloc()</span>
+</span><span class='line'><span class="cp">#  endif</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>SGI STL 内存配置失败的异常处理机制就是这样子了，提供一个默认的处理方法，也留有一个用户自定义处理异常的接口。</p>
@@ -392,7 +385,7 @@ $(document).ready(function(){
 
 <p>SGI STL内置内存池的实现请看 <code>__default_alloc_template</code> 中被定义为 private 的这些成员变量和方法（去掉了部分预处理代码和互斥处理的代码）：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -413,27 +406,28 @@ $(document).ready(function(){
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private:
-</span><span class='line'>#if ! (defined(__SUNPRO_CC) || defined(__GNUC__))
-</span><span class='line'>    enum {_ALIGN = 8}; // 对齐大小
-</span><span class='line'>    enum {_MAX_BYTES = 128}; // 最大有内置内存池来分配的内存大小
-</span><span class='line'>    enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
-</span><span class='line'># endif
-</span><span class='line'>  static size_t  _S_round_up(size_t __bytes) // 不是8的倍数，向上取整
-</span><span class='line'>    { return (((__bytes) + (size_t) _ALIGN-1) & ~((size_t) _ALIGN - 1)); }
-</span><span class='line'>__PRIVATE:
-</span><span class='line'>  union _Obj { // 空闲链表的每个node的定义
-</span><span class='line'>        union _Obj* _M_free_list_link;
-</span><span class='line'>        char _M_client_data[1];   };
-</span><span class='line'>  static _Obj* __STL_VOLATILE _S_free_list[]; // 空闲链表数组
-</span><span class='line'>  static size_t _S_freelist_index(size_t __bytes) { // __bytes 对应的free list的index
-</span><span class='line'>        return (((__bytes) + (size_t)_ALIGN-1)/(size_t)_ALIGN - 1);
-</span><span class='line'>  }
-</span><span class='line'>  static void* _S_refill(size_t __n); // 从内存池中申请空间并构建free list，然后从free list中分配空间给用户
-</span><span class='line'>  static char* _S_chunk_alloc(size_t __size, int& __nobjs); // 从内存池中分配空间
-</span><span class='line'>  static char* _S_start_free;  // 内存池空闲部分的起始地址
-</span><span class='line'>  static char* _S_end_free; // 内存池结束地址
-</span><span class='line'>  static size_t _S_heap_size; // 内存池堆大小，主要用于配置内存池的大小</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'><span class="cp">#if ! (defined(__SUNPRO_CC) || defined(__GNUC__))</span>
+</span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_ALIGN</span> <span class="o">=</span> <span class="mi">8</span><span class="p">};</span> <span class="c1">// 对齐大小</span>
+</span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_MAX_BYTES</span> <span class="o">=</span> <span class="mi">128</span><span class="p">};</span> <span class="c1">// 最大有内置内存池来分配的内存大小</span>
+</span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_NFREELISTS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">};</span> <span class="c1">// _MAX_BYTES/_ALIGN  // 空闲链表个数</span>
+</span><span class='line'><span class="cp"># endif</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span>  <span class="n">_S_round_up</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="c1">// 不是8的倍数，向上取整</span>
+</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">((</span><span class="n">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span> <span class="p">}</span>
+</span><span class='line'><span class="nl">__PRIVATE:</span>
+</span><span class='line'>  <span class="k">union</span> <span class="n">_Obj</span> <span class="p">{</span> <span class="c1">// 空闲链表的每个node的定义</span>
+</span><span class='line'>        <span class="k">union</span> <span class="n">_Obj</span><span class="o">*</span> <span class="n">_M_free_list_link</span><span class="p">;</span>
+</span><span class='line'>        <span class="kt">char</span> <span class="n">_M_client_data</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>   <span class="p">};</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Obj</span><span class="o">*</span> <span class="n">__STL_VOLATILE</span> <span class="n">_S_free_list</span><span class="p">[];</span> <span class="c1">// 空闲链表数组</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_freelist_index</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// __bytes 对应的free list的index</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_t</span><span class="p">)</span><span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">size_t</span><span class="p">)</span><span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_S_refill</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__n</span><span class="p">);</span> <span class="c1">// 从内存池中申请空间并构建free list，然后从free list中分配空间给用户</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_chunk_alloc</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__size</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__nobjs</span><span class="p">);</span> <span class="c1">// 从内存池中分配空间</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_start_free</span><span class="p">;</span>  <span class="c1">// 内存池空闲部分的起始地址</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_end_free</span><span class="p">;</span> <span class="c1">// 内存池结束地址</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_heap_size</span><span class="p">;</span> <span class="c1">// 内存池堆大小，主要用于配置内存池的大小</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中 <code>_S_refill</code> 和 <code>_S_chunk_alloc</code> 这两个函数是该内存池机制的核心。 <code>__default_alloc_template</code> 对外提供的 public 的接口有 <code>allocate</code>, <code>deallocate</code> 和 <code>reallocate</code> 这三个，其中涉及内存分配的 <code>allocate</code> 和 <code>reallocate</code> 的逻辑思路是，首先看申请的size（已round up）对应的free list是否为空，如果为空，则调用 <code>_S_refill</code> 来分配，否则直接从对应的free list中分配。而 <code>deallocate</code> 的逻辑是直接将空间插入到相应free list的最前面。</p>
@@ -464,7 +458,7 @@ $(document).ready(function(){
 
 <p>最后，我们来看看SGI STL中如何处理多线程下对内存池互斥访问的（实际上是对相应的free list进行互斥访问，这里访问是只需要对free list进行修改的访问操作）。在SGI的第二级配置器中与内存池互斥访问相关的就是 <code>_Lock</code> 这个类了，它仅仅只包含一个构造函数和一个析构函数，但这两个函数足够了。在构造函数中对内存池加锁，在析构函数中对内存池解锁：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -493,35 +487,36 @@ $(document).ready(function(){
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
 <span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//// in __default_alloc_template
-</span><span class='line'># ifdef __STL_THREADS
-</span><span class='line'>    static _STL_mutex_lock _S_node_allocator_lock; // 互斥锁变量
-</span><span class='line'># endif
-</span><span class='line'>class _Lock {
-</span><span class='line'>    public:
-</span><span class='line'>        _Lock() { __NODE_ALLOCATOR_LOCK; }
-</span><span class='line'>        ~_Lock() { __NODE_ALLOCATOR_UNLOCK; }
-</span><span class='line'>};
-</span><span class='line'>//// in preprocess
-</span><span class='line'>#ifdef __STL_THREADS
-</span><span class='line'># include &lt;stl_threads.h&gt; // stl 的线程，只是对linux或windows线程的一个封装
-</span><span class='line'># define __NODE_ALLOCATOR_THREADS true
-</span><span class='line'># ifdef __STL_SGI_THREADS
-</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
-</span><span class='line'>                { _S_node_allocator_lock._M_acquire_lock(); }  // 获取锁
-</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
-</span><span class='line'>                { _S_node_allocator_lock._M_release_lock(); }  // 释放锁
-</span><span class='line'># else /* !__STL_SGI_THREADS */
-</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK \
-</span><span class='line'>        { if (threads) _S_node_allocator_lock._M_acquire_lock(); }
-</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK \
-</span><span class='line'>        { if (threads) _S_node_allocator_lock._M_release_lock(); }
-</span><span class='line'># endif
-</span><span class='line'>#else /* !__STL_THREADS */
-</span><span class='line'>#   define __NODE_ALLOCATOR_LOCK
-</span><span class='line'>#   define __NODE_ALLOCATOR_UNLOCK
-</span><span class='line'>#   define __NODE_ALLOCATOR_THREADS false
-</span><span class='line'>#endif</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">//// in __default_alloc_template</span>
+</span><span class='line'><span class="cp"># ifdef __STL_THREADS</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">_STL_mutex_lock</span> <span class="n">_S_node_allocator_lock</span><span class="p">;</span> <span class="c1">// 互斥锁变量</span>
+</span><span class='line'><span class="cp"># endif</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_Lock</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>        <span class="n">_Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">__NODE_ALLOCATOR_LOCK</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>        <span class="o">~</span><span class="n">_Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">__NODE_ALLOCATOR_UNLOCK</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="c1">//// in preprocess</span>
+</span><span class='line'><span class="cp">#ifdef __STL_THREADS</span>
+</span><span class='line'><span class="cp"># include &lt;stl_threads.h&gt; </span><span class="c1">// stl 的线程，只是对linux或windows线程的一个封装</span>
+</span><span class='line'><span class="cp"># define __NODE_ALLOCATOR_THREADS true</span>
+</span><span class='line'><span class="cp"># ifdef __STL_SGI_THREADS</span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_LOCK if (threads &amp;&amp; __us_rsthread_malloc) \</span>
+</span><span class='line'><span class="cp">                { _S_node_allocator_lock._M_acquire_lock(); }  </span><span class="c1">// 获取锁</span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_UNLOCK if (threads &amp;&amp; __us_rsthread_malloc) \</span>
+</span><span class='line'><span class="cp">                { _S_node_allocator_lock._M_release_lock(); }  </span><span class="c1">// 释放锁</span>
+</span><span class='line'><span class="cp"># else </span><span class="cm">/* !__STL_SGI_THREADS */</span><span class="cp"></span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_LOCK \</span>
+</span><span class='line'><span class="cp">        { if (threads) _S_node_allocator_lock._M_acquire_lock(); }</span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_UNLOCK \</span>
+</span><span class='line'><span class="cp">        { if (threads) _S_node_allocator_lock._M_release_lock(); }</span>
+</span><span class='line'><span class="cp"># endif</span>
+</span><span class='line'><span class="cp">#else </span><span class="cm">/* !__STL_THREADS */</span><span class="cp"></span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_LOCK</span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_UNLOCK</span>
+</span><span class='line'><span class="cp">#   define __NODE_ALLOCATOR_THREADS false</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>由于在 <code>__default_alloc_template</code> 的对外接口中，只有 <code>allocate</code> 和 <code>deallocate</code> 中直接涉及到对free list进行修改的操作，所以在这两个函数中，在对free list进行修改之前，都要实例化一个 <code>_Lock</code> 的对象 <code>__lock_instance</code> ，此时调用构造函数进行加锁，当函数结束时，的对象 <code>__lock_instance</code> 自动析构，释放锁。这样，在多线程下，可以保证free list的一致性。</p>
@@ -563,7 +558,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

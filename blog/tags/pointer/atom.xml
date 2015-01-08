@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Pointer | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/pointer/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,7 +29,7 @@
 <!-- more -->
 
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -89,7 +89,7 @@ printf("Subtract gives: %d\n", b);
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
-<p><code>
+<p><code>c
 FunctionFunc x;
 void doSomething() { printf("Hello there\n"); }
 x = &amp;doSomething;
@@ -104,7 +104,7 @@ x(); //prints "Hello there"
 
 <p>在C++中，对应于C中函数指针的东西是仿函数（functor），使用起来就像函数一样。其实现方法是对某个 class 进行 <code>operator()</code> 重载，他就成为一个仿函数。而要成为一个可适配（adaptable）的仿函数，还需要其他的一些努力（在《STL源码剖析》一书的第8章，关于适配器（adaptor）的内容）。这里，我们只拿书中的那个例子来简单的看一下仿函数的定义和使用方法吧。代码如下：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include <iostream></h1>
 
@@ -151,7 +151,7 @@ return 0;
 
 <p>为了加深对函数调用操作符的理解，并将其真正用到实际中，这里拿快排这个非常典型的例子，并充分利用C++及STL的特性。下面是核心代码：</p>
 
-<p>```
+<p>``` cpp
 template<typename InIt,typename FuncType>
 void myqsort(InIt begin, InIt end, FuncType cmp){</p>
 
@@ -253,7 +253,7 @@ void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
 
 <p>一般来说 C++ 的运行库提供了默认的全局 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的实现，程序也可以用自定义的实现来取代运行库的实现。 下面是 C++ 标准中定义的 <code>new/new[]</code> 和 <code>delete/delete[]</code> 的声明（位于 <code>include/c++/new</code> 文件中）：</p>
 
-<p>```
+<p>``` cpp
 namespace std {
   class bad_alloc : public exception {</p>
 
@@ -299,7 +299,7 @@ inline void  operator delete<a href="void*,%20void*"></a> throw() { }
 
 <p>下面看一个例子，看看如何使用 <code>new_handler</code> 处理内存分配失败的情况：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include<new></h1>
 
@@ -369,7 +369,7 @@ Please contact the application's support team for more information.
 
 <p>在 C++ 内置 <code>new/delete</code> 中最后的一种是 placement 形式的 <code>new/delete</code> ，即分配的内存地址有用户给定。下面是一个最简单的实例：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include <cstdio></h1>
 
@@ -396,7 +396,7 @@ return 0;
 
 <p>在 <code>new</code> 操作符中，除了可以使用自定义申请的内存的大小及位置，我们还可以通过重载系统的 <code>new/delete</code> 操作符来加入其它一些附加参数，但仍称之为 <code>placement new</code> 。例如：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include<cstdio></h1>
 
@@ -450,7 +450,7 @@ return 0;
 
 <p>更新：关于 <code>placement new</code> 的 demo 改为如下代码后就没问题了：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include<cstdio></h1>
 

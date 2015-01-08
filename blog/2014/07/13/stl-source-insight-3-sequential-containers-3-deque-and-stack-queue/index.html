@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -217,7 +205,7 @@ $(document).ready(function(){
 
 <p>deque由一段一段连续空间串接而成，一旦有必要在deque的头部或尾端增加新的空间，便配置一段定量连续的空间，串接在deque的头部或尾端。deque的最大任务，就是在这些分段连续的空间上维护其整体连续的假象，并提供随机存取的接口。deque采用一块所谓的map（注意：不是STL中map容器，而是类似于vector）作为主控（为什么不使用list呢？），这块map是一个连续空间，其中每个元素都是一个指针，指向一段连续的空间，称为缓冲区，它才是deque的真正存储空间。SGI中允许指定缓冲区的大小，默认是512字节。除此之外，还有start和finish两个指针，分别指向第一个缓冲区的第一个元素和最后一个缓冲区的最后一个元素。其数据结构如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -232,21 +220,22 @@ $(document).ready(function(){
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline size_t __deque_buf_size(size_t __size) { // 计算缓冲区的大小
-</span><span class='line'>  return __size &lt; 512 ? size_t(512 / __size) : size_t(1);
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp** _M_map; // 指向缓冲区的指针数组首地址
-</span><span class='line'>  size_t _M_map_size;  // 指向缓冲区的指针数组的大小
-</span><span class='line'>  iterator _M_start; // 指向第一个缓冲区的第一个元素
-</span><span class='line'>  iterator _M_finish; // 指向最后一个缓冲区的最后一个元素
-</span><span class='line'>};
-</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; {
-</span><span class='line'>protected:  // Internal typedefs
-</span><span class='line'>  typedef pointer* _Map_pointer;
-</span><span class='line'>  static size_t _S_buffer_size() { return __deque_buf_size(sizeof(_Tp)); }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="n">size_t</span> <span class="n">__deque_buf_size</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__size</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 计算缓冲区的大小</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__size</span> <span class="o">&lt;</span> <span class="mi">512</span> <span class="o">?</span> <span class="n">size_t</span><span class="p">(</span><span class="mi">512</span> <span class="o">/</span> <span class="n">__size</span><span class="p">)</span> <span class="o">:</span> <span class="n">size_t</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">_Deque_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">**</span> <span class="n">_M_map</span><span class="p">;</span> <span class="c1">// 指向缓冲区的指针数组首地址</span>
+</span><span class='line'>  <span class="n">size_t</span> <span class="n">_M_map_size</span><span class="p">;</span>  <span class="c1">// 指向缓冲区的指针数组的大小</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">_M_start</span><span class="p">;</span> <span class="c1">// 指向第一个缓冲区的第一个元素</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">_M_finish</span><span class="p">;</span> <span class="c1">// 指向最后一个缓冲区的最后一个元素</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">deque</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Deque_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>  <span class="c1">// Internal typedefs</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">pointer</span><span class="o">*</span> <span class="n">_Map_pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_buffer_size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__deque_buf_size</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">));</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <!-- more -->
@@ -256,26 +245,27 @@ $(document).ready(function(){
 
 <p>由于deque涉及到两种类型（map和buffer）数据的空间配置，因此deque定义了两个专属的配置器 <code>_Map_alloc_type</code> 和 <code>_Node_alloc_type</code>:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; class _Deque_base {
-</span><span class='line'>protected:
-</span><span class='line'>  typedef simple_alloc&lt;_Tp, _Alloc&gt;  _Node_alloc_type;
-</span><span class='line'>  typedef simple_alloc&lt;_Tp*, _Alloc&gt; _Map_alloc_type;
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
-</span><span class='line'>class deque : protected _Deque_base&lt;_Tp, _Alloc&gt; { };</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">_Deque_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span>  <span class="n">_Node_alloc_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Map_alloc_type</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span> <span class="o">=</span> <span class="n">__STL_DEFAULT_ALLOCATOR</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">deque</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Deque_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>而这里的 <code>_Alloc</code> 使用的都是STL默认的 <code>alloc</code> 这个配置器，因此这两个配置器实际上都是 <code>alloc</code> 类型的配置器，即SGI的第二级配置器。<br/>
 在定义一个deque时，默认调用基类的构造函数，产生一个map大小为0的空的deque，随着第一次插入元素，由于map大小不够，需要调用<code>_M_push_back_aux</code> 进而调用 <code>_M_reallocate_map</code> 进行map的空间配置，如果初始的map不为空，还需要对map进行“分配新空间，复制，释放元空间”的操作，如果从头部插入同样的道理，这是就是map的配置逻辑（实际中，还有一种情况，就是map的前后剩余的node数不同，例如前部分都空着，而后面插入后溢出了，这时可以考虑在map内部移动，即将后半部分整体往前移动一定距离）。其中<code>_M_reallocate_map</code>的实现如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -298,35 +288,36 @@ $(document).ready(function(){
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>void deque&lt;_Tp,_Alloc&gt;::_M_reallocate_map(size_type __nodes_to_add, bool __add_at_front){
-</span><span class='line'>  size_type __old_num_nodes = _M_finish._M_node - _M_start._M_node + 1;
-</span><span class='line'>  size_type __new_num_nodes = __old_num_nodes + __nodes_to_add;
-</span><span class='line'>  _Map_pointer __new_nstart;
-</span><span class='line'>  if (_M_map_size &gt; 2 * __new_num_nodes) { // map的size足够，在map内部移动
-</span><span class='line'>    __new_nstart = _M_map + (_M_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
-</span><span class='line'>    if (__new_nstart &lt; _M_start._M_node)
-</span><span class='line'>      copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart);
-</span><span class='line'>    else
-</span><span class='line'>      copy_backward(_M_start._M_node, _M_finish._M_node + 1, __new_nstart + __old_num_nodes);
-</span><span class='line'>  } else { // map的size不够，重新分配
-</span><span class='line'>    size_type __new_map_size = _M_map_size + max(_M_map_size, __nodes_to_add) + 2;
-</span><span class='line'>    _Map_pointer __new_map = _M_allocate_map(__new_map_size); // 重新分配map
-</span><span class='line'>    __new_nstart = __new_map + (__new_map_size - __new_num_nodes) / 2 + (__add_at_front ? __nodes_to_add : 0);
-</span><span class='line'>    copy(_M_start._M_node, _M_finish._M_node + 1, __new_nstart); // 复制原map到新的map中
-</span><span class='line'>    _M_deallocate_map(_M_map, _M_map_size); // 释放原map
-</span><span class='line'>    _M_map = __new_map;
-</span><span class='line'>    _M_map_size = __new_map_size;
-</span><span class='line'>  }
-</span><span class='line'>  _M_start._M_set_node(__new_nstart);
-</span><span class='line'>  _M_finish._M_set_node(__new_nstart + __old_num_nodes - 1);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">_M_reallocate_map</span><span class="p">(</span><span class="n">size_type</span> <span class="n">__nodes_to_add</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">__add_at_front</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">size_type</span> <span class="n">__old_num_nodes</span> <span class="o">=</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">-</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">size_type</span> <span class="n">__new_num_nodes</span> <span class="o">=</span> <span class="n">__old_num_nodes</span> <span class="o">+</span> <span class="n">__nodes_to_add</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Map_pointer</span> <span class="n">__new_nstart</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">_M_map_size</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">__new_num_nodes</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// map的size足够，在map内部移动</span>
+</span><span class='line'>    <span class="n">__new_nstart</span> <span class="o">=</span> <span class="n">_M_map</span> <span class="o">+</span> <span class="p">(</span><span class="n">_M_map_size</span> <span class="o">-</span> <span class="n">__new_num_nodes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">__add_at_front</span> <span class="o">?</span> <span class="n">__nodes_to_add</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__new_nstart</span> <span class="o">&lt;</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">copy</span><span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">__new_nstart</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">copy_backward</span><span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">__new_nstart</span> <span class="o">+</span> <span class="n">__old_num_nodes</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// map的size不够，重新分配</span>
+</span><span class='line'>    <span class="n">size_type</span> <span class="n">__new_map_size</span> <span class="o">=</span> <span class="n">_M_map_size</span> <span class="o">+</span> <span class="n">max</span><span class="p">(</span><span class="n">_M_map_size</span><span class="p">,</span> <span class="n">__nodes_to_add</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_Map_pointer</span> <span class="n">__new_map</span> <span class="o">=</span> <span class="n">_M_allocate_map</span><span class="p">(</span><span class="n">__new_map_size</span><span class="p">);</span> <span class="c1">// 重新分配map</span>
+</span><span class='line'>    <span class="n">__new_nstart</span> <span class="o">=</span> <span class="n">__new_map</span> <span class="o">+</span> <span class="p">(</span><span class="n">__new_map_size</span> <span class="o">-</span> <span class="n">__new_num_nodes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">__add_at_front</span> <span class="o">?</span> <span class="n">__nodes_to_add</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">copy</span><span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">__new_nstart</span><span class="p">);</span> <span class="c1">// 复制原map到新的map中</span>
+</span><span class='line'>    <span class="n">_M_deallocate_map</span><span class="p">(</span><span class="n">_M_map</span><span class="p">,</span> <span class="n">_M_map_size</span><span class="p">);</span> <span class="c1">// 释放原map</span>
+</span><span class='line'>    <span class="n">_M_map</span> <span class="o">=</span> <span class="n">__new_map</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_M_map_size</span> <span class="o">=</span> <span class="n">__new_map_size</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_set_node</span><span class="p">(</span><span class="n">__new_nstart</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_set_node</span><span class="p">(</span><span class="n">__new_nstart</span> <span class="o">+</span> <span class="n">__old_num_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>那么每个连续的缓冲区buffer（或node）是在什么时候配置呢？它是在map中实际使用到的最后一个node不够用时但map还可以继续在这个node后面加入node时（即map非满而node满时），在 <code>_M_push_back_aux</code> 中调用 <code>_M_allocate_node</code> 来分配，相关函数都比较简单，这里就不贴了。<br/>
 以上主要是空间分配相关的，那么在 <code>pop</code> 的时候，空间的释放又是怎样的呢？这里也需要判断是否当前node全部被 <code>pop</code> 了，如果是的则需要释放这个node所占用的空间。如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -339,26 +330,27 @@ $(document).ready(function(){
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void pop_back() { // deque内部实现的成员函数，inline的
-</span><span class='line'>    if (_M_finish._M_cur != _M_finish._M_first) { // 整个node还没有pop完
-</span><span class='line'>      --_M_finish._M_cur;
-</span><span class='line'>      destroy(_M_finish._M_cur); // 析构当前元素
-</span><span class='line'>    } else  _M_pop_back_aux();
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>void deque&lt;_Tp,_Alloc&gt;::_M_pop_back_aux() { // 整个node被pop完了的情况
-</span><span class='line'>  _M_deallocate_node(_M_finish._M_first); // 释放整个node的空间
-</span><span class='line'>  _M_finish._M_set_node(_M_finish._M_node - 1); // node前移
-</span><span class='line'>  _M_finish._M_cur = _M_finish._M_last - 1; // 当前元素为最后一个node的最后一个元素
-</span><span class='line'>  destroy(_M_finish._M_cur); // 释放当前元素
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">pop_back</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// deque内部实现的成员函数，inline的</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span> <span class="o">!=</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_first</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 整个node还没有pop完</span>
+</span><span class='line'>      <span class="o">--</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">destroy</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">);</span> <span class="c1">// 析构当前元素</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span>  <span class="n">_M_pop_back_aux</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">_M_pop_back_aux</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// 整个node被pop完了的情况</span>
+</span><span class='line'>  <span class="n">_M_deallocate_node</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_first</span><span class="p">);</span> <span class="c1">// 释放整个node的空间</span>
+</span><span class='line'>  <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_set_node</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// node前移</span>
+</span><span class='line'>  <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span> <span class="o">=</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_last</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// 当前元素为最后一个node的最后一个元素</span>
+</span><span class='line'>  <span class="n">destroy</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">);</span> <span class="c1">// 释放当前元素</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>4. deque 的迭代器</h2>
 
 <p>deque是分段连续空间，前面也提到了deque使用的是Bidirectional Iterators，因此deque的迭代器主要需要实现<code>operator++</code>和<code>operator--</code>。要实现这两个操作，需要考虑当前指针是否处于buffer的头/尾，如果在buffer的头部而需要前移（或尾部需要后移），就需要将buffer往前/后移一个，在SGI中是通过调用 <code>_M_set_node</code> 来实现的。具体代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -378,26 +370,27 @@ $(document).ready(function(){
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Ref, class _Ptr&gt; struct _Deque_iterator {
-</span><span class='line'>  typedef _Tp** _Map_pointer;
-</span><span class='line'>  _Tp* _M_cur; // 几个成员变量
-</span><span class='line'>  _Tp* _M_first;
-</span><span class='line'>  _Tp* _M_last;
-</span><span class='line'>  _Map_pointer _M_node;
-</span><span class='line'>  _Self& operator++() { // ++ 操作符重载，后移
-</span><span class='line'>    ++_M_cur;
-</span><span class='line'>    if (_M_cur == _M_last) { // 到了buffer的最后一个
-</span><span class='line'>      _M_set_node(_M_node + 1); // 将当前node指针_M_node指向下一个node
-</span><span class='line'>      _M_cur = _M_first; // 当前指针指向新node的第一个元素
-</span><span class='line'>    }
-</span><span class='line'>    return *this; 
-</span><span class='line'>  }
-</span><span class='line'>  void _M_set_node(_Map_pointer __new_node) {
-</span><span class='line'>    _M_node = __new_node; // map pointer后移
-</span><span class='line'>    _M_first = *__new_node; // first指向新node
-</span><span class='line'>    _M_last = _M_first + difference_type(_S_buffer_size()); // last指向下一个node
-</span><span class='line'>  }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ref</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ptr</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">_Deque_iterator</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Tp</span><span class="o">**</span> <span class="n">_Map_pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_cur</span><span class="p">;</span> <span class="c1">// 几个成员变量</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_first</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_last</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Map_pointer</span> <span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// ++ 操作符重载，后移</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">_M_cur</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_cur</span> <span class="o">==</span> <span class="n">_M_last</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 到了buffer的最后一个</span>
+</span><span class='line'>      <span class="n">_M_set_node</span><span class="p">(</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// 将当前node指针_M_node指向下一个node</span>
+</span><span class='line'>      <span class="n">_M_cur</span> <span class="o">=</span> <span class="n">_M_first</span><span class="p">;</span> <span class="c1">// 当前指针指向新node的第一个元素</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_set_node</span><span class="p">(</span><span class="n">_Map_pointer</span> <span class="n">__new_node</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_M_node</span> <span class="o">=</span> <span class="n">__new_node</span><span class="p">;</span> <span class="c1">// map pointer后移</span>
+</span><span class='line'>    <span class="n">_M_first</span> <span class="o">=</span> <span class="o">*</span><span class="n">__new_node</span><span class="p">;</span> <span class="c1">// first指向新node</span>
+</span><span class='line'>    <span class="n">_M_last</span> <span class="o">=</span> <span class="n">_M_first</span> <span class="o">+</span> <span class="n">difference_type</span><span class="p">(</span><span class="n">_S_buffer_size</span><span class="p">());</span> <span class="c1">// last指向下一个node</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>使用 <code>--</code> 操作符向前移动的同理，这里就不赘述了。</p>
@@ -408,7 +401,7 @@ $(document).ready(function(){
 <strong>（1）clear</strong><br/>
 该函数的作用是清除整个deque，释放所有空间而只保留一个缓冲区：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -420,24 +413,25 @@ $(document).ready(function(){
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; void deque&lt;_Tp,_Alloc&gt;::clear() {
-</span><span class='line'>  for (_Map_pointer __node = _M_start._M_node + 1; __node &lt; _M_finish._M_node; ++__node) { // 从第二个node开始，遍历每个缓冲区（node）
-</span><span class='line'>    destroy(*__node, *__node + _S_buffer_size()); // 析构每个元素
-</span><span class='line'>    _M_deallocate_node(*__node); // 释放缓冲区
-</span><span class='line'>  }
-</span><span class='line'>  if (_M_start._M_node != _M_finish._M_node) { // 还剩下头尾两个node
-</span><span class='line'>    destroy(_M_start._M_cur, _M_start._M_last); // 析构头node中的每个元素
-</span><span class='line'>    destroy(_M_finish._M_first, _M_finish._M_cur); // 析构尾node中的每个元素
-</span><span class='line'>    _M_deallocate_node(_M_finish._M_first); // 释放尾node的空间
-</span><span class='line'>  } else destroy(_M_start._M_cur, _M_finish._M_cur); // 只有一个node，析构这个node中的所有元素
-</span><span class='line'>  _M_finish = _M_start;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">clear</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">_Map_pointer</span> <span class="n">__node</span> <span class="o">=</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">__node</span> <span class="o">&lt;</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span><span class="p">;</span> <span class="o">++</span><span class="n">__node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 从第二个node开始，遍历每个缓冲区（node）</span>
+</span><span class='line'>    <span class="n">destroy</span><span class="p">(</span><span class="o">*</span><span class="n">__node</span><span class="p">,</span> <span class="o">*</span><span class="n">__node</span> <span class="o">+</span> <span class="n">_S_buffer_size</span><span class="p">());</span> <span class="c1">// 析构每个元素</span>
+</span><span class='line'>    <span class="n">_M_deallocate_node</span><span class="p">(</span><span class="o">*</span><span class="n">__node</span><span class="p">);</span> <span class="c1">// 释放缓冲区</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">!=</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 还剩下头尾两个node</span>
+</span><span class='line'>    <span class="n">destroy</span><span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">,</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_last</span><span class="p">);</span> <span class="c1">// 析构头node中的每个元素</span>
+</span><span class='line'>    <span class="n">destroy</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_first</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">);</span> <span class="c1">// 析构尾node中的每个元素</span>
+</span><span class='line'>    <span class="n">_M_deallocate_node</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_first</span><span class="p">);</span> <span class="c1">// 释放尾node的空间</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="n">destroy</span><span class="p">(</span><span class="n">_M_start</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">);</span> <span class="c1">// 只有一个node，析构这个node中的所有元素</span>
+</span><span class='line'>  <span class="n">_M_finish</span> <span class="o">=</span> <span class="n">_M_start</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>（2）erase</strong><br/>
 该函数的作用是清除 [first,last) 间的所有元素：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -461,36 +455,37 @@ $(document).ready(function(){
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>typename deque&lt;_Tp,_Alloc&gt;::iterator 
-</span><span class='line'>deque&lt;_Tp,_Alloc&gt;::erase(iterator __first, iterator __last) {
-</span><span class='line'>  if (__first == _M_start && __last == _M_finish) { // erase 所有元素，直接调用clear
-</span><span class='line'>    clear();
-</span><span class='line'>    return _M_finish;
-</span><span class='line'>  } else { // erase 部分元素
-</span><span class='line'>    difference_type __n = __last - __first; // 待擦出的区间长度
-</span><span class='line'>    difference_type __elems_before = __first - _M_start; // 擦出区间前的元素个数
-</span><span class='line'>    if (__elems_before &lt; difference_type((this-&gt;size() - __n) / 2)) { // 前面的元素个个数小于擦除后剩余总数的一半，将这部分后移
-</span><span class='line'>      copy_backward(_M_start, __first, __last); // 后移
-</span><span class='line'>      iterator __new_start = _M_start + __n; 
-</span><span class='line'>      destroy(_M_start, __new_start);
-</span><span class='line'>      _M_destroy_nodes(__new_start._M_node, _M_start._M_node);
-</span><span class='line'>      _M_start = __new_start;
-</span><span class='line'>    } else { // 前面剩余的元素较多，将后面的前移
-</span><span class='line'>      copy(__last, _M_finish, __first); // 前移
-</span><span class='line'>      iterator __new_finish = _M_finish - __n;
-</span><span class='line'>      destroy(__new_finish, _M_finish);
-</span><span class='line'>      _M_destroy_nodes(__new_finish._M_node + 1, _M_finish._M_node + 1);
-</span><span class='line'>      _M_finish = __new_finish;
-</span><span class='line'>    }
-</span><span class='line'>    return _M_start + __elems_before;
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">typename</span> <span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">iterator</span>
+</span><span class='line'><span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">erase</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">__first</span> <span class="o">==</span> <span class="n">_M_start</span> <span class="o">&amp;&amp;</span> <span class="n">__last</span> <span class="o">==</span> <span class="n">_M_finish</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// erase 所有元素，直接调用clear</span>
+</span><span class='line'>    <span class="n">clear</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// erase 部分元素</span>
+</span><span class='line'>    <span class="n">difference_type</span> <span class="n">__n</span> <span class="o">=</span> <span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">;</span> <span class="c1">// 待擦出的区间长度</span>
+</span><span class='line'>    <span class="n">difference_type</span> <span class="n">__elems_before</span> <span class="o">=</span> <span class="n">__first</span> <span class="o">-</span> <span class="n">_M_start</span><span class="p">;</span> <span class="c1">// 擦出区间前的元素个数</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__elems_before</span> <span class="o">&lt;</span> <span class="n">difference_type</span><span class="p">((</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">__n</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// 前面的元素个个数小于擦除后剩余总数的一半，将这部分后移</span>
+</span><span class='line'>      <span class="n">copy_backward</span><span class="p">(</span><span class="n">_M_start</span><span class="p">,</span> <span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span> <span class="c1">// 后移</span>
+</span><span class='line'>      <span class="n">iterator</span> <span class="n">__new_start</span> <span class="o">=</span> <span class="n">_M_start</span> <span class="o">+</span> <span class="n">__n</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">destroy</span><span class="p">(</span><span class="n">_M_start</span><span class="p">,</span> <span class="n">__new_start</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">_M_destroy_nodes</span><span class="p">(</span><span class="n">__new_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">,</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_node</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">_M_start</span> <span class="o">=</span> <span class="n">__new_start</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 前面剩余的元素较多，将后面的前移</span>
+</span><span class='line'>      <span class="n">copy</span><span class="p">(</span><span class="n">__last</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">,</span> <span class="n">__first</span><span class="p">);</span> <span class="c1">// 前移</span>
+</span><span class='line'>      <span class="n">iterator</span> <span class="n">__new_finish</span> <span class="o">=</span> <span class="n">_M_finish</span> <span class="o">-</span> <span class="n">__n</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">destroy</span><span class="p">(</span><span class="n">__new_finish</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">_M_destroy_nodes</span><span class="p">(</span><span class="n">__new_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">_M_finish</span> <span class="o">=</span> <span class="n">__new_finish</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_start</span> <span class="o">+</span> <span class="n">__elems_before</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>（3）insert</strong><br/>
 该函数的作用是在某个位置插入一个元素：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -523,39 +518,40 @@ $(document).ready(function(){
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>iterator insert(iterator position, const value_type& __x) {
-</span><span class='line'>  if (position._M_cur == _M_start._M_cur) { // 在头部插入，用push_front
-</span><span class='line'>    push_front(__x);
-</span><span class='line'>    return _M_start;
-</span><span class='line'>  } else if (position._M_cur == _M_finish._M_cur) { // 在尾部插入
-</span><span class='line'>    push_back(__x);
-</span><span class='line'>    iterator __tmp = _M_finish;
-</span><span class='line'>    --__tmp;
-</span><span class='line'>    return __tmp; // 返回插入位置
-</span><span class='line'>  } else { // 在中间插入
-</span><span class='line'>    return _M_insert_aux(position, __x);
-</span><span class='line'>  }
-</span><span class='line'>}
-</span><span class='line'>deque&lt;_Tp,_Alloc&gt;::_M_insert_aux(iterator __pos, const value_type& __x) {
-</span><span class='line'>  difference_type __index = __pos - _M_start; // 插入点之前的元素个数
-</span><span class='line'>  value_type __x_copy = __x;
-</span><span class='line'>  if (size_type(__index) &lt; this-&gt;size() / 2) { // 前面的元素个数较小
-</span><span class='line'>    push_front(front()); // 在头部插入与头部相同的元素，然后从第二个元素开始到插入位置整体前移一步
-</span><span class='line'>    iterator __front1 = _M_start; ++__front1;
-</span><span class='line'>    iterator __front2 = __front1; ++__front2;
-</span><span class='line'>    __pos = _M_start + __index;
-</span><span class='line'>    iterator __pos1 = __pos; ++__pos1;
-</span><span class='line'>    copy(__front2, __pos1, __front1);
-</span><span class='line'>  } else { // 插入点后面的元素较少，从后面插入，然后插入点到尾部整体往后移一步
-</span><span class='line'>    push_back(back());
-</span><span class='line'>    iterator __back1 = _M_finish; --__back1;
-</span><span class='line'>    iterator __back2 = __back1;  --__back2;
-</span><span class='line'>    __pos = _M_start + __index;
-</span><span class='line'>    copy_backward(__pos, __back2, __back1);
-</span><span class='line'>  }
-</span><span class='line'>  *__pos = __x_copy;
-</span><span class='line'>  return __pos;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">iterator</span> <span class="n">insert</span><span class="p">(</span><span class="n">iterator</span> <span class="n">position</span><span class="p">,</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">_M_cur</span> <span class="o">==</span> <span class="n">_M_start</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 在头部插入，用push_front</span>
+</span><span class='line'>    <span class="n">push_front</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_start</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">_M_cur</span> <span class="o">==</span> <span class="n">_M_finish</span><span class="p">.</span><span class="n">_M_cur</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 在尾部插入</span>
+</span><span class='line'>    <span class="n">push_back</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">--</span><span class="n">__tmp</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__tmp</span><span class="p">;</span> <span class="c1">// 返回插入位置</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 在中间插入</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_insert_aux</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">_M_insert_aux</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__pos</span><span class="p">,</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">difference_type</span> <span class="n">__index</span> <span class="o">=</span> <span class="n">__pos</span> <span class="o">-</span> <span class="n">_M_start</span><span class="p">;</span> <span class="c1">// 插入点之前的元素个数</span>
+</span><span class='line'>  <span class="n">value_type</span> <span class="n">__x_copy</span> <span class="o">=</span> <span class="n">__x</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">size_type</span><span class="p">(</span><span class="n">__index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 前面的元素个数较小</span>
+</span><span class='line'>    <span class="n">push_front</span><span class="p">(</span><span class="n">front</span><span class="p">());</span> <span class="c1">// 在头部插入与头部相同的元素，然后从第二个元素开始到插入位置整体前移一步</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__front1</span> <span class="o">=</span> <span class="n">_M_start</span><span class="p">;</span> <span class="o">++</span><span class="n">__front1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__front2</span> <span class="o">=</span> <span class="n">__front1</span><span class="p">;</span> <span class="o">++</span><span class="n">__front2</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__pos</span> <span class="o">=</span> <span class="n">_M_start</span> <span class="o">+</span> <span class="n">__index</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__pos1</span> <span class="o">=</span> <span class="n">__pos</span><span class="p">;</span> <span class="o">++</span><span class="n">__pos1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">copy</span><span class="p">(</span><span class="n">__front2</span><span class="p">,</span> <span class="n">__pos1</span><span class="p">,</span> <span class="n">__front1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 插入点后面的元素较少，从后面插入，然后插入点到尾部整体往后移一步</span>
+</span><span class='line'>    <span class="n">push_back</span><span class="p">(</span><span class="n">back</span><span class="p">());</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__back1</span> <span class="o">=</span> <span class="n">_M_finish</span><span class="p">;</span> <span class="o">--</span><span class="n">__back1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__back2</span> <span class="o">=</span> <span class="n">__back1</span><span class="p">;</span>  <span class="o">--</span><span class="n">__back2</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__pos</span> <span class="o">=</span> <span class="n">_M_start</span> <span class="o">+</span> <span class="n">__index</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">copy_backward</span><span class="p">(</span><span class="n">__pos</span><span class="p">,</span> <span class="n">__back2</span><span class="p">,</span> <span class="n">__back1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="o">*</span><span class="n">__pos</span> <span class="o">=</span> <span class="n">__x_copy</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__pos</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>deque原本只能在头部或尾部插入元素的，提供了insert之后，就可以任何位置插入元素了。</p>
@@ -565,7 +561,7 @@ $(document).ready(function(){
 <p>由于deque可以从首位两端插入或剔除元素，所以只需要对其进行简单的封装就可以分别实现先进先出（FIFO）的stack和先进后出（FILO）的queue了。stack和queue中都有一个deque类型的成员，用做数据存储的容器，然后对deque的部分接口进行简单的封装，例如stack只提供从末端插入和删除的接口以及获取末端元素的接口，而queue则只提供从尾部插入而从头部删除的接口以及获取首位元素的接口。像这样具有“修改某物接口，形成另一种风貌”的性质的，称为配接器（adapter），因此STL中stack和queue往往不被归类为容器（container），而被归类为容器配接器（container adapter）。（关于配接器后面文章还会具体介绍）<br/>
 下面只给出stack的基本实现，并加以注解。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -580,26 +576,27 @@ $(document).ready(function(){
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque&lt;_Tp&gt;) &gt;
-</span><span class='line'>class stack; // 原型声明
-</span><span class='line'>template &lt;class _Tp, class _Sequence&gt; class stack {
-</span><span class='line'>protected:
-</span><span class='line'>  _Sequence c; // _Sequence为deque&lt;_Tp&gt;，c为实际存储数据的容器
-</span><span class='line'>public: // 向外部提供的接口，都是调用deque的接口来实现的
-</span><span class='line'>  stack() : c() {}
-</span><span class='line'>  explicit stack(const _Sequence& __s) : c(__s) {}
-</span><span class='line'>  bool empty() const { return c.empty(); }
-</span><span class='line'>  size_type size() const { return c.size(); }
-</span><span class='line'>  reference top() { return c.back(); }
-</span><span class='line'>  const_reference top() const { return c.back(); }
-</span><span class='line'>  void push(const value_type& __x) { c.push_back(__x); }
-</span><span class='line'>  void pop() { c.pop_back(); }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Sequence</span> <span class="n">__STL_DEPENDENT_DEFAULT_TMPL</span><span class="p">(</span><span class="n">deque</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">stack</span><span class="p">;</span> <span class="c1">// 原型声明</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Sequence</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">stack</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Sequence</span> <span class="n">c</span><span class="p">;</span> <span class="c1">// _Sequence为deque&lt;_Tp&gt;，c为实际存储数据的容器</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span> <span class="c1">// 向外部提供的接口，都是调用deque的接口来实现的</span>
+</span><span class='line'>  <span class="n">stack</span><span class="p">()</span> <span class="o">:</span> <span class="n">c</span><span class="p">()</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="k">explicit</span> <span class="n">stack</span><span class="p">(</span><span class="k">const</span> <span class="n">_Sequence</span><span class="o">&amp;</span> <span class="n">__s</span><span class="p">)</span> <span class="o">:</span> <span class="n">c</span><span class="p">(</span><span class="n">__s</span><span class="p">)</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">c</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">size_type</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">c</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">reference</span> <span class="n">top</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">c</span><span class="p">.</span><span class="n">back</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">const_reference</span> <span class="n">top</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">c</span><span class="p">.</span><span class="n">back</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span> <span class="n">c</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">pop</span><span class="p">()</span> <span class="p">{</span> <span class="n">c</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>值得一提的是，stack和queue都没有迭代器，因此不能对stack或queue进行遍历。但他们提供了 <code>operator ==</code> 和 <code>operator&lt;</code> 这两个比较大小的操作符：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -607,22 +604,24 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Seq&gt;
-</span><span class='line'>bool operator==(const stack&lt;_Tp,_Seq&gt;& __x, const stack&lt;_Tp,_Seq&gt;& __y) {
-</span><span class='line'>  return __x.c == __y.c;
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp, class _Seq&gt;
-</span><span class='line'>bool operator&lt;(const stack&lt;_Tp,_Seq&gt;& __x, const stack&lt;_Tp,_Seq&gt;& __y) {
-</span><span class='line'>  return __x.c &lt; __y.c;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Seq</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">stack</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Seq</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span> <span class="k">const</span> <span class="n">stack</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Seq</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">c</span> <span class="o">==</span> <span class="n">__y</span><span class="p">.</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Seq</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">stack</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Seq</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span> <span class="k">const</span> <span class="n">stack</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Seq</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">c</span> <span class="o">&lt;</span> <span class="n">__y</span><span class="p">.</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>另外，除了使用默认的deque作为stack和queue的容器之外，我们还可以使用list或其他自定义的容器，只需要实现了stack或queue需要的接口，使用方法很简单：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>stack&lt;int,vector&lt;int&gt; &gt; ist;
-</span><span class='line'>queue&lt;char,list&lt;char&gt; &gt; cq;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ist</span><span class="p">;</span>
+</span><span class='line'><span class="n">queue</span><span class="o">&lt;</span><span class="kt">char</span><span class="p">,</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">cq</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>即只需要指定模板中第二个参数即可。<br/>
@@ -665,7 +664,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

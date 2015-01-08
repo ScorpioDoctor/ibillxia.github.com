@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ASSP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/assp/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -48,7 +48,7 @@ Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储�
 0x4000:   0x34</br>
 0x4001:   0x12</br>
 用程序在区别的话，可以考虑：
-{% codeblock %}
+``` c
 #include <stdio.h>
 #include <stdlib.h>
 int main(int argc, char *argv[])
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
       system("PAUSE"); 
       return 0;
 }
-{% endcodeblock %}
+```
 </p>
 
 
@@ -88,7 +88,7 @@ ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由�
 
 
 <p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-{% codeblock %}
+``` c
 // data 为读取到的采样点的值，speech为原始数据流，
 //对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
 for(i=0;i<NumSample;i++){
@@ -99,7 +99,7 @@ for(i=0;i<NumSample;i++){
     else if(BitsPerSample==32)
         data[i] = (int)*((int*)speech+i);
 }
-{% endcodeblock %}
+```
 </p>
 
 
@@ -118,11 +118,11 @@ Data: 真正的语音数据部分。</br>
 
 
 <p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-{% codeblock %}
+```
 52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
 22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
 24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
-{% endcodeblock %}
+```
 则其个字段的解析如下图：
 <center>{% img /images/2013/IMAG2013072002.gif %}</center>
 </p>
@@ -136,7 +136,7 @@ Data: 真正的语音数据部分。</br>
 <p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
 
 
-<p>{% codeblock %}</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -228,7 +228,7 @@ return speech;
 </code></pre>
 
 <p>}
-{% endcodeblock %}</p>
+```</p>
 
 <h2>参考</h2>
 
@@ -262,7 +262,7 @@ return speech;
 <p>实例程序</p>
 
 
-<p>{% codeblock %}
+<p>``` c
 // <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> FileName: WinMain.cpp </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>**********
 // 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
 // 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</p>
@@ -463,7 +463,7 @@ return 0;
 
 <p>}
 // <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> End of File </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>*****
-{% endcodeblock %}</p>
+```</p>
 
 <p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
 
@@ -565,7 +565,7 @@ return 0;
 其中$\tau$是一个延迟的时间间隔。在某个区间使得$acf(\tau)$取得最大值的那个$\tau$值就选为pitch的起止点，如下图所示：
 <center>{% img /images/2013/IMAG2013052902.png %}</center>
 也就是说，我们将原始语音信号与其平移延迟信号的重叠（时间上重叠）部分进行内积运算，从而得到ACF。下面看一个具体的实例，其代码如下：
-{% codeblock %}
+``` py3
 import wave
 import numpy as np
 import pylab as pl
@@ -619,7 +619,7 @@ pl.plot(np.arange(frameSize),acf,'g')
 pl.xlabel("index in 1 frame")
 pl.ylabel("ACF")
 pl.show()
-{% endcodeblock %}
+```
 程序运行结果如下图所示：
 <center>{% img /images/2013/IMAG2013052903.png %}</center>
 </p>
@@ -714,7 +714,7 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
 
 
 <p>下面我们来看看最简单的、不需要训练的方法，其代码如下：
-{% codeblock %}
+``` py3
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
@@ -768,7 +768,7 @@ plt.legend()
 plt.ylabel('Volume(absSum)')
 plt.xlabel('time(seconds)')
 plt.show()
-{% endcodeblock %}
+```
 其中计算音量的函数calVolume参见<a href="http://ibillxia.github.io/blog/2013/05/15/audio-signal-process-time-domain-volume-python-realization/">
 音量及其Python实现</a>一文。程序的运行结果如下图：
 <center>{% img /images/2013/IMAG2013052201.png %}</center>
@@ -872,7 +872,7 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 
 <p>
 闲话少说了，上代码吧，其实看看这代码也挺简单的，就调一个matplotlib.pyplot.specgram()就可以了。
-{% codeblock %}
+``` py3
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
@@ -893,7 +893,7 @@ plt.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
 plt.ylabel('Frequency')
 plt.xlabel('time(seconds)')
 plt.show()
-{% endcodeblock %}
+```
 </p>
 
 

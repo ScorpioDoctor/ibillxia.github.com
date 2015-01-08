@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Leetcode | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/leetcode/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -45,7 +45,7 @@
 
 <p> 一个简单的实现如下：</p>
 
-<p>```
+<p>``` cpp
 void recursive_permute(int A[],int i,int n){</p>
 
 <pre><code>if(i==n-1){
@@ -74,7 +74,7 @@ for(int j=i;j&lt;n;j++){
 
 <p>添加这个限制的递归实现代码如下：</p>
 
-<p>```
+<p>``` cpp
 void recursive_permute2(int A[],int i,int n){</p>
 
 <pre><code>if(i==n-1){
@@ -117,7 +117,7 @@ for(int j=i;j&lt;n;j++){
 
 <p>上面的说明已经很接近伪代码了，具体实现如下：</p>
 
-<p>```
+<p>``` cpp
 bool next_permute(int A[],int n){</p>
 
 <pre><code>int i,j;
@@ -165,7 +165,7 @@ do{
 
 <p>下面来分析一下 STL 中是如何实现 next permute 的，在 stl_algo.h 中我们可以找到 next_permutation 的实现，基本思路也是按照上面的四步走来实现的，具体见如下代码及注释：</p>
 
-<p>```
+<p>``` cpp
 /<em>*
  *  @brief  Permute range into the next @a dictionary ordering.
  *  @ingroup sorting_algorithms
@@ -226,7 +226,7 @@ for(;;) {
 
 <p>这里是用双向迭代器对容器中的元素进行操作的，一个调用的实例如下：</p>
 
-<p>```
+<p>``` cpp
 vector&lt;vector<int> > permute(vector<int> &amp;num) {</p>
 
 <pre><code>vector&lt;vector&lt;int&gt; &gt; ans;

@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -641,12 +629,13 @@ MIDI接口：MIDI接口是为了连接舞台上的synthesizer、键盘、道具�
 
 <p>相关的 HTML 代码很简单，在source/_include/custom/footer.html中添加如下代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;p id = "back-top"&gt;
-</span><span class='line'>  &lt;a href="#top"&gt;&lt;span&gt;&lt;/span&gt;Back to Top&lt;/a&gt;
-</span><span class='line'>&lt;/p&gt;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;p</span> <span class="na">id =</span><span class="err"> </span><span class="s">&quot;back-top&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#top&quot;</span><span class="nt">&gt;&lt;span&gt;&lt;/span&gt;</span>Back to Top<span class="nt">&lt;/a&gt;</span>
+</span><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 

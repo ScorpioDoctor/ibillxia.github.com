@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: set | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/set/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -28,7 +28,7 @@
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first) __f(*__first);
 </code></p>
 
@@ -40,7 +40,7 @@ for ( ; __first != __last; ++__first) __f(*__first);
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<p><code>
+<p><code>cpp
 while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 </code></p>
 
@@ -53,7 +53,7 @@ while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first != </strong>last; ++__first)</p>
 
 <pre><code>if (*__first == __value) ++__n;
@@ -71,7 +71,7 @@ for ( ; <strong>first != </strong>last; ++__first)</p>
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
 
 <pre><code>iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
@@ -82,7 +82,7 @@ for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
 
 <pre><code>*__result = __opr(*__first);
@@ -92,7 +92,7 @@ for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, ++__result)</p>
 
 <pre><code>*__result = __binary_op(*__first1, *__first2);
@@ -105,7 +105,7 @@ for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, +
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first)
    if (*__first == __old_value) *__first = __new_value;
 </code></p>
@@ -115,7 +115,7 @@ for ( ; __first != __last; ++__first)
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first) *__first = __gen();
 </code></p>
 
@@ -124,7 +124,7 @@ for ( ; __first != __last; ++__first) *__first = __gen();
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<p>```
+<p>``` cpp
 <strong>first = find(</strong>first, <strong>last, </strong>value);
 _ForwardIter <strong>i = </strong>first;
 return <strong>first == </strong>last ? __first</p>
@@ -142,7 +142,7 @@ return <strong>first == </strong>last ? __first</p>
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<p><code>
+<p><code>cpp
 while (__first &lt; __last) iter_swap(__first++, --__last);
 </code></p>
 
@@ -156,7 +156,7 @@ while (__first &lt; __last) iter_swap(__first++, --__last);
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<p>```
+<p>``` cpp
 for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>last; ++__i)</p>
 
 <pre><code>iter_swap(__i, __first + __random_number((__i - __first) + 1));
@@ -257,7 +257,7 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 <!-- more -->
 
 
-<p>```
+<p>``` cpp
 template <class _Key, class _Compare, class _Alloc>
 class set {
 public:
@@ -313,7 +313,7 @@ inline bool operator&lt;(const set&lt;</em>Key,<em>Compare,</em>Alloc>&amp; __x,
 <h2>3. multiset</h2>
 
 <p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。<br/>
-```
+``` cpp
 template <class _Key, class _Compare, class _Alloc>
 class multiset {
 public:

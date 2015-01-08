@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: algorithm | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/algorithm/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -28,7 +28,7 @@
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first) __f(*__first);
 </code></p>
 
@@ -40,7 +40,7 @@ for ( ; __first != __last; ++__first) __f(*__first);
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<p><code>
+<p><code>cpp
 while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 </code></p>
 
@@ -53,7 +53,7 @@ while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first != </strong>last; ++__first)</p>
 
 <pre><code>if (*__first == __value) ++__n;
@@ -71,7 +71,7 @@ for ( ; <strong>first != </strong>last; ++__first)</p>
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
 
 <pre><code>iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
@@ -82,7 +82,7 @@ for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
 
 <pre><code>*__result = __opr(*__first);
@@ -92,7 +92,7 @@ for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<p>```
+<p>``` cpp
 for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, ++__result)</p>
 
 <pre><code>*__result = __binary_op(*__first1, *__first2);
@@ -105,7 +105,7 @@ for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, +
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first)
    if (*__first == __old_value) *__first = __new_value;
 </code></p>
@@ -115,7 +115,7 @@ for ( ; __first != __last; ++__first)
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<p><code>
+<p><code>cpp
 for ( ; __first != __last; ++__first) *__first = __gen();
 </code></p>
 
@@ -124,7 +124,7 @@ for ( ; __first != __last; ++__first) *__first = __gen();
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<p>```
+<p>``` cpp
 <strong>first = find(</strong>first, <strong>last, </strong>value);
 _ForwardIter <strong>i = </strong>first;
 return <strong>first == </strong>last ? __first</p>
@@ -142,7 +142,7 @@ return <strong>first == </strong>last ? __first</p>
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<p><code>
+<p><code>cpp
 while (__first &lt; __last) iter_swap(__first++, --__last);
 </code></p>
 
@@ -156,7 +156,7 @@ while (__first &lt; __last) iter_swap(__first++, --__last);
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<p>```
+<p>``` cpp
 for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>last; ++__i)</p>
 
 <pre><code>iter_swap(__i, __first + __random_number((__i - __first) + 1));
@@ -278,7 +278,7 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 
 
 <p>源码如下：
-```
+``` cpp
 template <class _InputIter1, class _InputIter2>
 bool lexicographical_compare(<em>InputIter1 __first1, </em>InputIter1 <strong>last1, _InputIter2 </strong>first2, _InputIter2 <strong>last2) {
   for ( ; </strong>first1 != <strong>last1 &amp;&amp; </strong>first2 != <strong>last2; ++</strong>first1, ++__first2) {</p>
@@ -296,7 +296,7 @@ if (*__first2 &lt; *__first1)
 
 <p>除了这个默认的版本外，还有一个版本提供比较方法（仿函数）的参数。另外，对于纯字符串的比较，SGI STL还做了进一步优化，使用原生指针和C标准函数 <code>memcmp()</code> 进行比较，如下：</p>
 
-<p>```
+<p>``` cpp
 inline bool
 lexicographical_compare(const unsigned char<em> __first1, const unsigned char</em> __last1,</p>
 
@@ -320,7 +320,7 @@ lexicographical_compare(const unsigned char<em> __first1, const unsigned char</e
 
 <p>在介绍 copy 算法的源码具体实现前，根据源码及其注释再做一个简单的小结：copy 算法中的一些辅助函数有两个目的，其一是对于简单的数据类型尽量使用 memmove，其二是对于具有 RandomAccessIterators 的对象使用一个计数器来进行循环；除此之外，SGI STL针对编译器是否具有函数模板偏特化、类模板偏特化等进行了适配。下面是 copy 的源码，其中添加了比较详细具体的注释：</p>
 
-<p>```
+<p>``` cpp
 // 首先是几个与偏特化无关的公用的3个函数
 template <class _InputIter, class _OutputIter, class _Distance>
 inline <em>OutputIter
@@ -526,7 +526,7 @@ __SGI_STL_DECLARE_COPY_TRIVIAL(long double)</p>
 
 <p>该算法计算 init 和区间 [first, last) 内所有元素的总和。注意，必须提供 init 的初始值，这样即使 first=last 区间为空，仍能得到一个明确定义的值。当 init=0 时，即为计算 [first, last) 区间内所有元素的总和。具体实现有两个版本，如下：</p>
 
-<p>```
+<p>``` cpp
 template <class _InputIterator, class _Tp>
 <em>Tp accumulate(</em>InputIterator <strong>first, _InputIterator </strong>last, <em>Tp <strong>init){
   </strong>STL_REQUIRES(</em>InputIterator, _InputIterator); // concept check
@@ -558,7 +558,7 @@ template <class _InputIterator, class _Tp, class _BinaryOperation>
 
 <p>该算法用来计算区间 [first, last) 中相邻元素的差（或其他指定运算，结果[i]=当前元素[i]的值-前驱元素[i-1]的值），该算法也有两个版本，一个是指定运算为差，另一个传入仿函数(参数 _binary_op)指定具体运算，这里贴出第二个版本：</p>
 
-<p>```
+<p>``` cpp
 template <class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOperation>
 <em>OutputIterator
 __adjacent_difference(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
@@ -596,7 +596,7 @@ template <class _InputIterator, class _OutputIterator, class _BinaryOperation>
 <h3>3. inner_product</h3>
 
 <p>该算法实现区间 [first1, last1) 和区间 [first2, first2+(last1-first1) ) 的一般内积（generalized inner product），公式为$init = init+(<em>i) * (</em>(first2+(i-first1)))$同样需要提供 init 的值（理由同accumulate）。另外还有一个版本，提供两个仿函数，分别指定上面公式中的加法和乘法。第一个版本的代码如下：
-```
+``` cpp
 template <class _InputIterator1, class _InputIterator2, class _Tp>
 <em>Tp inner_product(</em>InputIterator1 <strong>first1, _InputIterator1 </strong>last1,</p>
 
@@ -616,7 +616,7 @@ template <class _InputIterator1, class _InputIterator2, class _Tp>
 <h3>4. partial_sum</h3>
 
 <p>该算法用来计算局部总和，将 <code>*first</code> 赋值给 <code>*result</code>，将 <code>*frist+*(first+1)</code> 赋值给 <code>*(result+1)</code>，依次类推，即有 <code>result[i]=sum(*first..*(first+i))</code>，这是默认的操作为加法的版本，还有一个版本可以通过仿函数指定操作，以下是默认版本：
-```
+``` cpp
 template <class _InputIterator, class _OutputIterator, class _Tp>
 <em>OutputIterator __partial_sum(</em>InputIterator <strong>first, _InputIterator </strong>last,</p>
 
@@ -648,7 +648,7 @@ template <class _InputIterator, class _OutputIterator>
 <h3>5. itoa</h3>
 
 <p>该算法不是C++/STL标准，主要作用是将区间 [first, last) 的值赋值为 value,value+1,value+2,... 如下：
-```
+``` cpp
 template <class _ForwardIter, class _Tp>
 void iota(<em>ForwardIter __first, </em>ForwardIter <strong>last, _Tp </strong>value){
   while (<strong>first != </strong>last)</p>
@@ -662,7 +662,7 @@ void iota(<em>ForwardIter __first, </em>ForwardIter <strong>last, _Tp </strong>v
 <h3>6. power</h3>
 
 <p>该算法也不是C++/STL标准，作用在于实现 x 的 n 次方的计算，通过将n分解为2的幂来计算。还有一个版本是用户可以指定运算，而不一定是乘法。默认版本如下：
-```
+``` cpp
 template <class _Tp, class _Integer, class _MonoidOperation>
 <em>Tp __power(</em>Tp <strong>x, _Integer </strong>n, _MonoidOperation <strong>opr){ // func1：幂方的具体实现
   if (</strong>n == 0)</p>
@@ -783,7 +783,7 @@ inline <em>Tp power(</em>Tp </strong>x, _Integer <strong>n){
 
 <p>下面以查找算法的泛化过程为例详细介绍算法泛化的奇妙。对于查找算法，我们首先想到的是在一个整型数组中查找指定元素，一个基本的实现如下：</p>
 
-<p>```
+<p>``` cpp
 int<em> find(int</em> arrayHead, int arraySize, int value){</p>
 
 <pre><code>for(int i=0; i &lt; arraySize; i++){
@@ -797,7 +797,7 @@ return &amp;(arrayHead[i]);
 
 <p>该函数在数组中查找指定值的元素，返回找到的第一个符合条件的元素的地址，如果没有找到就返回最后一个元素的下一个位置（称为end）。当没有找到时，这里为什么要返回地址值（end）而不返回null呢？这是为了方便调用后续的泛型算法，但实际上该算法本身还是与容器相关的，而且暴露了很多容器的实现细节（如arraySize等）。为了让该算法适用于所有类型的容器，其操作应该更抽象化，可以让 find 接受两个指针作为参数，标识出一个操作区间，如下：</p>
 
-<p>```
+<p>``` cpp
 int<em> find(int</em> begin, int* end, int value){</p>
 
 <pre><code>while(begin != end &amp;&amp; *begin != value) ++begin;
@@ -809,7 +809,7 @@ return begin;
 
 <p>该函数在区间 <code>[begin, end)</code> 内查找 value，并返回一个指针。这样做之后，已经隐藏了容器内部特性了，但不足的是，要求元素的数据类型为整型，我们可以通过模板参数来解决这个问题：</p>
 
-<p>```
+<p>``` cpp
 template<typename T>
 T<em> find(T</em> begin, T* end, const T&amp; value){</p>
 
@@ -825,7 +825,7 @@ return begin; // 会引发copy行为
 
 <p>但这个版本还不够泛化，因为参数被限制为指针，而那些支持以上四种操作、行为很像指针的某些对象就无法使用 find 了。在STL中有迭代器，它是一种行为类似指针的对象，是一种smart pointers，使用迭代器实现 find 如下：</p>
 
-<p>```
+<p>``` cpp
 template<class Iterator, class T>
 Iterator find(Iterator begin, Iterator end, const T&amp; value){</p>
 

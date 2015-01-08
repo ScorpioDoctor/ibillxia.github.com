@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -211,14 +199,16 @@ $(document).ready(function(){
 
 <p>首先下载适用于 Octopress 的 <a href="https://github.com/bkutil/bootstrap-theme">Bootstrap主题</a> 并解压缩到博客的 .theme 目录，然后安装：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake install['bootstrap']</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake install<span class="o">[</span><span class="s1">&#39;bootstrap&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>安装的过程中可能会提示有 sass 或其他依赖库的语法错误神马的，这是因为 sass 的版本过低，可以通过如下命令来跟新：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bundle update sass</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle update sass
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -234,15 +224,16 @@ $(document).ready(function(){
 
 <p>首先，需要安装 <a href="https://github.com/plusjade/jekyll-bootstrap">jekyll-bootstrap</a> 的一些东西，请先下载并解压。主要是 <em>includes/JB/ 目录下的内容，将 JB 文件夹拷贝到 $BLOG_HOME/source/</em>includes/ 目录下，还有 jekyll-bootstrap 根目录下的 tags.html 拷贝到你想展示 Tags 的目录，并在 _config.yml 文件中配置 tag_dir 项的值为该目录，例如我这里的配置是：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>tag_dir: blog/tags</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>tag_dir: blog/tags
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>所以我的 tags.html 文件放在了 $BLOG_HOME/source/blog/tags 目录下，并将 tags.html 重命名为 index.html。</p>
 
 <p>这些配置好了后，你就可以先运行 rake generate 和 rake preview 来看看效果。可以发现 Tags 归档页的显示还是不太友好。那么我们需要加入一些自己的 css 样式。这里我参考了 pluskid 师兄的博客的 css 代码并略有修改，在我新建的 $BLOG_HOME/source/stylesheets/style.css 文件中加入如下代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -275,45 +266,47 @@ $(document).ready(function(){
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/* tag_box */
-</span><span class='line'>.tag_box {
-</span><span class='line'>  list-style:none;
-</span><span class='line'>  margin:0;
-</span><span class='line'>  padding:2px 0 ;
-</span><span class='line'>  overflow:hidden;
-</span><span class='line'>}
-</span><span class='line'>.tag_box li {
-</span><span class='line'>  line-height:20px;
-</span><span class='line'>  margin:0;
-</span><span class='line'>}
-</span><span class='line'>.tag_box.inline li {
-</span><span class='line'>  float:left;
-</span><span class='line'>  padding:2px 0 ;
-</span><span class='line'>}
-</span><span class='line'>.tag_box a {
-</span><span class='line'>  padding: 2px;
-</span><span class='line'>  margin: 2px;
-</span><span class='line'>  background: #eee;
-</span><span class='line'>  color:#005F6B;
-</span><span class='line'>  border-radius: 3px;
-</span><span class='line'>  text-decoration:none;
-</span><span class='line'>}
-</span><span class='line'>.tag_box a span{
-</span><span class='line'>  vertical-align:super;
-</span><span class='line'>  font-size:0.8em;
-</span><span class='line'>}
-</span><span class='line'>.tag_box a.active {
-</span><span class='line'>  background:#57A957;
-</span><span class='line'>  border:1px solid #4C964D;
-</span><span class='line'>  color:#FFF;
-</span><span class='line'>}
-</span><span class='line'>/* tag_box end */</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/* tag_box */</span>
+</span><span class='line'><span class="nc">.tag_box</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">list-style</span><span class="o">:</span><span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">margin</span><span class="o">:</span><span class="m">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">padding</span><span class="o">:</span><span class="m">2px</span> <span class="m">0</span> <span class="p">;</span>
+</span><span class='line'>  <span class="k">overflow</span><span class="o">:</span><span class="k">hidden</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nc">.tag_box</span> <span class="nt">li</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">line-height</span><span class="o">:</span><span class="m">20px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">margin</span><span class="o">:</span><span class="m">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nc">.tag_box.inline</span> <span class="nt">li</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">float</span><span class="o">:</span><span class="k">left</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">padding</span><span class="o">:</span><span class="m">2px</span> <span class="m">0</span> <span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nc">.tag_box</span> <span class="nt">a</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">padding</span><span class="o">:</span> <span class="m">2px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">margin</span><span class="o">:</span> <span class="m">2px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">background</span><span class="o">:</span> <span class="m">#eee</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span><span class="m">#005F6B</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">border</span><span class="o">-</span><span class="n">radius</span><span class="o">:</span> <span class="m">3px</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">text-decoration</span><span class="o">:</span><span class="k">none</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nc">.tag_box</span> <span class="nt">a</span> <span class="nt">span</span><span class="p">{</span>
+</span><span class='line'>  <span class="k">vertical-align</span><span class="o">:</span><span class="k">super</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">font-size</span><span class="o">:</span><span class="m">0.8em</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nc">.tag_box</span> <span class="nt">a</span><span class="nc">.active</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">background</span><span class="o">:</span><span class="m">#57A957</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">border</span><span class="o">:</span><span class="m">1px</span> <span class="k">solid</span> <span class="m">#4C964D</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span><span class="m">#FFF</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c">/* tag_box end */</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>注意，这里由于新加了 css 文件，要让其生效，需要在 html 模板中加入引用，具体我是在 $BLOG_HOME/source/_includes/head.html 文件中加入如下代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;link href="/stylesheets/style.css" media="screen, projection" rel="stylesheet" type="text/css"&gt;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/stylesheets/style.css&quot;</span> <span class="na">media=</span><span class="s">&quot;screen, projection&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>你也可以直接在 html 模板中加入 css 代码而不用新建 css 文件并添加引用。</p>
@@ -359,7 +352,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

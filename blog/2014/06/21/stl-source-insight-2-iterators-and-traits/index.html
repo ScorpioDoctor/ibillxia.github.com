@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -249,7 +237,7 @@ $(document).ready(function(){
 
 <p>例如，下面是 <code>back_insert_iterator</code> 的标准定义：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -272,29 +260,30 @@ $(document).ready(function(){
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Container&gt;
-</span><span class='line'>class back_insert_iterator {
-</span><span class='line'>protected:
-</span><span class='line'>  _Container* container;
-</span><span class='line'>public:
-</span><span class='line'>  // member variables
-</span><span class='line'>  typedef _Container          container_type;
-</span><span class='line'>  typedef output_iterator_tag iterator_category;
-</span><span class='line'>  typedef void                value_type;
-</span><span class='line'>  typedef void                difference_type;
-</span><span class='line'>  typedef void                pointer;
-</span><span class='line'>  typedef void                reference;
-</span><span class='line'>  // member functions, mainly about operator overloading
-</span><span class='line'>  explicit back_insert_iterator(_Container& __x) : container(&__x) {}
-</span><span class='line'>  back_insert_iterator&lt;_Container&gt;&
-</span><span class='line'>  operator=(const typename _Container::value_type& __value) { 
-</span><span class='line'>    container-&gt;push_back(__value);
-</span><span class='line'>    return *this;
-</span><span class='line'>  }
-</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator*() { return *this; }
-</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++() { return *this; }
-</span><span class='line'>  back_insert_iterator&lt;_Container&gt;& operator++(int) { return *this; }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Container</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">back_insert_iterator</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Container</span><span class="o">*</span> <span class="n">container</span><span class="p">;</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="c1">// member variables</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Container</span>          <span class="n">container_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">output_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span>                <span class="n">value_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span>                <span class="n">difference_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span>                <span class="n">pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span>                <span class="n">reference</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// member functions, mainly about operator overloading</span>
+</span><span class='line'>  <span class="k">explicit</span> <span class="n">back_insert_iterator</span><span class="p">(</span><span class="n">_Container</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="o">:</span> <span class="n">container</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__x</span><span class="p">)</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="n">back_insert_iterator</span><span class="o">&lt;</span><span class="n">_Container</span><span class="o">&gt;&amp;</span>
+</span><span class='line'>  <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="k">typename</span> <span class="n">_Container</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__value</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">container</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">__value</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">back_insert_iterator</span><span class="o">&lt;</span><span class="n">_Container</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">back_insert_iterator</span><span class="o">&lt;</span><span class="n">_Container</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">back_insert_iterator</span><span class="o">&lt;</span><span class="n">_Container</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>3. 迭代器相应型别与Traits编程技巧</h2>
@@ -303,14 +292,15 @@ $(document).ready(function(){
 
 <p>在算法中运用迭代器是，很可能需要获取器相应型别，即迭代器所指对象的类型。此时需要使用到 function template 的参数推导（argument deducation）机制，在传入迭代器模板类型的同时，传入迭代器所指对象的模板类型，例如：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;class I, class T&gt;
-</span><span class='line'>void func_impl(I iter, T t){
-</span><span class='line'>    // TODO: Add your code here
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">I</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">func_impl</span><span class="p">(</span><span class="n">I</span> <span class="n">iter</span><span class="p">,</span> <span class="n">T</span> <span class="n">t</span><span class="p">){</span>
+</span><span class='line'>    <span class="c1">// TODO: Add your code here</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这里不仅要传入类型 <code>class I</code>, 还要传入类型 <code>class T</code>。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
@@ -330,7 +320,7 @@ $(document).ready(function(){
 
 <p>在STL的每个标准迭代器中，都定义了5个迭代器相应型别的成员变量，在STL定义了一个统一的接口：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -340,23 +330,24 @@ $(document).ready(function(){
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// In file stl_iterator_base.h
-</span><span class='line'>template &lt;class _Category, class _Tp, class _Distance = ptrdiff_t,
-</span><span class='line'>          class _Pointer = _Tp*, class _Reference = _Tp&&gt;
-</span><span class='line'>struct iterator {
-</span><span class='line'>  typedef _Category  iterator_category;
-</span><span class='line'>  typedef _Tp        value_type;
-</span><span class='line'>  typedef _Distance  difference_type;
-</span><span class='line'>  typedef _Pointer   pointer;
-</span><span class='line'>  typedef _Reference reference;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// In file stl_iterator_base.h</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Category</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Distance</span> <span class="o">=</span> <span class="n">ptrdiff_t</span><span class="p">,</span>
+</span><span class='line'>          <span class="k">class</span> <span class="nc">_Pointer</span> <span class="o">=</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Reference</span> <span class="o">=</span> <span class="n">_Tp</span><span class="o">&amp;&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">iterator</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Category</span>  <span class="n">iterator_category</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Tp</span>        <span class="n">value_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Distance</span>  <span class="n">difference_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Pointer</span>   <span class="n">pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Reference</span> <span class="n">reference</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其他的迭代器都可以继承这个标注类，由于后面3个模板参数都有默认值，因此新的迭代器只需提供前两个参数即可（但在SGI STL中并没有使用继承机制）。这样在使用该迭代器的泛型算法中，可以返回这5种类型中的任意一种，而不需要依赖于 template 参数推导的机制。</p>
 
 <p>在SGI STL中，如果启用 <code>__STL_CLASS_PARTIAL_SPECIALIZATION</code> 这个宏定义，还有这样一个标准的 <code>iterator_traits</code> ：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -365,15 +356,16 @@ $(document).ready(function(){
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// In file stl_iterator_base.h
-</span><span class='line'>template &lt;class _Iterator&gt;
-</span><span class='line'>struct iterator_traits {
-</span><span class='line'>  typedef typename _Iterator::iterator_category iterator_category;
-</span><span class='line'>  typedef typename _Iterator::value_type        value_type;
-</span><span class='line'>  typedef typename _Iterator::difference_type   difference_type;
-</span><span class='line'>  typedef typename _Iterator::pointer           pointer;
-</span><span class='line'>  typedef typename _Iterator::reference         reference;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// In file stl_iterator_base.h</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Iterator</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">iterator_traits</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Iterator</span><span class="o">::</span><span class="n">iterator_category</span> <span class="n">iterator_category</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Iterator</span><span class="o">::</span><span class="n">value_type</span>        <span class="n">value_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Iterator</span><span class="o">::</span><span class="n">difference_type</span>   <span class="n">difference_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Iterator</span><span class="o">::</span><span class="n">pointer</span>           <span class="n">pointer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Iterator</span><span class="o">::</span><span class="n">reference</span>         <span class="n">reference</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>值得一提的是，这些类型不仅可以是泛型算法的返回值类型，还可以是传入参数的类型。例如 <code>iterator_category</code> 可以作为迭代器的接口 <code>advance()</code> 和 <code>distance()</code>  的传入参数之一。 不同类型的迭代器实现同一算法的方式可能不同，可以通过这个参数类型来区分不同的重载函数。</p>
@@ -425,7 +417,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

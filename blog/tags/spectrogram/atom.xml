@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Spectrogram | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/spectrogram/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -61,7 +61,7 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 
 <p>
 闲话少说了，上代码吧，其实看看这代码也挺简单的，就调一个matplotlib.pyplot.specgram()就可以了。
-{% codeblock %}
+``` py3
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
@@ -82,7 +82,7 @@ plt.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
 plt.ylabel('Frequency')
 plt.xlabel('time(seconds)')
 plt.show()
-{% endcodeblock %}
+```
 </p>
 
 

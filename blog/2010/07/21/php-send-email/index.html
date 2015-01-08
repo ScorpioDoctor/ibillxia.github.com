@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -216,7 +204,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -231,21 +219,22 @@ $(document).ready(function(){
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
-</span><span class='line'>require (FILE_DIR."smtp.php"); 
-</span><span class='line'>$smtpserver = "smtp.xxx.com";//SMTP服务器 
-</span><span class='line'>$smtpserverport =25;//SMTP服务器端口 
-</span><span class='line'>$smtpusermail = "xxxxx@xxx.com";//SMTP服务器的用户邮箱 
-</span><span class='line'>$smtpemailto = "aaaaa@xxx.com";//发送给谁 
-</span><span class='line'>$smtpuser = "xxxxx";//SMTP服务器的用户帐号 
-</span><span class='line'>$smtppass = "xxxxx";//SMTP服务器的用户密码 
-</span><span class='line'>$mailsubject = "Test Subject";//邮件主题 
-</span><span class='line'>$mailbody = "&lt;h1>This is a test mail&lt;/h1>";//邮件内容 
-</span><span class='line'>$mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件 
-</span><span class='line'>$smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证. 
-</span><span class='line'>$smtp->debug = TRUE;//是否显示发送的调试信息 
-</span><span class='line'>$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype); 
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?</span>
+</span><span class='line'><span class="k">require</span> <span class="p">(</span><span class="nx">FILE_DIR</span><span class="o">.</span><span class="s2">&quot;smtp.php&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$smtpserver</span> <span class="o">=</span> <span class="s2">&quot;smtp.xxx.com&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器 </span>
+</span><span class='line'><span class="nv">$smtpserverport</span> <span class="o">=</span><span class="mi">25</span><span class="p">;</span><span class="c1">//SMTP服务器端口 </span>
+</span><span class='line'><span class="nv">$smtpusermail</span> <span class="o">=</span> <span class="s2">&quot;xxxxx@xxx.com&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户邮箱 </span>
+</span><span class='line'><span class="nv">$smtpemailto</span> <span class="o">=</span> <span class="s2">&quot;aaaaa@xxx.com&quot;</span><span class="p">;</span><span class="c1">//发送给谁 </span>
+</span><span class='line'><span class="nv">$smtpuser</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户帐号 </span>
+</span><span class='line'><span class="nv">$smtppass</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户密码 </span>
+</span><span class='line'><span class="nv">$mailsubject</span> <span class="o">=</span> <span class="s2">&quot;Test Subject&quot;</span><span class="p">;</span><span class="c1">//邮件主题 </span>
+</span><span class='line'><span class="nv">$mailbody</span> <span class="o">=</span> <span class="s2">&quot;&lt;h1&gt;This is a test mail&lt;/h1&gt;&quot;</span><span class="p">;</span><span class="c1">//邮件内容 </span>
+</span><span class='line'><span class="nv">$mailtype</span> <span class="o">=</span> <span class="s2">&quot;HTML&quot;</span><span class="p">;</span><span class="c1">//邮件格式（HTML/TXT）,TXT为文本邮件 </span>
+</span><span class='line'><span class="nv">$smtp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">smtp</span><span class="p">(</span><span class="nv">$smtpserver</span><span class="p">,</span><span class="nv">$smtpserverport</span><span class="p">,</span><span class="k">true</span><span class="p">,</span><span class="nv">$smtpuser</span><span class="p">,</span><span class="nv">$smtppass</span><span class="p">);</span><span class="c1">//这里面的一个true是表示使用身份验证,否则不使用身份验证. </span>
+</span><span class='line'><span class="nv">$smtp</span><span class="o">-&gt;</span><span class="na">debug</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span><span class="c1">//是否显示发送的调试信息 </span>
+</span><span class='line'><span class="nv">$smtp</span><span class="o">-&gt;</span><span class="na">sendmail</span><span class="p">(</span><span class="nv">$smtpemailto</span><span class="p">,</span> <span class="nv">$smtpusermail</span><span class="p">,</span> <span class="nv">$mailsubject</span><span class="p">,</span> <span class="nv">$mailbody</span><span class="p">,</span> <span class="nv">$mailtype</span><span class="p">);</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -260,7 +249,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -493,241 +482,240 @@ $(document).ready(function(){
 <span class='line-number'>231</span>
 <span class='line-number'>232</span>
 <span class='line-number'>233</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php 
-</span><span class='line'>class smtp { 
-</span><span class='line'>  /* Public Variables */ 
-</span><span class='line'>  var $smtp_port; 
-</span><span class='line'>  var $time_out; 
-</span><span class='line'>  var $host_name; 
-</span><span class='line'>  var $log_file; 
-</span><span class='line'>  var $relay_host; 
-</span><span class='line'>  var $debug; 
-</span><span class='line'>  var $auth; 
-</span><span class='line'>  var $user; 
-</span><span class='line'>  var $pass; 
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">smtp</span> <span class="p">{</span>
+</span><span class='line'>  <span class="cm">/* Public Variables */</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$smtp_port</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$time_out</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$host_name</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$log_file</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$relay_host</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$debug</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$auth</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$user</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$pass</span><span class="p">;</span>
 </span><span class='line'>  
-</span><span class='line'>  /* Private Variables */ 
-</span><span class='line'>  var $sock; 
+</span><span class='line'>  <span class="cm">/* Private Variables */</span>
+</span><span class='line'>  <span class="k">var</span> <span class="nv">$sock</span><span class="p">;</span>
 </span><span class='line'>  
-</span><span class='line'>  /* Constractor */ 
-</span><span class='line'>  function smtp($relay_host = "", $smtp_port = 25,$auth = false,$user,$pass) { 
-</span><span class='line'>      $this->debug = FALSE; 
-</span><span class='line'>      $this->smtp_port = $smtp_port; 
-</span><span class='line'>      $this->relay_host = $relay_host; 
-</span><span class='line'>      $this->time_out = 30; //is used in fsockopen() 
+</span><span class='line'>  <span class="cm">/* Constractor */</span>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp</span><span class="p">(</span><span class="nv">$relay_host</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$smtp_port</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span><span class="nv">$auth</span> <span class="o">=</span> <span class="k">false</span><span class="p">,</span><span class="nv">$user</span><span class="p">,</span><span class="nv">$pass</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">debug</span> <span class="o">=</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_port</span> <span class="o">=</span> <span class="nv">$smtp_port</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span> <span class="o">=</span> <span class="nv">$relay_host</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">time_out</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span> <span class="c1">//is used in fsockopen() </span>
 </span><span class='line'>
-</span><span class='line'>      $this->auth = $auth;//auth 
-</span><span class='line'>      $this->user = $user; 
-</span><span class='line'>      $this->pass = $pass; 
-</span><span class='line'>      # 
-</span><span class='line'>      $this->host_name = "localhost"; //is used in HELO command 
-</span><span class='line'>      $this->log_file = ""; 
-</span><span class='line'>      $this->sock = FALSE; 
-</span><span class='line'>  } 
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">auth</span> <span class="o">=</span> <span class="nv">$auth</span><span class="p">;</span><span class="c1">//auth </span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user</span> <span class="o">=</span> <span class="nv">$user</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pass</span> <span class="o">=</span> <span class="nv">$pass</span><span class="p">;</span>
+</span><span class='line'>      <span class="c1"># </span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">host_name</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">;</span> <span class="c1">//is used in HELO command </span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_file</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span> <span class="o">=</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  /* Main Function */ 
-</span><span class='line'>  function sendmail($to, $from, $subject = "", $body = "", $mailtype, $cc = "", $bcc = "", $additional_headers = "") { 
-</span><span class='line'>      $mail_from = $this->get_address($this->strip_comment($from)); 
-</span><span class='line'>      $body = ereg_replace("(^(\r\n))(\.)", "\1.\3", $body); 
-</span><span class='line'>      $header = "MIME-Version:1.0\r\n"; 
-</span><span class='line'>      if($mailtype=="HTML"){ 
-</span><span class='line'>          $header .= "Content-Type:text/html\r\n"; 
-</span><span class='line'>      } 
-</span><span class='line'>      $header .= "To: ".$to."\r\n"; 
-</span><span class='line'>      if ($cc != "") { 
-</span><span class='line'>          $header .= "Cc: ".$cc."\r\n"; 
-</span><span class='line'>      } 
-</span><span class='line'>      $header .= "From: $from&lt;".$from.">\r\n"; 
-</span><span class='line'>      $header .= "Subject: ".$subject."\r\n"; 
-</span><span class='line'>      $header .= $additional_headers; 
-</span><span class='line'>      $header .= "Date: ".date("r")."\r\n"; 
-</span><span class='line'>      $header .= "X-Mailer:By Redhat (PHP/".phpversion().")\r\n"; 
-</span><span class='line'>      list($msec, $sec) = explode(" ", microtime()); 
-</span><span class='line'>      $header .= "Message-ID: &lt;".date("YmdHis", $sec).".".($msec*1000000).".".$mail_from.">\r\n"; 
-</span><span class='line'>      $TO = explode(",", $this->strip_comment($to)); 
-</span><span class='line'>      if ($cc != "") { 
-</span><span class='line'>          $TO = array_merge($TO, explode(",", $this->strip_comment($cc))); 
-</span><span class='line'>      } 
-</span><span class='line'>      if ($bcc != "") { 
-</span><span class='line'>          $TO = array_merge($TO, explode(",", $this->strip_comment($bcc))); 
-</span><span class='line'>      } 
+</span><span class='line'>  <span class="cm">/* Main Function */</span>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">sendmail</span><span class="p">(</span><span class="nv">$to</span><span class="p">,</span> <span class="nv">$from</span><span class="p">,</span> <span class="nv">$subject</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$body</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$mailtype</span><span class="p">,</span> <span class="nv">$cc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$bcc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$additional_headers</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$mail_from</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get_address</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">strip_comment</span><span class="p">(</span><span class="nv">$from</span><span class="p">));</span>
+</span><span class='line'>      <span class="nv">$body</span> <span class="o">=</span> <span class="nb">ereg_replace</span><span class="p">(</span><span class="s2">&quot;(^(</span><span class="se">\r\n</span><span class="s2">))(\.)&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\1</span><span class="s2">.</span><span class="se">\3</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$body</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">=</span> <span class="s2">&quot;MIME-Version:1.0</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="nv">$mailtype</span><span class="o">==</span><span class="s2">&quot;HTML&quot;</span><span class="p">){</span>
+</span><span class='line'>          <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;Content-Type:text/html</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;To: &quot;</span><span class="o">.</span><span class="nv">$to</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$cc</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;Cc: &quot;</span><span class="o">.</span><span class="nv">$cc</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;From: </span><span class="si">$from</span><span class="s2">&lt;&quot;</span><span class="o">.</span><span class="nv">$from</span><span class="o">.</span><span class="s2">&quot;&gt;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;Subject: &quot;</span><span class="o">.</span><span class="nv">$subject</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="nv">$additional_headers</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;Date: &quot;</span><span class="o">.</span><span class="nb">date</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;X-Mailer:By Redhat (PHP/&quot;</span><span class="o">.</span><span class="nb">phpversion</span><span class="p">()</span><span class="o">.</span><span class="s2">&quot;)</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">list</span><span class="p">(</span><span class="nv">$msec</span><span class="p">,</span> <span class="nv">$sec</span><span class="p">)</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="nb">microtime</span><span class="p">());</span>
+</span><span class='line'>      <span class="nv">$header</span> <span class="o">.=</span> <span class="s2">&quot;Message-ID: &lt;&quot;</span><span class="o">.</span><span class="nb">date</span><span class="p">(</span><span class="s2">&quot;YmdHis&quot;</span><span class="p">,</span> <span class="nv">$sec</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="p">(</span><span class="nv">$msec</span><span class="o">*</span><span class="mi">1000000</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="nv">$mail_from</span><span class="o">.</span><span class="s2">&quot;&gt;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$TO</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">strip_comment</span><span class="p">(</span><span class="nv">$to</span><span class="p">));</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$cc</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$TO</span> <span class="o">=</span> <span class="nb">array_merge</span><span class="p">(</span><span class="nv">$TO</span><span class="p">,</span> <span class="nb">explode</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">strip_comment</span><span class="p">(</span><span class="nv">$cc</span><span class="p">)));</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$bcc</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$TO</span> <span class="o">=</span> <span class="nb">array_merge</span><span class="p">(</span><span class="nv">$TO</span><span class="p">,</span> <span class="nb">explode</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">strip_comment</span><span class="p">(</span><span class="nv">$bcc</span><span class="p">)));</span>
+</span><span class='line'>      <span class="p">}</span>
 </span><span class='line'>      
-</span><span class='line'>      $sent = TRUE; 
-</span><span class='line'>      foreach ($TO as $rcpt_to) { 
-</span><span class='line'>          $rcpt_to = $this->get_address($rcpt_to); 
-</span><span class='line'>          if (!$this->smtp_sockopen($rcpt_to)) { 
-</span><span class='line'>              $this->log_write("Error: Cannot send email to ".$rcpt_to."\n"); 
-</span><span class='line'>              $sent = FALSE; 
-</span><span class='line'>              continue; 
-</span><span class='line'>          } 
-</span><span class='line'>          if ($this->smtp_send($this->host_name, $mail_from, $rcpt_to, $header, $body)) { 
-</span><span class='line'>              $this->log_write("E-mail has been sent to &lt;".$rcpt_to.">\n"); 
-</span><span class='line'>          } else { 
-</span><span class='line'>              $this->log_write("Error: Cannot send email to &lt;".$rcpt_to.">\n"); 
-</span><span class='line'>              $sent = FALSE; 
-</span><span class='line'>          } 
-</span><span class='line'>          fclose($this->sock); 
-</span><span class='line'>          this->log_write("Disconnected from remote host\n"); 
-</span><span class='line'>      } 
-</span><span class='line'>      return $sent; 
-</span><span class='line'>  } 
+</span><span class='line'>      <span class="nv">$sent</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">foreach</span> <span class="p">(</span><span class="nv">$TO</span> <span class="k">as</span> <span class="nv">$rcpt_to</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$rcpt_to</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get_address</span><span class="p">(</span><span class="nv">$rcpt_to</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_sockopen</span><span class="p">(</span><span class="nv">$rcpt_to</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Cannot send email to &quot;</span><span class="o">.</span><span class="nv">$rcpt_to</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>              <span class="nv">$sent</span> <span class="o">=</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>              <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_send</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">host_name</span><span class="p">,</span> <span class="nv">$mail_from</span><span class="p">,</span> <span class="nv">$rcpt_to</span><span class="p">,</span> <span class="nv">$header</span><span class="p">,</span> <span class="nv">$body</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;E-mail has been sent to &lt;&quot;</span><span class="o">.</span><span class="nv">$rcpt_to</span><span class="o">.</span><span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Cannot send email to &lt;&quot;</span><span class="o">.</span><span class="nv">$rcpt_to</span><span class="o">.</span><span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>              <span class="nv">$sent</span> <span class="o">=</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="nb">fclose</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Disconnected from remote host</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$sent</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  /* Private Functions */ 
-</span><span class='line'>  function smtp_send($helo, $from, $to, $header, $body = "") { 
-</span><span class='line'>      if (!$this->smtp_putcmd("HELO", $helo)) { 
-</span><span class='line'>          return $this->smtp_error("sending HELO command"); 
-</span><span class='line'>      } 
+</span><span class='line'>  <span class="cm">/* Private Functions */</span>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_send</span><span class="p">(</span><span class="nv">$helo</span><span class="p">,</span> <span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="nv">$header</span><span class="p">,</span> <span class="nv">$body</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;HELO&quot;</span><span class="p">,</span> <span class="nv">$helo</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending HELO command&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>      if($this->auth){ 
-</span><span class='line'>          if (!$this->smtp_putcmd("AUTH LOGIN", base64_encode($this->user))) { 
-</span><span class='line'>              return $this->smtp_error("sending HELO command"); 
-</span><span class='line'>          } 
-</span><span class='line'>          if (!$this->smtp_putcmd("", base64_encode($this->pass))) { 
-</span><span class='line'>              return $this->smtp_error("sending HELO command"); 
-</span><span class='line'>          } 
-</span><span class='line'>      } 
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">auth</span><span class="p">){</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;AUTH LOGIN&quot;</span><span class="p">,</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">)))</span> <span class="p">{</span>
+</span><span class='line'>              <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending HELO command&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pass</span><span class="p">)))</span> <span class="p">{</span>
+</span><span class='line'>              <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending HELO command&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>      if (!$this->smtp_putcmd("MAIL", "FROM:&lt;".$from.">")) { 
-</span><span class='line'>          return $this->smtp_error("sending MAIL FROM command"); 
-</span><span class='line'>      } 
-</span><span class='line'>      if (!$this->smtp_putcmd("RCPT", "TO:&lt;".$to.">")) { 
-</span><span class='line'>          return $this->smtp_error("sending RCPT TO command"); 
-</span><span class='line'>      } 
-</span><span class='line'>      if (!$this->smtp_putcmd("DATA")) { 
-</span><span class='line'>          return $this->smtp_error("sending DATA command"); 
-</span><span class='line'>      } 
-</span><span class='line'>      if (!$this->smtp_message($header, $body)) { 
-</span><span class='line'>          return $this->smtp_error("sending message"); 
-</span><span class='line'>      } 
-</span><span class='line'>      if (!$this->smtp_eom()) { 
-</span><span class='line'>          return $this->smtp_error("sending &lt;CR>&lt;LF>.&lt;CR>&lt;LF> [EOM]"); 
-</span><span class='line'>      } 
-</span><span class='line'>      if (!$this->smtp_putcmd("QUIT")) { 
-</span><span class='line'>          return $this->smtp_error("sending QUIT command"); 
-</span><span class='line'>      } 
-</span><span class='line'>      return TRUE; 
-</span><span class='line'>  } 
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;MAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;FROM:&lt;&quot;</span><span class="o">.</span><span class="nv">$from</span><span class="o">.</span><span class="s2">&quot;&gt;&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending MAIL FROM command&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;RCPT&quot;</span><span class="p">,</span> <span class="s2">&quot;TO:&lt;&quot;</span><span class="o">.</span><span class="nv">$to</span><span class="o">.</span><span class="s2">&quot;&gt;&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending RCPT TO command&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;DATA&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending DATA command&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_message</span><span class="p">(</span><span class="nv">$header</span><span class="p">,</span> <span class="nv">$body</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending message&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_eom</span><span class="p">())</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt; [EOM]&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_putcmd</span><span class="p">(</span><span class="s2">&quot;QUIT&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_error</span><span class="p">(</span><span class="s2">&quot;sending QUIT command&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_sockopen($address) { 
-</span><span class='line'>      if ($this->relay_host == "") { 
-</span><span class='line'>          return $this->smtp_sockopen_mx($address); 
-</span><span class='line'>      } else { 
-</span><span class='line'>          return $this->smtp_sockopen_relay(); 
-</span><span class='line'>      } 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_sockopen</span><span class="p">(</span><span class="nv">$address</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_sockopen_mx</span><span class="p">(</span><span class="nv">$address</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_sockopen_relay</span><span class="p">();</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  
-</span><span class='line'>  function smtp_sockopen_relay() { 
-</span><span class='line'>      $this->log_write("Trying to ".$this->relay_host.":".$this->smtp_port."\n"); 
-</span><span class='line'>      $this->sock = @fsockopen($this->relay_host, $this->smtp_port, $errno, $errstr, $this->time_out); 
-</span><span class='line'>      if (!($this->sock && $this->smtp_ok())) { 
-</span><span class='line'>          $this->log_write("Error: Cannot connenct to relay host ".$this->relay_host."\n"); 
-</span><span class='line'>          $this->log_write("Error: ".$errstr." (".$errno.")\n"); 
-</span><span class='line'>          return FALSE; 
-</span><span class='line'>      } 
-</span><span class='line'>      $this->log_write("Connected to relay host ".$this->relay_host."\n"); 
-</span><span class='line'>      return TRUE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_sockopen_relay</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Trying to &quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span><span class="o">.</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_port</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span> <span class="o">=</span> <span class="o">@</span><span class="nb">fsockopen</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_port</span><span class="p">,</span> <span class="nv">$errno</span><span class="p">,</span> <span class="nv">$errstr</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">time_out</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_ok</span><span class="p">()))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Cannot connenct to relay host &quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: &quot;</span><span class="o">.</span><span class="nv">$errstr</span><span class="o">.</span><span class="s2">&quot; (&quot;</span><span class="o">.</span><span class="nv">$errno</span><span class="o">.</span><span class="s2">&quot;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Connected to relay host &quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">relay_host</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_sockopen_mx($address) { 
-</span><span class='line'>      $domain = ereg_replace("^.+@([^@]+)$", "\1", $address); 
-</span><span class='line'>      if (!@getmxrr($domain, $MXHOSTS)) { 
-</span><span class='line'>          $this->log_write("Error: Cannot resolve MX \"".$domain."\"\n"); 
-</span><span class='line'>          return FALSE; 
-</span><span class='line'>      } 
-</span><span class='line'>      foreach ($MXHOSTS as $host) { 
-</span><span class='line'>          $this->log_write("Trying to ".$host.":".$this->smtp_port."\n"); 
-</span><span class='line'>          $this->sock = @fsockopen($host, $this->smtp_port, $errno, $errstr, $this->time_out); 
-</span><span class='line'>          if (!($this->sock && $this->smtp_ok())) { 
-</span><span class='line'>              $this->log_write("Warning: Cannot connect to mx host ".$host."\n"); 
-</span><span class='line'>              $this->log_write("Error: ".$errstr." (".$errno.")\n"); 
-</span><span class='line'>              continue; 
-</span><span class='line'>          } 
-</span><span class='line'>          $this->log_write("Connected to mx host ".$host."\n"); 
-</span><span class='line'>          return TRUE; 
-</span><span class='line'>      } 
-</span><span class='line'>      $this->log_write("Error: Cannot connect to any mx hosts (".implode(", ", $MXHOSTS).")\n"); 
-</span><span class='line'>      return FALSE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_sockopen_mx</span><span class="p">(</span><span class="nv">$address</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$domain</span> <span class="o">=</span> <span class="nb">ereg_replace</span><span class="p">(</span><span class="s2">&quot;^.+@([^@]+)$&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$address</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!@</span><span class="nx">getmxrr</span><span class="p">(</span><span class="nv">$domain</span><span class="p">,</span> <span class="nv">$MXHOSTS</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Cannot resolve MX </span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="nv">$domain</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\&quot;\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">foreach</span> <span class="p">(</span><span class="nv">$MXHOSTS</span> <span class="k">as</span> <span class="nv">$host</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Trying to &quot;</span><span class="o">.</span><span class="nv">$host</span><span class="o">.</span><span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_port</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span> <span class="o">=</span> <span class="o">@</span><span class="nb">fsockopen</span><span class="p">(</span><span class="nv">$host</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_port</span><span class="p">,</span> <span class="nv">$errno</span><span class="p">,</span> <span class="nv">$errstr</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">time_out</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_ok</span><span class="p">()))</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Warning: Cannot connect to mx host &quot;</span><span class="o">.</span><span class="nv">$host</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>              <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: &quot;</span><span class="o">.</span><span class="nv">$errstr</span><span class="o">.</span><span class="s2">&quot; (&quot;</span><span class="o">.</span><span class="nv">$errno</span><span class="o">.</span><span class="s2">&quot;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>              <span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Connected to mx host &quot;</span><span class="o">.</span><span class="nv">$host</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Cannot connect to any mx hosts (&quot;</span><span class="o">.</span><span class="nb">implode</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="nv">$MXHOSTS</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_message($header, $body) { 
-</span><span class='line'>      fputs($this->sock, $header."\r\n".$body); 
-</span><span class='line'>      $this->smtp_debug("> ".str_replace("\r\n", "\n"."> ", $header."\n> ".$body."\n> ")); 
-</span><span class='line'>      return TRUE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_message</span><span class="p">(</span><span class="nv">$header</span><span class="p">,</span> <span class="nv">$body</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nb">fputs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="nv">$header</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="nv">$body</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="o">.</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="s2">&quot;&gt; &quot;</span><span class="p">,</span> <span class="nv">$header</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt; &quot;</span><span class="o">.</span><span class="nv">$body</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt; &quot;</span><span class="p">));</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_eom() { 
-</span><span class='line'>      fputs($this->sock, "\r\n.\r\n"); 
-</span><span class='line'>      $this->smtp_debug(". [EOM]\n"); 
-</span><span class='line'>      return $this->smtp_ok(); 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_eom</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nb">fputs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">.</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="s2">&quot;. [EOM]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_ok</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_ok() { 
-</span><span class='line'>      $response = str_replace("\r\n", "", fgets($this->sock, 512)); 
-</span><span class='line'>      $this->smtp_debug($response."\n"); 
-</span><span class='line'>      if (!ereg("^[23]", $response)) { 
-</span><span class='line'>          fputs($this->sock, "QUIT\r\n"); 
-</span><span class='line'>          fgets($this->sock, 512); 
-</span><span class='line'>          $this->log_write("Error: Remote host returned \"".$response."\"\n"); 
-</span><span class='line'>          return FALSE; 
-</span><span class='line'>      } 
-</span><span class='line'>      return TRUE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_ok</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$response</span> <span class="o">=</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">fgets</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="mi">512</span><span class="p">));</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="nv">$response</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">ereg</span><span class="p">(</span><span class="s2">&quot;^[23]&quot;</span><span class="p">,</span> <span class="nv">$response</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nb">fputs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="s2">&quot;QUIT</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="nb">fgets</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="mi">512</span><span class="p">);</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Remote host returned </span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="nv">$response</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\&quot;\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_putcmd($cmd, $arg = "") { 
-</span><span class='line'>      if ($arg != "") { 
-</span><span class='line'>          if($cmd=="") $cmd = $arg; 
-</span><span class='line'>          else $cmd = $cmd." ".$arg; 
-</span><span class='line'>      } 
-</span><span class='line'>      fputs($this->sock, $cmd."\r\n"); 
-</span><span class='line'>      $this->smtp_debug("> ".$cmd."\n"); 
-</span><span class='line'>      return $this->smtp_ok(); 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_putcmd</span><span class="p">(</span><span class="nv">$cmd</span><span class="p">,</span> <span class="nv">$arg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$arg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="nv">$cmd</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="nv">$cmd</span> <span class="o">=</span> <span class="nv">$arg</span><span class="p">;</span>
+</span><span class='line'>          <span class="k">else</span> <span class="nv">$cmd</span> <span class="o">=</span> <span class="nv">$cmd</span><span class="o">.</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="nv">$arg</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nb">fputs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sock</span><span class="p">,</span> <span class="nv">$cmd</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="o">.</span><span class="nv">$cmd</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_ok</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_error($string) { 
-</span><span class='line'>      $this->log_write("Error: Error occurred while ".$string.".\n"); 
-</span><span class='line'>      return FALSE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_error</span><span class="p">(</span><span class="nv">$string</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_write</span><span class="p">(</span><span class="s2">&quot;Error: Error occurred while &quot;</span><span class="o">.</span><span class="nv">$string</span><span class="o">.</span><span class="s2">&quot;.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function log_write($message) { 
-</span><span class='line'>      $this->smtp_debug($message); 
-</span><span class='line'>      if ($this->log_file == "") { 
-</span><span class='line'>          return TRUE; 
-</span><span class='line'>      } 
-</span><span class='line'>      $message = date("M d H:i:s ").get_current_user()."[".getmypid()."]: ".$message; 
-</span><span class='line'>      if (!@file_exists($this->log_file) !($fp = @fopen($this->log_file, "a"))) { 
-</span><span class='line'>          $this->smtp_debug("Warning: Cannot open log file \"".$this->log_file."\"\n"); 
-</span><span class='line'>          return FALSE;; 
-</span><span class='line'>      } 
-</span><span class='line'>      flock($fp, LOCK_EX); 
-</span><span class='line'>      fputs($fp, $message); 
-</span><span class='line'>      fclose($fp); 
-</span><span class='line'>      return TRUE; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">log_write</span><span class="p">(</span><span class="nv">$message</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_file</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$message</span> <span class="o">=</span> <span class="nb">date</span><span class="p">(</span><span class="s2">&quot;M d H:i:s &quot;</span><span class="p">)</span><span class="o">.</span><span class="nb">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="s2">&quot;[&quot;</span><span class="o">.</span><span class="nb">getmypid</span><span class="p">()</span><span class="o">.</span><span class="s2">&quot;]: &quot;</span><span class="o">.</span><span class="nv">$message</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!@</span><span class="nb">file_exists</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_file</span><span class="p">)</span> <span class="o">!</span><span class="p">(</span><span class="nv">$fp</span> <span class="o">=</span> <span class="o">@</span><span class="nb">fopen</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smtp_debug</span><span class="p">(</span><span class="s2">&quot;Warning: Cannot open log file </span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">log_file</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\&quot;\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="k">FALSE</span><span class="p">;;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nb">flock</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span> <span class="nx">LOCK_EX</span><span class="p">);</span>
+</span><span class='line'>      <span class="nb">fputs</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span> <span class="nv">$message</span><span class="p">);</span>
+</span><span class='line'>      <span class="nb">fclose</span><span class="p">(</span><span class="nv">$fp</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function strip_comment($address) { 
-</span><span class='line'>      $comment = "\([^()]*\)"; 
-</span><span class='line'>      while (ereg($comment, $address)) { 
-</span><span class='line'>      $address = ereg_replace($comment, "", $address); 
-</span><span class='line'>      } 
-</span><span class='line'>      return $address; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">strip_comment</span><span class="p">(</span><span class="nv">$address</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$comment</span> <span class="o">=</span> <span class="s2">&quot;\([^()]*\)&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="nb">ereg</span><span class="p">(</span><span class="nv">$comment</span><span class="p">,</span> <span class="nv">$address</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$address</span> <span class="o">=</span> <span class="nb">ereg_replace</span><span class="p">(</span><span class="nv">$comment</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$address</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$address</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function get_address($address) { 
-</span><span class='line'>      $address = ereg_replace("([ \t\r\n])+", "", $address); 
-</span><span class='line'>      $address = ereg_replace("^.*&lt;(.+)>.*$", "\1", $address); 
-</span><span class='line'>      return $address; 
-</span><span class='line'>  } 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">get_address</span><span class="p">(</span><span class="nv">$address</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$address</span> <span class="o">=</span> <span class="nb">ereg_replace</span><span class="p">(</span><span class="s2">&quot;([ </span><span class="se">\t\r\n</span><span class="s2">])+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nv">$address</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$address</span> <span class="o">=</span> <span class="nb">ereg_replace</span><span class="p">(</span><span class="s2">&quot;^.*&lt;(.+)&gt;.*$&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$address</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$address</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  function smtp_debug($message) { 
-</span><span class='line'>      if ($this->debug) { 
-</span><span class='line'>          echo $message; 
-</span><span class='line'>      } 
-</span><span class='line'>  } 
-</span><span class='line'>} 
+</span><span class='line'>  <span class="k">function</span> <span class="nf">smtp_debug</span><span class="p">(</span><span class="nv">$message</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">debug</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">echo</span> <span class="nv">$message</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
-
-
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"> </span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 <div id="copyleft" class="well" >
@@ -767,7 +755,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

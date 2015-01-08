@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: API | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/api/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -33,7 +33,7 @@
 <p>实例程序</p>
 
 
-<p>{% codeblock %}
+<p>``` c
 // <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> FileName: WinMain.cpp </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>**********
 // 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
 // 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</p>
@@ -234,7 +234,7 @@ return 0;
 
 <p>}
 // <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> End of File </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>*****
-{% endcodeblock %}</p>
+```</p>
 
 <p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
 

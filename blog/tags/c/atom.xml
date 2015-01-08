@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/c/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,7 +29,7 @@
 <!-- more -->
 
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -89,7 +89,7 @@ printf("Subtract gives: %d\n", b);
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
-<p><code>
+<p><code>c
 FunctionFunc x;
 void doSomething() { printf("Hello there\n"); }
 x = &amp;doSomething;
@@ -104,7 +104,7 @@ x(); //prints "Hello there"
 
 <p>在C++中，对应于C中函数指针的东西是仿函数（functor），使用起来就像函数一样。其实现方法是对某个 class 进行 <code>operator()</code> 重载，他就成为一个仿函数。而要成为一个可适配（adaptable）的仿函数，还需要其他的一些努力（在《STL源码剖析》一书的第8章，关于适配器（adaptor）的内容）。这里，我们只拿书中的那个例子来简单的看一下仿函数的定义和使用方法吧。代码如下：</p>
 
-<p>```</p>
+<p>``` cpp</p>
 
 <h1>include <iostream></h1>
 
@@ -151,7 +151,7 @@ return 0;
 
 <p>为了加深对函数调用操作符的理解，并将其真正用到实际中，这里拿快排这个非常典型的例子，并充分利用C++及STL的特性。下面是核心代码：</p>
 
-<p>```
+<p>``` cpp
 template<typename InIt,typename FuncType>
 void myqsort(InIt begin, InIt end, FuncType cmp){</p>
 
@@ -255,7 +255,7 @@ void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
 
 <p>下面我们看一个稍微复杂的例子，这个例子是在运行时才出现另我们感到意外的错误（这里的运行时错误并不是指 <code>Runtime Error</code>，么么哒）。</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -327,7 +327,7 @@ Called g, count=9.
 <p>（1）用于实现局部函数 <br/>
 此时无法用内联函数替代宏定义。因为宏定义代码块中的自动变量可以和引用宏的前后代码块互为使用，即宏引用前的代码快中的自动变量可以在宏中直接使用，而宏中定义的自动变量可以在宏引用的代码块之后使用。例如，比较常见是：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -349,7 +349,7 @@ return 0;
 <p>（2）宏可以支持某种形式的惰式计算<br/>
 例如：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>define SELECT(s,v1,v2) ((s)?(v1):(v2))</h1>
 
@@ -360,7 +360,7 @@ return 0;
 <p>(3)宏定义可以产生编译时常量<br/>
 例如：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>define ADD(a,b) ((a)+(b))</h1>
 
@@ -370,235 +370,6 @@ return 0;
 
 <p>（4）实现类型通用的函数<br/>
 如果不借助C++模板这样的机制，C语言内联是无法实现这样的功能的，而只能针对不同的数据类型定义不同名的函数。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PCM WAVE格式详解及用C语言实现wave文件的读取]]></title>
-    <link href="http://ibillxia.github.io/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language/"/>
-    <updated>2013-07-20T20:07:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2013/07/20/details-of-wave-format-and-reading-wave-files-in-C-language</id>
-    <content type="html"><![CDATA[<h2>1.PCM Wave格式详解</h2>
-
-
-<p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
-一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
-数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center>{% img /images/2013/IMAG2013072001.gif %}</center>
-</p>
-
-
-<!--more-->
-
-
-<p>每个字段的涵义如下：
-ChunkID: 占4个字节，内容为“RIFF”的ASCII码(0x52494646)，以大端（big endian）存储。</br>
-ChunkSize: 4字节，存储整个文件的字节数（不包含ChunkID和ChunkSize这8个字节），以小端（little endian）方式存储。</br>
-Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储。</br>
-</p>
-
-
-
-
-<p>
-其中bigendian 主要有一个特征，在内存中对操作数的存储方式和从高字节到低字节。例如：0x1234，这样一个数，存储为:</br>
-0x4000:   0x12</br>
-0x4001:   0x34</br>
-而小尾端littleendian是：</br>
-0x4000:   0x34</br>
-0x4001:   0x12</br>
-用程序在区别的话，可以考虑：
-{% codeblock %}
-#include <stdio.h>
-#include <stdlib.h>
-int main(int argc, char *argv[])
-{
-       union w
-      {
-       short int a;
-       char b;
-      }c;
-      c.a=1;
-      if( c.b==1 )  printf("little endian\n");
-      else printf("big endian\n");
-      system("PAUSE"); 
-      return 0;
-}
-{% endcodeblock %}
-</p>
-
-
-
-
-<p>"WAVE"格式由两个子数据块构成：“fmt”块和“data”块，其中“fmt”块的详细解释如下：
-Subchunk1ID: 占4个字节，内容为“fmt ”的ASCII码(0x666d7420)，以大端存储。</br>
-Subchunk1Size: 占4个字节，存储该子块的字节数（不含前面的Subchunk1ID和Subchunk1Size这8个字节），以小端方式存储。</br>
-AudioFormat：占2个字节，以小端方式存储，存储音频文件的编码格式，例如若为PCM则其存储值为1，若为其他非PCM格式的则有一定的压缩。</br>
-NumChannels: 占2个字节，以小端方式存储，通道数，单通道(Mono)值为1，双通道(Stereo)值为2，等等。</br>
-SampleRate: 占4个字节，以小端方式存储，采样率，如8k，44.1k等。</br>
-ByteRate: 占4个字节，以小端方式存储，每秒存储的bit数，其值=SampleRate * NumChannels * BitsPerSample/8</br>
-BlockAlign: 占2个字节，以小端方式存储，块对齐大小，其值=NumChannels * BitsPerSample/8</br>
-BitsPerSample: 占2个字节，以小端方式存储，每个采样点的bit数，一般为8,16,32等。</br>
-接下来是两个可选的扩展参数：</br>
-ExtraParamSize: 占2个字节，表示扩展段的大小。</br>
-ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由前一个字段给定。
-</p>
-
-
-
-
-<p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-{% codeblock %}
-// data 为读取到的采样点的值，speech为原始数据流，
-//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
-for(i=0;i<NumSample;i++){
-    if(BitsPerSample==8)
-        data[i] = (int)*((char*)speech+i);
-    else if(BitsPerSample==16)
-        data[i] = (int)*((short*)speech+i);
-    else if(BitsPerSample==32)
-        data[i] = (int)*((int*)speech+i);
-}
-{% endcodeblock %}
-</p>
-
-
-
-
-<p>"WAVE"格式文件的第二个子数据块是“data”，其个字段的详细解释如下：</br>
-Subchunk2ID: 占4个字节，内容为“data”的ASCII码(0x64617461)，以大端存储。</br>
-Subchunk2Size: 占4个字节，内容为接下来的正式的数据部分的字节数，其值=NumSamples * NumChannels * BitsPerSample/8</br>
-Data: 真正的语音数据部分。</br>
-</p>
-
-
-
-
-<h2>一个Wave文件头的实例</h2>
-
-
-<p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-{% codeblock %}
-52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
-{% endcodeblock %}
-则其个字段的解析如下图：
-<center>{% img /images/2013/IMAG2013072002.gif %}</center>
-</p>
-
-
-
-
-<h2>C语言实现wave文件的读取</h2>
-
-
-<p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
-
-
-<p>{% codeblock %}</p>
-
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;stdlib.h></h1>
-
-<h1>include &lt;string.h></h1>
-
-<p>// define Wave format structure
-typedef struct tWAVEFORMATEX
-{</p>
-
-<pre><code>short wFormatTag;         /* format type */
-short nChannels;          /* number of channels (i.e. mono, stereo...) */
-unsigned int nSamplesPerSec;     /* sample rate */
-unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-short nBlockAlign;        /* block size of data */
-short wBitsPerSample;     /* number of bits per sample of mono data */
-short cbSize;             /* the count in bytes of the size of */
-                                /* extra information (after cbSize) */
-</code></pre>
-
-<p>} WAVEFORMATEX, *PWAVEFORMATEX;</p>
-
-<p>char<em> wavread(char </em>fname, WAVEFORMATEX *wf);</p>
-
-<p>int main(){</p>
-
-<pre><code>char fname[] = "test.wav";
-char *speech;
-WAVEFORMATEX wf;
-
-speech = wavread(fname, &amp;wf);
-// afterward processing...
-
-return 0;
-</code></pre>
-
-<p>}</p>
-
-<p>// read wave file
-char<em> wavread(char </em>fname, WAVEFORMATEX *wf){</p>
-
-<pre><code>FILE* fp;
-char str[32];
-char *speech;
-unsigned int subchunk1size; // head size
-unsigned int subchunk2size; // speech data size
-
-// check format type
-fp = fopen(fname,"r");
-if(!fp){
-    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-    return NULL;
-}
-fseek(fp, 8, SEEK_SET);
-fread(str, sizeof(char), 7, fp);
-str[7] = '\0';
-if(strcmp(str,"WAVEfmt")){
-    fprintf(stderr,"The file is not in WAVE format!\n");
-    return NULL;
-}
-
-// read format header
-fseek(fp, 16, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
-fseek(fp, 20, SEEK_SET);
-fread(wf, subchunk1size, 1, fp);
-
-// read wave data
-fseek(fp, 20+subchunk1size, SEEK_SET);
-fread(str, 1, 4, fp);
-str[4] = '\0';
-if(strcmp(str,"data")){
-    fprintf(stderr,"Locating data start point failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+4, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
-speech = (char*)malloc(sizeof(char)*subchunk2size);
-if(!speech){
-    fprintf(stderr, "Memory alloc failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+8, SEEK_SET);
-fread(speech, 1, subchunk2size, fp);
-
-fclose(fp);
-return speech;
-</code></pre>
-
-<p>}
-{% endcodeblock %}</p>
-
-<h2>参考</h2>
-
-
-<p>
-[1]WAVE PCM soundfile format: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/ </br>
-[2]Resource Interchange File Format: http://en.wikipedia.org/wiki/Resource_Interchange_File_Format </br>
-[3]基于Visual C++6.0的声音文件操作: http://www.yesky.com/20030414/1663116_1.shtml
-</p>
-
 ]]></content>
   </entry>
   
@@ -1068,6 +839,205 @@ i++;
 
 
 <p><a href="http://www.cppblog.com/oosky/archive/2006/03/26/4625.html#_Toc131314725">华为软件编程规范</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[浅谈C语言的可变参数]]></title>
+    <link href="http://ibillxia.github.io/blog/2011/04/21/about-variable-parameters-in-c-language/"/>
+    <updated>2011-04-21T16:50:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2011/04/21/about-variable-parameters-in-c-language</id>
+    <content type="html"><![CDATA[<h2>1.问题引入</h2>
+
+
+<p>
+C语言中有些函数使用可变参数，比如常见的int printf( const char *format [, argument]... );，
+第一个参数format是固定的，其余的参数的个数和类型都不固定。例如：</p>
+
+
+<p>{% codeblock %}
+printf("Enjoy yourself everyday!/n");
+printf("The value is %d!/n", value);
+{% endcodeblock %}</p>
+
+<p>这种可变参数可以说是C语言一个比较难理解的部分，这里会由几个问题引发一些对它的分析。
+注意：在C++中有函数重载（overload）可以用来区别不同函数参数的调用，但它还是不能表示任意数量的函数参数。</p>
+
+
+
+
+<h2>2.printf（）实现原理</h2>
+
+
+<p>
+C语言用va_start等宏来处理这些可变参数。这些宏看起来很复杂，其实原理挺简单，
+就是根据参数入栈的特点从最靠近第一个可变参数的固定参数开始，依次获取每个可变参数的地址。
+下面我们来分析这些宏。</p>
+
+
+
+
+<!-- more -->
+
+
+<p>在stdarg.h头文件中，针对不同平台有不同的宏定义，我们选取X86平台下的宏定义：</p>
+
+
+<p>{% codeblock %}
+typedef char * va_list;</p>
+
+<h1>define _INTSIZEOF(n) ( (sizeof(n) + sizeof(int) - 1) &amp; ~(sizeof(int) - 1) )</h1>
+
+<h1>define va_start(ap,v) ( ap = (va_list)&amp;v + _INTSIZEOF(v) )</h1>
+
+<h1>define va_arg(ap,t) ( <em>(t </em>)((ap += <em>INTSIZEOF(t)) - </em>INTSIZEOF(t)) )</h1>
+
+<h1>define va_end(ap) ( ap = (va_list)0 )</h1>
+
+<p>{% endcodeblock %}</p>
+
+<p>_INTSIZEOF(n)宏是为了考虑那些内存地址需要对齐的系统，从宏的名字来应该是跟sizeof(int)对齐。
+一般的sizeof(int)=4，也就是参数在内存中的地址都为4的倍数。比如，如果sizeof(n)在1－4之间，
+那_INTSIZEOF(n)＝4；如果sizeof(n)在5－8之间，那么_INTSIZEOF(n)=8。</p>
+
+
+
+
+<p>为了能从固定参数依次得到每个可变参数，va_start,va_arg充分利用下面两点：</br>
+&nbsp;&nbsp;&nbsp;&nbsp;1．C语言在函数调用时，先将最后一个参数压入栈;</br>
+&nbsp;&nbsp;&nbsp;&nbsp;2．X86平台下的内存分配顺序是从高地址内存到低地址内存</br>
+<center>{% img /images/2011/IMAG2011042101.png %}</center></p>
+
+
+
+
+<p>由上图可见，v是固定参数在内存中的地址，在调用va_start后，ap指向第一个可变参数。
+这个宏的作用就是在v的内存地址上增加v所占的内存大小，这样就得到了第一个可变参数的地址。</p>
+
+
+
+
+<p>接下来，可以这样设想，如果我能确定这个可变参数的类型，那么我就知道了它占用了多少内存，
+依葫芦画瓢，我就能得到下一个可变参数的地址。</p>
+
+
+
+
+<p>让我们再来看看va_arg，它先ap指向下一个可变参数，然后减去当前可变参数的大小即得到当前
+可变参数的内存地址，再做个类型转换，返回它的值。</br>
+要确定每个可变参数的类型，有两种做法，要么都是默认的类型，要么就在固定参数中包含足够的
+信息让程序可以确定每个可变参数的类型。比如，printf，程序通过分析format字符串就可以
+确定每个可变参数大类型。</br>
+最后一个宏就简单了，va_end使得ap不再指向有效的内存地址。</p>
+
+
+
+
+<p>看了这几个宏，不禁让我再次感慨，C语言太灵活了，而且代码可以写得非常简洁，
+虽然有时候让人看得不是很明白，但是一旦明白 过来，你肯定会为它击掌叫好！</br>
+其实在varargs.h头文件中定义了UNIX System V实行的va系列宏，而上面在stdarg.h头文件中
+定义的是ANSI C形式的宏，这两种宏是不兼容的，一般说来，我们应该使用ANSI C形式的va宏。</p>
+
+
+
+
+<h2>3.实战演练</h2>
+
+
+<p>有没有办法写一个函数，这个函数参数的具体形式可以在运行时才确定？</br>
+系统提供了vprintf系列格式化字符串的函数，用于编程人员封装自己的I/O函数。</p>
+
+
+<p>{% codeblock %}
+int vprintf / vscanf(const char * format, va_list ap); // 从标准输入/输出格式化字符串
+int vfprintf / vfsacanf(FILE * stream, const char * format, va_list ap);// 从文件流
+int vsprintf / vsscanf(char * s, const char * format, va_list ap); // 从字符串
+// 例1：格式化到一个文件流，可用于日志文件
+FILE *logfile;
+int WriteLog(const char * format, ...)
+{
+   va_list arg_ptr;
+   va_start(arg_ptr, format);
+   int nWrittenBytes = vfprintf(logfile, format, arg_ptr);
+   va_end(arg_ptr);
+   return nWrittenBytes;
+}
+...
+// 调用时，与使用printf()没有区别。
+WriteLog("%04d-%02d-%02d %02d:%02d:%02d %s/%04d logged out.", nYear, nMonth, nDay, nHour, nMinute, szUserName, nUserID);
+{% endcodeblock %}</p>
+
+<p>同理，也可以从文件中执行格式化输入；或者对标准输入输出，字符串执行格式化。</br>
+在上面的例1中，WriteLog()函数可以接受参数个数可变的输入，本质上，它的实现需要vprintf()的支持。
+如何真正实现属于自己的可变参数函数，包括控制每一个传入的可选参数。</p>
+
+
+
+
+<h2>4.关于va()函数和va宏</h2>
+
+
+<p>C语言支持va函数，作为C语言的扩展--C++同样支持va函数，但在C++中并不推荐使用，C++引入的
+多态性同样可以实现参数个数可变的函数。不过，C++的重载功能毕竟只能是有限多个可以预见的参数个数。
+比较而言，C中的va函数则可以定义无穷多个相当于C++的重载函数，这方面C++是无能为力的。va函数的
+优势表现在使用的方便性和易用性上，可以使代码更简洁。C编译器为了统一在不同的硬件架构、硬件
+平台上的实现，和增加代码的可移植性，提供了一系列宏来屏蔽硬件环境不同带来的差异。</p>
+
+
+
+
+<p>ANSI C标准下，va的宏定义在stdarg.h中，它们有：va_list，va_start()，va_arg()，va_end()。</p>
+
+
+<p>{% codeblock %}
+// 例2：求任意个自然数的平方和：
+int SqSum(int n1, ...)
+{
+   va_list arg_ptr;
+   int nSqSum = 0, n = n1;
+   va_start(arg_ptr, n1);
+   while (n > 0)
+  {
+nSqSum += (n * n);
+n = va_arg(arg_ptr, int);
+  }
+  va_end(arg_ptr);
+  return nSqSum;
+}
+// 调用时
+int nSqSum = SqSum(7, 2, 7, 11, -1);
+{% endcodeblock %}</p>
+
+<p>可变参数函数的原型声明格式为：</p>
+
+
+<p>{% codeblock %}
+type VAFunction(type arg1, type arg2, ... );
+{% endcodeblock %}</p>
+
+<p>参数可以分为两部分：个数确定的固定参数和个数可变的可选参数。函数至少需要一个固定参数，
+固定参数的声明和普通函数一样；可选参数由于个数不确定，声明时用"..."表示。固定参数和可选
+参数公同构成一个函数的参数列表。借助上面这个简单的例2，来看看各个va_xxx的作用。</p>
+
+
+
+
+<p>va_list arg_ptr：定义一个指向个数可变的参数列表指针；</br>
+va_start(arg_ptr, argN)：使参数列表指针arg_ptr指向函数参数列表中的第一个可选参数，
+说明：argN是位于第一个可选参数之前的固定参数，（或者说，最后一个固定参数；...
+之前的一个参数），函数参数列表中参数在内存中的顺序与函数声明时的顺序是一致的。
+如果有一va函数的声明是void va_test(char a, char b, char c, ...)，则它的固定
+参数依次是a,b,c，最后一个固定参数argN为c，因此就是va_start(arg_ptr, c)。</br>
+va_arg(arg_ptr, type)：返回参数列表中指针arg_ptr所指的参数，返回类型为type，
+并使指针arg_ptr指向参数列表中下一个参数。</br>
+va_copy(dest, src)：dest，src的类型都是va_list，va_copy()用于复制参数列表指针，将dest初始化为src。</br>
+va_end(arg_ptr)：清空参数列表，并置参数指针arg_ptr无效。说明：指针arg_ptr被置无效后，
+可以通过调用va_start()、va_copy()恢复arg_ptr。每次调用va_start() / va_copy()后，
+必须得有相应的va_end()与之匹配。参数指针可以在参数列表中随意地来回移动，
+但必须在va_start() ... va_end()之内。</p>
+
+
+
 ]]></content>
   </entry>
   

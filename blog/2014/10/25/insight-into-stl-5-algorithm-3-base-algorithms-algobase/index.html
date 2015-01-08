@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -242,7 +230,7 @@ $(document).ready(function(){
 
 <p>源码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -252,21 +240,22 @@ $(document).ready(function(){
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIter1, class _InputIter2&gt;
-</span><span class='line'>bool lexicographical_compare(_InputIter1 __first1, _InputIter1 __last1, _InputIter2 __first2, _InputIter2 __last2) {
-</span><span class='line'>  for ( ; __first1 != __last1 && __first2 != __last2; ++__first1, ++__first2) {
-</span><span class='line'>    if (*__first1 &lt; *__first2)
-</span><span class='line'>      return true;
-</span><span class='line'>    if (*__first2 &lt; *__first1)
-</span><span class='line'>      return false;
-</span><span class='line'>  }
-</span><span class='line'>  return __first1 == __last1 && __first2 != __last2;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter1</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_InputIter2</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">bool</span> <span class="n">lexicographical_compare</span><span class="p">(</span><span class="n">_InputIter1</span> <span class="n">__first1</span><span class="p">,</span> <span class="n">_InputIter1</span> <span class="n">__last1</span><span class="p">,</span> <span class="n">_InputIter2</span> <span class="n">__first2</span><span class="p">,</span> <span class="n">_InputIter2</span> <span class="n">__last2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first1</span> <span class="o">!=</span> <span class="n">__last1</span> <span class="o">&amp;&amp;</span> <span class="n">__first2</span> <span class="o">!=</span> <span class="n">__last2</span><span class="p">;</span> <span class="o">++</span><span class="n">__first1</span><span class="p">,</span> <span class="o">++</span><span class="n">__first2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">__first2</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first2</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">__first1</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__first1</span> <span class="o">==</span> <span class="n">__last1</span> <span class="o">&amp;&amp;</span> <span class="n">__first2</span> <span class="o">!=</span> <span class="n">__last2</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>除了这个默认的版本外，还有一个版本提供比较方法（仿函数）的参数。另外，对于纯字符串的比较，SGI STL还做了进一步优化，使用原生指针和C标准函数 <code>memcmp()</code> 进行比较，如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -274,14 +263,15 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline bool 
-</span><span class='line'>lexicographical_compare(const unsigned char* __first1, const unsigned char* __last1,
-</span><span class='line'>                        const unsigned char* __first2,const unsigned char* __last2) {
-</span><span class='line'>  const size_t __len1 = __last1 - __first1;
-</span><span class='line'>  const size_t __len2 = __last2 - __first2;
-</span><span class='line'>  const int __result = memcmp(__first1, __first2, min(__len1, __len2));
-</span><span class='line'>  return __result != 0 ? __result &lt; 0 : __len1 &lt; __len2;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="kt">bool</span>
+</span><span class='line'><span class="n">lexicographical_compare</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last1</span><span class="p">,</span>
+</span><span class='line'>                        <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first2</span><span class="p">,</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">const</span> <span class="n">size_t</span> <span class="n">__len1</span> <span class="o">=</span> <span class="n">__last1</span> <span class="o">-</span> <span class="n">__first1</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="n">size_t</span> <span class="n">__len2</span> <span class="o">=</span> <span class="n">__last2</span> <span class="o">-</span> <span class="n">__first2</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">int</span> <span class="n">__result</span> <span class="o">=</span> <span class="n">memcmp</span><span class="p">(</span><span class="n">__first1</span><span class="p">,</span> <span class="n">__first2</span><span class="p">,</span> <span class="n">min</span><span class="p">(</span><span class="n">__len1</span><span class="p">,</span> <span class="n">__len2</span><span class="p">));</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__result</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">__result</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">__len1</span> <span class="o">&lt;</span> <span class="n">__len2</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>3. 复制/拷贝算法</h2>
@@ -294,7 +284,7 @@ $(document).ready(function(){
 
 <p>在介绍 copy 算法的源码具体实现前，根据源码及其注释再做一个简单的小结：copy 算法中的一些辅助函数有两个目的，其一是对于简单的数据类型尽量使用 memmove，其二是对于具有 RandomAccessIterators 的对象使用一个计数器来进行循环；除此之外，SGI STL针对编译器是否具有函数模板偏特化、类模板偏特化等进行了适配。下面是 copy 的源码，其中添加了比较详细具体的注释：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -420,132 +410,133 @@ $(document).ready(function(){
 <span class='line-number'>124</span>
 <span class='line-number'>125</span>
 <span class='line-number'>126</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// 首先是几个与偏特化无关的公用的3个函数
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter, class _Distance&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>__copy(_InputIter __first, _InputIter __last,
-</span><span class='line'>       _OutputIter __result,input_iterator_tag, _Distance*){
-</span><span class='line'>  for ( ; __first != __last; ++__result, ++__first) // 使用迭代器遍历和复制
-</span><span class='line'>    *__result = *__first;
-</span><span class='line'>  return __result;
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _RandomAccessIter, class _OutputIter, class _Distance&gt;
-</span><span class='line'>inline _OutputIter
-</span><span class='line'>__copy(_RandomAccessIter __first, _RandomAccessIter __last,
-</span><span class='line'>       _OutputIter __result, random_access_iterator_tag, _Distance*){
-</span><span class='line'>  for (_Distance __n = __last - __first; __n &gt; 0; --__n) { //对于随机访问迭代器，使用一个计数器n
-</span><span class='line'>    *__result = *__first;
-</span><span class='line'>    ++__first;
-</span><span class='line'>    ++__result;
-</span><span class='line'>  }
-</span><span class='line'>  return __result;
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>inline _Tp*
-</span><span class='line'>__copy_trivial(const _Tp* __first, const _Tp* __last, _Tp* __result) {
-</span><span class='line'>  memmove(__result, __first, sizeof(_Tp) * (__last - __first)); // 直接使用 memmove
-</span><span class='line'>  return __result + (__last - __first);
-</span><span class='line'>}
-</span><span class='line'>//============== __STL_FUNCTION_TMPL_PARTIAL_ORDER 对于具有函数模板偏特性的编译器
-</span><span class='line'>#if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>__copy_aux2(_InputIter __first, _InputIter __last, _OutputIter __result, __false_type) { // false_type 的重载版
-</span><span class='line'>  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>__copy_aux2(_InputIter __first, _InputIter __last, _OutputIter __result, __true_type) { // true_type 的重载版
-</span><span class='line'>  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
-</span><span class='line'>}
-</span><span class='line'>#ifndef __USLC__
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>inline _Tp* 
-</span><span class='line'>__copy_aux2(_Tp* __first, _Tp* __last, _Tp* __result, __true_type) { // 原生指针的重载版
-</span><span class='line'>  return __copy_trivial(__first, __last, __result);
-</span><span class='line'>}
-</span><span class='line'>#endif /* __USLC__ */
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>inline _Tp* 
-</span><span class='line'>__copy_aux2(const _Tp* __first, const _Tp* __last, _Tp* __result, __true_type) { // 常量指针的重载版
-</span><span class='line'>  return __copy_trivial(__first, __last, __result);
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter, class _Tp&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>__copy_aux(_InputIter __first, _InputIter __last, _OutputIter __result, _Tp*) {
-</span><span class='line'>  typedef typename __type_traits&lt;_Tp&gt;::has_trivial_assignment_operator _Trivial;
-</span><span class='line'>  return __copy_aux2(__first, __last, __result, _Trivial());
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>copy(_InputIter __first, _InputIter __last, _OutputIter __result) { //最终的对外接口
-</span><span class='line'>  return __copy_aux(__first, __last, __result, __VALUE_TYPE(__first));
-</span><span class='line'>}
-</span><span class='line'>//============== __STL_CLASS_PARTIAL_SPECIALIZATION 对于具有类模板偏特性的编译器
-</span><span class='line'>#elif defined(__STL_CLASS_PARTIAL_SPECIALIZATION)
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter, class _BoolType&gt;
-</span><span class='line'>struct __copy_dispatch { // 类1，泛化版
-</span><span class='line'>  static _OutputIter copy(_InputIter __first, _InputIter __last, _OutputIter __result) {
-</span><span class='line'>    typedef typename iterator_traits&lt;_InputIter&gt;::iterator_category _Category;
-</span><span class='line'>    typedef typename iterator_traits&lt;_InputIter&gt;::difference_type _Distance;
-</span><span class='line'>    return __copy(__first, __last, __result, _Category(), (_Distance*) 0);
-</span><span class='line'>  }
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>struct __copy_dispatch&lt;_Tp*, _Tp*, __true_type&gt;{ // 类2，特化版
-</span><span class='line'>  static _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) {
-</span><span class='line'>    return __copy_trivial(__first, __last, __result);
-</span><span class='line'>  }
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>struct __copy_dispatch&lt;const _Tp*, _Tp*, __true_type&gt;{ // 类3，特化版
-</span><span class='line'>  static _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) {
-</span><span class='line'>    return __copy_trivial(__first, __last, __result);
-</span><span class='line'>  }
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>copy(_InputIter __first, _InputIter __last, _OutputIter __result) { // 对外接口
-</span><span class='line'>  typedef typename iterator_traits&lt;_InputIter&gt;::value_type _Tp;
-</span><span class='line'>  typedef typename __type_traits&lt;_Tp&gt;::has_trivial_assignment_operator _Trivial;
-</span><span class='line'>  return __copy_dispatch&lt;_InputIter, _OutputIter, _Trivial&gt;
-</span><span class='line'>    ::copy(__first, __last, __result);
-</span><span class='line'>}
-</span><span class='line'>//============== 其他，完全不具有偏特化特性的情况
-</span><span class='line'>#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-</span><span class='line'>template &lt;class _InputIter, class _OutputIter&gt;
-</span><span class='line'>inline _OutputIter 
-</span><span class='line'>copy(_InputIter __first, _InputIter __last, _OutputIter __result){ // 对外接口，泛化版
-</span><span class='line'>  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
-</span><span class='line'>}
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 首先是几个与偏特化无关的公用的3个函数</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Distance</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">__copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span>
+</span><span class='line'>       <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span><span class="n">input_iterator_tag</span><span class="p">,</span> <span class="n">_Distance</span><span class="o">*</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__result</span><span class="p">,</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span> <span class="c1">// 使用迭代器遍历和复制</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">__result</span> <span class="o">=</span> <span class="o">*</span><span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__result</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_RandomAccessIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Distance</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">__copy</span><span class="p">(</span><span class="n">_RandomAccessIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_RandomAccessIter</span> <span class="n">__last</span><span class="p">,</span>
+</span><span class='line'>       <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span> <span class="n">random_access_iterator_tag</span><span class="p">,</span> <span class="n">_Distance</span><span class="o">*</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">_Distance</span> <span class="n">__n</span> <span class="o">=</span> <span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">;</span> <span class="n">__n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">__n</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//对于随机访问迭代器，使用一个计数器n</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">__result</span> <span class="o">=</span> <span class="o">*</span><span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">__result</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__result</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_Tp</span><span class="o">*</span>
+</span><span class='line'><span class="n">__copy_trivial</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">memmove</span><span class="p">(</span><span class="n">__result</span><span class="p">,</span> <span class="n">__first</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">));</span> <span class="c1">// 直接使用 memmove</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__result</span> <span class="o">+</span> <span class="p">(</span><span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//============== __STL_FUNCTION_TMPL_PARTIAL_ORDER 对于具有函数模板偏特性的编译器</span>
+</span><span class='line'><span class="cp">#if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">__copy_aux2</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__false_type</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// false_type 的重载版</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__ITERATOR_CATEGORY</span><span class="p">(</span><span class="n">__first</span><span class="p">),</span> <span class="n">__DISTANCE_TYPE</span><span class="p">(</span><span class="n">__first</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">__copy_aux2</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__true_type</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// true_type 的重载版</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__ITERATOR_CATEGORY</span><span class="p">(</span><span class="n">__first</span><span class="p">),</span> <span class="n">__DISTANCE_TYPE</span><span class="p">(</span><span class="n">__first</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">#ifndef __USLC__</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_Tp</span><span class="o">*</span>
+</span><span class='line'><span class="n">__copy_aux2</span><span class="p">(</span><span class="n">_Tp</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__true_type</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 原生指针的重载版</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_trivial</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">#endif </span><span class="cm">/* __USLC__ */</span><span class="cp"></span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_Tp</span><span class="o">*</span>
+</span><span class='line'><span class="n">__copy_aux2</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__true_type</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 常量指针的重载版</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_trivial</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">__copy_aux</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">__type_traits</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">has_trivial_assignment_operator</span> <span class="n">_Trivial</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_aux2</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Trivial</span><span class="p">());</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//最终的对外接口</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_aux</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__VALUE_TYPE</span><span class="p">(</span><span class="n">__first</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//============== __STL_CLASS_PARTIAL_SPECIALIZATION 对于具有类模板偏特性的编译器</span>
+</span><span class='line'><span class="cp">#elif defined(__STL_CLASS_PARTIAL_SPECIALIZATION)</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_BoolType</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">__copy_dispatch</span> <span class="p">{</span> <span class="c1">// 类1，泛化版</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_OutputIter</span> <span class="n">copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="o">&gt;::</span><span class="n">iterator_category</span> <span class="n">_Category</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="o">&gt;::</span><span class="n">difference_type</span> <span class="n">_Distance</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Category</span><span class="p">(),</span> <span class="p">(</span><span class="n">_Distance</span><span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">__copy_dispatch</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="n">__true_type</span><span class="o">&gt;</span><span class="p">{</span> <span class="c1">// 类2，特化版</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">copy</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__copy_trivial</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">__copy_dispatch</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">,</span> <span class="n">__true_type</span><span class="o">&gt;</span><span class="p">{</span> <span class="c1">// 类3，特化版</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">copy</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__copy_trivial</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 对外接口</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="n">_Tp</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">__type_traits</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">has_trivial_assignment_operator</span> <span class="n">_Trivial</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_dispatch</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="p">,</span> <span class="n">_OutputIter</span><span class="p">,</span> <span class="n">_Trivial</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//============== 其他，完全不具有偏特化特性的情况</span>
+</span><span class='line'><span class="cp">#else </span><span class="cm">/* __STL_CLASS_PARTIAL_SPECIALIZATION */</span><span class="cp"></span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
+</span><span class='line'><span class="n">copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">){</span> <span class="c1">// 对外接口，泛化版</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">__ITERATOR_CATEGORY</span><span class="p">(</span><span class="n">__first</span><span class="p">),</span> <span class="n">__DISTANCE_TYPE</span><span class="p">(</span><span class="n">__first</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>#define __SGI_STL_DECLARE_COPY_TRIVIAL(_Tp)                                \
-</span><span class='line'>  inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) { \ // 对外接口，特化版
-</span><span class='line'>    memmove(__result, __first, sizeof(_Tp) * (__last - __first));          \
-</span><span class='line'>    return __result + (__last - __first);                                  \
-</span><span class='line'>  }
+</span><span class='line'><span class="cp">#define __SGI_STL_DECLARE_COPY_TRIVIAL(_Tp)                                \</span>
+</span><span class='line'><span class="cp">  inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) { \ </span><span class="c1">// 对外接口，特化版</span>
+</span><span class='line'>    <span class="n">memmove</span><span class="p">(</span><span class="n">__result</span><span class="p">,</span> <span class="n">__first</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">));</span>          \
+</span><span class='line'>    <span class="k">return</span> <span class="n">__result</span> <span class="o">+</span> <span class="p">(</span><span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">);</span>                                  \
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(char)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(signed char)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned char)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(short)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned short)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(int)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned int)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(long)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long)
-</span><span class='line'>#ifdef __STL_HAS_WCHAR_T
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(wchar_t)
-</span><span class='line'>#endif
-</span><span class='line'>#ifdef _STL_LONG_LONG
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(long long)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long long)
-</span><span class='line'>#endif
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(float)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(double)
-</span><span class='line'>__SGI_STL_DECLARE_COPY_TRIVIAL(long double)
-</span><span class='line'>#undef __SGI_STL_DECLARE_COPY_TRIVIAL
-</span><span class='line'>#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">signed</span> <span class="kt">char</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">short</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">short</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">long</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span>
+</span><span class='line'><span class="cp">#ifdef __STL_HAS_WCHAR_T</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">wchar_t</span><span class="p">)</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="cp">#ifdef _STL_LONG_LONG</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">)</span>
+</span><span class='line'><span class="cp">#endif</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span>
+</span><span class='line'><span class="n">__SGI_STL_DECLARE_COPY_TRIVIAL</span><span class="p">(</span><span class="kt">long</span> <span class="kt">double</span><span class="p">)</span>
+</span><span class='line'><span class="cp">#undef __SGI_STL_DECLARE_COPY_TRIVIAL</span>
+</span><span class='line'><span class="cp">#endif </span><span class="cm">/* __STL_CLASS_PARTIAL_SPECIALIZATION */</span><span class="cp"></span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>以上是 copy 的完整代码，关于复制还有两个接口，一个是 <code>copy_n</code>，另一个是 <code>copy_backward</code>，前者复制区间 <code>[first, last)</code> 中前 n 个元素，后者从last-1 往 first 复制，这里就不详细展开了。</p>
@@ -587,7 +578,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

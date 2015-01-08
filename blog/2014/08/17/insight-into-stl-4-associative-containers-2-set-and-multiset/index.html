@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -220,7 +208,7 @@ $(document).ready(function(){
 <!-- more -->
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -254,40 +242,41 @@ $(document).ready(function(){
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Key, class _Compare, class _Alloc&gt;
-</span><span class='line'>class set {
-</span><span class='line'>public:
-</span><span class='line'>  typedef _Key     key_type;
-</span><span class='line'>  typedef _Key     value_type; // 实值与键值同类型
-</span><span class='line'>private:
-</span><span class='line'>  typedef _Rb_tree&lt;key_type, value_type, _Identity&lt;value_type&gt;, key_compare, _Alloc&gt; _Rep_type;
-</span><span class='line'>  _Rep_type _M_t;  // 底层使用红黑树作为容器
-</span><span class='line'>  set() : _M_t(_Compare(), allocator_type()) {} // 默认构造函数
-</span><span class='line'>  set(const set&lt;_Key,_Compare,_Alloc&gt;& __x) : _M_t(__x._M_t) {}  // 拷贝构造函数
-</span><span class='line'>  pair&lt;iterator,bool&gt; insert(const value_type& __x) { // 插入操作
-</span><span class='line'>    pair&lt;typename _Rep_type::iterator, bool&gt; __p = _M_t.insert_unique(__x); 
-</span><span class='line'>    return pair&lt;iterator, bool&gt;(__p.first, __p.second);
-</span><span class='line'>  }
-</span><span class='line'>  void erase(iterator __position) { // 删除操作
-</span><span class='line'>    typedef typename _Rep_type::iterator _Rep_iterator;
-</span><span class='line'>    _M_t.erase((_Rep_iterator&)__position); 
-</span><span class='line'>  }
-</span><span class='line'>  void clear() { _M_t.clear(); } // 清空操作
-</span><span class='line'>  iterator find(const key_type& __x) const { return _M_t.find(__x); } // 查找
-</span><span class='line'>  size_type count(const key_type& __x) const { // 计数
-</span><span class='line'>    return _M_t.find(__x) == _M_t.end() ? 0 : 1;
-</span><span class='line'>  }
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Key, class _Compare, class _Alloc&gt;
-</span><span class='line'>inline bool operator==(const set&lt;_Key,_Compare,_Alloc&gt;& __x, 
-</span><span class='line'>                       const set&lt;_Key,_Compare,_Alloc&gt;& __y) { // 比较相等操作符
-</span><span class='line'>  return __x._M_t == __y._M_t;
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _Key, class _Compare, class _Alloc&gt;
-</span><span class='line'>inline bool operator&lt;(const set&lt;_Key,_Compare,_Alloc&gt;& __x, 
-</span><span class='line'>                      const set&lt;_Key,_Compare,_Alloc&gt;& __y) { // 比较大小操作符
-</span><span class='line'>  return __x._M_t &lt; __y._M_t;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">set</span> <span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Key</span>     <span class="n">key_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Key</span>     <span class="n">value_type</span><span class="p">;</span> <span class="c1">// 实值与键值同类型</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree</span><span class="o">&lt;</span><span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">_Identity</span><span class="o">&lt;</span><span class="n">value_type</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">key_compare</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Rep_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Rep_type</span> <span class="n">_M_t</span><span class="p">;</span>  <span class="c1">// 底层使用红黑树作为容器</span>
+</span><span class='line'>  <span class="n">set</span><span class="p">()</span> <span class="o">:</span> <span class="n">_M_t</span><span class="p">(</span><span class="n">_Compare</span><span class="p">(),</span> <span class="n">allocator_type</span><span class="p">())</span> <span class="p">{}</span> <span class="c1">// 默认构造函数</span>
+</span><span class='line'>  <span class="n">set</span><span class="p">(</span><span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="o">:</span> <span class="n">_M_t</span><span class="p">(</span><span class="n">__x</span><span class="p">.</span><span class="n">_M_t</span><span class="p">)</span> <span class="p">{}</span>  <span class="c1">// 拷贝构造函数</span>
+</span><span class='line'>  <span class="n">pair</span><span class="o">&lt;</span><span class="n">iterator</span><span class="p">,</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">insert</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 插入操作</span>
+</span><span class='line'>    <span class="n">pair</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_Rep_type</span><span class="o">::</span><span class="n">iterator</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span> <span class="n">__p</span> <span class="o">=</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_unique</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">iterator</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">__p</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">__p</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">erase</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__position</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 删除操作</span>
+</span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Rep_type</span><span class="o">::</span><span class="n">iterator</span> <span class="n">_Rep_iterator</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_M_t</span><span class="p">.</span><span class="n">erase</span><span class="p">((</span><span class="n">_Rep_iterator</span><span class="o">&amp;</span><span class="p">)</span><span class="n">__position</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">clear</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// 清空操作</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="n">key_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 查找</span>
+</span><span class='line'>  <span class="n">size_type</span> <span class="n">count</span><span class="p">(</span><span class="k">const</span> <span class="n">key_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="c1">// 计数</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">__x</span><span class="p">)</span> <span class="o">==</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span>
+</span><span class='line'>                       <span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 比较相等操作符</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">_M_t</span> <span class="o">==</span> <span class="n">__y</span><span class="p">.</span><span class="n">_M_t</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;&amp;</span> <span class="n">__x</span><span class="p">,</span>
+</span><span class='line'>                      <span class="k">const</span> <span class="n">set</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;&amp;</span> <span class="n">__y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 比较大小操作符</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__x</span><span class="p">.</span><span class="n">_M_t</span> <span class="o">&lt;</span> <span class="n">__y</span><span class="p">.</span><span class="n">_M_t</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到基本都是调用 <code>_M_t</code> 的方法来实现的，而这里的 <code>_M_t</code> 是一个红黑树对象。</p>
@@ -296,7 +285,7 @@ $(document).ready(function(){
 
 <p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -316,26 +305,27 @@ $(document).ready(function(){
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Key, class _Compare, class _Alloc&gt;
-</span><span class='line'>class multiset {
-</span><span class='line'>public:
-</span><span class='line'>  multiset(const value_type* __first, const value_type* __last)
-</span><span class='line'>    : _M_t(_Compare(), allocator_type())
-</span><span class='line'>    { _M_t.insert_equal(__first, __last); } // 构造函数
-</span><span class='line'>  iterator insert(const value_type& __x) { // 插入操作
-</span><span class='line'>    return _M_t.insert_equal(__x);
-</span><span class='line'>  }
-</span><span class='line'>  iterator insert(iterator __position, const value_type& __x) {
-</span><span class='line'>    typedef typename _Rep_type::iterator _Rep_iterator;
-</span><span class='line'>    return _M_t.insert_equal((_Rep_iterator&)__position, __x);
-</span><span class='line'>  }
-</span><span class='line'>  void insert(const value_type* __first, const value_type* __last) {
-</span><span class='line'>    _M_t.insert_equal(__first, __last);
-</span><span class='line'>  }
-</span><span class='line'>  void insert(const_iterator __first, const_iterator __last) {
-</span><span class='line'>    _M_t.insert_equal(__first, __last);
-</span><span class='line'>  }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">multiset</span> <span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">multiset</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">__last</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">:</span> <span class="n">_M_t</span><span class="p">(</span><span class="n">_Compare</span><span class="p">(),</span> <span class="n">allocator_type</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">{</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_equal</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 构造函数</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">insert</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 插入操作</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_equal</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">insert</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__position</span><span class="p">,</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">_Rep_type</span><span class="o">::</span><span class="n">iterator</span> <span class="n">_Rep_iterator</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_equal</span><span class="p">((</span><span class="n">_Rep_iterator</span><span class="o">&amp;</span><span class="p">)</span><span class="n">__position</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">insert</span><span class="p">(</span><span class="k">const</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_equal</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">insert</span><span class="p">(</span><span class="n">const_iterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">const_iterator</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_M_t</span><span class="p">.</span><span class="n">insert_equal</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其他部分基本与 set 一样。</p>
@@ -377,7 +367,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

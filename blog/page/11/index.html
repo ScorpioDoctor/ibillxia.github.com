@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -379,12 +367,12 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
   </header>
 
 
-  <div class="entry-content"><p>call_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
+  <div class="entry-content"><p>call\_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
 
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -392,14 +380,15 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function a($b,$c) 
-</span><span class='line'>{
-</span><span class='line'>  echo $b;
-</span><span class='line'>  echo $c;
-</span><span class='line'>}
-</span><span class='line'>call_user_func('a', "111","222");
-</span><span class='line'>call_user_func('a', "333","444");
-</span><span class='line'>//显示 111 222 333 444</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function a($b,$c) </span>
+</span><span class='line'><span class="x">{</span>
+</span><span class='line'><span class="x">  echo $b;</span>
+</span><span class='line'><span class="x">  echo $c;</span>
+</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="x">call_user_func(&#39;a&#39;, &quot;111&quot;,&quot;222&quot;);</span>
+</span><span class='line'><span class="x">call_user_func(&#39;a&#39;, &quot;333&quot;,&quot;444&quot;);</span>
+</span><span class='line'><span class="x">//显示 111 222 333 444</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -456,7 +445,7 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -471,21 +460,22 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
-</span><span class='line'>require (FILE_DIR."smtp.php"); 
-</span><span class='line'>$smtpserver = "smtp.xxx.com";//SMTP服务器 
-</span><span class='line'>$smtpserverport =25;//SMTP服务器端口 
-</span><span class='line'>$smtpusermail = "xxxxx@xxx.com";//SMTP服务器的用户邮箱 
-</span><span class='line'>$smtpemailto = "aaaaa@xxx.com";//发送给谁 
-</span><span class='line'>$smtpuser = "xxxxx";//SMTP服务器的用户帐号 
-</span><span class='line'>$smtppass = "xxxxx";//SMTP服务器的用户密码 
-</span><span class='line'>$mailsubject = "Test Subject";//邮件主题 
-</span><span class='line'>$mailbody = "&lt;h1>This is a test mail&lt;/h1>";//邮件内容 
-</span><span class='line'>$mailtype = "HTML";//邮件格式（HTML/TXT）,TXT为文本邮件 
-</span><span class='line'>$smtp = new smtp($smtpserver,$smtpserverport,true,$smtpuser,$smtppass);//这里面的一个true是表示使用身份验证,否则不使用身份验证. 
-</span><span class='line'>$smtp->debug = TRUE;//是否显示发送的调试信息 
-</span><span class='line'>$smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype); 
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?</span>
+</span><span class='line'><span class="k">require</span> <span class="p">(</span><span class="nx">FILE_DIR</span><span class="o">.</span><span class="s2">&quot;smtp.php&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$smtpserver</span> <span class="o">=</span> <span class="s2">&quot;smtp.xxx.com&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器 </span>
+</span><span class='line'><span class="nv">$smtpserverport</span> <span class="o">=</span><span class="mi">25</span><span class="p">;</span><span class="c1">//SMTP服务器端口 </span>
+</span><span class='line'><span class="nv">$smtpusermail</span> <span class="o">=</span> <span class="s2">&quot;xxxxx@xxx.com&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户邮箱 </span>
+</span><span class='line'><span class="nv">$smtpemailto</span> <span class="o">=</span> <span class="s2">&quot;aaaaa@xxx.com&quot;</span><span class="p">;</span><span class="c1">//发送给谁 </span>
+</span><span class='line'><span class="nv">$smtpuser</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户帐号 </span>
+</span><span class='line'><span class="nv">$smtppass</span> <span class="o">=</span> <span class="s2">&quot;xxxxx&quot;</span><span class="p">;</span><span class="c1">//SMTP服务器的用户密码 </span>
+</span><span class='line'><span class="nv">$mailsubject</span> <span class="o">=</span> <span class="s2">&quot;Test Subject&quot;</span><span class="p">;</span><span class="c1">//邮件主题 </span>
+</span><span class='line'><span class="nv">$mailbody</span> <span class="o">=</span> <span class="s2">&quot;&lt;h1&gt;This is a test mail&lt;/h1&gt;&quot;</span><span class="p">;</span><span class="c1">//邮件内容 </span>
+</span><span class='line'><span class="nv">$mailtype</span> <span class="o">=</span> <span class="s2">&quot;HTML&quot;</span><span class="p">;</span><span class="c1">//邮件格式（HTML/TXT）,TXT为文本邮件 </span>
+</span><span class='line'><span class="nv">$smtp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">smtp</span><span class="p">(</span><span class="nv">$smtpserver</span><span class="p">,</span><span class="nv">$smtpserverport</span><span class="p">,</span><span class="k">true</span><span class="p">,</span><span class="nv">$smtpuser</span><span class="p">,</span><span class="nv">$smtppass</span><span class="p">);</span><span class="c1">//这里面的一个true是表示使用身份验证,否则不使用身份验证. </span>
+</span><span class='line'><span class="nv">$smtp</span><span class="o">-&gt;</span><span class="na">debug</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span><span class="c1">//是否显示发送的调试信息 </span>
+</span><span class='line'><span class="nv">$smtp</span><span class="o">-&gt;</span><span class="na">sendmail</span><span class="p">(</span><span class="nv">$smtpemailto</span><span class="p">,</span> <span class="nv">$smtpusermail</span><span class="p">,</span> <span class="nv">$mailsubject</span><span class="p">,</span> <span class="nv">$mailbody</span><span class="p">,</span> <span class="nv">$mailtype</span><span class="p">);</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -652,78 +642,6 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/">怎么过有意义的日子-俞敏洪</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-06-21T23:21:00+08:00" pubdate data-updated="true">Jun 21<span>st</span>, 2010</time>
-        
-         | <a href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>当时，我们班50个同学，25个男生25个女生。一开始我听完这个数字就特别兴奋，但是没想到我们班的女生没一个正眼瞧我一眼的。到了2001年的时候,我们全班同学聚会，
-大家从世界各地赶回来。蓦然回首，大家突然发现班上挺没出息的，普通话也讲不好的，默默无闻的那个人怎么就成了全班最出色的了。这个时候女同学们都热情的走上来
-握住我的手，后悔当初没下手。</p>
-
-
-
-
-<p>所以后来大学女生问我，俞老师我们现在找男朋友要什么标准.我说很简单，参考我的长相。当然如果长得像我，那是绝对不能放过的。凡是长得比我难看的也不要放过，
-因为这个世界上的规律就是，越难看的人内涵越丰富。</p>
-
-
-
-
-<p>大三的时候我最喜欢读的是《红楼梦》，而且刚好读到林黛玉咳嗽而死的那一章。结果发现自己也在吐血。到医院，医生一查说得了肺结核立刻关起来，一关就是一年。
-我跟医生说像我这样的小伙子怎么会得肺结核呢？医生让我讲讲现状。我说，您看我学习特别刻苦，可成绩就是上不去，班里没有一个女孩子喜欢我。他说，这种情况不得
-肺结核是完全不可能的。</p>
-
-
-
-
-<p>但这个病也给我带来了心态上的调整，因为我在大学一二年级，想要追赶我的同学就是我的精神支柱。但是到了三年级，病了一年后我完全改变了，我觉得活着就挺好。
-然后我就给自己订了一个最低标准，至少保证大学毕业拿到毕业证书，最后国家给我分配一份工作就挺好。虽然我并没有放弃努力，结果反而获得一个更加开阔的心胸。
-所以，到现在为止我学会了永远不要去比，因为总有比你更加优秀的，也总有比你更加落后的。</p>
-
-
-
-
-<p>这个世界上最正确的是跟自己比，想一想今天是不是比昨天进步了一点，想一想明年是不是比今年更加好一点。想一想，10年以后的你是不是比今年的你要更加出色。
-这样的心态一直保持到我大学毕业。</p>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2010/06/21/how-to-live-a-meaningful-life-yuminhong/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
       <h1 class="entry-title"><a href="/blog/2010/04/10/10-stories-in-management/">管理的十个寓言故事</a></h1>
     
     
@@ -796,7 +714,7 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2009/09/03/mayun-vs-niugensheng-vs-shiyuzhu/">马云VS牛根生VS史玉柱</a></h1>
+      <h1 class="entry-title"><a href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/">Sql Server数据库常用的查询语句</a></h1>
     
     
       <p class="meta">
@@ -812,36 +730,131 @@ Nutch是一个基于Lucene，类似Google的完整网络搜索引擎解决方案
   
 
 
-<time datetime="2009-09-03T21:47:00+08:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2009</time>
+<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2009</time>
         
-         | <a href="/blog/2009/09/03/mayun-vs-niugensheng-vs-shiyuzhu/#disqus_thread">Comments</a>
+         | <a href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h2>马云经典语录</h2>
+  <div class="entry-content"><h2>一、表操作</h2>
+
+<p>例 1 对于表的教学管理数据库中的表 STUDENTS ，可以定义如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Create TABLE STUDENTS (SNO NUMERIC (6, 0) NOT NULL 
+</span><span class='line'>SNAME CHAR (8) NOT NULL 
+</span><span class='line'>AGE NUMERIC(3,0) 
+</span><span class='line'>SEX CHAR(2) 
+</span><span class='line'>BPLACE CHAR(20) 
+</span><span class='line'>PRIMARY KEY(SNO)) </span></code></pre></td></tr></table></div></figure>
 
 
-<p><center><img src="/images/2009/IMAG2009090301.jpg"></center></p>
+<p>例 2 对于表的教学管理数据库中的表 ENROLLS ，可以定义如下：</p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Create TABLE ENROLLS(SNO NUMERIC(6,0) NOT NULL 
+</span><span class='line'>CNO CHAR(4) NOT NULL 
+</span><span class='line'>GRADE INT 
+</span><span class='line'>PRIMARY KEY(SNO,CNO) 
+</span><span class='line'>FOREIGN KEY(SNO) REFERENCES STUDENTS(SNO) 
+</span><span class='line'>FOREIGN KEY(CNO) REFERENCES COURSES(CNO) 
+</span><span class='line'>CHECK ((GRADE IS NULL) or (GRADE BETWEEN 0 AND 100))) </span></code></pre></td></tr></table></div></figure>
 
-<p>1.当你成功的时候，你说的所有话都是真理。 </br>
-2.我永远相信只要永不放弃，我们还是有机会的。最后，我们还是坚信一点，这世界上只要有梦想，只要不断努力，
-只要不断学习，不管你长得如何，不管是这样，还是那样，男人的长相往往和他的的才华成反比。今天很残酷，
-明天更残酷，后天很美好，但绝对大部分是死在明天晚上，所以每个人不要放弃今天。 </br>
-3.孙正义跟我有同一个观点，一个方案是一流的Idea加三流的实施；另外一个方案，一流的实施加三流的Idea，哪个好？
-我们俩同时选择一流的实施，三流的Idea。 </br>
-4.我既要扔鞭炮，又要扔炸弹。扔鞭炮是为了吸引别人的注意，迷惑敌人；扔炸弹才是我真正的目的。不过，我可不会告诉你
-我什么时候扔鞭炮，什么时候扔炸弹。游戏就是要虚虚实实，这样才开心。如果你在游戏中感到很痛苦，那说明你的玩法选错了。</br> 
-5.“其实，有的时候人的最大问题就在于他说的都是对的” 。 </br>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2009/09/03/mayun-vs-niugensheng-vs-shiyuzhu/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Sql Server数据库常用的命令语句</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-20T14:44:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2009</time>
+        
+         | <a href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>1. 查看数据库的版本</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>select @@version</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>2. 查看数据库所在机器操作系统参数</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>exec master..xp_msver</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>3. 查看数据库启动的参数</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sp_configure</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4. 查看数据库启动时间</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>select convert(varchar(30),login_time,120) from   master..sysprocesses where spid=1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看数据库服务器名和实例名</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>print 'Server Name...............: ' + convert(varchar(30),@@SERVERNAME) 
+</span><span class='line'>print 'Instance..................: ' + convert(varchar(30),@@SERVICENAME)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2009/07/20/useful-commands-in-MS-SQL-Server/">Read on &rarr;</a>
     </footer>
   
 

@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -220,9 +208,7 @@ $(document).ready(function(){
 <p>实例程序</p>
 
 
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -413,197 +399,198 @@ $(document).ready(function(){
 <span class='line-number'>189</span>
 <span class='line-number'>190</span>
 <span class='line-number'>191</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// ******************* FileName: WinMain.cpp *****************************
-</span><span class='line'>// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
-</span><span class='line'>// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// ******************* FileName: WinMain.cpp *****************************</span>
+</span><span class='line'><span class="c1">// 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中</span>
+</span><span class='line'><span class="c1">// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</span>
 </span><span class='line'>
-</span><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;atlstr.h>
-</span><span class='line'>#include &lt;windows.h>
-</span><span class='line'>#include &lt;Mmsystem.h>
+</span><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;atlstr.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;windows.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;Mmsystem.h&gt;</span>
 </span><span class='line'>
-</span><span class='line'>#pragma comment(lib,"Winmm.lib")
+</span><span class='line'><span class="cp">#pragma comment(lib,&quot;Winmm.lib&quot;)</span>
 </span><span class='line'>
-</span><span class='line'>char lpTemp[256];
+</span><span class='line'><span class="kt">char</span> <span class="n">lpTemp</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'>DWORD FCC(LPSTR lpStr)
-</span><span class='line'>{
-</span><span class='line'>  DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
-</span><span class='line'>  return Number;
-</span><span class='line'>}
+</span><span class='line'><span class="n">DWORD</span> <span class="nf">FCC</span><span class="p">(</span><span class="n">LPSTR</span> <span class="n">lpStr</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">DWORD</span> <span class="n">Number</span> <span class="o">=</span> <span class="n">lpStr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">lpStr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span><span class="mh">0x100</span> <span class="o">+</span> <span class="n">lpStr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span><span class="mh">0x10000</span> <span class="o">+</span> <span class="n">lpStr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span><span class="mh">0x1000000</span> <span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">Number</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-</span><span class='line'>{
-</span><span class='line'>  DWORD datasize = 48000;
-</span><span class='line'>    
-</span><span class='line'>  // 设置录音采样参数
-</span><span class='line'>  WAVEFORMATEX waveformat;
-</span><span class='line'>  waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
-</span><span class='line'>  waveformat.nChannels=1;
-</span><span class='line'>  waveformat.nSamplesPerSec=8000;
-</span><span class='line'>  waveformat.nBlockAlign=1;
-</span><span class='line'>  waveformat.wBitsPerSample=8;
-</span><span class='line'>  waveformat.cbSize=0;
-</span><span class='line'>  waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
+</span><span class='line'><span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">WinMain</span><span class="p">(</span> <span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span> <span class="n">LPSTR</span> <span class="n">lpCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span> <span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">DWORD</span> <span class="n">datasize</span> <span class="o">=</span> <span class="mi">48000</span><span class="p">;</span>
 </span><span class='line'>  
-</span><span class='line'>  sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  HWAVEIN m_hWaveIn;
-</span><span class='line'>  if ( !waveInGetNumDevs() )
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  // 打开录音设备
-</span><span class='line'>  int res = waveInOpen(&m_hWaveIn,WAVE_MAPPER, &waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
-</span><span class='line'>  if ( res != MMSYSERR_NOERROR )
-</span><span class='line'>  {
-</span><span class='line'>     sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
-</span><span class='line'>     MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>     return 0;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="c1">// 设置录音采样参数</span>
+</span><span class='line'>  <span class="n">WAVEFORMATEX</span> <span class="n">waveformat</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">wFormatTag</span><span class="o">=</span><span class="n">WAVE_FORMAT_PCM</span><span class="p">;</span> <span class="c1">// 指定录音格式</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">nChannels</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">nSamplesPerSec</span><span class="o">=</span><span class="mi">8000</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">nBlockAlign</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">wBitsPerSample</span><span class="o">=</span><span class="mi">8</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">cbSize</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">waveformat</span><span class="p">.</span><span class="n">nAvgBytesPerSec</span><span class="o">=</span><span class="n">waveformat</span><span class="p">.</span><span class="n">nChannels</span><span class="o">*</span><span class="n">waveformat</span><span class="p">.</span><span class="n">nSamplesPerSec</span><span class="o">*</span><span class="n">waveformat</span><span class="p">.</span><span class="n">wBitsPerSample</span><span class="o">/</span><span class="mi">8</span><span class="p">;</span>
 </span><span class='line'>  
-</span><span class='line'>  WAVEHDR m_pWaveHdr;
-</span><span class='line'>  m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
-</span><span class='line'>  memset(m_pWaveHdr.lpData, 0, datasize );
-</span><span class='line'>  m_pWaveHdr.dwBufferLength = datasize;
-</span><span class='line'>  m_pWaveHdr.dwBytesRecorded = 0;
-</span><span class='line'>  m_pWaveHdr.dwUser = 0;
-</span><span class='line'>  m_pWaveHdr.dwFlags = 0;
-</span><span class='line'>  m_pWaveHdr.dwLoops = 0;
-</span><span class='line'>  sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+</span><span class='line'>  <span class="n">sprintf</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">,</span><span class="s">&quot;WAVEFORMATEX size = %lu&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEFORMATEX</span><span class="p">));</span>
+</span><span class='line'>  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  // 准备内存块录音
-</span><span class='line'>  int resPrepare = waveInPrepareHeader( m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR) ); 
-</span><span class='line'>  if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>  {
-</span><span class='line'>      sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>      MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="n">HWAVEIN</span> <span class="n">m_hWaveIn</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">waveInGetNumDevs</span><span class="p">()</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;没有可以使用的 WaveIn 通道&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  resPrepare = waveInAddBuffer( m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR) );
-</span><span class='line'>  if ( resPrepare != MMSYSERR_NOERROR) 
-</span><span class='line'>  {
-</span><span class='line'>      sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
-</span><span class='line'>      MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'> 
-</span><span class='line'>  if (! waveInStart(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>  Sleep(30000);
-</span><span class='line'>
-</span><span class='line'>  MMTIME mmt;
-</span><span class='line'>  mmt.wType = TIME_BYTES;
-</span><span class='line'>  sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
-</span><span class='line'>  MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-</span><span class='line'>
-</span><span class='line'>  if (! waveInGetPosition(m_hWaveIn, &mmt, sizeof(MMTIME)) )
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if (mmt.wType != TIME_BYTES) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  if (! waveInStop(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else  
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
+</span><span class='line'>  <span class="c1">// 打开录音设备</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">waveInOpen</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_hWaveIn</span><span class="p">,</span><span class="n">WAVE_MAPPER</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">waveformat</span><span class="p">,</span> <span class="p">(</span><span class="n">DWORD</span><span class="p">)</span><span class="nb">NULL</span><span class="p">,</span><span class="mi">0L</span><span class="p">,</span><span class="n">CALLBACK_WINDOW</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">res</span> <span class="o">!=</span> <span class="n">MMSYSERR_NOERROR</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>     <span class="n">sprintf</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">,</span> <span class="s">&quot;打开 waveIn 通道失败，Error_Code = 0x%x&quot;</span><span class="p">,</span> <span class="n">res</span> <span class="p">);</span>
+</span><span class='line'>     <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  
-</span><span class='line'>  if ( waveInReset(m_hWaveIn) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="n">WAVEHDR</span> <span class="n">m_pWaveHdr</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">lpData</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">GlobalLock</span><span class="p">(</span> <span class="n">GlobalAlloc</span><span class="p">(</span><span class="n">GMEM_MOVEABLE</span><span class="o">|</span><span class="n">GMEM_SHARE</span><span class="p">,</span> <span class="n">datasize</span><span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="n">memset</span><span class="p">(</span><span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">lpData</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">datasize</span> <span class="p">);</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBufferLength</span> <span class="o">=</span> <span class="n">datasize</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBytesRecorded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwUser</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwLoops</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sprintf</span><span class="p">(</span> <span class="n">lpTemp</span><span class="p">,</span> <span class="s">&quot;WAVEHDR size = %lu&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEHDR</span><span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
-</span><span class='line'>  DWORD NumToWrite=0;
-</span><span class='line'>  DWORD dwNumber = 0;
-</span><span class='line'>  HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
-</span><span class='line'>      FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+</span><span class='line'>  <span class="c1">// 准备内存块录音</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">resPrepare</span> <span class="o">=</span> <span class="n">waveInPrepareHeader</span><span class="p">(</span> <span class="n">m_hWaveIn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pWaveHdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEHDR</span><span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">resPrepare</span> <span class="o">!=</span> <span class="n">MMSYSERR_NOERROR</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sprintf</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">,</span> <span class="s">&quot;不能开辟录音头文件，Error_Code = 0x%03X&quot;</span><span class="p">,</span> <span class="n">resPrepare</span> <span class="p">);</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  // memset(m_pWaveHdr.lpData, 0, datasize);
-</span><span class='line'>  dwNumber = FCC("RIFF");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("WAVE");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("fmt ");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = 18L;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  WriteFile(FileHandle, &waveformat, sizeof(WAVEFORMATEX), &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = FCC("data");
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  dwNumber = m_pWaveHdr.dwBytesRecorded;
-</span><span class='line'>  WriteFile(FileHandle, &dwNumber, 4, &NumToWrite, NULL);
-</span><span class='line'>  WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &NumToWrite, NULL);
-</span><span class='line'>  SetEndOfFile(FileHandle);
-</span><span class='line'>  CloseHandle( FileHandle );  
-</span><span class='line'>  FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
-</span><span class='line'>  MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
+</span><span class='line'>  <span class="n">resPrepare</span> <span class="o">=</span> <span class="n">waveInAddBuffer</span><span class="p">(</span> <span class="n">m_hWaveIn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pWaveHdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEHDR</span><span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">resPrepare</span> <span class="o">!=</span> <span class="n">MMSYSERR_NOERROR</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sprintf</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">,</span> <span class="s">&quot;不能开辟录音用缓冲，Error_Code = 0x%03X&quot;</span><span class="p">,</span> <span class="n">resPrepare</span> <span class="p">);</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  if ( waveInUnprepareHeader(m_hWaveIn, &m_pWaveHdr, sizeof(WAVEHDR)) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">waveInStart</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;开始录音&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;开始录音失败&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">Sleep</span><span class="p">(</span><span class="mi">30000</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
-</span><span class='line'>  }
-</span><span class='line'>  else 
-</span><span class='line'>  {
-</span><span class='line'>      MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
-</span><span class='line'>      return 0;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="n">MMTIME</span> <span class="n">mmt</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">mmt</span><span class="p">.</span><span class="n">wType</span> <span class="o">=</span> <span class="n">TIME_BYTES</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sprintf</span><span class="p">(</span> <span class="n">lpTemp</span><span class="p">,</span> <span class="s">&quot;sizeof(MMTIME) = %d, sizeof(UINT) = %d&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">MMTIME</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">UINT</span><span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="n">lpTemp</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  if (res == MMSYSERR_NOERROR ) // 关闭录音设备
-</span><span class='line'>  {
-</span><span class='line'>      if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
-</span><span class='line'>      {
-</span><span class='line'>          MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>      }
-</span><span class='line'>      else
-</span><span class='line'>      {
-</span><span class='line'>          MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
-</span><span class='line'>          return 0;
-</span><span class='line'>      }
-</span><span class='line'>  }
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">waveInGetPosition</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mmt</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">MMTIME</span><span class="p">))</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;取得现在音频位置&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;不能取得音频长度&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>  return 0;
-</span><span class='line'>}
-</span><span class='line'>// ******************* End of File ************************</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">mmt</span><span class="p">.</span><span class="n">wType</span> <span class="o">!=</span> <span class="n">TIME_BYTES</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;指定的 TIME_BYTES 格式音频长度不支持&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">waveInStop</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;停止录音&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;停止录音失败&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">waveInReset</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;重置内存区失败&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBytesRecorded</span> <span class="o">=</span> <span class="n">mmt</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">cb</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">DWORD</span> <span class="n">NumToWrite</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">DWORD</span> <span class="n">dwNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">HANDLE</span> <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">CreateFile</span><span class="p">(</span> <span class="n">CString</span><span class="p">(</span><span class="s">&quot;myTest.wav&quot;</span><span class="p">),</span> <span class="n">GENERIC_WRITE</span><span class="p">,</span>
+</span><span class='line'>      <span class="n">FILE_SHARE_READ</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">CREATE_ALWAYS</span><span class="p">,</span> <span class="n">FILE_ATTRIBUTE_NORMAL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// memset(m_pWaveHdr.lpData, 0, datasize);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">FCC</span><span class="p">(</span><span class="s">&quot;RIFF&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBytesRecorded</span> <span class="o">+</span> <span class="mi">18</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">FCC</span><span class="p">(</span><span class="s">&quot;WAVE&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">FCC</span><span class="p">(</span><span class="s">&quot;fmt &quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="mi">18L</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">waveformat</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEFORMATEX</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">FCC</span><span class="p">(</span><span class="s">&quot;data&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">dwNumber</span> <span class="o">=</span> <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBytesRecorded</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dwNumber</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">WriteFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">,</span> <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">lpData</span><span class="p">,</span> <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">dwBytesRecorded</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumToWrite</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">SetEndOfFile</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">CloseHandle</span><span class="p">(</span> <span class="n">FileHandle</span> <span class="p">);</span>
+</span><span class='line'>  <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">INVALID_HANDLE_VALUE</span><span class="p">;</span> <span class="c1">// 收尾关闭句柄</span>
+</span><span class='line'>  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;应该已生成 myTest.wav 文件&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">waveInUnprepareHeader</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_pWaveHdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">WAVEHDR</span><span class="p">))</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;Un_Prepare Header 失败&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;Un_Prepare Header 成功&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="n">GlobalFree</span><span class="p">(</span><span class="n">GlobalHandle</span><span class="p">(</span> <span class="n">m_pWaveHdr</span><span class="p">.</span><span class="n">lpData</span> <span class="p">))</span> <span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;Global Free 失败&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;Global Free 成功&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">res</span> <span class="o">==</span> <span class="n">MMSYSERR_NOERROR</span> <span class="p">)</span> <span class="c1">// 关闭录音设备</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">waveInClose</span><span class="p">(</span><span class="n">m_hWaveIn</span><span class="p">)</span><span class="o">==</span><span class="n">MMSYSERR_NOERROR</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;正常关闭录音设备&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;非正常关闭录音设备&quot;</span><span class="p">),</span><span class="n">CString</span><span class="p">(</span><span class="s">&quot;提示&quot;</span><span class="p">),</span><span class="n">MB_OK</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// ******************* End of File ************************</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -656,7 +643,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

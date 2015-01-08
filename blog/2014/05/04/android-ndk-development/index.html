@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -231,8 +219,6 @@ $(document).ready(function(){
 </span><span class='line'>mv Downloads/android-ndk-r9d/ /usr/local/adt-x86-20140321/ndk-r9d </span></code></pre></td></tr></table></div></figure>
 
 
-<p></p>
-
 <p>然后配置环境变量：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -293,7 +279,7 @@ $(document).ready(function(){
 
 <p>原本按照图一中的流程我们需要先编写一些 C/C++ 原生的代码，但实际中，为了简便起见，我们可以使用 jdk 的 javah 工具（如果没有， <code>sudo apt-get update</code> 一下）来根据 java 调用 C/C++ API 的接口类来自动生成 jni 的头文件。因此，我们需要先做第3步的内容，这里编写的 Java API 接口 HelloCal 类（在 <code>src/io.ibillxia.hellojni</code> 路径下）如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -307,20 +293,21 @@ $(document).ready(function(){
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//HelloCal.java
-</span><span class='line'>package io.ibillxia.hellojni; 
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//HelloCal.java</span>
+</span><span class='line'><span class="kn">package</span> <span class="n">io</span><span class="o">.</span><span class="na">ibillxia</span><span class="o">.</span><span class="na">hellojni</span><span class="o">;</span>
 </span><span class='line'>
-</span><span class='line'>public class HelloCal { 
-</span><span class='line'>  static { 
-</span><span class='line'>      System.loadLibrary("HelloJni"); // 加载 jni 动态库 
-</span><span class='line'>  } 
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloCal</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;HelloJni&quot;</span><span class="o">);</span> <span class="c1">// 加载 jni 动态库 </span>
+</span><span class='line'>  <span class="o">}</span>
 </span><span class='line'>  
-</span><span class='line'>  public native String helloSay(); // 返回字符串 
-</span><span class='line'>  public native int helloAdd(int a,int b); // 两个整数相加 
-</span><span class='line'>  public native int helloSub(int a,int b); // 两个整数相减 
-</span><span class='line'>  public native int helloMul(int a,int b); // 两个整数相乘 
-</span><span class='line'>  public native int helloDiv(int a,int b); // 两个整数相除 
-</span><span class='line'>} </span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">helloSay</span><span class="o">();</span> <span class="c1">// 返回字符串 </span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">native</span> <span class="kt">int</span> <span class="nf">helloAdd</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span><span class="kt">int</span> <span class="n">b</span><span class="o">);</span> <span class="c1">// 两个整数相加 </span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">native</span> <span class="kt">int</span> <span class="nf">helloSub</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span><span class="kt">int</span> <span class="n">b</span><span class="o">);</span> <span class="c1">// 两个整数相减 </span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">native</span> <span class="kt">int</span> <span class="nf">helloMul</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span><span class="kt">int</span> <span class="n">b</span><span class="o">);</span> <span class="c1">// 两个整数相乘 </span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">native</span> <span class="kt">int</span> <span class="nf">helloDiv</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span><span class="kt">int</span> <span class="n">b</span><span class="o">);</span> <span class="c1">// 两个整数相除 </span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
@@ -329,8 +316,9 @@ $(document).ready(function(){
 
 <p>编写完 java API 后在 Eclipse 中 build 一下生成对应 .class 文件，然后使用 javah 工具根据该 class 文件自动生成 jni API 的头文件。在 HelloJni App 根目录下执行如下命令：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>javah -classpath ./bin/classes -d jni io.ibillxia.hellojni.HelloCal </span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">javah</span> <span class="o">-</span><span class="n">classpath</span> <span class="o">./</span><span class="n">bin</span><span class="o">/</span><span class="n">classes</span> <span class="o">-</span><span class="n">d</span> <span class="n">jni</span> <span class="n">io</span><span class="o">.</span><span class="na">ibillxia</span><span class="o">.</span><span class="na">hellojni</span><span class="o">.</span><span class="na">HelloCal</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
@@ -355,7 +343,7 @@ $(document).ready(function(){
 
 <p>最后是编写 Android App，并在 App 中调用 Jni 接口函数。在 <code>io.ibillxia.hellojni</code> 包中新建一个 Java 类 HelloJni ，编写如下代码（import 内容省略，具体见源码压缩包）：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -383,34 +371,35 @@ $(document).ready(function(){
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//HelloJni.java
-</span><span class='line'>public class HelloJni extends Activity {
-</span><span class='line'>    /** Called when the activity is first created. */
-</span><span class='line'>    @Override
-</span><span class='line'>    public void onCreate(Bundle savedInstanceState)
-</span><span class='line'>    {
-</span><span class='line'>        super.onCreate(savedInstanceState);
-</span><span class='line'>        setContentView(R.layout.hello_jni);
-</span><span class='line'>        
-</span><span class='line'>        Button btn = (Button)findViewById(R.id.btn_cal);
-</span><span class='line'>        btn.setOnClickListener(new Button.OnClickListener() {
-</span><span class='line'>          @Override
-</span><span class='line'>          public void onClick(View v) {
-</span><span class='line'>              // TODO Auto-generated method stub
-</span><span class='line'>              TextView tv1 = (TextView) findViewById(R.id.textView1);
-</span><span class='line'>              TextView tv2 = (TextView) findViewById(R.id.textView2);
-</span><span class='line'>              TextView tv3 = (TextView) findViewById(R.id.textView3);
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//HelloJni.java</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloJni</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/** Called when the activity is first created. */</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">hello_jni</span><span class="o">);</span>
 </span><span class='line'>
-</span><span class='line'>              int a = Integer.parseInt(tv1.getText().toString());
-</span><span class='line'>              int b = Integer.parseInt(tv2.getText().toString());
-</span><span class='line'>              HelloCal cal = new HelloCal();
-</span><span class='line'>              int c = cal.helloAdd(a,b);
-</span><span class='line'>              String str = cal.helloSay();  
-</span><span class='line'>              tv3.setText(str + Integer.toString(c));
-</span><span class='line'>          }
-</span><span class='line'>        });
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>        <span class="n">Button</span> <span class="n">btn</span> <span class="o">=</span> <span class="o">(</span><span class="n">Button</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">btn_cal</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">btn</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">Button</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>          <span class="nd">@Override</span>
+</span><span class='line'>          <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="c1">// TODO Auto-generated method stub</span>
+</span><span class='line'>              <span class="n">TextView</span> <span class="n">tv1</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView1</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">TextView</span> <span class="n">tv2</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView2</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">TextView</span> <span class="n">tv3</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textView3</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>              <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">tv1</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>              <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">tv2</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>              <span class="n">HelloCal</span> <span class="n">cal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HelloCal</span><span class="o">();</span>
+</span><span class='line'>              <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="na">helloAdd</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">);</span>
+</span><span class='line'>              <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="na">helloSay</span><span class="o">();</span>
+</span><span class='line'>              <span class="n">tv3</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">str</span> <span class="o">+</span> <span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">c</span><span class="o">));</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
@@ -457,7 +446,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

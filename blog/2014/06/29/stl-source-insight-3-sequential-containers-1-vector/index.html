@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -219,7 +207,7 @@ $(document).ready(function(){
 <strong>vector 的数据结构</strong><br/>
 vector的数据结构很简单，就是一段连续的物理空间，包含起止地址以及已用到的空间的末尾地址这三个成员：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -228,15 +216,16 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>class _Vector_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _Tp* _M_start;
-</span><span class='line'>  _Tp* _M_finish;
-</span><span class='line'>  _Tp* _M_end_of_storage;
-</span><span class='line'>};
-</span><span class='line'>class vector : protected _Vector_base&lt;_Tp, _Alloc&gt;{
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_Vector_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_start</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Tp</span><span class="o">*</span> <span class="n">_M_end_of_storage</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">vector</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Vector_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span><span class="p">{</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <!-- more -->
@@ -248,16 +237,17 @@ vector的数据结构很简单，就是一段连续的物理空间，包含起�
 
 <p>vector的空间配置器 STL 默认的 <code>alloc</code> 即 <code>__default_alloc_template</code> 配置器，即第二级配置器，它对于 POD(plain old data) 类型数据使用内建内存池来应对内存碎片问题，关于该默认配置器的更多介绍请参见本系列第2篇文章 <a href="http://ibillxia.github.io/blog/2014/06/13/stl-source-insight-1-memory-allocator/">深入理解STL源码(1) 空间配置器</a> . 除此之外，SGI vector 还定义了一个 <code>data_allocator</code>，为的是更方便的以元素大小为配置单位：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; 
-</span><span class='line'>class _Vector_base  // vector 继承了该基类
-</span><span class='line'>protected:
-</span><span class='line'>    typedef simple_alloc&lt;_Tp, _Alloc&gt; _M_data_allocator;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_Vector_base</span>  <span class="c1">// vector 继承了该基类</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>    <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_M_data_allocator</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>关于 <code>simple_alloc</code> 的内容见前面的文章，它其实就是简单的对 <code>malloc</code> 等的加一层封装。
@@ -267,14 +257,15 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 
 <p>由于vector使用的物理连续的空间，需要支持随机访问，所以它使用的随机访问迭代器（Random Access Iterators）。也正由于vector使用连续物理空间，所以不论其元素类型为何，使用普通指针就可以作为它的迭代器：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public:
-</span><span class='line'>  typedef _Tp value_type;
-</span><span class='line'>  typedef value_type* iterator;
-</span><span class='line'>  typedef const value_type* const_iterator;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Tp</span> <span class="n">value_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">iterator</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="k">const</span> <span class="n">value_type</span><span class="o">*</span> <span class="n">const_iterator</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>注意</strong>：vector中所谓的动态增加大小，并不是在原空间之后接连续新空间（因为无法保证原空间之后尚有可供配置的空间），而是以原大小的两倍另外配置一块较大空间，然后将原内容拷贝过来，然后再在其后构造新元素，最后释放原空间。因此，对于vector的任何操作，一旦引起空间重新配置，指向原vector的所有迭代器就失效了，这是vector使用中的一个大坑，务必小心。</p>
@@ -284,7 +275,7 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 <p>vector所提供的元素操作很多，这里选取几个常用操作介绍一下。<br/>
 <strong>（1）push_back</strong></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -292,20 +283,21 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public  void push_back(const _Tp& __x) {
-</span><span class='line'>if (_M_finish != _M_end_of_storage) {
-</span><span class='line'>    construct(_M_finish, __x);
-</span><span class='line'>    ++_M_finish;
-</span><span class='line'>}
-</span><span class='line'>else
-</span><span class='line'>    _M_insert_aux(end(), __x); // auxiliary insert
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">public</span>  <span class="kt">void</span> <span class="n">push_back</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">_M_finish</span> <span class="o">!=</span> <span class="n">_M_end_of_storage</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">construct</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>    <span class="n">_M_insert_aux</span><span class="p">(</span><span class="n">end</span><span class="p">(),</span> <span class="n">__x</span><span class="p">);</span> <span class="c1">// auxiliary insert</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中辅助的insert函数的基本逻辑为：按原空间大小的两倍申请新空间，复制原数据到新空间，释放原空间，更新新vector的数据结构的成员变量。<br/>
 <strong>（2）insert</strong></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -315,33 +307,35 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public  iterator insert(iterator __position, const _Tp& __x) {
-</span><span class='line'>    size_type __n = __position - begin();
-</span><span class='line'>    if (_M_finish != _M_end_of_storage && __position == end()) {
-</span><span class='line'>      construct(_M_finish, __x);
-</span><span class='line'>      ++_M_finish;
-</span><span class='line'>    }
-</span><span class='line'>    else
-</span><span class='line'>      _M_insert_aux(__position, __x);
-</span><span class='line'>    return begin() + __n;
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">public</span>  <span class="n">iterator</span> <span class="n">insert</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__position</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">size_type</span> <span class="n">__n</span> <span class="o">=</span> <span class="n">__position</span> <span class="o">-</span> <span class="n">begin</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_finish</span> <span class="o">!=</span> <span class="n">_M_end_of_storage</span> <span class="o">&amp;&amp;</span> <span class="n">__position</span> <span class="o">==</span> <span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">construct</span><span class="p">(</span><span class="n">_M_finish</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>      <span class="o">++</span><span class="n">_M_finish</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">_M_insert_aux</span><span class="p">(</span><span class="n">__position</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">__n</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>与<code>push_back</code>类似，只是<code>push_back</code> 在最后插入，更为简单。insert 首先判断是否为在最后插入且容量足够，如果是最后插入且容量足够就就直接内部实现了。否则还是调用上面的辅助插入函数，该函数中首先判断容量是否足够，容量足的话，先构造一个新元素并以当前vector的最后一个元素的值作为其初始值，然后从倒数第二个元素开始从后往前拷贝，将前一元素的值赋给后一元素，知道当前插入位置。<br/>
 <strong>(3)erase</strong></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public  iterator erase(iterator __first, iterator __last) {
-</span><span class='line'>    iterator __i = copy(__last, _M_finish, __first);
-</span><span class='line'>    destroy(__i, _M_finish);
-</span><span class='line'>    _M_finish = _M_finish - (__last - __first);
-</span><span class='line'>    return __first;
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">public</span>  <span class="n">iterator</span> <span class="n">erase</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__i</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">__last</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">,</span> <span class="n">__first</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">destroy</span><span class="p">(</span><span class="n">__i</span><span class="p">,</span> <span class="n">_M_finish</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">_M_finish</span> <span class="o">=</span> <span class="n">_M_finish</span> <span class="o">-</span> <span class="p">(</span><span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>与insert相反，该函数将某些连续的元素从vector中删除，所以不存在容量不足等问题，但也不会将没有使用的空间归还给操作系统。这里只有简单的元素拷贝（copy）和元素的析构（destroy）。另外，需要说明的是，对于vector而言clear函数和erase函数是等同的，都只清空对应内存块的值，而不将空间归还给操作系统，所以vector的容量是只增不减的。而对于其他一些容器就有所不同了，比如list之类以node为单位的数据结构。<br/>
@@ -384,7 +378,24 @@ vector的内存是在vector的构造或析构、插入元素而容量不够等�
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

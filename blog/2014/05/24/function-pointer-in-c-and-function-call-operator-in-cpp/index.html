@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -218,7 +206,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -249,37 +237,38 @@ $(document).ready(function(){
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h&gt;
-</span><span class='line'> 
-</span><span class='line'>// 函数原型
-</span><span class='line'>int add(int x, int y);
-</span><span class='line'>int subtract(int x, int y);
-</span><span class='line'>int domath(int (*mathop)(int, int), int x, int y);
-</span><span class='line'> 
-</span><span class='line'>// 加法 x+ y
-</span><span class='line'>int add(int x, init y) {
-</span><span class='line'>    return x + y;
-</span><span class='line'>}
-</span><span class='line'> 
-</span><span class='line'>// 减法 x - y
-</span><span class='line'>int subtract(int x, int y) {
-</span><span class='line'>    return x - y;
-</span><span class='line'>}
-</span><span class='line'> 
-</span><span class='line'>// 根据输入执行函数指针
-</span><span class='line'>int domath(int (*mathop)(int, int), int x, int y) {
-</span><span class='line'>    return (*mathop)(x, y);
-</span><span class='line'>}
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
 </span><span class='line'>
-</span><span class='line'>int main() {
-</span><span class='line'>  // 用加法调用domath
-</span><span class='line'>  int a = domath(add, 10, 2);
-</span><span class='line'>  printf("Add gives: %d\n", a);
-</span><span class='line'>   
-</span><span class='line'>  // 用减法调用domath
-</span><span class='line'>  int b = domath(subtract, 10, 2);
-</span><span class='line'>  printf("Subtract gives: %d\n", b);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="c1">// 函数原型</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">subtract</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">domath</span><span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">mathop</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">),</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 加法 x+ y</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">init</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 减法 x - y</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">subtract</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// 根据输入执行函数指针</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">domath</span><span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">mathop</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">),</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">mathop</span><span class="p">)(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// 用加法调用domath</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">domath</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Add gives: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">// 用减法调用domath</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">domath</span><span class="p">(</span><span class="n">subtract</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Subtract gives: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在函数 <code>domath</code> 中，我们可以根据传入的 <code>mathop</code> 函数指针来做不同的计算操作。另外，在该文中，最后提到函数名会被隐式的转换为函数指针，就像作为参数传递的时候，数组名被隐式的转换为指针一样。在函数指针被要求当作输入的任何地方，都能够使用函数名，解引用符 <code>*</code> 和取地址符 <code>&amp;</code> 用在函数名之前基本上都是多余的。这个之前还真不知道，新技能get，哈哈</p>
@@ -295,14 +284,15 @@ $(document).ready(function(){
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>FunctionFunc x;
-</span><span class='line'>void doSomething() { printf("Hello there\n"); }
-</span><span class='line'>x = &doSomething;
-</span><span class='line'>x(); //prints "Hello there"</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">FunctionFunc</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">doSomething</span><span class="p">()</span> <span class="p">{</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello there</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="p">}</span>
+</span><span class='line'><span class="n">x</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">doSomething</span><span class="p">;</span>
+</span><span class='line'><span class="n">x</span><span class="p">();</span> <span class="c1">//prints &quot;Hello there&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>根据上面提到的隐式转换，这里的取址符其实是没有必要的。关于C语言的函数指针就介绍到这儿了，接下来介绍一下C++的函数调用操作符。</p>
@@ -313,7 +303,7 @@ $(document).ready(function(){
 
 <p>在C++中，对应于C中函数指针的东西是仿函数（functor），使用起来就像函数一样。其实现方法是对某个 class 进行 <code>operator()</code> 重载，他就成为一个仿函数。而要成为一个可适配（adaptable）的仿函数，还需要其他的一些努力（在《STL源码剖析》一书的第8章，关于适配器（adaptor）的内容）。这里，我们只拿书中的那个例子来简单的看一下仿函数的定义和使用方法吧。代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -340,33 +330,34 @@ $(document).ready(function(){
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;iostream&gt;
-</span><span class='line'>using namespace std;
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;iostream&gt;</span>
+</span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>// 对plus进行operator() 重载，使得 plus 变成了一个仿函数
-</span><span class='line'>template&lt;class T&gt;
-</span><span class='line'>struct plus{
-</span><span class='line'>  T operator() (const T &x, const T &y) const {return x+y;}
-</span><span class='line'>};
+</span><span class='line'><span class="c1">// 对plus进行operator() 重载，使得 plus 变成了一个仿函数</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">plus</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">T</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">;}</span>
+</span><span class='line'><span class="p">};</span>
 </span><span class='line'>
-</span><span class='line'>// 对 minus 进行operator() 重载，使得 minus 变成了一个仿函数
-</span><span class='line'>template&lt;class T&gt;
-</span><span class='line'>struct minus{
-</span><span class='line'>  T operator() (const T &x, const T &y) const {return x-y;}
-</span><span class='line'>};
+</span><span class='line'><span class="c1">// 对 minus 进行operator() 重载，使得 minus 变成了一个仿函数</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">minus</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">T</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">;}</span>
+</span><span class='line'><span class="p">};</span>
 </span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>  // 以下产生仿函数对象
-</span><span class='line'>  plus&lt;int&gt; plusObj;
-</span><span class='line'>  minus&lt;int&gt; minusObj;
-</span><span class='line'>  // 以下使用仿函数，就像使用一般函数一样
-</span><span class='line'>  cout&lt;&lt;plusObj(3,5)&lt;&lt;endl;
-</span><span class='line'>  cout&lt;&lt;minusObj(3,5)&lt;&lt;endl;
-</span><span class='line'>  // 也可以这样使用，通过临时对象（匿名对象）
-</span><span class='line'>  cout&lt;&lt;plus&lt;int&gt;()(3,5)&lt;&lt;endl;
-</span><span class='line'>  cout&lt;&lt;minus&lt;int&gt;()(3,5)&lt;&lt;endl;
-</span><span class='line'>  return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'>  <span class="c1">// 以下产生仿函数对象</span>
+</span><span class='line'>  <span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">plusObj</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">minus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">minusObj</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// 以下使用仿函数，就像使用一般函数一样</span>
+</span><span class='line'>  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">plusObj</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">minusObj</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// 也可以这样使用，通过临时对象（匿名对象）</span>
+</span><span class='line'>  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">plus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">()(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">minus</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">()(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这里的 <code>plus&lt;T&gt;</code> 和 <code>minus&lt;T&gt;</code> 已经非常接近 STL 的实现了，唯一的差别是它缺乏“可适配能力”，关于 STL 中的适配器（adaptor），我现在也还没看完该书，也还不太了解，在后续文章中应该会介绍到。读者可以自行google。</p>
@@ -375,7 +366,7 @@ $(document).ready(function(){
 
 <p>为了加深对函数调用操作符的理解，并将其真正用到实际中，这里拿快排这个非常典型的例子，并充分利用C++及STL的特性。下面是核心代码：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -423,54 +414,55 @@ $(document).ready(function(){
 <span class='line-number'>46</span>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;typename InIt,typename FuncType&gt;
-</span><span class='line'>void myqsort(InIt begin, InIt end, FuncType cmp){
-</span><span class='line'>  if(begin==end||begin==end-1)return;
-</span><span class='line'>  InIt it = mysplit(begin,end,cmp);
-</span><span class='line'>  if(it!=end){
-</span><span class='line'>      myqsort(begin,it,cmp);
-</span><span class='line'>      myqsort(it+1,end,cmp);
-</span><span class='line'>  }
-</span><span class='line'>}
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">InIt</span><span class="p">,</span><span class="k">typename</span> <span class="n">FuncType</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">myqsort</span><span class="p">(</span><span class="n">InIt</span> <span class="n">begin</span><span class="p">,</span> <span class="n">InIt</span> <span class="n">end</span><span class="p">,</span> <span class="n">FuncType</span> <span class="n">cmp</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">begin</span><span class="o">==</span><span class="n">end</span><span class="o">||</span><span class="n">begin</span><span class="o">==</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">InIt</span> <span class="n">it</span> <span class="o">=</span> <span class="n">mysplit</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">cmp</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">it</span><span class="o">!=</span><span class="n">end</span><span class="p">){</span>
+</span><span class='line'>      <span class="n">myqsort</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="n">it</span><span class="p">,</span><span class="n">cmp</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">myqsort</span><span class="p">(</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">end</span><span class="p">,</span><span class="n">cmp</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>template&lt;typename InIt,typename FuncType&gt;
-</span><span class='line'>InIt mysplit(InIt begin, InIt end, FuncType cmp){
-</span><span class='line'>  InIt itl,itr;
-</span><span class='line'>  itl=begin;
-</span><span class='line'>  itr=end-1;
-</span><span class='line'>  while(itl != itr){
-</span><span class='line'>      while(itl != itr && cmp(*itr,*begin)&gt;0)itr--;
-</span><span class='line'>      if(itl==itr)break;
-</span><span class='line'>      while(itl != itr && cmp(*begin,*itl)&gt;0)itl++;
-</span><span class='line'>      if(itl==itr)break;
-</span><span class='line'>      swap(*itl,*itr);
-</span><span class='line'>      itr--;
-</span><span class='line'>  }
-</span><span class='line'>  return itl;
-</span><span class='line'>}
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">InIt</span><span class="p">,</span><span class="k">typename</span> <span class="n">FuncType</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">InIt</span> <span class="n">mysplit</span><span class="p">(</span><span class="n">InIt</span> <span class="n">begin</span><span class="p">,</span> <span class="n">InIt</span> <span class="n">end</span><span class="p">,</span> <span class="n">FuncType</span> <span class="n">cmp</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">InIt</span> <span class="n">itl</span><span class="p">,</span><span class="n">itr</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">itl</span><span class="o">=</span><span class="n">begin</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">itr</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">itl</span> <span class="o">!=</span> <span class="n">itr</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">while</span><span class="p">(</span><span class="n">itl</span> <span class="o">!=</span> <span class="n">itr</span> <span class="o">&amp;&amp;</span> <span class="n">cmp</span><span class="p">(</span><span class="o">*</span><span class="n">itr</span><span class="p">,</span><span class="o">*</span><span class="n">begin</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="n">itr</span><span class="o">--</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">itl</span><span class="o">==</span><span class="n">itr</span><span class="p">)</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">while</span><span class="p">(</span><span class="n">itl</span> <span class="o">!=</span> <span class="n">itr</span> <span class="o">&amp;&amp;</span> <span class="n">cmp</span><span class="p">(</span><span class="o">*</span><span class="n">begin</span><span class="p">,</span><span class="o">*</span><span class="n">itl</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="n">itl</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">itl</span><span class="o">==</span><span class="n">itr</span><span class="p">)</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="o">*</span><span class="n">itl</span><span class="p">,</span><span class="o">*</span><span class="n">itr</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">itr</span><span class="o">--</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">itl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>class Test{
-</span><span class='line'>public:
-</span><span class='line'>  double m_lf;
-</span><span class='line'>  string m_str;
-</span><span class='line'>public:
-</span><span class='line'>  void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
-</span><span class='line'>  void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
-</span><span class='line'>};
+</span><span class='line'><span class="k">class</span> <span class="nc">Test</span><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="kt">double</span> <span class="n">m_lf</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">string</span> <span class="n">m_str</span><span class="p">;</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">set</span><span class="p">(){</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">m_lf</span><span class="o">&gt;&gt;</span><span class="n">m_str</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">print</span><span class="p">(){</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">m_lf</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="o">&lt;&lt;</span><span class="n">m_str</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
 </span><span class='line'>
-</span><span class='line'>struct cmpd{
-</span><span class='line'>  int operator()(Test a,Test b){
-</span><span class='line'>      if(abs(a.m_lf - b.m_lf)&lt;INF)return 0;
-</span><span class='line'>      if(a.m_lf &gt; b.m_lf)return 1;
-</span><span class='line'>      return -1;
-</span><span class='line'>  }
-</span><span class='line'>};
+</span><span class='line'><span class="k">struct</span> <span class="n">cmpd</span><span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="k">operator</span><span class="p">()(</span><span class="n">Test</span> <span class="n">a</span><span class="p">,</span><span class="n">Test</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">m_lf</span> <span class="o">-</span> <span class="n">b</span><span class="p">.</span><span class="n">m_lf</span><span class="p">)</span><span class="o">&lt;</span><span class="n">INF</span><span class="p">)</span><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">m_lf</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">m_lf</span><span class="p">)</span><span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
 </span><span class='line'>
-</span><span class='line'>struct cmps{
-</span><span class='line'>  int operator()(Test a,Test b){
-</span><span class='line'>      return a.m_str.compare(b.m_str);
-</span><span class='line'>  }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">struct</span> <span class="n">cmps</span><span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="k">operator</span><span class="p">()(</span><span class="n">Test</span> <span class="n">a</span><span class="p">,</span><span class="n">Test</span> <span class="n">b</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">m_str</span><span class="p">.</span><span class="n">compare</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">m_str</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>完整的代码及测试输入可以通过以下链接打包下载：<a href="https://ibillxia.github.io/upload/code/20140525.tar.gz">code-2014-05-25</a>。</p>
@@ -512,7 +504,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

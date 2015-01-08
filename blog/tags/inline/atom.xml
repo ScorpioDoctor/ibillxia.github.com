@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: inline | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/inline/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -44,7 +44,7 @@
 
 <p>下面我们看一个稍微复杂的例子，这个例子是在运行时才出现另我们感到意外的错误（这里的运行时错误并不是指 <code>Runtime Error</code>，么么哒）。</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -116,7 +116,7 @@ Called g, count=9.
 <p>（1）用于实现局部函数 <br/>
 此时无法用内联函数替代宏定义。因为宏定义代码块中的自动变量可以和引用宏的前后代码块互为使用，即宏引用前的代码快中的自动变量可以在宏中直接使用，而宏中定义的自动变量可以在宏引用的代码块之后使用。例如，比较常见是：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>include &lt;stdio.h></h1>
 
@@ -138,7 +138,7 @@ return 0;
 <p>（2）宏可以支持某种形式的惰式计算<br/>
 例如：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>define SELECT(s,v1,v2) ((s)?(v1):(v2))</h1>
 
@@ -149,7 +149,7 @@ return 0;
 <p>(3)宏定义可以产生编译时常量<br/>
 例如：</p>
 
-<p>```</p>
+<p>``` c</p>
 
 <h1>define ADD(a,b) ((a)+(b))</h1>
 

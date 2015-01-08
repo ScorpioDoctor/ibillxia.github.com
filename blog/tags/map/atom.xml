@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: map | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/map/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,7 +29,7 @@
 <h2>2. map 的实现</h2>
 
 <p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：<br/>
-<code>
+<code>cpp
 template &lt;class _T1, class _T2&gt;
 struct pair {
   typedef _T1 first_type;
@@ -57,7 +57,7 @@ inline pair&lt;_T1, _T2&gt; make_pair(const _T1&amp; __x, const _T2&amp; __y) { 
 
 
 <p>然后是 map 的定义，大体上和 set 差不多，只是在使用 RB-tree 作为容器时，传入的模板参数是一个 pair，主要代码如下：<br/>
-```
+``` cpp
 template <class _Key, class _Tp, class _Compare, class _Alloc>
 class map {
 public:

@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -287,8 +275,7 @@ $(document).ready(function(){
 其中$\tau$是一个延迟的时间间隔。在某个区间使得$acf(\tau)$取得最大值的那个$\tau$值就选为pitch的起止点，如下图所示：
 <center><img src="/images/2013/IMAG2013052902.png"></center>
 也就是说，我们将原始语音信号与其平移延迟信号的重叠（时间上重叠）部分进行内积运算，从而得到ACF。下面看一个具体的实例，其代码如下：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -341,60 +328,60 @@ $(document).ready(function(){
 <span class='line-number'>51</span>
 <span class='line-number'>52</span>
 <span class='line-number'>53</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import wave
-</span><span class='line'>import numpy as np
-</span><span class='line'>import pylab as pl
+</pre></td><td class='code'><pre><code class='py3'><span class='line'><span class="kn">import</span> <span class="nn">wave</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
 </span><span class='line'>
-</span><span class='line'>def ACF(frame):
-</span><span class='line'>    flen = len(frame)
-</span><span class='line'>    acf = np.zeros(flen)
-</span><span class='line'>    for i in range(flen):
-</span><span class='line'>        acf[i] = np.sum(frame[i:flen]*frame[0:flen-i])
-</span><span class='line'>    return acf
+</span><span class='line'><span class="k">def</span> <span class="nf">ACF</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">flen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">acf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">flen</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">flen</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">acf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">flen</span><span class="p">]</span><span class="o">*</span><span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">flen</span><span class="o">-</span><span class="n">i</span><span class="p">])</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">acf</span>
 </span><span class='line'>
-</span><span class='line'># ============ test the algorithm =============
-</span><span class='line'># read wave file and get parameters.
-</span><span class='line'>fw = wave.open('a.wav','rb')
-</span><span class='line'>params = fw.getparams()
-</span><span class='line'>print(params)
-</span><span class='line'>nchannels, sampwidth, framerate, nframes = params[:4]
-</span><span class='line'>strData = fw.readframes(nframes)
-</span><span class='line'>waveData = np.fromstring(strData, dtype=np.int16)
-</span><span class='line'>waveData = waveData*1.0/max(abs(waveData))  # normalization
-</span><span class='line'>fw.close()
+</span><span class='line'><span class="c"># ============ test the algorithm =============</span>
+</span><span class='line'><span class="c"># read wave file and get parameters.</span>
+</span><span class='line'><span class="n">fw</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;a.wav&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">params</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
+</span><span class='line'><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span><span class='line'><span class="n">nchannels</span><span class="p">,</span> <span class="n">sampwidth</span><span class="p">,</span> <span class="n">framerate</span><span class="p">,</span> <span class="n">nframes</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+</span><span class='line'><span class="n">strData</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
+</span><span class='line'><span class="n">waveData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">strData</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+</span><span class='line'><span class="n">waveData</span> <span class="o">=</span> <span class="n">waveData</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">waveData</span><span class="p">))</span>  <span class="c"># normalization</span>
+</span><span class='line'><span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </span><span class='line'>
-</span><span class='line'># plot the wave
-</span><span class='line'>time = np.arange(0, len(waveData)) * (1.0 / framerate)
+</span><span class='line'><span class="c"># plot the wave</span>
+</span><span class='line'><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">waveData</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">framerate</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>frameSize = 512
-</span><span class='line'>idx1 = 10000
-</span><span class='line'>idx2 = idx1+frameSize
-</span><span class='line'>index1 = idx1*1.0 / framerate
-</span><span class='line'>index2 = idx2*1.0 / framerate
-</span><span class='line'>acf = ACF(waveData[idx1:idx2])
-</span><span class='line'>#acf[0:10] = -acf[0]
-</span><span class='line'>#acfmax = np.argmax(acf)
-</span><span class='line'>#print(acfmax)
-</span><span class='line'>#print(framerate*1.0/acfmax)
+</span><span class='line'><span class="n">frameSize</span> <span class="o">=</span> <span class="mi">512</span>
+</span><span class='line'><span class="n">idx1</span> <span class="o">=</span> <span class="mi">10000</span>
+</span><span class='line'><span class="n">idx2</span> <span class="o">=</span> <span class="n">idx1</span><span class="o">+</span><span class="n">frameSize</span>
+</span><span class='line'><span class="n">index1</span> <span class="o">=</span> <span class="n">idx1</span><span class="o">*</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'><span class="n">index2</span> <span class="o">=</span> <span class="n">idx2</span><span class="o">*</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'><span class="n">acf</span> <span class="o">=</span> <span class="n">ACF</span><span class="p">(</span><span class="n">waveData</span><span class="p">[</span><span class="n">idx1</span><span class="p">:</span><span class="n">idx2</span><span class="p">])</span>
+</span><span class='line'><span class="c">#acf[0:10] = -acf[0]</span>
+</span><span class='line'><span class="c">#acfmax = np.argmax(acf)</span>
+</span><span class='line'><span class="c">#print(acfmax)</span>
+</span><span class='line'><span class="c">#print(framerate*1.0/acfmax)</span>
 </span><span class='line'>
-</span><span class='line'>pl.subplot(311)
-</span><span class='line'>pl.plot(time, waveData)
-</span><span class='line'>pl.plot([index1,index1],[-1,1],'r')
-</span><span class='line'>pl.plot([index2,index2],[-1,1],'r')
-</span><span class='line'>pl.xlabel("time (seconds)")
-</span><span class='line'>pl.ylabel("Amplitude")
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">311</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">waveData</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index1</span><span class="p">,</span><span class="n">index1</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index2</span><span class="p">,</span><span class="n">index2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;time (seconds)&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>pl.subplot(312)
-</span><span class='line'>pl.plot(np.arange(frameSize),waveData[idx1:idx2],'r')
-</span><span class='line'>pl.xlabel("index in 1 frame")
-</span><span class='line'>pl.ylabel("Amplitude")
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">312</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">frameSize</span><span class="p">),</span><span class="n">waveData</span><span class="p">[</span><span class="n">idx1</span><span class="p">:</span><span class="n">idx2</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;index in 1 frame&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>pl.subplot(313)
-</span><span class='line'>pl.plot(np.arange(frameSize),acf,'g')
-</span><span class='line'>pl.xlabel("index in 1 frame")
-</span><span class='line'>pl.ylabel("ACF")
-</span><span class='line'>pl.show()</span></code></pre></td></tr></table></div></figure>
-
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">313</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">frameSize</span><span class="p">),</span><span class="n">acf</span><span class="p">,</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;index in 1 frame&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;ACF&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 程序运行结果如下图所示：
 <center><img src="/images/2013/IMAG2013052903.png"></center>
 </p>
@@ -478,7 +465,24 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

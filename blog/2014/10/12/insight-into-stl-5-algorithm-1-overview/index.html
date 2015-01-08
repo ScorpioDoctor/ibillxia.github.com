@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -277,62 +265,66 @@ $(document).ready(function(){
 
 <p>下面以查找算法的泛化过程为例详细介绍算法泛化的奇妙。对于查找算法，我们首先想到的是在一个整型数组中查找指定元素，一个基本的实现如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int* find(int* arrayHead, int arraySize, int value){
-</span><span class='line'>  for(int i=0; i &lt; arraySize; i++){
-</span><span class='line'>      if(arrayHead[i] == value) break;
-</span><span class='line'>  }
-</span><span class='line'>  return &(arrayHead[i]);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">find</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">arrayHead</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arraySize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arraySize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">arrayHead</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">arrayHead</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>该函数在数组中查找指定值的元素，返回找到的第一个符合条件的元素的地址，如果没有找到就返回最后一个元素的下一个位置（称为end）。当没有找到时，这里为什么要返回地址值（end）而不返回null呢？这是为了方便调用后续的泛型算法，但实际上该算法本身还是与容器相关的，而且暴露了很多容器的实现细节（如arraySize等）。为了让该算法适用于所有类型的容器，其操作应该更抽象化，可以让 find 接受两个指针作为参数，标识出一个操作区间，如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int* find(int* begin, int* end, int value){
-</span><span class='line'>  while(begin != end && *begin != value) ++begin;
-</span><span class='line'>  return begin;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span><span class="o">*</span> <span class="n">find</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">begin</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">end</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">end</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="o">++</span><span class="n">begin</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">begin</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>该函数在区间 <code>[begin, end)</code> 内查找 value，并返回一个指针。这样做之后，已经隐藏了容器内部特性了，但不足的是，要求元素的数据类型为整型，我们可以通过模板参数来解决这个问题：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;typename T&gt;
-</span><span class='line'>T* find(T* begin, T* end, const T& value){
-</span><span class='line'>  // 用到了operator !=,*,++
-</span><span class='line'>  while(begin != end && *begin != value) ++begin;
-</span><span class='line'>  return begin; // 会引发copy行为
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">T</span><span class="o">*</span> <span class="n">find</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">begin</span><span class="p">,</span> <span class="n">T</span><span class="o">*</span> <span class="n">end</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">){</span>
+</span><span class='line'>  <span class="c1">// 用到了operator !=,*,++</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">end</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="o">++</span><span class="n">begin</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">begin</span><span class="p">;</span> <span class="c1">// 会引发copy行为</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>除了参数模板化之外，值得注意的是其中待查找的对象是以常引用的方式传递，这样对于大对象非常有利。于是，现在的find函数几乎适用于任何容器——只要该容器允许指针，而指针又都支持inequality（判断不相等）操作符、dereference（取值）操作符、（prefix）increment（前置式递增）操作符、copy（复制）行为这四种操作。</p>
 
 <p>但这个版本还不够泛化，因为参数被限制为指针，而那些支持以上四种操作、行为很像指针的某些对象就无法使用 find 了。在STL中有迭代器，它是一种行为类似指针的对象，是一种smart pointers，使用迭代器实现 find 如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template&lt;class Iterator, class T&gt;
-</span><span class='line'>Iterator find(Iterator begin, Iterator end, const T& value){
-</span><span class='line'>  while(begin != end && *begin != value) ++begin;
-</span><span class='line'>  return begin;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Iterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">Iterator</span> <span class="n">find</span><span class="p">(</span><span class="n">Iterator</span> <span class="n">begin</span><span class="p">,</span> <span class="n">Iterator</span> <span class="n">end</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">end</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">begin</span> <span class="o">!=</span> <span class="n">value</span><span class="p">)</span> <span class="o">++</span><span class="n">begin</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">begin</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这便是一个完全泛化的find 函数，它与STL中的find函数几乎一模一样（不同之处可自行查看STL源码）。了解和理解了STL算法的泛化过程，就很容易看懂STL中很多其他的算法了。</p>
@@ -374,7 +366,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

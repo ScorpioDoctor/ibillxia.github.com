@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -215,8 +203,9 @@ $(document).ready(function(){
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first) __f(*__first);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span> <span class="n">__f</span><span class="p">(</span><span class="o">*</span><span class="n">__first</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
@@ -227,8 +216,9 @@ $(document).ready(function(){
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>while (__first != __last && !(*__first == __val)) ++__first;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">while</span> <span class="p">(</span><span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__val</span><span class="p">))</span> <span class="o">++</span><span class="n">__first</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>另外，关于find，考虑偏特化特性，还有在迭代器为随机存取迭代器时，每次循环进行4次判断和自增，这是所谓的 <a href="http://en.wikipedia.org/wiki/Loop_unrolling">loop unrolling</a>，在StackOverflow 上也有相关解释 <a href="http://stackoverflow.com/questions/24295972/">questions-24295972</a>。如果学过体系结构，应该也会提及循环展开的加速方法。</p>
@@ -240,10 +230,11 @@ $(document).ready(function(){
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first)
-</span><span class='line'>    if (*__first == __value) ++__n;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__value</span><span class="p">)</span> <span class="o">++</span><span class="n">__n</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>以上这个是非STL标准的，另外还有一个版本返回值为迭代器的 <code>difference_type</code> 的偏特化版本，这个才是STL标准。</p>
@@ -256,27 +247,30 @@ $(document).ready(function(){
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first1 != __last1; ++__first1, ++__first2)
-</span><span class='line'>    iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first1</span> <span class="o">!=</span> <span class="n">__last1</span><span class="p">;</span> <span class="o">++</span><span class="n">__first1</span><span class="p">,</span> <span class="o">++</span><span class="n">__first2</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">iter_swap</span><span class="p">(</span><span class="n">__first1</span><span class="p">,</span> <span class="n">__first2</span><span class="p">);</span> <span class="c1">// 迭代器的交换，使用iter_swap</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first, ++__result)
-</span><span class='line'>    *__result = __opr(*__first);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">,</span> <span class="o">++</span><span class="n">__result</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">__result</span> <span class="o">=</span> <span class="n">__opr</span><span class="p">(</span><span class="o">*</span><span class="n">__first</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first1 != __last1; ++__first1, ++__first2, ++__result)
-</span><span class='line'>    *__result = __binary_op(*__first1, *__first2);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first1</span> <span class="o">!=</span> <span class="n">__last1</span><span class="p">;</span> <span class="o">++</span><span class="n">__first1</span><span class="p">,</span> <span class="o">++</span><span class="n">__first2</span><span class="p">,</span> <span class="o">++</span><span class="n">__result</span><span class="p">)</span>
+</span><span class='line'>    <span class="o">*</span><span class="n">__result</span> <span class="o">=</span> <span class="n">__binary_op</span><span class="p">(</span><span class="o">*</span><span class="n">__first1</span><span class="p">,</span> <span class="o">*</span><span class="n">__first2</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>注意该算法不需要传入第二个区间的last迭代器。</p>
@@ -284,10 +278,11 @@ $(document).ready(function(){
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first)
-</span><span class='line'>   if (*__first == __old_value) *__first = __new_value;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span>
+</span><span class='line'>   <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__old_value</span><span class="p">)</span> <span class="o">*</span><span class="n">__first</span> <span class="o">=</span> <span class="n">__new_value</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>另外还有三个版本的替换： <code>replace_if</code>，判断条件可以自己指定，而不一定是相等；<code>replace_copy</code>，将修改后的结果存到一个新的序列中；<code>replace_copy_if</code> 是前两者的合体。</p>
@@ -295,8 +290,9 @@ $(document).ready(function(){
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first) *__first = __gen();</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span> <span class="o">*</span><span class="n">__first</span> <span class="o">=</span> <span class="n">__gen</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>还有一个 <code>generate_n</code> 将序列中的前n个元素的值按给定函数赋值。</p>
@@ -304,14 +300,15 @@ $(document).ready(function(){
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>__first = find(__first, __last, __value);
-</span><span class='line'>_ForwardIter __i = __first;
-</span><span class='line'>return __first == __last ? __first 
-</span><span class='line'>                   : remove_copy(++__i, __last, __first, __value);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">__first</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__value</span><span class="p">);</span>
+</span><span class='line'><span class="n">_ForwardIter</span> <span class="n">__i</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'><span class="k">return</span> <span class="n">__first</span> <span class="o">==</span> <span class="n">__last</span> <span class="o">?</span> <span class="n">__first</span>
+</span><span class='line'>                   <span class="o">:</span> <span class="n">remove_copy</span><span class="p">(</span><span class="o">++</span><span class="n">__i</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__first</span><span class="p">,</span> <span class="n">__value</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>11.unique和unique_copy</strong><br/>
@@ -322,8 +319,9 @@ $(document).ready(function(){
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>while (__first &lt; __last) iter_swap(__first++, --__last);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">while</span> <span class="p">(</span><span class="n">__first</span> <span class="o">&lt;</span> <span class="n">__last</span><span class="p">)</span> <span class="n">iter_swap</span><span class="p">(</span><span class="n">__first</span><span class="o">++</span><span class="p">,</span> <span class="o">--</span><span class="n">__last</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>还有迭代器为双向迭代器的版本和非质变算法版本 <code>reverse_copy</code>。</p>
@@ -336,10 +334,11 @@ $(document).ready(function(){
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for (_RandomAccessIter __i = __first + 1; __i != __last; ++__i)
-</span><span class='line'>    iter_swap(__i, __first + __random_number((__i - __first) + 1));</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">_RandomAccessIter</span> <span class="n">__i</span> <span class="o">=</span> <span class="n">__first</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">__i</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__i</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">iter_swap</span><span class="p">(</span><span class="n">__i</span><span class="p">,</span> <span class="n">__first</span> <span class="o">+</span> <span class="n">__random_number</span><span class="p">((</span><span class="n">__i</span> <span class="o">-</span> <span class="n">__first</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>除了这个版本采用STL的random函数生成随机数的版本外，还有一个版本可以自己指定随机数生成函数。</p>
@@ -450,7 +449,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

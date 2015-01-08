@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -217,20 +205,21 @@ $(document).ready(function(){
 
 <p>加减法最简单、最好理解了，设待交换的两个变量分别为 a 和 b ，首先将两者的和赋给 a ；然后将 a 与 b的差赋给 b ，这样 b 就是 a 原来的值了；最后再将 a 与 b 的差赋给 a ，这样 a 就是 b 原来的值了。具体代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline template &lt;class T&gt;
-</span><span class='line'>void xswap(T &a,T &b){
-</span><span class='line'>    a=a+b;
-</span><span class='line'>  //printf("a=%u\n",a);
-</span><span class='line'>    b=a-b;
-</span><span class='line'>    a=a-b;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">xswap</span><span class="p">(</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">//printf(&quot;a=%u\n&quot;,a);</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -240,25 +229,26 @@ $(document).ready(function(){
 
 <p>当然也可以先减后加：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inline template &lt;class T&gt;
-</span><span class='line'>void xswap2(T &a,T &b){
-</span><span class='line'>    a=a-b;
-</span><span class='line'>  //printf("a=%u\n",a);
-</span><span class='line'>    b=a+b;
-</span><span class='line'>    a=b-a;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">xswap2</span><span class="p">(</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">//printf(&quot;a=%u\n&quot;,a);</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这里实现的原理与先加后减类似。粗一看，这样实现两个变量的原地交换很简单有效。但是，这其中有一个很隐秘的bug，就是溢出的问题，在先加后减的实现中，如果 a 与 b 的和大于该类型的能表示的最大值，会发生神马捏？我写了一个 main 函数来简单的测试了一下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -266,24 +256,26 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int main()
-</span><span class='line'>{
-</span><span class='line'>    unsigned char a=255,b=1;
-</span><span class='line'>    printf("a=%u,b=%u\n",a,b);
-</span><span class='line'>    xswap(a,b);
-</span><span class='line'>    printf("a=%u,b=%u\n",a,b);
-</span><span class='line'>    return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;a=%u,b=%u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">xswap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;a=%u,b=%u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>将上面的 xswap 函数中的注释取消，编译运行后（使用Code::Blocks 13.12 MinGW g++编译），得到如下输出：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>a=255,b=1
-</span><span class='line'>a=0
-</span><span class='line'>a=1,b=255</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">1</span>
+</span><span class='line'><span class="n">a</span><span class="o">=</span><span class="mi">0</span>
+</span><span class='line'><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">255</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到其中第2行输出的 a 的值为 0，产生了上溢（如果 a , b 同为负，可能产生下溢）。虽然最后交换的结果还是对的，但溢出的部分可能对内存中其他变量产生不可预测的后果。因此，不建议这么实现原地交换两个变量，如果实在需要用这种方法，一定要在进行加或减之前，判断时候回产生溢出。</p>
@@ -292,18 +284,19 @@ $(document).ready(function(){
 
 <p>异或法的基本原理类似，但还利用了异或的如下两个特性： a ^ 0 = a, a ^ a = 0. 用异或来实现两个变量的交换如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class T&gt;
-</span><span class='line'>inline void xswap3(T &a,T &b){
-</span><span class='line'>    a=a^b;
-</span><span class='line'>    b=a^b;
-</span><span class='line'>    a=b^a;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span> <span class="n">xswap3</span><span class="p">(</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">b</span><span class="o">^</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>由于异或是按位运算的，所以不存在溢出问题。因此，如果一定要原地实现两个变量的交换的话，建议用异或的方法。</p>
@@ -312,7 +305,7 @@ $(document).ready(function(){
 
 <p>实际上，我们还可以利用上面的思想，将两个变量扩展到多个变量的原地交换，例如三个变量的交换：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -321,15 +314,16 @@ $(document).ready(function(){
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class T&gt;
-</span><span class='line'>inline void swap3(T &a,T &b,T &c){
-</span><span class='line'>    a=a^b;
-</span><span class='line'>    b=a^b;
-</span><span class='line'>    a=b^a;
-</span><span class='line'>    b=b^c;
-</span><span class='line'>    c=b^c;
-</span><span class='line'>    b=b^c;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span> <span class="n">swap3</span><span class="p">(</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="n">T</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">){</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">a</span><span class="o">=</span><span class="n">b</span><span class="o">^</span><span class="n">a</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="o">^</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">c</span><span class="o">=</span><span class="n">b</span><span class="o">^</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="o">^</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>即先交换 a 和 b，再交换 b (=a) 和 c。另外，上面的式子可以简化和压缩到一个式子，具体的技巧读者可以自行google，这里不提倡这么做。</p>
@@ -338,7 +332,7 @@ $(document).ready(function(){
 
 <p>最后，我们来看看STL标准库是如何实现swap的（这里的实现版本是 move.h 文件中的一个，在 STL 中还有针对 vector, string, tree, map, multimap, deque 的 swap 函数）。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -356,24 +350,25 @@ $(document).ready(function(){
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/**
-</span><span class='line'>*  @brief Swaps two values.
-</span><span class='line'>*  @ingroup mutating_algorithms
-</span><span class='line'>*  @param  __a  A thing of arbitrary type.
-</span><span class='line'>*  @param  __b  Another thing of arbitrary type.
-</span><span class='line'>*  @return   Nothing.
-</span><span class='line'>*/
-</span><span class='line'>template&lt;typename _Tp&gt;
-</span><span class='line'>inline void
-</span><span class='line'>swap(_Tp& __a, _Tp& __b)
-</span><span class='line'>{
-</span><span class='line'>  // concept requirements
-</span><span class='line'>  __glibcxx_function_requires(_SGIAssignableConcept&lt;_Tp&gt;)
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm">*  @brief Swaps two values.</span>
+</span><span class='line'><span class="cm">*  @ingroup mutating_algorithms</span>
+</span><span class='line'><span class="cm">*  @param  __a  A thing of arbitrary type.</span>
+</span><span class='line'><span class="cm">*  @param  __b  Another thing of arbitrary type.</span>
+</span><span class='line'><span class="cm">*  @return   Nothing.</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span>
+</span><span class='line'><span class="n">swap</span><span class="p">(</span><span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__a</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__b</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">// concept requirements</span>
+</span><span class='line'>  <span class="n">__glibcxx_function_requires</span><span class="p">(</span><span class="n">_SGIAssignableConcept</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>  _Tp __tmp = _GLIBCXX_MOVE(__a);
-</span><span class='line'>  __a = _GLIBCXX_MOVE(__b);
-</span><span class='line'>  __b = _GLIBCXX_MOVE(__tmp);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="n">_Tp</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="n">_GLIBCXX_MOVE</span><span class="p">(</span><span class="n">__a</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">__a</span> <span class="o">=</span> <span class="n">_GLIBCXX_MOVE</span><span class="p">(</span><span class="n">__b</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">__b</span> <span class="o">=</span> <span class="n">_GLIBCXX_MOVE</span><span class="p">(</span><span class="n">__tmp</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到，这里新声明了一个变量 __tmp 来中转。至于为什么没有原地进行交换，一个可能的解释是：对于 inline 函数来说，函数调用的代码会直接被改函数体替换，再经过编译优化，最后可能只需要借助一个寄存器变量就可以实现两个变量的交换了，这是非常快的，与通过按位的异或运算的实现，在性能上区别不是太大。</p>
@@ -419,7 +414,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

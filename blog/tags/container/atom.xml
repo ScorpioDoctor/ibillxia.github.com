@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: container | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/container/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,7 +29,7 @@
 <!-- more -->
 
 
-<p>```
+<p>``` cpp
 template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
 class hash_set {
 private:
@@ -104,7 +104,7 @@ inline bool operator==(const hash_set&lt;<em>Value,</em>HashFcn,<em>EqualKey,</e
 <!-- more -->
 
 
-<p><code>
+<p><code>cpp
 template &lt;class _Val&gt;
 struct _Hashtable_node { // 链表节点的定义
   _Hashtable_node* _M_next; // 指向下一个节点
@@ -129,7 +129,7 @@ private:
 </em>Alloc: 空间配置器，默认使用 std::alloc</p></blockquote>
 
 <p>虽然开链法并不要求哈希表的大小为质数，但 SGI STL 仍然以质数来设计表的大小，并将28个质数（大约2倍依次递增）计算好，并提供函数来查询其中最接近某数并大于某数的质数，如下：<br/>
-<code>
+<code>cpp
 enum { __stl_num_primes = 28 };
 static const unsigned long __stl_prime_list[__stl_num_primes] = {
   53ul,         97ul,         193ul,       389ul,       769ul,
@@ -152,7 +152,7 @@ inline unsigned long __stl_next_prime(unsigned long __n) {
 <h4>节点空间配置</h4>
 
 <p>首先只考虑比较简单的情况，即哈希表的大小不需要调整，此时空间配置主要是链表节点的配置，而 hashtable 使用 vector 作为容器，链表节点的空间配置（分配和释放）如下：<br/>
-```
+``` cpp
 typedef simple_alloc&lt;<em>Node, </em>Alloc> <em>M_node_allocator_type;
 </em>Node<em> <em>M_get_node() { return </em>M_node_allocator_type::allocate(1); } // 分配一个节点的空间
 void <em>M_put_node(</em>Node</em> <strong>p) { _M_node_allocator_type::deallocate(</strong>p, 1); } // 释放一个节点的空间
@@ -180,7 +180,7 @@ _M_put_node(__n);
 <h4>插入操作表格重新整理</h4>
 
 <p>哈希表的插入操作有两个问题要考虑，一个是 是否允许插入相同键值的元素，另一个是 是否需要扩充表的大小。在 STL 中，首先是判断新插入一个元素后是否需要扩充，判断的条件是插入后元素的个数大于当前哈希表的大小；而是否允许元素重复则通过提供 <code>insert_unique</code> 和 <code>insert_equal</code> 来解决。相关代码如下：<br/>
-```
+``` cpp
 pair&lt;iterator, bool> insert_unique(const value_type&amp; __obj) {</p>
 
 <pre><code>resize(_M_num_elements + 1); // 先进行扩充（如有必要）
@@ -243,7 +243,7 @@ hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::insert_unique_nor
 <h4>整体复制和清空</h4>
 
 <p>复制和清空时分别涉及空间的分配和释放，所以在这里也介绍一下。首先是复制操作，需要先将目标 hashtable 清空，然后将源 hashtable 的 buckets 中的每个链表一一复制，如下：<br/>
-```
+``` cpp
 template <class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All>
 void hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::<em>M_copy_from(const hashtable&amp; __ht) {
   </em>M_buckets.clear(); // 先清空目标 hashtable
@@ -274,7 +274,7 @@ _M_num_elements = __ht._M_num_elements;
 <h2>4. hashtable 的迭代器</h2>
 
 <p>hashtable 的迭代器是前向的单向迭代器，遍历的方式是先遍历完一个 list 然后切换到下一个 bucket 指向的 list 进行遍历。以下是 hashtable 的迭代器的定义：<br/>
-```
+``` cpp
 template <class _Val, class _Key, class _HashFcn, class _ExtractKey, class _EqualKey, class _Alloc>
 struct <em>Hashtable_iterator {
   typedef hashtable&lt;</em>Val,<em>Key,</em>HashFcn,<em>ExtractKey,</em>EqualKey,<em>Alloc> </em>Hashtable;
@@ -313,7 +313,7 @@ while (!_M_cur &amp;&amp; ++__bucket &lt; _M_ht-&gt;_M_buckets.size())
 <h2>5. 哈希函数</h2>
 
 <p>在第三节中介绍 hashtable 的数据结构时，提到了一个哈希函数类型的模板参数，从键值到索引位置的映射由这个哈希函数来完成，实际中是通过函数 <code>_M_bkt_num_key</code> 来完成这个映射的，如下：<br/>
-```
+``` cpp
 size_type _M_bkt_num_key(const key_type&amp; __key) const {</p>
 
 <pre><code>return _M_bkt_num_key(__key, _M_buckets.size());
@@ -328,7 +328,7 @@ size_type _M_bkt_num_key(const key_type&amp; <strong>key, size_t </strong>n) con
 <p>}
 <code>
 这里的 `_M_hash` 是一个哈希函数类型的成员，可以看做是一个函数指针，真正的函数的定义在 `&lt;stl_hash_fun.h&gt;` 中，针对 char，int，long 等整数型别，这里大部分的 hash function 什么也没做，只是重视返回原始值，但对字符串（const char* ）设计了一个转换函数，如下：  
-</code>
+</code> cpp
 template <class _Key> struct hash { }; // 仿函数 hash
 inline size_t <strong>stl_hash_string(const char* </strong>s) { // 将字符串映射为整型
   unsigned long <strong>h = 0;
@@ -393,7 +393,7 @@ inline size_t <strong>stl_hash_string(const char* </strong>s) { // 将字符串�
 <h2>2. map 的实现</h2>
 
 <p>由于 map 的元素是键值对，用 pair 表示，下面是它的定义：<br/>
-<code>
+<code>cpp
 template &lt;class _T1, class _T2&gt;
 struct pair {
   typedef _T1 first_type;
@@ -421,7 +421,7 @@ inline pair&lt;_T1, _T2&gt; make_pair(const _T1&amp; __x, const _T2&amp; __y) { 
 
 
 <p>然后是 map 的定义，大体上和 set 差不多，只是在使用 RB-tree 作为容器时，传入的模板参数是一个 pair，主要代码如下：<br/>
-```
+``` cpp
 template <class _Key, class _Tp, class _Compare, class _Alloc>
 class map {
 public:
@@ -502,7 +502,7 @@ public:
 <!-- more -->
 
 
-<p>```
+<p>``` cpp
 template <class _Key, class _Compare, class _Alloc>
 class set {
 public:
@@ -558,7 +558,7 @@ inline bool operator&lt;(const set&lt;</em>Key,<em>Compare,</em>Alloc>&amp; __x,
 <h2>3. multiset</h2>
 
 <p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。<br/>
-```
+``` cpp
 template <class _Key, class _Compare, class _Alloc>
 class multiset {
 public:
@@ -653,7 +653,7 @@ RB-tree是另一种被广泛使用的平衡二叉搜索树，也是SGI STL唯一
 <p>上面的这些约束保证了这个树大致上是平衡的，这也决定了红黑树的插入、删除、查询等操作是比较快速的。 根据规则5，新增节点必须为红色；根据规则4，新增节点之父节点必须为黑色。当新增节点根据二叉搜索树的规则到达其插入点时，却未能符合上述条件时，就必须调整颜色并旋转树形。下图是一个典型的RB-tree（来自wiki）：<br/>
 {% img /images/2014/IMAG2014080302.png%}<br/>
 SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构如下：
-```
+``` cpp
 typedef bool <em>Rb_tree_Color_type;
 const </em>Rb_tree_Color_type <em>S_rb_tree_red = false;
 const </em>Rb_tree_Color_type <em>S_rb_tree_black = true;
@@ -689,7 +689,7 @@ template <class _Value> struct <em>Rb_tree_node : public </em>Rb_tree_node_base 
 <code>
 其中每个节点主要包含一个标志颜色的bool变量 `_M_color`，3个节点指针 `_M_parent` , `_M_left` , `_M_right`，2个成员函数 `_S_minimum` 和 `_S_maximum` （分别求取最小（最左）、最大（最右）节点）。  
 而RB-tree的定义如下：  
-</code>
+</code> cpp
 template <class _Tp, class _Alloc> struct <em>Rb_tree_base { // RB-tree的定义
   typedef </em>Alloc allocator_type;
   allocator_type get_allocator() const { return allocator_type(); }
@@ -717,7 +717,7 @@ template &lt;class </em>Key, class </em>Value, class <em>KeyOfValue, class </em>
 <h2>3. RB-tree的迭代器</h2>
 
 <p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator--）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下： <br/>
-<code>
+<code>cpp
 struct _Rb_tree_base_iterator {
   typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
   typedef bidirectional_iterator_tag iterator_category;
@@ -731,7 +731,7 @@ struct _Rb_tree_iterator : public _Rb_tree_base_iterator {
 };
 </code>
 可以看到RB-tree的自增和自减操作是使用基迭代器的increment和decrement来实现的，这里仅分析自增操作的实现（自减操作类似的）。RB-tree的自增操作实际上是寻找中序遍历下当前节点的后一个节点，其代码如下：<br/>
-```
+``` cpp
   void _M_increment()  { // 自增操作，中序遍历的下一个节点</p>
 
 <pre><code>if (_M_node-&gt;_M_right != 0) { // 当前节点有右子树
@@ -758,7 +758,7 @@ struct _Rb_tree_iterator : public _Rb_tree_base_iterator {
 <h4>4.1 基本插入操作</h4>
 
 <p>RB-tree提供两种插入操作，<code>insert_unique()</code> 和 <code>insert_equal()</code>，顾名思义，前者表示被插入的节点的键值在树中是唯一的（如果已经存在，就不需要插入了），后者表示可以存在键值相同的节点。这两个函数都有多个版本，下面以后者的最简单版本（单一参数：被插入的节点的键值）为实例进行介绍。下面是 <code>insert_equal</code> 的实现：
-```
+``` cpp
 <em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc> ::insert_equal(const <em>Value&amp; __v) {
   </em>Link_type <strong>y = <em>M_header;
   </em>Link_type </strong>x = _M_root(); // 从根节点开始
@@ -850,7 +850,7 @@ if (__y == _M_rightmost()) // y为最右节点
 <h2>6. RB-tree的查询操作</h2>
 
 <p>RB-tree是一个二叉搜索树，元素的查询是其拿手项目，非常简单，以下是RB-tree提供的查询操作：
-```
+``` cpp
 template <class _Key, class _Value, class _KeyOfValue, class _Compare, class _Alloc>
 typename <em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::iterator
 <em>Rb_tree&lt;</em>Key,<em>Value,</em>KeyOfValue,<em>Compare,</em>Alloc>::find(const <em>Key&amp; __k) {

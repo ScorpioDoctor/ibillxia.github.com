@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -330,48 +318,12 @@ $(document).ready(function(){
 </ol>
 
 
-<h4>STL 容器</h4>
-
-<ol>
-<li><a href="http://ibillxia.github.io/blog/2014/06/29/stl-source-insight-3-sequential-containers-1-vector/">深入理解STL源码(3.1) 序列式容器之vector</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/07/06/stl-source-insight-3-sequential-containers-2-list/">深入理解STL源码(3.2) 序列式容器之list</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/07/13/stl-source-insight-3-sequential-containers-3-deque-and-stack-queue/">深入理解STL源码(3.3) 序列式容器之deque和stack、queue</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/07/27/stl-source-insight-3-sequential-containers-4-heap-and-priority-queue/">深入理解STL源码(3.4) 序列式容器之heap和priority queue</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/08/03/insight-into-stl-4-associative-containers-1-red-black-tree/">深入理解STL源码(4.1) 关联式容器之红黑树</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/08/17/insight-into-stl-4-associative-containers-2-set-and-multiset/">深入理解STL源码(4.2) 关联式容器之set和multiset</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/08/31/insight-into-stl-4-associative-containers-3-map-and-multimap/">深入理解STL源码(4.3) 关联式容器之map和multimap</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/09/13/insight-into-stl-4-associative-containers-4-hashtable/">深入理解STL源码(4.4) 关联式容器之hashtable</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/09/27/insight-into-stl-4-associative-containers-5-hashset-and-hashmap/">深入理解STL源码(4.5) 关联式容器之hashset和hashmap</a></li>
-</ol>
-
-
-<h4>STL 算法</h4>
-
-<ol>
-<li><a href="http://ibillxia.github.io/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/">深入理解STL源码(5.1) 算法</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/">深入理解STL源码(5.2) 算法之数值算法</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/">深入理解STL源码(5.3) 算法之基本算法algobase</a></li>
-<li><a href="http://ibillxia.github.io/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/">深入理解STL源码(5.4) 算法之复杂算法algorithm</a></li>
-</ol>
-
-
-<h4>STL 函数对象</h4>
-
-<ol>
-<li><a href="http://ibillxia.github.io/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/">深入理解STL源码(6) 仿函数|函数对象</a></li>
-</ol>
-
-
-<h4>STL 适配器</h4>
-
-<ol>
-<li><a href="http://ibillxia.github.io/blog/2014/11/23/insight-into-stl-7-adaptor/">深入理解STL源码(7) 配接器adaptor</a></li>
-</ol>
-
-
-<p>接下来，还需要花大量时间来重温一遍，对之前文章中的一些遗留问题进行梳理和解答。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/26/insight-into-stl-archive/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -525,8 +477,9 @@ $(document).ready(function(){
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for ( ; __first != __last; ++__first) __f(*__first);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span> <span class="n">__f</span><span class="p">(</span><span class="o">*</span><span class="n">__first</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
@@ -653,7 +606,7 @@ $(document).ready(function(){
 
 <p>该算法计算 init 和区间 [first, last) 内所有元素的总和。注意，必须提供 init 的初始值，这样即使 first=last 区间为空，仍能得到一个明确定义的值。当 init=0 时，即为计算 [first, last) 区间内所有元素的总和。具体实现有两个版本，如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -667,20 +620,21 @@ $(document).ready(function(){
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _InputIterator, class _Tp&gt;
-</span><span class='line'>_Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp __init){
-</span><span class='line'>  __STL_REQUIRES(_InputIterator, _InputIterator); // concept check
-</span><span class='line'>  for ( ; __first != __last; ++__first)
-</span><span class='line'>    __init = __init + *__first; // 求和
-</span><span class='line'>  return __init;
-</span><span class='line'>}
-</span><span class='line'>template &lt;class _InputIterator, class _Tp, class _BinaryOperation&gt;
-</span><span class='line'>_Tp accumulate(_InputIterator __first, _InputIterator __last, _Tp __init, _BinaryOperation __binary_op){
-</span><span class='line'>  __STL_REQUIRES(_InputIterator, _InputIterator); // concept check
-</span><span class='line'>  for ( ; __first != __last; ++__first)
-</span><span class='line'>    __init = __binary_op(__init, *__first); // 指定二元操作
-</span><span class='line'>  return __init;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">_Tp</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">_InputIterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIterator</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span> <span class="n">__init</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">__STL_REQUIRES</span><span class="p">(</span><span class="n">_InputIterator</span><span class="p">,</span> <span class="n">_InputIterator</span><span class="p">);</span> <span class="c1">// concept check</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">__init</span> <span class="o">=</span> <span class="n">__init</span> <span class="o">+</span> <span class="o">*</span><span class="n">__first</span><span class="p">;</span> <span class="c1">// 求和</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__init</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIterator</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_BinaryOperation</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">_Tp</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">_InputIterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIterator</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_Tp</span> <span class="n">__init</span><span class="p">,</span> <span class="n">_BinaryOperation</span> <span class="n">__binary_op</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">__STL_REQUIRES</span><span class="p">(</span><span class="n">_InputIterator</span><span class="p">,</span> <span class="n">_InputIterator</span><span class="p">);</span> <span class="c1">// concept check</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">;</span> <span class="o">++</span><span class="n">__first</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">__init</span> <span class="o">=</span> <span class="n">__binary_op</span><span class="p">(</span><span class="n">__init</span><span class="p">,</span> <span class="o">*</span><span class="n">__first</span><span class="p">);</span> <span class="c1">// 指定二元操作</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">__init</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 

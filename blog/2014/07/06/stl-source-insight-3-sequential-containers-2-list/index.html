@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -215,7 +203,7 @@ $(document).ready(function(){
 
 <p>在数据结构中，我们知道链表的节点node和链表list本身是不同的数据结构，以下分别是node和list的数据结构：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -233,24 +221,25 @@ $(document).ready(function(){
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_node_base {
-</span><span class='line'>  _List_node_base* _M_next;
-</span><span class='line'>  _List_node_base* _M_prev;
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp&gt;
-</span><span class='line'>struct _List_node : public _List_node_base {  // node 的定义
-</span><span class='line'>  _Tp _M_data;
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc&gt;
-</span><span class='line'>class _List_base {
-</span><span class='line'>protected:
-</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_node; // 只要一个指针就可以表示整个双向链表
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt;
-</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; {
-</span><span class='line'>public:
-</span><span class='line'>  typedef _List_node&lt;_Tp&gt; _Node;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">_List_node_base</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">_M_next</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">_M_prev</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">_List_node</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_List_node_base</span> <span class="p">{</span>  <span class="c1">// node 的定义</span>
+</span><span class='line'>  <span class="n">_Tp</span> <span class="n">_M_data</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_List_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_node</span><span class="p">;</span> <span class="c1">// 只要一个指针就可以表示整个双向链表</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span> <span class="o">=</span> <span class="n">__STL_DEFAULT_ALLOCATOR</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">list</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_List_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="n">_Node</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <!-- more -->
@@ -262,7 +251,7 @@ $(document).ready(function(){
 
 <p>list缺省使用 alloc （即 <code>__STL_DEFAULT_ALLOCATOR</code>） 作为空间配置器，并据此定义了另外一个 <code>list_node_allocator</code> ，并定义了<code>_M_get_node</code>和<code>_M_put_node</code>  两个函数，分别用于分配和释放空间，为的是更方便的以节点大小为配置单位。除此之外，还定义了两个<code>_M_create_node</code> 函数，在分配空间的同时调用元素的构建函数对其进行初始化：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -285,29 +274,30 @@ $(document).ready(function(){
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; 
-</span><span class='line'>class _List_base {
-</span><span class='line'>protected:
-</span><span class='line'>  typedef simple_alloc&lt;_List_node&lt;_Tp&gt;, _Alloc&gt; _Alloc_type; // 专属配置器，每次配置一个节点
-</span><span class='line'>  _List_node&lt;_Tp&gt;* _M_get_node() { return _Alloc_type::allocate(1); } // 分配一个节点
-</span><span class='line'>  void _M_put_node(_List_node&lt;_Tp&gt;* __p) { _Alloc_type::deallocate(__p, 1); }  // 释放一个节点
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) &gt; // 缺省使用 __STL_DEFAULT_ALLOCATOR 配置器
-</span><span class='line'>class list : protected _List_base&lt;_Tp, _Alloc&gt; { 
-</span><span class='line'>protected:
-</span><span class='line'>  _Node* _M_create_node(const _Tp& __x){ // 分配空间并初始化
-</span><span class='line'>    _Node* __p = _M_get_node();
-</span><span class='line'>    __STL_TRY {  _Construct(&__p-&gt;_M_data, __x);  }
-</span><span class='line'>    __STL_UNWIND(_M_put_node(__p));
-</span><span class='line'>    return __p;
-</span><span class='line'>  }
-</span><span class='line'>  _Node* _M_create_node(){
-</span><span class='line'>    _Node* __p = _M_get_node();
-</span><span class='line'>    __STL_TRY {  _Construct(&__p-&gt;_M_data);  }
-</span><span class='line'>    __STL_UNWIND(_M_put_node(__p));
-</span><span class='line'>    return __p;
-</span><span class='line'>  }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_List_base</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Alloc_type</span><span class="p">;</span> <span class="c1">// 专属配置器，每次配置一个节点</span>
+</span><span class='line'>  <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_get_node</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_Alloc_type</span><span class="o">::</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 分配一个节点</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_put_node</span><span class="p">(</span><span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">__p</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Alloc_type</span><span class="o">::</span><span class="n">deallocate</span><span class="p">(</span><span class="n">__p</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// 释放一个节点</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span> <span class="o">=</span> <span class="n">__STL_DEFAULT_ALLOCATOR</span><span class="p">(</span><span class="n">_Tp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="c1">// 缺省使用 __STL_DEFAULT_ALLOCATOR 配置器</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">list</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_List_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Node</span><span class="o">*</span> <span class="n">_M_create_node</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">){</span> <span class="c1">// 分配空间并初始化</span>
+</span><span class='line'>    <span class="n">_Node</span><span class="o">*</span> <span class="n">__p</span> <span class="o">=</span> <span class="n">_M_get_node</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">__STL_TRY</span> <span class="p">{</span>  <span class="n">_Construct</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__p</span><span class="o">-&gt;</span><span class="n">_M_data</span><span class="p">,</span> <span class="n">__x</span><span class="p">);</span>  <span class="p">}</span>
+</span><span class='line'>    <span class="n">__STL_UNWIND</span><span class="p">(</span><span class="n">_M_put_node</span><span class="p">(</span><span class="n">__p</span><span class="p">));</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__p</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Node</span><span class="o">*</span> <span class="n">_M_create_node</span><span class="p">(){</span>
+</span><span class='line'>    <span class="n">_Node</span><span class="o">*</span> <span class="n">__p</span> <span class="o">=</span> <span class="n">_M_get_node</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">__STL_TRY</span> <span class="p">{</span>  <span class="n">_Construct</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__p</span><span class="o">-&gt;</span><span class="n">_M_data</span><span class="p">);</span>  <span class="p">}</span>
+</span><span class='line'>    <span class="n">__STL_UNWIND</span><span class="p">(</span><span class="n">_M_put_node</span><span class="p">(</span><span class="n">__p</span><span class="p">));</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__p</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>在list的构造和析构函数、插入、删除等操作中设计到空间的配置。由于list不涉及同时分配多个连续元素的空间，因此用不到SGI的第二层配置器。</p>
@@ -316,7 +306,7 @@ $(document).ready(function(){
 
 <p>由于list的节点在内存中不一定连续存储，其迭代器不能像vector那样使用普通指针了，由于list是双向的链表，迭代器必须具备前移、后移的能力，所以它的迭代器是BidirectionalIterators，即双向的可增可减的，以下是list的迭代器的设计：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -331,21 +321,22 @@ $(document).ready(function(){
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>struct _List_iterator_base {
-</span><span class='line'>  typedef bidirectional_iterator_tag iterator_category;
-</span><span class='line'>  _List_node_base* _M_node;
-</span><span class='line'>  _List_iterator_base(_List_node_base* __x) : _M_node(__x) {}
-</span><span class='line'>  _List_iterator_base() {}
-</span><span class='line'>  void _M_incr() { _M_node = _M_node-&gt;_M_next; }
-</span><span class='line'>  void _M_decr() { _M_node = _M_node-&gt;_M_prev; }
-</span><span class='line'>};
-</span><span class='line'>template&lt;class _Tp, class _Ref, class _Ptr&gt;
-</span><span class='line'>struct _List_iterator : public _List_iterator_base {
-</span><span class='line'>  _Self& operator++() { this-&gt;_M_incr(); return *this; }
-</span><span class='line'>  _Self operator++(int) { _Self __tmp = *this; this-&gt;_M_incr(); return __tmp; }
-</span><span class='line'>  _Self& operator--() { this-&gt;_M_decr(); return *this; }
-</span><span class='line'>  _Self operator--(int) { _Self __tmp = *this; this-&gt;_M_decr(); return __tmp; }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">_List_iterator_base</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">bidirectional_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_List_iterator_base</span><span class="p">(</span><span class="n">_List_node_base</span><span class="o">*</span> <span class="n">__x</span><span class="p">)</span> <span class="o">:</span> <span class="n">_M_node</span><span class="p">(</span><span class="n">__x</span><span class="p">)</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="n">_List_iterator_base</span><span class="p">()</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_incr</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_node</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_next</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_decr</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_node</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ref</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ptr</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">_List_iterator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_List_iterator_base</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_incr</span><span class="p">();</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Self</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Self</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_incr</span><span class="p">();</span> <span class="k">return</span> <span class="n">__tmp</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">--</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_decr</span><span class="p">();</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Self</span> <span class="k">operator</span><span class="o">--</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Self</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_M_decr</span><span class="p">();</span> <span class="k">return</span> <span class="n">__tmp</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>list有一个重要性质，插入操作（insert）和接合操作（splice）都不会造成原有list迭代器失效，而list的删除操作（erase）也只对“指向被删除元素”的那个迭代器失效，其他迭代器不受任何影响。</p>
@@ -356,7 +347,7 @@ $(document).ready(function(){
 <strong>（1）clear</strong><br/>
 clear 函数的作用是清楚整个list的所有节点。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -368,24 +359,25 @@ clear 函数的作用是清楚整个list的所有节点。</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void clear() { _Base::clear(); }
-</span><span class='line'>void _List_base&lt;_Tp,_Alloc&gt;::clear() {
-</span><span class='line'>  _List_node&lt;_Tp&gt;* __cur = (_List_node&lt;_Tp&gt;*) _M_node-&gt;_M_next;
-</span><span class='line'>  while (__cur != _M_node) {
-</span><span class='line'>    _List_node&lt;_Tp&gt;* __tmp = __cur;
-</span><span class='line'>    __cur = (_List_node&lt;_Tp&gt;*) __cur-&gt;_M_next; // 后移
-</span><span class='line'>    _Destroy(&__tmp-&gt;_M_data); // 析构当前节点的对象
-</span><span class='line'>    _M_put_node(__tmp); // 释放当前节点的空间
-</span><span class='line'>  }
-</span><span class='line'>  _M_node-&gt;_M_next = _M_node; // 置为空list
-</span><span class='line'>  _M_node-&gt;_M_prev = _M_node;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">clear</span><span class="p">()</span> <span class="p">{</span> <span class="n">_Base</span><span class="o">::</span><span class="n">clear</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'><span class="kt">void</span> <span class="n">_List_base</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">clear</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">__cur</span> <span class="o">=</span> <span class="p">(</span><span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span><span class="p">)</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_next</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">__cur</span> <span class="o">!=</span> <span class="n">_M_node</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="n">__cur</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__cur</span> <span class="o">=</span> <span class="p">(</span><span class="n">_List_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span><span class="p">)</span> <span class="n">__cur</span><span class="o">-&gt;</span><span class="n">_M_next</span><span class="p">;</span> <span class="c1">// 后移</span>
+</span><span class='line'>    <span class="n">_Destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__tmp</span><span class="o">-&gt;</span><span class="n">_M_data</span><span class="p">);</span> <span class="c1">// 析构当前节点的对象</span>
+</span><span class='line'>    <span class="n">_M_put_node</span><span class="p">(</span><span class="n">__tmp</span><span class="p">);</span> <span class="c1">// 释放当前节点的空间</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_next</span> <span class="o">=</span> <span class="n">_M_node</span><span class="p">;</span> <span class="c1">// 置为空list</span>
+</span><span class='line'>  <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span> <span class="o">=</span> <span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>（2）remove</strong><br/>
 remove 函数的作用是将数值为value的所有元素移除。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -395,22 +387,23 @@ remove 函数的作用是将数值为value的所有元素移除。</p>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void list&lt;_Tp, _Alloc&gt;::remove(const _Tp& __value) {
-</span><span class='line'>  iterator __first = begin();
-</span><span class='line'>  iterator __last = end();
-</span><span class='line'>  while (__first != __last) { // 遍历list
-</span><span class='line'>    iterator __next = __first;
-</span><span class='line'>    ++__next;
-</span><span class='line'>    if (*__first == __value) erase(__first); // 值与 value 相等就移除
-</span><span class='line'>    __first = __next;
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">list</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">remove</span><span class="p">(</span><span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__value</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__first</span> <span class="o">=</span> <span class="n">begin</span><span class="p">();</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__last</span> <span class="o">=</span> <span class="n">end</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">__first</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 遍历list</span>
+</span><span class='line'>    <span class="n">iterator</span> <span class="n">__next</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">__next</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__value</span><span class="p">)</span> <span class="n">erase</span><span class="p">(</span><span class="n">__first</span><span class="p">);</span> <span class="c1">// 值与 value 相等就移除</span>
+</span><span class='line'>    <span class="n">__first</span> <span class="o">=</span> <span class="n">__next</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>（3）unique</strong><br/>
 unique函数的作用是移除相同的<strong>连续</strong>元素，只有“连续而且相同”的元素，才回被移除到只剩一个。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -423,25 +416,26 @@ unique函数的作用是移除相同的<strong>连续</strong>元素，只有“
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void list&lt;_Tp, _Alloc&gt;::unique() {
-</span><span class='line'>  iterator __first = begin();
-</span><span class='line'>  iterator __last = end();
-</span><span class='line'>  if (__first == __last) return;
-</span><span class='line'>  iterator __next = __first;
-</span><span class='line'>  while (++__next != __last) {
-</span><span class='line'>    if (*__first == *__next) // 连续连个节点的值相同
-</span><span class='line'>      erase(__next);
-</span><span class='line'>    else
-</span><span class='line'>      __first = __next;
-</span><span class='line'>    __next = __first;
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">list</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">unique</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__first</span> <span class="o">=</span> <span class="n">begin</span><span class="p">();</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__last</span> <span class="o">=</span> <span class="n">end</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__last</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__next</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="n">__next</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first</span> <span class="o">==</span> <span class="o">*</span><span class="n">__next</span><span class="p">)</span> <span class="c1">// 连续连个节点的值相同</span>
+</span><span class='line'>      <span class="n">erase</span><span class="p">(</span><span class="n">__next</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">__first</span> <span class="o">=</span> <span class="n">__next</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__next</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p><strong>（4）transfer</strong><br/>
 transfer的作用是将 [first, last) 内的所有元素移动到 position 之前。它是一个私有函数，它为其他常用操作如 splice、sort、merge 等的实现提供了便利。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -455,20 +449,21 @@ transfer的作用是将 [first, last) 内的所有元素移动到 position 之�
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>protected:
-</span><span class='line'>  void transfer(iterator __position, iterator __first, iterator __last) {
-</span><span class='line'>    if (__position != __last) {
-</span><span class='line'>      // Remove [first, last) from its old position.
-</span><span class='line'>      __last._M_node-&gt;_M_prev-&gt;_M_next     = __position._M_node;
-</span><span class='line'>      __first._M_node-&gt;_M_prev-&gt;_M_next    = __last._M_node;
-</span><span class='line'>      __position._M_node-&gt;_M_prev-&gt;_M_next = __first._M_node; 
-</span><span class='line'>      // Splice [first, last) into its new position.
-</span><span class='line'>      _List_node_base* __tmp      = __position._M_node-&gt;_M_prev;
-</span><span class='line'>      __position._M_node-&gt;_M_prev = __last._M_node-&gt;_M_prev;
-</span><span class='line'>      __last._M_node-&gt;_M_prev     = __first._M_node-&gt;_M_prev; 
-</span><span class='line'>      __first._M_node-&gt;_M_prev    = __tmp;
-</span><span class='line'>    }
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">transfer</span><span class="p">(</span><span class="n">iterator</span> <span class="n">__position</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">__first</span><span class="p">,</span> <span class="n">iterator</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__position</span> <span class="o">!=</span> <span class="n">__last</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// Remove [first, last) from its old position.</span>
+</span><span class='line'>      <span class="n">__last</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="o">-&gt;</span><span class="n">_M_next</span>     <span class="o">=</span> <span class="n">__position</span><span class="p">.</span><span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">__first</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="o">-&gt;</span><span class="n">_M_next</span>    <span class="o">=</span> <span class="n">__last</span><span class="p">.</span><span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">__position</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="o">-&gt;</span><span class="n">_M_next</span> <span class="o">=</span> <span class="n">__first</span><span class="p">.</span><span class="n">_M_node</span><span class="p">;</span>
+</span><span class='line'>      <span class="c1">// Splice [first, last) into its new position.</span>
+</span><span class='line'>      <span class="n">_List_node_base</span><span class="o">*</span> <span class="n">__tmp</span>      <span class="o">=</span> <span class="n">__position</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">__position</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span> <span class="o">=</span> <span class="n">__last</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">__last</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span>     <span class="o">=</span> <span class="n">__first</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">__first</span><span class="p">.</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_prev</span>    <span class="o">=</span> <span class="n">__tmp</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>关于list的内容就介绍到这里了。</p>
@@ -510,7 +505,24 @@ transfer的作用是将 [first, last) 内的所有元素移动到 position 之�
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

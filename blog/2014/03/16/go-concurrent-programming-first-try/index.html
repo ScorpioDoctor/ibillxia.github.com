@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -259,7 +247,7 @@ $(document).ready(function(){
 并发编程范式。协程是比进程和线程更轻量级的线程，go语言标准库提供的所有系统调用操作都会出让CPU给其他goroutine，协程的切换管理不依赖于系统的线程和
 进程，也不依赖于CPU的核心数量。下面我们来看一个简单的goroutine的实例。
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -274,26 +262,27 @@ $(document).ready(function(){
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
 </span><span class='line'>
-</span><span class='line'>import "fmt"
+</span><span class='line'><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
 </span><span class='line'>
-</span><span class='line'>func main() {
-</span><span class='line'>  arr := [10]int{}
-</span><span class='line'>  for i := 0; i &lt; 10; i++ {
-</span><span class='line'>      fmt.Print("Result of ", i, ":")
-</span><span class='line'>      go func() {
-</span><span class='line'>          arr[i] = i + i*i
-</span><span class='line'>          fmt.Println(arr[i])
-</span><span class='line'>      }()
-</span><span class='line'>  }
-</span><span class='line'>  fmt.Println("Done")
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;Result of &quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>          <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span><span class='line'>      <span class="p">}()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Done&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 Go从main package的main()函数开始执行，这段代码的功能是计算arr[i]=i+i*i，其中i取值从0到9，每一个i计算完后立即输出。其中go为golang的关键字，启动
 一个协程（goroutine）。程序的运行的结果是什么呢？我们期望的结果应该是这样的吧：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -304,22 +293,24 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:0
-</span><span class='line'>Result of 1:2
-</span><span class='line'>Result of 2:6
-</span><span class='line'>Result of 3:12
-</span><span class='line'>Result of 4:20
-</span><span class='line'>Result of 5:30
-</span><span class='line'>Result of 6:42
-</span><span class='line'>Result of 7:56
-</span><span class='line'>Result of 8:72
-</span><span class='line'>Result of 9:90
-</span><span class='line'>Done</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">0</span><span class="p">:</span><span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">2</span><span class="p">:</span><span class="mi">6</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">3</span><span class="p">:</span><span class="mi">12</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">4</span><span class="p">:</span><span class="mi">20</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">5</span><span class="p">:</span><span class="mi">30</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">6</span><span class="p">:</span><span class="mi">42</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">7</span><span class="p">:</span><span class="mi">56</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">8</span><span class="p">:</span><span class="mi">72</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">9</span><span class="p">:</span><span class="mi">90</span>
+</span><span class='line'><span class="nx">Done</span>
+</span></code></pre></td></tr></table></div></figure>
 
 可是在LiteIDE中运行后，却会发现结果是这样子的：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:Result of 1:Result of 2:Result of 3:Result of 4:Result of 5:Result of 6:Result of 7:Result of 8:Result of 9:Done</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">0</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">1</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">2</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">3</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">4</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">5</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">6</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">7</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">8</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">9</span><span class="p">:</span><span class="nx">Done</span>
+</span></code></pre></td></tr></table></div></figure>
 
 这是为神马捏？怎么第9~12行的go func(){&#8230;}() 这段代码好像更笨就没有执行嘛？！莫非这是golang的bug？</p>
 
@@ -338,7 +329,7 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 
 <p>等一等，多个协程读写同一个变量，我们是不是需要对这个变量枷锁呀？答案是肯定的，我们可以采用类似与C/C++的线程通讯、数据共享的思路来实现，如下：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -371,50 +362,52 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 <span class='line-number'>31</span>
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
 </span><span class='line'>
-</span><span class='line'>import (
-</span><span class='line'>  "fmt"
-</span><span class='line'>  "runtime"
-</span><span class='line'>  "sync"
-</span><span class='line'>)
+</span><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>  <span class="s">&quot;fmt&quot;</span>
+</span><span class='line'>  <span class="s">&quot;runtime&quot;</span>
+</span><span class='line'>  <span class="s">&quot;sync&quot;</span>
+</span><span class='line'><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>func main() {
-</span><span class='line'>  var cnt int = 0  // 全局计数器
-</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
-</span><span class='line'>  arr := [10]int{}
-</span><span class='line'>  for i := 0; i &lt; 10; i++ {
-</span><span class='line'>      fmt.Print("Result of ", i, ":")
-</span><span class='line'>      go func() {
-</span><span class='line'>          arr[i] = i + i*i
-</span><span class='line'>          fmt.Println(arr[i])
-</span><span class='line'>          mylock.Lock() // 写之前枷锁
-</span><span class='line'>          cnt++
-</span><span class='line'>          mylock.Unlock() // 写之后释放锁
-</span><span class='line'>      }()
-</span><span class='line'>  }
-</span><span class='line'>  for {
-</span><span class='line'>      mylock.Lock() // 读之前枷锁
-</span><span class='line'>      temp := cnt
-</span><span class='line'>      mylock.Unlock() // 读之后释放锁
-</span><span class='line'>      runtime.Gosched() // 协程切换
-</span><span class='line'>      if temp &gt;= 10 {
-</span><span class='line'>          break
-</span><span class='line'>      }
-</span><span class='line'>  }
-</span><span class='line'>  fmt.Println("Done")
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">cnt</span> <span class="kt">int</span> <span class="p">=</span> <span class="mi">0</span>  <span class="c1">// 全局计数器</span>
+</span><span class='line'>  <span class="nx">mylock</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span><span class="p">{}</span>  <span class="c1">// 互斥锁</span>
+</span><span class='line'>  <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;Result of &quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>          <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 写之前枷锁</span>
+</span><span class='line'>          <span class="nx">cnt</span><span class="o">++</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 写之后释放锁</span>
+</span><span class='line'>      <span class="p">}()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 读之前枷锁</span>
+</span><span class='line'>      <span class="nx">temp</span> <span class="o">:=</span> <span class="nx">cnt</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 读之后释放锁</span>
+</span><span class='line'>      <span class="nx">runtime</span><span class="p">.</span><span class="nx">Gosched</span><span class="p">()</span> <span class="c1">// 协程切换</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nx">temp</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">break</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Done&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 执行以上程序，应该能够得到我们之前预期的那样的结果吧？可以运行之后，我们发现，结果却是这样的：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Result of 0:Result of 1:Result of 2:Result of 3:Result of 4:Result of 5:Result of 6:Result of 7:Result of 8:Result of 9:panic: runtime error: index out of range
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">0</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">1</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">2</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">3</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">4</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">5</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">6</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">7</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">8</span><span class="p">:</span><span class="nx">Result</span> <span class="nx">of</span> <span class="mi">9</span><span class="p">:</span><span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">index</span> <span class="nx">out</span> <span class="nx">of</span> <span class="k">range</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
 
 出现了运行时错误，数组下表越界了？！第17行还是没有输出？！经过一番修改，得到如下代码：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -448,44 +441,45 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
 </span><span class='line'>
-</span><span class='line'>import (
-</span><span class='line'>  "fmt"
-</span><span class='line'>  "runtime"
-</span><span class='line'>  "sync"
-</span><span class='line'>)
+</span><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>  <span class="s">&quot;fmt&quot;</span>
+</span><span class='line'>  <span class="s">&quot;runtime&quot;</span>
+</span><span class='line'>  <span class="s">&quot;sync&quot;</span>
+</span><span class='line'><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>func main() {
-</span><span class='line'>  var cnt int = 0  // 全局计数器
-</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
-</span><span class='line'>  arr := [11]int{}
-</span><span class='line'>  for i := 0; i &lt; 10; i++ {
-</span><span class='line'>      go func() {
-</span><span class='line'>          arr[i] = i + i*i
-</span><span class='line'>          mylock.Lock() // 写之前枷锁
-</span><span class='line'>          cnt++
-</span><span class='line'>          mylock.Unlock() // 写之后释放锁
-</span><span class='line'>      }()
-</span><span class='line'>  }
-</span><span class='line'>  for {
-</span><span class='line'>      mylock.Lock() // 读之前枷锁
-</span><span class='line'>      temp := cnt
-</span><span class='line'>      mylock.Unlock() // 读之后释放锁
-</span><span class='line'>      runtime.Gosched() // 协程切换
-</span><span class='line'>      if temp &gt;= 10 {
-</span><span class='line'>          break
-</span><span class='line'>      }
-</span><span class='line'>  }
-</span><span class='line'>  for i := 0; i &lt; 11; i++ {
-</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
-</span><span class='line'>  }
-</span><span class='line'>  fmt.Println("Done")
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">cnt</span> <span class="kt">int</span> <span class="p">=</span> <span class="mi">0</span>  <span class="c1">// 全局计数器</span>
+</span><span class='line'>  <span class="nx">mylock</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span><span class="p">{}</span>  <span class="c1">// 互斥锁</span>
+</span><span class='line'>  <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 写之前枷锁</span>
+</span><span class='line'>          <span class="nx">cnt</span><span class="o">++</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 写之后释放锁</span>
+</span><span class='line'>      <span class="p">}()</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 读之前枷锁</span>
+</span><span class='line'>      <span class="nx">temp</span> <span class="o">:=</span> <span class="nx">cnt</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 读之后释放锁</span>
+</span><span class='line'>      <span class="nx">runtime</span><span class="p">.</span><span class="nx">Gosched</span><span class="p">()</span> <span class="c1">// 协程切换</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nx">temp</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">break</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">11</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Result of &quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Done&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 这下应该能得到预期的结果了吧。可以运行程序后，有傻眼了，结果是：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -497,25 +491,26 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Result of  0 : 0
-</span><span class='line'>Result of  1 : 0
-</span><span class='line'>Result of  2 : 0
-</span><span class='line'>Result of  3 : 0
-</span><span class='line'>Result of  4 : 0
-</span><span class='line'>Result of  5 : 0
-</span><span class='line'>Result of  6 : 0
-</span><span class='line'>Result of  7 : 0
-</span><span class='line'>Result of  8 : 0
-</span><span class='line'>Result of  9 : 0
-</span><span class='line'>Result of  10 : 110
-</span><span class='line'>Done</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">0</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">2</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">3</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">4</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">5</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">6</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">7</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">8</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">9</span> <span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="nx">Result</span> <span class="nx">of</span>  <span class="mi">10</span> <span class="p">:</span> <span class="mi">110</span>
+</span><span class='line'><span class="nx">Done</span>
+</span></code></pre></td></tr></table></div></figure>
 
 神马？arr[0]~arr[9]肿么都是0，肿么会冒出一个arr[10]=110？！即使把第15、16行顺序互换，得到的结果还是一样！！！这真是一场噩梦啊！！！仔细对比许书上的例子，
 我们发现，这里使用的是匿名函数创建协程，匿名函数中使用了全局的变量，而每次使用go关键字创建协程后，程序不是继续往下执行，而是继续返回到for这一行来执行，首先i++，
 然后判断i<10，成立就继续执行并创建协程，10个协程创建完了之后，才真正开始匿名函数的执行，而此时i已经是10了，对于每一个协程i都是10，因此最终只计算了一个arr[10]=110，
 这也是为什么申请10个单位的数组时会出现运行时错误。而这完全不是我们所要的结果，那么怎么办呢？我们不妨用带参数的匿名函数来试试？如下：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -549,40 +544,41 @@ Go从main package的main()函数开始执行，这段代码的功能是计算arr
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
 </span><span class='line'>
-</span><span class='line'>import (
-</span><span class='line'>  "fmt"
-</span><span class='line'>  "runtime"
-</span><span class='line'>  "sync"
-</span><span class='line'>)
+</span><span class='line'><span class="kn">import</span> <span class="p">(</span>
+</span><span class='line'>  <span class="s">&quot;fmt&quot;</span>
+</span><span class='line'>  <span class="s">&quot;runtime&quot;</span>
+</span><span class='line'>  <span class="s">&quot;sync&quot;</span>
+</span><span class='line'><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'>func main() {
-</span><span class='line'>  var cnt int = 0  // 全局计数器
-</span><span class='line'>  mylock := &sync.Mutex{}  // 互斥锁
-</span><span class='line'>  arr := [11]int{}
-</span><span class='line'>  for i := 0; i &lt; 10; i++ {
-</span><span class='line'>      go func(i int) { // 这里的i是形参
-</span><span class='line'>          arr[i] = i + i*i
-</span><span class='line'>          mylock.Lock() // 写之前枷锁
-</span><span class='line'>          cnt++
-</span><span class='line'>          mylock.Unlock() // 写之后释放锁
-</span><span class='line'>      }(i) // 这里的i是实参
-</span><span class='line'>  }
-</span><span class='line'>  for {
-</span><span class='line'>      mylock.Lock() // 读之前枷锁
-</span><span class='line'>      temp := cnt
-</span><span class='line'>      mylock.Unlock() // 读之后释放锁
-</span><span class='line'>      runtime.Gosched() // 协程切换
-</span><span class='line'>      if temp &gt;= 10 {
-</span><span class='line'>          break
-</span><span class='line'>      }
-</span><span class='line'>  }
-</span><span class='line'>  for i := 0; i &lt; 11; i++ {
-</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
-</span><span class='line'>  }
-</span><span class='line'>  fmt.Println("Done")
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">cnt</span> <span class="kt">int</span> <span class="p">=</span> <span class="mi">0</span>  <span class="c1">// 全局计数器</span>
+</span><span class='line'>  <span class="nx">mylock</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span><span class="p">{}</span>  <span class="c1">// 互斥锁</span>
+</span><span class='line'>  <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 这里的i是形参</span>
+</span><span class='line'>          <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 写之前枷锁</span>
+</span><span class='line'>          <span class="nx">cnt</span><span class="o">++</span>
+</span><span class='line'>          <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 写之后释放锁</span>
+</span><span class='line'>      <span class="p">}(</span><span class="nx">i</span><span class="p">)</span> <span class="c1">// 这里的i是实参</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span> <span class="c1">// 读之前枷锁</span>
+</span><span class='line'>      <span class="nx">temp</span> <span class="o">:=</span> <span class="nx">cnt</span>
+</span><span class='line'>      <span class="nx">mylock</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span> <span class="c1">// 读之后释放锁</span>
+</span><span class='line'>      <span class="nx">runtime</span><span class="p">.</span><span class="nx">Gosched</span><span class="p">()</span> <span class="c1">// 协程切换</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nx">temp</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">break</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">11</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Result of &quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Done&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 终于，我们总算得到了想要的结果了，经过不懈努力终于大功告成。这里没创建一个协程，都有一个实参值传给形参，在匿名函数中就不存在共享的全局变量i了。
 然而，在让我们回头看看我们的代码，却会发现，这与一般的多线程程序有什么区别的，而且写起来会感觉更麻烦，有过之而无不及啊！</p>
@@ -606,7 +602,7 @@ channel是Go语言在语言级别提供的goroutine间的通信方式，可以�
 对象的过程和调用函数时的参数传递行为比较一致，比如也可以传递指针等。如果需要跨进程通信，建议用分布式系统的方法来解决，比如使用Socket或者HTTP等通信协议。
 channel是类型相关的。也就是说，一个channel只能传递一种类型的值，这个类型需要在声明channel时指定。我们先看下用channel的方式重写上面的例子是什么样子的
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -628,41 +624,43 @@ channel是类型相关的。也就是说，一个channel只能传递一种类型
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>package main
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="kn">package</span> <span class="nx">main</span>
 </span><span class='line'>
-</span><span class='line'>import "fmt"
+</span><span class='line'><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
 </span><span class='line'>
-</span><span class='line'>func main() {
-</span><span class='line'>  chs := make([]chan int, 10) // 申请一个10维的channel数组
-</span><span class='line'>  arr := [11]int{}
-</span><span class='line'>  for i := 0; i &lt; 10; i++ {
-</span><span class='line'>      chs[i] = make(chan int) // 对每个channel初始化
-</span><span class='line'>      go func(ch chan int, i int) {
-</span><span class='line'>          arr[i] = i + i*i
-</span><span class='line'>          ch &lt;- 1  // 写channel，应该在函数体的最后一行，许书（P94，代码清单4-4）上有bug
-</span><span class='line'>      }(chs[i], i)
-</span><span class='line'>  }
-</span><span class='line'>  for _, ch := range chs {
-</span><span class='line'>      &lt;-ch // 读channel
-</span><span class='line'>  }
-</span><span class='line'>  for i := 0; i &lt; 11; i++ {
-</span><span class='line'>      fmt.Println("Result of ", i, ":", arr[i])
-</span><span class='line'>  }
-</span><span class='line'>  fmt.Println("Done")
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">chs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 申请一个10维的channel数组</span>
+</span><span class='line'>  <span class="nx">arr</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="kt">int</span><span class="p">{}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">chs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="c1">// 对每个channel初始化</span>
+</span><span class='line'>      <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>          <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>  <span class="c1">// 写channel，应该在函数体的最后一行，许书（P94，代码清单4-4）上有bug</span>
+</span><span class='line'>      <span class="p">}(</span><span class="nx">chs</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ch</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">chs</span> <span class="p">{</span>
+</span><span class='line'>      <span class="o">&lt;-</span><span class="nx">ch</span> <span class="c1">// 读channel</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">11</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Result of &quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Done&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 在这段代码中，我们给每个goroutine分配了一个channel，在每个goroutine执行完时对该goroutine的channel进行写操作，而在第16行进行读操作，对于每个channel，
 只有完成了写操作之后，才可以进行读取，否则会处于阻塞状态。因此在10个goroutine没有执行完之前，main函数是不会退出的。这样是不是比共享内存的方式更简单
 而优雅呢？其实，我们还可以对代码继续进行简化，可以将匿名函数的传递的channel参数省去，而在匿名函数内部直接使用全局的chs[i]，匿名函数可以修改为如下：
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>go func(i int) {
-</span><span class='line'>  arr[i] = i + i*i
-</span><span class='line'>  chs[i] &lt;- 1  // 写channel
-</span><span class='line'>}(i)</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='go'><span class='line'><span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="nx">i</span><span class="o">*</span><span class="nx">i</span>
+</span><span class='line'>  <span class="nx">chs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="mi">1</span>  <span class="c1">// 写channel</span>
+</span><span class='line'><span class="p">}(</span><span class="nx">i</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </p>
 
@@ -719,7 +717,24 @@ channel是类型相关的。也就是说，一个channel只能传递一种类型
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -255,7 +243,7 @@ RB-tree是另一种被广泛使用的平衡二叉搜索树，也是SGI STL唯一
 <img src="/images/2014/IMAG2014080302.png"><br/>
 SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -281,38 +269,39 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>typedef bool _Rb_tree_Color_type;
-</span><span class='line'>const _Rb_tree_Color_type _S_rb_tree_red = false;
-</span><span class='line'>const _Rb_tree_Color_type _S_rb_tree_black = true;
-</span><span class='line'>//======================================
-</span><span class='line'>struct _Rb_tree_node_base { // 节点的定义
-</span><span class='line'>  typedef _Rb_tree_Color_type _Color_type;
-</span><span class='line'>  typedef _Rb_tree_node_base* _Base_ptr;
-</span><span class='line'>  _Color_type _M_color; // 节点颜色，实际为一个bool型变量
-</span><span class='line'>  _Base_ptr _M_parent; // 指向父节点，方便遍历
-</span><span class='line'>  _Base_ptr _M_left;
-</span><span class='line'>  _Base_ptr _M_right;
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">typedef</span> <span class="kt">bool</span> <span class="n">_Rb_tree_Color_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_red</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_black</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//======================================</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_node_base</span> <span class="p">{</span> <span class="c1">// 节点的定义</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_Color_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_node_base</span><span class="o">*</span> <span class="n">_Base_ptr</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Color_type</span> <span class="n">_M_color</span><span class="p">;</span> <span class="c1">// 节点颜色，实际为一个bool型变量</span>
+</span><span class='line'>  <span class="n">_Base_ptr</span> <span class="n">_M_parent</span><span class="p">;</span> <span class="c1">// 指向父节点，方便遍历</span>
+</span><span class='line'>  <span class="n">_Base_ptr</span> <span class="n">_M_left</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Base_ptr</span> <span class="n">_M_right</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>  static _Base_ptr _S_minimum(_Base_ptr __x) {
-</span><span class='line'>    while (__x-&gt;_M_left != 0) __x = __x-&gt;_M_left;
-</span><span class='line'>    return __x;
-</span><span class='line'>  }
-</span><span class='line'>  static _Base_ptr _S_maximum(_Base_ptr __x) {
-</span><span class='line'>    while (__x-&gt;_M_right != 0) __x = __x-&gt;_M_right;
-</span><span class='line'>    return __x;
-</span><span class='line'>  }
-</span><span class='line'>};
-</span><span class='line'>//======================================
-</span><span class='line'>template &lt;class _Value&gt; struct _Rb_tree_node : public _Rb_tree_node_base { // 节点的定义
-</span><span class='line'>  typedef _Rb_tree_node&lt;_Value&gt;* _Link_type;
-</span><span class='line'>  _Value _M_value_field;
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="n">_S_minimum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_left</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__x</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="n">_S_maximum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_right</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_right</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">__x</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="c1">//======================================</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Value</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">_Rb_tree_node</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_Rb_tree_node_base</span> <span class="p">{</span> <span class="c1">// 节点的定义</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Value</span><span class="o">&gt;*</span> <span class="n">_Link_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Value</span> <span class="n">_M_value_field</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中每个节点主要包含一个标志颜色的bool变量 <code>_M_color</code>，3个节点指针 <code>_M_parent</code> , <code>_M_left</code> , <code>_M_right</code>，2个成员函数 <code>_S_minimum</code> 和 <code>_S_maximum</code> （分别求取最小（最左）、最大（最右）节点）。<br/>
 而RB-tree的定义如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -330,24 +319,25 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Tp, class _Alloc&gt; struct _Rb_tree_base { // RB-tree的定义
-</span><span class='line'>  typedef _Alloc allocator_type;
-</span><span class='line'>  allocator_type get_allocator() const { return allocator_type(); }
-</span><span class='line'>  _Rb_tree_base(const allocator_type&)  : _M_header(0) { _M_header = _M_get_node(); } // 构造函数
-</span><span class='line'>  ~_Rb_tree_base() { _M_put_node(_M_header); } // 析构函数
-</span><span class='line'>protected:
-</span><span class='line'>  _Rb_tree_node&lt;_Tp&gt;* _M_header; // 根节点
-</span><span class='line'>  typedef simple_alloc&lt;_Rb_tree_node&lt;_Tp&gt;, _Alloc&gt; _Alloc_type; // 空间配置器
-</span><span class='line'>  _Rb_tree_node&lt;_Tp&gt;* _M_get_node()  { return _Alloc_type::allocate(1); } // 分配一个节点的空间
-</span><span class='line'>  void _M_put_node(_Rb_tree_node&lt;_Tp&gt;* __p) { _Alloc_type::deallocate(__p, 1); } // 释放__p节点的空间
-</span><span class='line'>};
-</span><span class='line'>//======================================
-</span><span class='line'>template &lt;class _Key, class _Value, class _KeyOfValue, class _Compare,
-</span><span class='line'>          class _Alloc = __STL_DEFAULT_ALLOCATOR(_Value) &gt;
-</span><span class='line'>class _Rb_tree : protected _Rb_tree_base&lt;_Value, _Alloc&gt; {
-</span><span class='line'>  typedef _Rb_tree_base&lt;_Value, _Alloc&gt; _Base;
-</span><span class='line'>// ... 
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">_Rb_tree_base</span> <span class="p">{</span> <span class="c1">// RB-tree的定义</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Alloc</span> <span class="n">allocator_type</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">allocator_type</span> <span class="n">get_allocator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">allocator_type</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Rb_tree_base</span><span class="p">(</span><span class="k">const</span> <span class="n">allocator_type</span><span class="o">&amp;</span><span class="p">)</span>  <span class="o">:</span> <span class="n">_M_header</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">_M_header</span> <span class="o">=</span> <span class="n">_M_get_node</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// 构造函数</span>
+</span><span class='line'>  <span class="o">~</span><span class="n">_Rb_tree_base</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_put_node</span><span class="p">(</span><span class="n">_M_header</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 析构函数</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_header</span><span class="p">;</span> <span class="c1">// 根节点</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Alloc_type</span><span class="p">;</span> <span class="c1">// 空间配置器</span>
+</span><span class='line'>  <span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_get_node</span><span class="p">()</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">_Alloc_type</span><span class="o">::</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 分配一个节点的空间</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_put_node</span><span class="p">(</span><span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">__p</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Alloc_type</span><span class="o">::</span><span class="n">deallocate</span><span class="p">(</span><span class="n">__p</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 释放__p节点的空间</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="c1">//======================================</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_KeyOfValue</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span>
+</span><span class='line'>          <span class="k">class</span> <span class="nc">_Alloc</span> <span class="o">=</span> <span class="n">__STL_DEFAULT_ALLOCATOR</span><span class="p">(</span><span class="n">_Value</span><span class="p">)</span> <span class="o">&gt;</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">_Rb_tree</span> <span class="o">:</span> <span class="k">protected</span> <span class="n">_Rb_tree_base</span><span class="o">&lt;</span><span class="n">_Value</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_base</span><span class="o">&lt;</span><span class="n">_Value</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Base</span><span class="p">;</span>
+</span><span class='line'><span class="c1">// ... </span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到RB-tree的空间配置器是 <code>simple_alloc</code> 配置器，按 <code>_Rb_tree_node</code> 节点大小分配空间，每次分配或释放一个节点的空间。</p>
@@ -356,7 +346,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 
 <p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator&#8211;）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -367,22 +357,23 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>struct _Rb_tree_base_iterator {
-</span><span class='line'>  typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
-</span><span class='line'>  typedef bidirectional_iterator_tag iterator_category;
-</span><span class='line'>  void _M_increment()  { }
-</span><span class='line'>  void _M_decrement()  { }
-</span><span class='line'>};
-</span><span class='line'>template &lt;class _Value, class _Ref, class _Ptr&gt;
-</span><span class='line'>struct _Rb_tree_iterator : public _Rb_tree_base_iterator {
-</span><span class='line'>  _Self& operator++() { _M_increment(); return *this; }
-</span><span class='line'>  _Self& operator--() { _M_decrement(); return *this; }
-</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_base_iterator</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_node_base</span><span class="o">::</span><span class="n">_Base_ptr</span> <span class="n">_Base_ptr</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">bidirectional_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_decrement</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ref</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ptr</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_iterator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_Rb_tree_base_iterator</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_increment</span><span class="p">();</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">--</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_decrement</span><span class="p">();</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到RB-tree的自增和自减操作是使用基迭代器的increment和decrement来实现的，这里仅分析自增操作的实现（自减操作类似的）。RB-tree的自增操作实际上是寻找中序遍历下当前节点的后一个节点，其代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -397,21 +388,22 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  void _M_increment()  { // 自增操作，中序遍历的下一个节点
-</span><span class='line'>    if (_M_node-&gt;_M_right != 0) { // 当前节点有右子树
-</span><span class='line'>      _M_node = _M_node-&gt;_M_right;
-</span><span class='line'>      while (_M_node-&gt;_M_left != 0) // 右子树的最左节点即为所求
-</span><span class='line'>        _M_node = _M_node-&gt;_M_left;
-</span><span class='line'>    } else { // 当前节点没有右子树，找父节点且父节点的右子树不包含当前节点的祖先节点
-</span><span class='line'>      _Base_ptr __y = _M_node-&gt;_M_parent;
-</span><span class='line'>      while (_M_node == __y-&gt;_M_right) { // 当前节点在父节点的右子树中就继续往父节点的父节点找
-</span><span class='line'>        _M_node = __y;
-</span><span class='line'>        __y = __y-&gt;_M_parent;
-</span><span class='line'>      }
-</span><span class='line'>      if (_M_node-&gt;_M_right != __y)
-</span><span class='line'>        _M_node = __y;
-</span><span class='line'>    }
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'>  <span class="kt">void</span> <span class="n">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="c1">// 自增操作，中序遍历的下一个节点</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_right</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 当前节点有右子树</span>
+</span><span class='line'>      <span class="n">_M_node</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_right</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 右子树的最左节点即为所求</span>
+</span><span class='line'>        <span class="n">_M_node</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_left</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// 当前节点没有右子树，找父节点且父节点的右子树不包含当前节点的祖先节点</span>
+</span><span class='line'>      <span class="n">_Base_ptr</span> <span class="n">__y</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_parent</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="n">_M_node</span> <span class="o">==</span> <span class="n">__y</span><span class="o">-&gt;</span><span class="n">_M_right</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 当前节点在父节点的右子树中就继续往父节点的父节点找</span>
+</span><span class='line'>        <span class="n">_M_node</span> <span class="o">=</span> <span class="n">__y</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">__y</span> <span class="o">=</span> <span class="n">__y</span><span class="o">-&gt;</span><span class="n">_M_parent</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_right</span> <span class="o">!=</span> <span class="n">__y</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">_M_node</span> <span class="o">=</span> <span class="n">__y</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>
@@ -423,7 +415,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 
 <p>RB-tree提供两种插入操作，<code>insert_unique()</code> 和 <code>insert_equal()</code>，顾名思义，前者表示被插入的节点的键值在树中是唯一的（如果已经存在，就不需要插入了），后者表示可以存在键值相同的节点。这两个函数都有多个版本，下面以后者的最简单版本（单一参数：被插入的节点的键值）为实例进行介绍。下面是 <code>insert_equal</code> 的实现：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -459,42 +451,43 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
 <span class='line-number'>36</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>_Rb_tree&lt;_Key,_Value,_KeyOfValue,_Compare,_Alloc&gt; ::insert_equal(const _Value& __v) {
-</span><span class='line'>  _Link_type __y = _M_header;
-</span><span class='line'>  _Link_type __x = _M_root(); // 从根节点开始
-</span><span class='line'>  while (__x != 0) { // 往下寻找插入点
-</span><span class='line'>    __y = __x;
-</span><span class='line'>    // 比较，当前节点的键值比插入值大往左子树找，否则往右子树找
-</span><span class='line'>    __x = _M_key_compare(_KeyOfValue()(__v), _S_key(__x)) ? _S_left(__x) : _S_right(__x); 
-</span><span class='line'>  }
-</span><span class='line'>  return _M_insert(__x, __y, __v); // 真正的插入操作，x为新插入节点，y为x的父节点，v为新值
-</span><span class='line'>}
-</span><span class='line'>//真正的插入操作，主要是对RB-tree及新节点的成员变量的设置
-</span><span class='line'>_Rb_tree&lt;_Key,_Value,_KeyOfValue,_Compare,_Alloc&gt; ::_M_insert(_Base_ptr __x_, _Base_ptr __y_, const _Value& __v) {
-</span><span class='line'>  _Link_type __x = (_Link_type) __x_;
-</span><span class='line'>  _Link_type __y = (_Link_type) __y_;
-</span><span class='line'>  _Link_type __z;
-</span><span class='line'>  if (__y == _M_header || __x != 0 || _M_key_compare(_KeyOfValue()(__v), _S_key(__y))) {
-</span><span class='line'>    __z = _M_create_node(__v); // 创建新节点
-</span><span class='line'>    _S_left(__y) = __z;     // makes _M_leftmost() = __z, when __y == _M_header
-</span><span class='line'>    if (__y == _M_header) { // y为header
-</span><span class='line'>      _M_root() = __z;
-</span><span class='line'>      _M_rightmost() = __z;
-</span><span class='line'>    } else if (__y == _M_leftmost()) // y为最左节点
-</span><span class='line'>      _M_leftmost() = __z;  // maintain _M_leftmost() pointing to min node
-</span><span class='line'>  } else {
-</span><span class='line'>    __z = _M_create_node(__v); // 创建新节点。???为什么不放到if-else上面???
-</span><span class='line'>    _S_right(__y) = __z; // 新节点为y的右孩子
-</span><span class='line'>    if (__y == _M_rightmost()) // y为最右节点
-</span><span class='line'>      _M_rightmost() = __z; // maintain _M_rightmost() pointing to max node
-</span><span class='line'>  }
-</span><span class='line'>  _S_parent(__z) = __y; // 设定新节点的父节点
-</span><span class='line'>  _S_left(__z) = 0;
-</span><span class='line'>  _S_right(__z) = 0;
-</span><span class='line'>  _Rb_tree_rebalance(__z, _M_header-&gt;_M_parent); // 调整RB-tree使之恢复平衡
-</span><span class='line'>  ++_M_node_count;
-</span><span class='line'>  return iterator(__z); // 返回指向新节点的迭代器
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">_Rb_tree</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Value</span><span class="p">,</span><span class="n">_KeyOfValue</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;</span> <span class="o">::</span><span class="n">insert_equal</span><span class="p">(</span><span class="k">const</span> <span class="n">_Value</span><span class="o">&amp;</span> <span class="n">__v</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__y</span> <span class="o">=</span> <span class="n">_M_header</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">_M_root</span><span class="p">();</span> <span class="c1">// 从根节点开始</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">__x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 往下寻找插入点</span>
+</span><span class='line'>    <span class="n">__y</span> <span class="o">=</span> <span class="n">__x</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">// 比较，当前节点的键值比插入值大往左子树找，否则往右子树找</span>
+</span><span class='line'>    <span class="n">__x</span> <span class="o">=</span> <span class="n">_M_key_compare</span><span class="p">(</span><span class="n">_KeyOfValue</span><span class="p">()(</span><span class="n">__v</span><span class="p">),</span> <span class="n">_S_key</span><span class="p">(</span><span class="n">__x</span><span class="p">))</span> <span class="o">?</span> <span class="n">_S_left</span><span class="p">(</span><span class="n">__x</span><span class="p">)</span> <span class="o">:</span> <span class="n">_S_right</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">_M_insert</span><span class="p">(</span><span class="n">__x</span><span class="p">,</span> <span class="n">__y</span><span class="p">,</span> <span class="n">__v</span><span class="p">);</span> <span class="c1">// 真正的插入操作，x为新插入节点，y为x的父节点，v为新值</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//真正的插入操作，主要是对RB-tree及新节点的成员变量的设置</span>
+</span><span class='line'><span class="n">_Rb_tree</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Value</span><span class="p">,</span><span class="n">_KeyOfValue</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;</span> <span class="o">::</span><span class="n">_M_insert</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x_</span><span class="p">,</span> <span class="n">_Base_ptr</span> <span class="n">__y_</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Value</span><span class="o">&amp;</span> <span class="n">__v</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__x</span> <span class="o">=</span> <span class="p">(</span><span class="n">_Link_type</span><span class="p">)</span> <span class="n">__x_</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__y</span> <span class="o">=</span> <span class="p">(</span><span class="n">_Link_type</span><span class="p">)</span> <span class="n">__y_</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__z</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">__y</span> <span class="o">==</span> <span class="n">_M_header</span> <span class="o">||</span> <span class="n">__x</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">_M_key_compare</span><span class="p">(</span><span class="n">_KeyOfValue</span><span class="p">()(</span><span class="n">__v</span><span class="p">),</span> <span class="n">_S_key</span><span class="p">(</span><span class="n">__y</span><span class="p">)))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">__z</span> <span class="o">=</span> <span class="n">_M_create_node</span><span class="p">(</span><span class="n">__v</span><span class="p">);</span> <span class="c1">// 创建新节点</span>
+</span><span class='line'>    <span class="n">_S_left</span><span class="p">(</span><span class="n">__y</span><span class="p">)</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span>     <span class="c1">// makes _M_leftmost() = __z, when __y == _M_header</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__y</span> <span class="o">==</span> <span class="n">_M_header</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// y为header</span>
+</span><span class='line'>      <span class="n">_M_root</span><span class="p">()</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">_M_rightmost</span><span class="p">()</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">__y</span> <span class="o">==</span> <span class="n">_M_leftmost</span><span class="p">())</span> <span class="c1">// y为最左节点</span>
+</span><span class='line'>      <span class="n">_M_leftmost</span><span class="p">()</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span>  <span class="c1">// maintain _M_leftmost() pointing to min node</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">__z</span> <span class="o">=</span> <span class="n">_M_create_node</span><span class="p">(</span><span class="n">__v</span><span class="p">);</span> <span class="c1">// 创建新节点。???为什么不放到if-else上面???</span>
+</span><span class='line'>    <span class="n">_S_right</span><span class="p">(</span><span class="n">__y</span><span class="p">)</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span> <span class="c1">// 新节点为y的右孩子</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__y</span> <span class="o">==</span> <span class="n">_M_rightmost</span><span class="p">())</span> <span class="c1">// y为最右节点</span>
+</span><span class='line'>      <span class="n">_M_rightmost</span><span class="p">()</span> <span class="o">=</span> <span class="n">__z</span><span class="p">;</span> <span class="c1">// maintain _M_rightmost() pointing to max node</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">_S_parent</span><span class="p">(</span><span class="n">__z</span><span class="p">)</span> <span class="o">=</span> <span class="n">__y</span><span class="p">;</span> <span class="c1">// 设定新节点的父节点</span>
+</span><span class='line'>  <span class="n">_S_left</span><span class="p">(</span><span class="n">__z</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_S_right</span><span class="p">(</span><span class="n">__z</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">_Rb_tree_rebalance</span><span class="p">(</span><span class="n">__z</span><span class="p">,</span> <span class="n">_M_header</span><span class="o">-&gt;</span><span class="n">_M_parent</span><span class="p">);</span> <span class="c1">// 调整RB-tree使之恢复平衡</span>
+</span><span class='line'>  <span class="o">++</span><span class="n">_M_node_count</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">iterator</span><span class="p">(</span><span class="n">__z</span><span class="p">);</span> <span class="c1">// 返回指向新节点的迭代器</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>至此新节点插入完成。然而，由于新节点的插入，可能会引起RB-tree的性质4,5的破坏，需要对RB-tree进行旋转并对相关节点重新着色，这都是在 <code>_Rb_tree_rebalance</code> 这个函数中实现的，下面就主要介绍RB-tree是如何恢复平衡。</p>
@@ -543,7 +536,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 
 <p>RB-tree是一个二叉搜索树，元素的查询是其拿手项目，非常简单，以下是RB-tree提供的查询操作：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -559,22 +552,23 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>template &lt;class _Key, class _Value, class _KeyOfValue, class _Compare, class _Alloc&gt;
-</span><span class='line'>typename _Rb_tree&lt;_Key,_Value,_KeyOfValue,_Compare,_Alloc&gt;::iterator 
-</span><span class='line'>_Rb_tree&lt;_Key,_Value,_KeyOfValue,_Compare,_Alloc&gt;::find(const _Key& __k) {
-</span><span class='line'>  _Link_type __y = _M_header;      // Last node which is not less than __k. 
-</span><span class='line'>  _Link_type __x = _M_root();      // Current node. 
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_KeyOfValue</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Compare</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">typename</span> <span class="n">_Rb_tree</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Value</span><span class="p">,</span><span class="n">_KeyOfValue</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">iterator</span>
+</span><span class='line'><span class="n">_Rb_tree</span><span class="o">&lt;</span><span class="n">_Key</span><span class="p">,</span><span class="n">_Value</span><span class="p">,</span><span class="n">_KeyOfValue</span><span class="p">,</span><span class="n">_Compare</span><span class="p">,</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="n">_Key</span><span class="o">&amp;</span> <span class="n">__k</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__y</span> <span class="o">=</span> <span class="n">_M_header</span><span class="p">;</span>      <span class="c1">// Last node which is not less than __k. </span>
+</span><span class='line'>  <span class="n">_Link_type</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">_M_root</span><span class="p">();</span>      <span class="c1">// Current node. </span>
 </span><span class='line'>
-</span><span class='line'>  while (__x != 0) // x为NIL时推出循环
-</span><span class='line'>    if (!_M_key_compare(_S_key(__x), __k))
-</span><span class='line'>      __y = __x, __x = _S_left(__x); // 往左子树找（赋值运算优先于逗号运算，y是x的父节点）
-</span><span class='line'>    else
-</span><span class='line'>      __x = _S_right(__x); // 往右子树找
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">__x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// x为NIL时推出循环</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_M_key_compare</span><span class="p">(</span><span class="n">_S_key</span><span class="p">(</span><span class="n">__x</span><span class="p">),</span> <span class="n">__k</span><span class="p">))</span>
+</span><span class='line'>      <span class="n">__y</span> <span class="o">=</span> <span class="n">__x</span><span class="p">,</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">_S_left</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span> <span class="c1">// 往左子树找（赋值运算优先于逗号运算，y是x的父节点）</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">__x</span> <span class="o">=</span> <span class="n">_S_right</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span> <span class="c1">// 往右子树找</span>
 </span><span class='line'>
-</span><span class='line'>  iterator __j = iterator(__y);   
-</span><span class='line'>  return (__j == end() || _M_key_compare(__k, _S_key(__j._M_node))) ? 
-</span><span class='line'>     end() : __j; // 没找到返回end()，否则返回相应节点的指针（迭代器）
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="n">iterator</span> <span class="n">__j</span> <span class="o">=</span> <span class="n">iterator</span><span class="p">(</span><span class="n">__y</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">(</span><span class="n">__j</span> <span class="o">==</span> <span class="n">end</span><span class="p">()</span> <span class="o">||</span> <span class="n">_M_key_compare</span><span class="p">(</span><span class="n">__k</span><span class="p">,</span> <span class="n">_S_key</span><span class="p">(</span><span class="n">__j</span><span class="p">.</span><span class="n">_M_node</span><span class="p">)))</span> <span class="o">?</span>
+</span><span class='line'>     <span class="n">end</span><span class="p">()</span> <span class="o">:</span> <span class="n">__j</span><span class="p">;</span> <span class="c1">// 没找到返回end()，否则返回相应节点的指针（迭代器）</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>小结</h2>
@@ -619,7 +613,24 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

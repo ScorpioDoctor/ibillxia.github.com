@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Android | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/android/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-01T15:28:56+08:00</updated>
+  <updated>2015-01-08T22:09:37+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -91,7 +91,7 @@ ndk-build --version
 
 <p>原本按照图一中的流程我们需要先编写一些 C/C++ 原生的代码，但实际中，为了简便起见，我们可以使用 jdk 的 javah 工具（如果没有， <code>sudo apt-get update</code> 一下）来根据 java 调用 C/C++ API 的接口类来自动生成 jni 的头文件。因此，我们需要先做第3步的内容，这里编写的 Java API 接口 HelloCal 类（在 <code>src/io.ibillxia.hellojni</code> 路径下）如下：</p>
 
-<p>```
+<p>``` java
 //HelloCal.java
 package io.ibillxia.hellojni;</p>
 
@@ -139,7 +139,7 @@ javah -classpath ./bin/classes -d jni io.ibillxia.hellojni.HelloCal
 
 <p>最后是编写 Android App，并在 App 中调用 Jni 接口函数。在 <code>io.ibillxia.hellojni</code> 包中新建一个 Java 类 HelloJni ，编写如下代码（import 内容省略，具体见源码压缩包）：</p>
 
-<p>```
+<p>``` java
 //HelloJni.java
 public class HelloJni extends Activity {</p>
 

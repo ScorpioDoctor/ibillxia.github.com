@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -232,7 +220,7 @@ $(document).ready(function(){
 
 <p> 一个简单的实现如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -245,19 +233,20 @@ $(document).ready(function(){
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void recursive_permute(int A[],int i,int n){
-</span><span class='line'>  if(i==n-1){
-</span><span class='line'>      for(int j=0;j&lt;n;j++)
-</span><span class='line'>          cout&lt;&lt;A[j]&lt;&lt;" ";
-</span><span class='line'>      cout&lt;&lt;endl;
-</span><span class='line'>      return;
-</span><span class='line'>  }
-</span><span class='line'>  for(int j=i;j&lt;n;j++){
-</span><span class='line'>      swap(A[i],A[j]);  // choose A[j] as the ith element
-</span><span class='line'>      recursive_permute(A,i+1,n);
-</span><span class='line'>      swap(A[i],A[j]);  // reset to enter next for
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>  <span class="c1">// choose A[j] as the ith element</span>
+</span><span class='line'>      <span class="n">recursive_permute</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>  <span class="c1">// reset to enter next for</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这个实现非常精简易懂，但却存在一个问题，那就是当数组 A 中存在重复元素时，得到的排列是有重复的，这是因为在第8行的循环中，可能会选取重复的 A[j] 值。 为了去掉重复排列，我们可以在选取第 i 个数 A[j] 之前（即交换 A[i] 和 A[j] 之前），判断值为 A[j] 的元素是否选取过，即要判断在 A[i] 到 A[j-1] 中是否存在与 A[j] 相等的元素，如果出现过，说明 A[i] 选 A[j] 这个排列已经生成过了，可以直接跳过当前的 A[j] 看看是否可以选取 A[j+1] 作为 A[i] 了。比如上面的 e1 = e2，那么无重复的全排列应该是：</p>
@@ -270,7 +259,7 @@ $(document).ready(function(){
 
 <p>添加这个限制的递归实现代码如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -286,22 +275,23 @@ $(document).ready(function(){
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void recursive_permute2(int A[],int i,int n){
-</span><span class='line'>  if(i==n-1){
-</span><span class='line'>      for(int j=0;j&lt;n;j++)
-</span><span class='line'>          cout&lt;&lt;A[j]&lt;&lt;" ";
-</span><span class='line'>      cout&lt;&lt;endl;
-</span><span class='line'>      return;
-</span><span class='line'>  }
-</span><span class='line'>  for(int j=i;j&lt;n;j++){
-</span><span class='line'>      int k;
-</span><span class='line'>      for(k=i;k&lt;j;k++)if(A[k]==A[j])break; // A[j] already used
-</span><span class='line'>      if(k&lt;j)continue;
-</span><span class='line'>      swap(A[i],A[j]);  // choose A[j] as the ith element
-</span><span class='line'>      recursive_permute2(A,i+1,n);
-</span><span class='line'>      swap(A[i],A[j]);  // reset to enter next for
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">recursive_permute2</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">k</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">j</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">==</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="k">break</span><span class="p">;</span> <span class="c1">// A[j] already used</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">j</span><span class="p">)</span><span class="k">continue</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>  <span class="c1">// choose A[j] as the ith element</span>
+</span><span class='line'>      <span class="n">recursive_permute2</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>  <span class="c1">// reset to enter next for</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>至此，递归法实现全排列的求解就总结到这儿了，下面来看看非递归怎么实现。</p>
@@ -325,7 +315,7 @@ $(document).ready(function(){
 
 <p>上面的说明已经很接近伪代码了，具体实现如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -345,31 +335,32 @@ $(document).ready(function(){
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bool next_permute(int A[],int n){
-</span><span class='line'>  int i,j;
-</span><span class='line'>  // step .1
-</span><span class='line'>  if(n&lt;2)return false;
-</span><span class='line'>  for(i=n-2;i&gt;=0;i--){
-</span><span class='line'>      if(A[i]&lt;A[i+1])break;
-</span><span class='line'>  }
-</span><span class='line'>  if(i&lt;0)return false; // A[0] is maximum, no next permute for it
-</span><span class='line'>  // step .2
-</span><span class='line'>  for(j=n-1;j&gt;i;j--){
-</span><span class='line'>      if(A[j]&gt;A[i])break;
-</span><span class='line'>  }
-</span><span class='line'>  // step .3
-</span><span class='line'>  swap(A[i],A[j]);
-</span><span class='line'>  // step .4
-</span><span class='line'>  while(++i &lt; --n){
-</span><span class='line'>      swap(A[i],A[n]);
-</span><span class='line'>  }
-</span><span class='line'>  return true;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">bool</span> <span class="n">next_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// step .1</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span><span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span><span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// A[0] is maximum, no next permute for it</span>
+</span><span class='line'>  <span class="c1">// step .2</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">--</span><span class="p">){</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="k">break</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="c1">// step .3</span>
+</span><span class='line'>  <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+</span><span class='line'>  <span class="c1">// step .4</span>
+</span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="o">++</span><span class="n">i</span> <span class="o">&lt;</span> <span class="o">--</span><span class="n">n</span><span class="p">){</span>
+</span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这里将其返回值定义为 bool 类型，可以方便后面求解全排列时调用：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -377,14 +368,15 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void non_recursive_permute(int A[],int n){
-</span><span class='line'>  sort(A,A+n);
-</span><span class='line'>  int i;
-</span><span class='line'>  do{
-</span><span class='line'>      for(i=0;i&lt;n;i++)cout&lt;&lt;A[i]&lt;&lt;" ";
-</span><span class='line'>      cout&lt;&lt;endl;
-</span><span class='line'>  }while(next_permute(A,n));
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">non_recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">+</span><span class="n">n</span><span class="p">);</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">do</span><span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span><span class="k">while</span><span class="p">(</span><span class="n">next_permute</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">n</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>上面这个函数即实现了按字典序生成全排列的功能，而且对于输入含有重复值的情况，不会生成重复的排列。对于非递归实现，很容易分析其时间复杂度，next_permute 的时间复杂度为 O(n)，而 non_recursive_permute 的时间复杂度为 O(n*n!)。</p>
@@ -393,7 +385,7 @@ $(document).ready(function(){
 
 <p>下面来分析一下 STL 中是如何实现 next permute 的，在 stl_algo.h 中我们可以找到 next_permutation 的实现，基本思路也是按照上面的四步走来实现的，具体见如下代码及注释：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -443,61 +435,62 @@ $(document).ready(function(){
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
 <span class='line-number'>50</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/**
-</span><span class='line'> *  @brief  Permute range into the next @a dictionary ordering.
-</span><span class='line'> *  @ingroup sorting_algorithms
-</span><span class='line'> *  @param  first  Start of range.
-</span><span class='line'> *  @param  last   End of range.
-</span><span class='line'> *  @return  False if wrapped to first permutation, true otherwise.
-</span><span class='line'> *
-</span><span class='line'> *  Treats all permutations of the range as a set of @a dictionary sorted
-</span><span class='line'> *  sequences.  Permutes the current sequence into the next one of this set.
-</span><span class='line'> *  Returns true if there are more sequences to generate.  If the sequence
-</span><span class='line'> *  is the largest of the set, the smallest is generated and false returned.
-</span><span class='line'>*/
-</span><span class='line'>template&lt;typename _BidirectionalIterator&gt;
-</span><span class='line'>bool
-</span><span class='line'>next_permutation(_BidirectionalIterator __first,
-</span><span class='line'>                 _BidirectionalIterator __last)
-</span><span class='line'>{
-</span><span class='line'>    // concept requirements
-</span><span class='line'>    __glibcxx_function_requires(_BidirectionalIteratorConcept&lt;
-</span><span class='line'>                                _BidirectionalIterator&gt;)
-</span><span class='line'>    __glibcxx_function_requires(_LessThanComparableConcept&lt;
-</span><span class='line'>                                typename iterator_traits&lt;_BidirectionalIterator&gt;::value_type&gt;)
-</span><span class='line'>    __glibcxx_requires_valid_range(__first, __last);
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *  @brief  Permute range into the next @a dictionary ordering.</span>
+</span><span class='line'><span class="cm"> *  @ingroup sorting_algorithms</span>
+</span><span class='line'><span class="cm"> *  @param  first  Start of range.</span>
+</span><span class='line'><span class="cm"> *  @param  last   End of range.</span>
+</span><span class='line'><span class="cm"> *  @return  False if wrapped to first permutation, true otherwise.</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> *  Treats all permutations of the range as a set of @a dictionary sorted</span>
+</span><span class='line'><span class="cm"> *  sequences.  Permutes the current sequence into the next one of this set.</span>
+</span><span class='line'><span class="cm"> *  Returns true if there are more sequences to generate.  If the sequence</span>
+</span><span class='line'><span class="cm"> *  is the largest of the set, the smallest is generated and false returned.</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_BidirectionalIterator</span><span class="o">&gt;</span>
+</span><span class='line'><span class="kt">bool</span>
+</span><span class='line'><span class="n">next_permutation</span><span class="p">(</span><span class="n">_BidirectionalIterator</span> <span class="n">__first</span><span class="p">,</span>
+</span><span class='line'>                 <span class="n">_BidirectionalIterator</span> <span class="n">__last</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// concept requirements</span>
+</span><span class='line'>    <span class="n">__glibcxx_function_requires</span><span class="p">(</span><span class="n">_BidirectionalIteratorConcept</span><span class="o">&lt;</span>
+</span><span class='line'>                                <span class="n">_BidirectionalIterator</span><span class="o">&gt;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">__glibcxx_function_requires</span><span class="p">(</span><span class="n">_LessThanComparableConcept</span><span class="o">&lt;</span>
+</span><span class='line'>                                <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_BidirectionalIterator</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="o">&gt;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">__glibcxx_requires_valid_range</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>    if (__first == __last)  // 容器中没有元素，没有 next permute
-</span><span class='line'>        return false;
-</span><span class='line'>    _BidirectionalIterator __i = __first;
-</span><span class='line'>    ++__i;
-</span><span class='line'>    if (__i == __last)  // 容器中只有一个元素，同没有
-</span><span class='line'>        return false;
-</span><span class='line'>    __i = __last;
-</span><span class='line'>    --__i;  // 将 __i 指向最后一个元素
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__last</span><span class="p">)</span>  <span class="c1">// 容器中没有元素，没有 next permute</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">_BidirectionalIterator</span> <span class="n">__i</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">__i</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__i</span> <span class="o">==</span> <span class="n">__last</span><span class="p">)</span>  <span class="c1">// 容器中只有一个元素，同没有</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">__i</span> <span class="o">=</span> <span class="n">__last</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">--</span><span class="n">__i</span><span class="p">;</span>  <span class="c1">// 将 __i 指向最后一个元素</span>
 </span><span class='line'>
-</span><span class='line'>    for(;;) {
-</span><span class='line'>        _BidirectionalIterator __ii = __i;  
-</span><span class='line'>        --__i;
-</span><span class='line'>        if (*__i &lt; *__ii) {  // step .1, 这里的 __i 就相当于上面step 1中的i
-</span><span class='line'>            _BidirectionalIterator __j = __last;
-</span><span class='line'>            while (!(*__i &lt; *--__j)) {  // step .2, 这里的 __j 就相当上面 step 2中的j
-</span><span class='line'>            }
-</span><span class='line'>            std::iter_swap(__i, __j);  // step .3 交换
-</span><span class='line'>            std::reverse(__ii, __last);  // step .4 逆置
-</span><span class='line'>            return true;
-</span><span class='line'>        }
-</span><span class='line'>        if (__i == __first) {  // 直到 __i = __first 还是没有 *__i &lt; *__ii ，说明序列是递减排列的
-</span><span class='line'>            std::reverse(__first, __last); // 本应该没有下一个排列，但这里将字典序中第一个排列作为最后一个排列的 next permute
-</span><span class='line'>            return false; // 这里返回 false 而不是 true
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">_BidirectionalIterator</span> <span class="n">__ii</span> <span class="o">=</span> <span class="n">__i</span><span class="p">;</span>
+</span><span class='line'>        <span class="o">--</span><span class="n">__i</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__i</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">__ii</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// step .1, 这里的 __i 就相当于上面step 1中的i</span>
+</span><span class='line'>            <span class="n">_BidirectionalIterator</span> <span class="n">__j</span> <span class="o">=</span> <span class="n">__last</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">__i</span> <span class="o">&lt;</span> <span class="o">*--</span><span class="n">__j</span><span class="p">))</span> <span class="p">{</span>  <span class="c1">// step .2, 这里的 __j 就相当上面 step 2中的j</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">iter_swap</span><span class="p">(</span><span class="n">__i</span><span class="p">,</span> <span class="n">__j</span><span class="p">);</span>  <span class="c1">// step .3 交换</span>
+</span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">__ii</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>  <span class="c1">// step .4 逆置</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">__i</span> <span class="o">==</span> <span class="n">__first</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 直到 __i = __first 还是没有 *__i &lt; *__ii ，说明序列是递减排列的</span>
+</span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span> <span class="c1">// 本应该没有下一个排列，但这里将字典序中第一个排列作为最后一个排列的 next permute</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// 这里返回 false 而不是 true</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这里是用双向迭代器对容器中的元素进行操作的，一个调用的实例如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -505,14 +498,15 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>vector&lt;vector&lt;int&gt; &gt; permute(vector&lt;int&gt; &num) {
-</span><span class='line'>  vector&lt;vector&lt;int&gt; &gt; ans;
-</span><span class='line'>  sort(num.begin(),num.end());
-</span><span class='line'>  do{
-</span><span class='line'>      ans.push_back(num);
-</span><span class='line'>  }while(next_permutation(num.begin(),num.end()));
-</span><span class='line'>  return ans;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">permute</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sort</span><span class="p">(</span><span class="n">num</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">num</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</span><span class='line'>  <span class="k">do</span><span class="p">{</span>
+</span><span class='line'>      <span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span><span class="k">while</span><span class="p">(</span><span class="n">next_permutation</span><span class="p">(</span><span class="n">num</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">num</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以看到，其实 STL 的 next permute 的实现跟我们的非递归算法是一致的。但这里有两个问题：一是，这里看似有二重循环（在 for 中套 while ），但实际上复杂度是 n+n =》 O(n) 的（可以为什么要写成这种二重循环的形式捏？不解）；二是，我们可以看到在 for 循环中，对 __ii 这个变量进行了多次声明，为什么不将其声明放在 for 外面捏？（虽然待排列的元素数 n 不会很大，但这样多次声明一个迭代器变量，虽不会占用过多内存，但在声明时调用构造函数和析构函数也是有一定的时间开销的吧，虽然相对于求全排列的复杂度 O(n*n!) 几乎可以忽略不计）</p>
@@ -554,7 +548,24 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>

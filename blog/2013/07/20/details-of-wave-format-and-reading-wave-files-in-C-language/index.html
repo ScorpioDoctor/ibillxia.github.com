@@ -117,18 +117,6 @@ $(document).ready(function(){
 </script>
 
   
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-39460228-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
 
 </head>
 
@@ -235,8 +223,7 @@ Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储�
 0x4000:   0x34</br>
 0x4001:   0x12</br>
 用程序在区别的话，可以考虑：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -251,22 +238,22 @@ Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储�
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;stdlib.h>
-</span><span class='line'>int main(int argc, char *argv[])
-</span><span class='line'>{
-</span><span class='line'>       union w
-</span><span class='line'>      {
-</span><span class='line'>       short int a;
-</span><span class='line'>       char b;
-</span><span class='line'>      }c;
-</span><span class='line'>      c.a=1;
-</span><span class='line'>      if( c.b==1 )  printf("little endian\n");
-</span><span class='line'>      else printf("big endian\n");
-</span><span class='line'>      system("PAUSE"); 
-</span><span class='line'>      return 0;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>       <span class="k">union</span> <span class="n">w</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>       <span class="kt">short</span> <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>       <span class="kt">char</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">c</span><span class="p">.</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="o">==</span><span class="mi">1</span> <span class="p">)</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;little endian</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">else</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;big endian</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">system</span><span class="p">(</span><span class="s">&quot;PAUSE&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
@@ -290,8 +277,7 @@ ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由�
 
 
 <p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -301,17 +287,17 @@ ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由�
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// data 为读取到的采样点的值，speech为原始数据流，
-</span><span class='line'>//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
-</span><span class='line'>for(i=0;i&lt;NumSample;i++){
-</span><span class='line'>  if(BitsPerSample==8)
-</span><span class='line'>      data[i] = (int)*((char*)speech+i);
-</span><span class='line'>  else if(BitsPerSample==16)
-</span><span class='line'>      data[i] = (int)*((short*)speech+i);
-</span><span class='line'>  else if(BitsPerSample==32)
-</span><span class='line'>      data[i] = (int)*((int*)speech+i);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// data 为读取到的采样点的值，speech为原始数据流，</span>
+</span><span class='line'><span class="c1">//对应于下面的&quot;WAVE&quot;格式文件的第二个子数据块“data”块的“Data”部分。</span>
+</span><span class='line'><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">NumSample</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">8</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">16</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">short</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">32</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
@@ -330,14 +316,13 @@ Data: 真正的语音数据部分。</br>
 
 
 <p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-</span><span class='line'>22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-</span><span class='line'>24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="mi">52</span> <span class="mi">49</span> <span class="mi">46</span> <span class="mi">46</span> <span class="mi">24</span> <span class="mi">08</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mi">57</span> <span class="mi">41</span> <span class="mi">56</span> <span class="mi">45</span> <span class="mi">66</span> <span class="mi">6</span><span class="n">d</span> <span class="mi">74</span> <span class="mi">20</span> <span class="mi">10</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">01</span> <span class="mo">00</span> <span class="mo">02</span> <span class="mo">00</span>
+</span><span class='line'><span class="mi">22</span> <span class="mi">56</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mi">88</span> <span class="mi">58</span> <span class="mo">01</span> <span class="mo">00</span> <span class="mo">04</span> <span class="mo">00</span> <span class="mi">10</span> <span class="mo">00</span> <span class="mi">64</span> <span class="mi">61</span> <span class="mi">74</span> <span class="mi">61</span> <span class="mo">00</span> <span class="mi">08</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span>
+</span><span class='line'><span class="mi">24</span> <span class="mi">17</span> <span class="mi">1</span><span class="n">e</span> <span class="n">f3</span> <span class="mi">3</span><span class="n">c</span> <span class="mi">13</span> <span class="mi">3</span><span class="n">c</span> <span class="mi">14</span> <span class="mi">16</span> <span class="n">f9</span> <span class="mi">18</span> <span class="n">f9</span> <span class="mi">34</span> <span class="n">e7</span> <span class="mi">23</span> <span class="n">a6</span> <span class="mi">3</span><span class="n">c</span> <span class="n">f2</span> <span class="mi">24</span> <span class="n">f2</span> <span class="mi">11</span> <span class="n">ce</span> <span class="mi">1</span><span class="n">a</span> <span class="mi">0</span><span class="n">d</span>
+</span></code></pre></td></tr></table></div></figure>
 则其个字段的解析如下图：
 <center><img src="/images/2013/IMAG2013072002.gif"></center>
 </p>
@@ -351,9 +336,7 @@ Data: 真正的语音数据部分。</br>
 <p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
 
 
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -432,85 +415,86 @@ Data: 真正的语音数据部分。</br>
 <span class='line-number'>77</span>
 <span class='line-number'>78</span>
 <span class='line-number'>79</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#include &lt;stdlib.h>
-</span><span class='line'>#include &lt;string.h>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
 </span><span class='line'>
-</span><span class='line'>// define Wave format structure
-</span><span class='line'>typedef struct tWAVEFORMATEX
-</span><span class='line'>{
-</span><span class='line'>    short wFormatTag;         /* format type */
-</span><span class='line'>    short nChannels;          /* number of channels (i.e. mono, stereo...) */
-</span><span class='line'>    unsigned int nSamplesPerSec;     /* sample rate */
-</span><span class='line'>    unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-</span><span class='line'>    short nBlockAlign;        /* block size of data */
-</span><span class='line'>    short wBitsPerSample;     /* number of bits per sample of mono data */
-</span><span class='line'>    short cbSize;             /* the count in bytes of the size of */
-</span><span class='line'>                                    /* extra information (after cbSize) */
-</span><span class='line'>} WAVEFORMATEX, *PWAVEFORMATEX;
+</span><span class='line'><span class="c1">// define Wave format structure</span>
+</span><span class='line'><span class="k">typedef</span> <span class="k">struct</span> <span class="n">tWAVEFORMATEX</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="n">wFormatTag</span><span class="p">;</span>         <span class="cm">/* format type */</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="n">nChannels</span><span class="p">;</span>          <span class="cm">/* number of channels (i.e. mono, stereo...) */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">nSamplesPerSec</span><span class="p">;</span>     <span class="cm">/* sample rate */</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">nAvgBytesPerSec</span><span class="p">;</span>    <span class="cm">/* for buffer estimation */</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="n">nBlockAlign</span><span class="p">;</span>        <span class="cm">/* block size of data */</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="n">wBitsPerSample</span><span class="p">;</span>     <span class="cm">/* number of bits per sample of mono data */</span>
+</span><span class='line'>    <span class="kt">short</span> <span class="n">cbSize</span><span class="p">;</span>             <span class="cm">/* the count in bytes of the size of */</span>
+</span><span class='line'>                                    <span class="cm">/* extra information (after cbSize) */</span>
+</span><span class='line'><span class="p">}</span> <span class="n">WAVEFORMATEX</span><span class="p">,</span> <span class="o">*</span><span class="n">PWAVEFORMATEX</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf);
+</span><span class='line'><span class="kt">char</span><span class="o">*</span> <span class="nf">wavread</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">fname</span><span class="p">,</span> <span class="n">WAVEFORMATEX</span> <span class="o">*</span><span class="n">wf</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>int main(){
-</span><span class='line'>  char fname[] = "test.wav";
-</span><span class='line'>  char *speech;
-</span><span class='line'>  WAVEFORMATEX wf;
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="n">fname</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;test.wav&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="o">*</span><span class="n">speech</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">WAVEFORMATEX</span> <span class="n">wf</span><span class="p">;</span>
 </span><span class='line'>  
-</span><span class='line'>  speech = wavread(fname, &wf);
-</span><span class='line'>  // afterward processing...
+</span><span class='line'>  <span class="n">speech</span> <span class="o">=</span> <span class="n">wavread</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wf</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">// afterward processing...</span>
 </span><span class='line'>  
-</span><span class='line'>  return 0;
-</span><span class='line'>}
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'>// read wave file
-</span><span class='line'>char* wavread(char *fname, WAVEFORMATEX *wf){
-</span><span class='line'>  FILE* fp;
-</span><span class='line'>  char str[32];
-</span><span class='line'>  char *speech;
-</span><span class='line'>  unsigned int subchunk1size; // head size
-</span><span class='line'>  unsigned int subchunk2size; // speech data size
+</span><span class='line'><span class="c1">// read wave file</span>
+</span><span class='line'><span class="kt">char</span><span class="o">*</span> <span class="nf">wavread</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">fname</span><span class="p">,</span> <span class="n">WAVEFORMATEX</span> <span class="o">*</span><span class="n">wf</span><span class="p">){</span>
+</span><span class='line'>  <span class="kt">FILE</span><span class="o">*</span> <span class="n">fp</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+</span><span class='line'>  <span class="kt">char</span> <span class="o">*</span><span class="n">speech</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">subchunk1size</span><span class="p">;</span> <span class="c1">// head size</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">subchunk2size</span><span class="p">;</span> <span class="c1">// speech data size</span>
 </span><span class='line'>
-</span><span class='line'>  // check format type
-</span><span class='line'>  fp = fopen(fname,"r");
-</span><span class='line'>  if(!fp){
-</span><span class='line'>      fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 8, SEEK_SET);
-</span><span class='line'>  fread(str, sizeof(char), 7, fp);
-</span><span class='line'>  str[7] = '\0';
-</span><span class='line'>  if(strcmp(str,"WAVEfmt")){
-</span><span class='line'>      fprintf(stderr,"The file is not in WAVE format!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
+</span><span class='line'>  <span class="c1">// check format type</span>
+</span><span class='line'>  <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s">&quot;r&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fp</span><span class="p">){</span>
+</span><span class='line'>      <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s">&quot;Can not open the wave file: %s.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">fname</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">),</span> <span class="mi">7</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">str</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">&quot;WAVEfmt&quot;</span><span class="p">)){</span>
+</span><span class='line'>      <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s">&quot;The file is not in WAVE format!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  
-</span><span class='line'>  // read format header
-</span><span class='line'>  fseek(fp, 16, SEEK_SET);
-</span><span class='line'>  fread((unsigned int*)(&subchunk1size),4,1,fp);
-</span><span class='line'>  fseek(fp, 20, SEEK_SET);
-</span><span class='line'>  fread(wf, subchunk1size, 1, fp);
+</span><span class='line'>  <span class="c1">// read format header</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">((</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">subchunk1size</span><span class="p">),</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">fp</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">subchunk1size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
 </span><span class='line'>  
-</span><span class='line'>  // read wave data
-</span><span class='line'>  fseek(fp, 20+subchunk1size, SEEK_SET);
-</span><span class='line'>  fread(str, 1, 4, fp);
-</span><span class='line'>  str[4] = '\0';
-</span><span class='line'>  if(strcmp(str,"data")){
-</span><span class='line'>      fprintf(stderr,"Locating data start point failed!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 20+subchunk1size+4, SEEK_SET);
-</span><span class='line'>  fread((unsigned int*)(&subchunk2size), 4, 1, fp);
-</span><span class='line'>  speech = (char*)malloc(sizeof(char)*subchunk2size);
-</span><span class='line'>  if(!speech){
-</span><span class='line'>      fprintf(stderr, "Memory alloc failed!\n");
-</span><span class='line'>      return NULL;
-</span><span class='line'>  }
-</span><span class='line'>  fseek(fp, 20+subchunk1size+8, SEEK_SET);
-</span><span class='line'>  fread(speech, 1, subchunk2size, fp);
+</span><span class='line'>  <span class="c1">// read wave data</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">20</span><span class="o">+</span><span class="n">subchunk1size</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">str</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">&quot;data&quot;</span><span class="p">)){</span>
+</span><span class='line'>      <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s">&quot;Locating data start point failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">20</span><span class="o">+</span><span class="n">subchunk1size</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">((</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">subchunk2size</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">speech</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="o">*</span><span class="n">subchunk2size</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">speech</span><span class="p">){</span>
+</span><span class='line'>      <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Memory alloc failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">fseek</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">20</span><span class="o">+</span><span class="n">subchunk1size</span><span class="o">+</span><span class="mi">8</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">fread</span><span class="p">(</span><span class="n">speech</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">subchunk2size</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  fclose(fp);
-</span><span class='line'>  return speech;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  <span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">speech</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -557,12 +541,29 @@ Data: 真正的语音数据部分。</br>
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/assp/'>ASSP</a>, <a class='category' href='/blog/categories/program/'>Program</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c/'>C</a>, <a class='tag' href='/blog/tags/pcm/'>PCM</a>, <a class='tag' href='/blog/tags/wave/'>Wave</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cyu-yan/'>C语言</a>, <a class='tag' href='/blog/tags/pcm/'>PCM</a>, <a class='tag' href='/blog/tags/wave/'>Wave</a></span>
 		
     </p>
     
       
-         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
+         <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_douban"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_renren"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
       
     
 	</br>
