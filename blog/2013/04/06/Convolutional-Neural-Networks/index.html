@@ -330,8 +330,7 @@ $(document).ready(function(){
 <p>卷积层的前馈运算是通过如下算法实现的：</br>
 <center>卷积层的输出= Sigmoid( Sum(卷积) +偏移量) </center>
 其中卷积核和偏移量都是可训练的。下面是其核心代码：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -350,26 +349,26 @@ $(document).ready(function(){
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ConvolutionLayer::fprop(input,output) {
-</span><span class='line'>  //取得卷积核的个数
-</span><span class='line'>  int n=kernel.GetDim(0);
-</span><span class='line'>  for (int i=0;i&lt;n;i++) {
-</span><span class='line'>      //第i个卷积核对应输入层第a个特征映射，输出层的第b个特征映射
-</span><span class='line'>      //这个卷积核可以形象的看作是从输入层第a个特征映射到输出层的第b个特征映射的一个链接
-</span><span class='line'>      int a=table[i][0], b=table[i][1];
-</span><span class='line'>      //用第i个卷积核和输入层第a个特征映射做卷积
-</span><span class='line'>      convolution = Conv(input[a],kernel[i]);
-</span><span class='line'>      //把卷积结果求和
-</span><span class='line'>      sum[b] +=convolution;
-</span><span class='line'>  }
-</span><span class='line'>  for (i=0;i&lt;(int)bias.size();i++) {
-</span><span class='line'>      //加上偏移量
-</span><span class='line'>      sum[i] += bias[i];
-</span><span class='line'>  }
-</span><span class='line'>  //调用Sigmoid函数
-</span><span class='line'>  output = Sigmoid(sum);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">ConvolutionLayer</span><span class="o">::</span><span class="n">fprop</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="n">output</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">//取得卷积核的个数</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="n">kernel</span><span class="p">.</span><span class="n">GetDim</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//第i个卷积核对应输入层第a个特征映射，输出层的第b个特征映射</span>
+</span><span class='line'>      <span class="c1">//这个卷积核可以形象的看作是从输入层第a个特征映射到输出层的第b个特征映射的一个链接</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">a</span><span class="o">=</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>      <span class="c1">//用第i个卷积核和输入层第a个特征映射做卷积</span>
+</span><span class='line'>      <span class="n">convolution</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span><span class="n">input</span><span class="p">[</span><span class="n">a</span><span class="p">],</span><span class="n">kernel</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span><span class='line'>      <span class="c1">//把卷积结果求和</span>
+</span><span class='line'>      <span class="n">sum</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">+=</span><span class="n">convolution</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">bias</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//加上偏移量</span>
+</span><span class='line'>      <span class="n">sum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bias</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="c1">//调用Sigmoid函数</span>
+</span><span class='line'>  <span class="n">output</span> <span class="o">=</span> <span class="n">Sigmoid</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 其中，input是 n1×n2×n3 的矩阵，n1是输入层特征映射的个数，n2是输入层特征映射的宽度，n3是输入层特征映射的高度。output, sum, convolution,
 bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图中是5×5)。kernel是卷积核矩阵。table是连接表，即如果第a输入和第b个输出之间
 有连接，table里就会有[a,b]这一项，而且每个连接都对应一个卷积核。</p>
@@ -378,8 +377,7 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 
 
 <p>卷积层的反馈运算的核心代码如下：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -397,25 +395,25 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ConvolutionLayer::bprop(input,output,in_dx,out_dx) {
-</span><span class='line'>  //梯度通过DSigmoid反传
-</span><span class='line'>  sum_dx = DSigmoid(out_dx);
-</span><span class='line'>  //计算bias的梯度
-</span><span class='line'>  for (i=0;i&lt;bias.size();i++)  {
-</span><span class='line'>      bias_dx[i] = sum_dx[i];
-</span><span class='line'>  }
-</span><span class='line'>  //取得卷积核的个数
-</span><span class='line'>  int n=kernel.GetDim(0);
-</span><span class='line'>  for (int i=0;i&lt;n;i++)
-</span><span class='line'>  {
-</span><span class='line'>      int a=table[i][0],b=table[i][1];
-</span><span class='line'>      //用第i个卷积核和第b个输出层反向卷积（即输出层的一点乘卷积模板返回给输入层），并把结果累加到第a个输入层
-</span><span class='line'>      input_dx[a] += DConv(sum_dx[b],kernel[i]);
-</span><span class='line'>      //用同样的方法计算卷积模板的梯度
-</span><span class='line'>      kernel_dx[i] += DConv(sum_dx[b],input[a]);
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">ConvolutionLayer</span><span class="o">::</span><span class="n">bprop</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="n">output</span><span class="p">,</span><span class="n">in_dx</span><span class="p">,</span><span class="n">out_dx</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">//梯度通过DSigmoid反传</span>
+</span><span class='line'>  <span class="n">sum_dx</span> <span class="o">=</span> <span class="n">DSigmoid</span><span class="p">(</span><span class="n">out_dx</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//计算bias的梯度</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">bias</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>    <span class="p">{</span>
+</span><span class='line'>      <span class="n">bias_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sum_dx</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="c1">//取得卷积核的个数</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="n">kernel</span><span class="p">.</span><span class="n">GetDim</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="kt">int</span> <span class="n">a</span><span class="o">=</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">b</span><span class="o">=</span><span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>      <span class="c1">//用第i个卷积核和第b个输出层反向卷积（即输出层的一点乘卷积模板返回给输入层），并把结果累加到第a个输入层</span>
+</span><span class='line'>      <span class="n">input_dx</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="n">DConv</span><span class="p">(</span><span class="n">sum_dx</span><span class="p">[</span><span class="n">b</span><span class="p">],</span><span class="n">kernel</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</span><span class='line'>      <span class="c1">//用同样的方法计算卷积模板的梯度</span>
+</span><span class='line'>      <span class="n">kernel_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">DConv</span><span class="p">(</span><span class="n">sum_dx</span><span class="p">[</span><span class="n">b</span><span class="p">],</span><span class="n">input</span><span class="p">[</span><span class="n">a</span><span class="p">]);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 其中in_dx,out_dx 的结构和 input,output 相同，代表的是相应点的梯度。
 </p>
 
@@ -437,8 +435,7 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 <p>类似的字采样层的输出的计算式为：</br>
 <center>输出= Sigmoid( 采样*权重 +偏移量)</center>
 其核心代码如下：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -456,33 +453,32 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>SubSamplingLayer::fprop(input,output) {
-</span><span class='line'>  int n1= input.GetDim(0);
-</span><span class='line'>  int n2= input.GetDim(1);
-</span><span class='line'>  int n3= input.GetDim(2);
-</span><span class='line'>  for (int i=0;i&lt;n1;i++) {
-</span><span class='line'>      for (int j=0;j&lt;n2;j++) {
-</span><span class='line'>          for (int k=0;k&lt;n3;k++) {
-</span><span class='line'>              //coeff 是可训练的权重，sw 、sh 是采样窗口的尺寸。
-</span><span class='line'>              sub[i][j/sw][k/sh] += input[i][j][k]*coeff[i];
-</span><span class='line'>          }
-</span><span class='line'>      }
-</span><span class='line'>  }
-</span><span class='line'>  for (i=0;i&lt;n1;i++) {
-</span><span class='line'>      //加上偏移量
-</span><span class='line'>      sum[i] = sub[i] + bias[i];
-</span><span class='line'>  }
-</span><span class='line'>  output = Sigmoid(sum);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">SubSamplingLayer</span><span class="o">::</span><span class="n">fprop</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="n">output</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">n1</span><span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">GetDim</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">n2</span><span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">GetDim</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">n3</span><span class="o">=</span> <span class="n">input</span><span class="p">.</span><span class="n">GetDim</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n2</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n3</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>              <span class="c1">//coeff 是可训练的权重，sw 、sh 是采样窗口的尺寸。</span>
+</span><span class='line'>              <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">/</span><span class="n">sw</span><span class="p">][</span><span class="n">k</span><span class="o">/</span><span class="n">sh</span><span class="p">]</span> <span class="o">+=</span> <span class="n">input</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">coeff</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">//加上偏移量</span>
+</span><span class='line'>      <span class="n">sum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">bias</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">output</span> <span class="o">=</span> <span class="n">Sigmoid</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
 
 
 <p>子采样层的反馈运算的核心代码如下：
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -502,27 +498,27 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>SubSamplingLayer::bprop(input,output,in_dx,out_dx) {
-</span><span class='line'>  //梯度通过DSigmoid反传
-</span><span class='line'>  sum_dx = DSigmoid(out_dx);
-</span><span class='line'>  //计算bias和coeff的梯度
-</span><span class='line'>  for (i=0;i&lt;n1;i++) {
-</span><span class='line'>      coeff_dx[i] = 0;
-</span><span class='line'>      bias_dx[i] = 0;
-</span><span class='line'>      for (j=0;j&lt;n2/sw;j++)
-</span><span class='line'>          for (k=0;k&lt;n3/sh;k++) {
-</span><span class='line'>              coeff_dx[i] += sub[j][k]*sum_dx[i][j][k];
-</span><span class='line'>              bias_dx[i] += sum_dx[i][j][k]);
-</span><span class='line'>          }
-</span><span class='line'>  }
-</span><span class='line'>  for (i=0;i&lt;n1;i++) {
-</span><span class='line'>      for (j=0;j&lt;n2;j++)
-</span><span class='line'>          for (k=0;k&lt;n3;k++) {
-</span><span class='line'>              in_dx[i][j][k] = coeff[i]*sum_dx[i][j/sw][k/sh];
-</span><span class='line'>          }
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">SubSamplingLayer</span><span class="o">::</span><span class="n">bprop</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="n">output</span><span class="p">,</span><span class="n">in_dx</span><span class="p">,</span><span class="n">out_dx</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">//梯度通过DSigmoid反传</span>
+</span><span class='line'>  <span class="n">sum_dx</span> <span class="o">=</span> <span class="n">DSigmoid</span><span class="p">(</span><span class="n">out_dx</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//计算bias和coeff的梯度</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">coeff_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">bias_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n2</span><span class="o">/</span><span class="n">sw</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n3</span><span class="o">/</span><span class="n">sh</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>              <span class="n">coeff_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sub</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">sum_dx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+</span><span class='line'>              <span class="n">bias_dx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sum_dx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n2</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n3</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>              <span class="n">in_dx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">sum_dx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">/</span><span class="n">sw</span><span class="p">][</span><span class="n">k</span><span class="o">/</span><span class="n">sh</span><span class="p">];</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
@@ -584,7 +580,7 @@ bias是n1×(n2-kw+1)×(n3-kh+1)的矩阵，kw,kh是卷积核的宽度高度(图�
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>PRML</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cnn/'>CNN</a>, <a class='tag' href='/blog/tags/lenet/'>LeNet</a>, <a class='tag' href='/blog/tags/neuralnetworks/'>NeuralNetworks</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cnn/'>CNN</a>, <a class='tag' href='/blog/tags/lenet/'>LeNet</a>, <a class='tag' href='/blog/tags/shen-jing-wang-luo/'>神经网络</a></span>
 		
     </p>
     

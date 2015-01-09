@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Technics | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/categories/technics/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -30,7 +30,7 @@
 可以和团队成员在线协作。</p>
 
 
-<center>{% img /images/2014/IMAG2014030101.png %}</center>
+<center><img src="/images/2014/IMAG2014030101.png"></center>
 
 
 <!--more-->
@@ -311,7 +311,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 也是『纽约时报』畅销书『长尾理论』及『免费：商业的未来』的作者。</p>
 
 
-<center>{% img /images/2014/IMAG2014022301.jpg %}</center>
+<center><img src="/images/2014/IMAG2014022301.jpg"></center>
 
 
 <p>『创客：新工业革命』一书以独特的视角分析了传统的制造业在汹涌澎湃的互联网浪潮中发生的翻天覆地的变化。在互联网这个广阔媒介的
@@ -333,7 +333,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 <p>长尾（The Long Tail），或译长尾效应，最初由克里斯·安德森（Chris Anderson）于2004年发表于自家的<a href="http://www.wired.com/wired/archive/12.10/tail.html">杂志</a>，
 用来描述诸如亚马逊公司、Netflix和Real.com/Rhapsody之类的网站之商业和经济模式。是指那些不受到重视的、销量小但种类多的产品或服务
 由于总量巨大，累积起来的总收益超过主流产品的现象。下图中纵轴为“人气”，横轴为“产品”，黄色部分即为长尾。
-<center>{% img /images/2014/IMAG2014022302.png %}</center>
+<center><img src="/images/2014/IMAG2014022302.png"></center>
 在互联网领域，长尾效应尤为显著。比如亚马逊上的书籍的销售情况，<a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=400940">Erik</a>等
 用指数曲线研究了亚马逊网站的书本销售量和销售排名的关系，并发现亚马逊40%的书本销售来自于**本地书店里不卖**的书本。在亚马逊这个案例上，
 可应用“长尾”概念解释：它一半左右的销售来自于比较热门的商品，而另一半却来自相对不那么热门的商品。这跟传统
@@ -442,7 +442,7 @@ DIY首饰、工艺品，DIY家具、房屋，DIY台历、杯子、布偶、玩�
 <p>EFI是一种个人电脑系统规格，用来定义操作系统与系统固件之间的软件界面，为替代BIOS的升级方案。可扩展固件接口（EFI）负责
 加电自检（POST）、连系操作系统以及提供连接操作系统与硬件的接口。UEFI在EFI基础上增加与改进了加密编码（cryptography）、
 网络认证（network authentication）与用户界面架构（User Interface Architecture）等方面的内容。EFI在软件层次中的位置如下图</br>
-{% img /images/2012/IMAG2012092301.png %}
+<img src="/images/2012/IMAG2012092301.png">
 </p>
 
 
@@ -537,11 +537,12 @@ EFI系统不提供复杂的缓存器保护功能，它只具备简单的缓存�
 <p>我们同时假设主机A和B之间的通信遵守TCP／IP的三次握手机制。握手方法是：</p>
 
 
-<p>{% codeblock %}
-A->：SYN（序列号=M）
-B->A：SYN（序列号＝N），ACK（应答序号=M+1）
-A->B：ACK（应答序号＝N+1）
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A->：SYN（序列号=M）
+</span><span class='line'>B->A：SYN（序列号＝N），ACK（应答序号=M+1）
+</span><span class='line'>A->B：ACK（应答序号＝N+1）</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <!--more-->
 
@@ -556,11 +557,12 @@ A->B：ACK（应答序号＝N+1）
 主机X只有算出B的序列号，才能创建TCP连接。其过程描述如下：</p>
 
 
-<p>{% codeblock %}
-X->B：SYN（序列号=M），SRC=A
-B->A：SYN（序列号=N），ACK（应答号=M+1）
-X->B：ACK（应答号＝N+1），SRC＝A
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>X->B：SYN（序列号=M），SRC=A
+</span><span class='line'>B->A：SYN（序列号=N），ACK（应答号=M+1）
+</span><span class='line'>X->B：ACK（应答号＝N+1），SRC＝A</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>同时，主机X应该阻止主机A响应主机B的包。为此，X可以等到主机A因某种原因终止运行，或者阻塞主机A的操作系统协议部分，使它不能响应主机B。
 一旦主机X完成了以上操作，它就可以向主机B发送命令。主机B将执行这些命令，认为他们是由合法主机A发来的。</p>

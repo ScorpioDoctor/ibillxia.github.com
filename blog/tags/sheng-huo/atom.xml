@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 生活 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/sheng-huo/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -18,7 +18,7 @@
     <link href="http://ibillxia.github.io/blog/2015/01/01/congcong-2014/"/>
     <updated>2015-01-01T13:30:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2015/01/01/congcong-2014</id>
-    <content type="html"><![CDATA[<center>{% img /images/2015/IMAG2015010101.jpg %}</center>
+    <content type="html"><![CDATA[<center><img src="/images/2015/IMAG2015010101.jpg"></center>
 
 
 <p>匆匆又一年。</p>

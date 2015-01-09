@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Jekyll | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/jekyll/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -92,7 +92,7 @@ tag_dir: blog/tags
 <p>注意，这里由于新加了 css 文件，要让其生效，需要在 html 模板中加入引用，具体我是在 $BLOG_HOME/source/_includes/head.html 文件中加入如下代码：</p>
 
 <p><code>html
-&lt;link href="{{ root_url }}/stylesheets/style.css" media="screen, projection" rel="stylesheet" type="text/css"&gt;
+&lt;link href="/stylesheets/style.css" media="screen, projection" rel="stylesheet" type="text/css"&gt;
 </code></p>
 
 <p>你也可以直接在 html 模板中加入 css 代码而不用新建 css 文件并添加引用。</p>

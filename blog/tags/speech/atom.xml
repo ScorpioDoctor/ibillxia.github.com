@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Speech | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/speech/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -41,7 +41,7 @@
 以便于进行频谱分析或声道参数分析。预加重可以用具有6dB/倍频程的提升高频特性的预加重数字滤波器实现。预处理的另一
 方面工作是分帧和加窗：分帧的帧长一般在10ms~30ms，分帧既可以是连续的，也可以是有部分over-lap；短时分析的实质是
 对信号加窗，一般采用Hamming窗，其他的还有矩形窗、汉宁窗等，如下图所示。
-<center>{% img /images/2013/IMAG2013050801.png %}</center>
+<center><img src="/images/2013/IMAG2013050801.png"></center>
 </p>
 
 
@@ -190,7 +190,7 @@ Zero Ratio）。短时平均过零率（Zn）可以作为“频率”来理解�
 输出的对数能量(log energy)，k = 1,2,… N。 再将此N个参数进行余弦变换(cosine transform)求出L阶的Mel-scale cepstrum参数。</p>
 
 <h2>4.Matlab程序实现</h2>
-{% codeblock %}
+``` matlab
 function r = mfcc(s, fs)
 % MFCC参数提取
 % Reference: 论文《MFCC和LPCC特征参数在说话人识别中的研究》
@@ -260,7 +260,7 @@ r = [fp(b2:b4) 1+fp(1:b3)];
 c = [b2:b4 1:b3] + 1;
 v = 2 * [1-pm(b2:b4) pm(1:b3)];
 m = sparse(r, c, v, p, 1+fn2);
-{% endcodeblock %}
+```
 
 <h2>参考文献</h2>
 <p>[1] <a href="http://www.semxi.com/TechnologyDetail.aspx?nID=27">http://www.semxi.com/TechnologyDetail.aspx?nID=27</a> </br>

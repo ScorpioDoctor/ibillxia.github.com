@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: ACF | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/acf/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -55,7 +55,7 @@
 
 <p>在切音框的过程中，我们允许左右音框的重叠，因此，我们定义「音框率」（Frame Rate）是每秒钟所出现的音框个数，如果取样频率是11025，音框长度是256 点，
 重叠点数是84，那么音框率就是11025/(256-84) = 64，换句话说，我们的电脑要能够每秒钟处理64 个音框，才能达到实时处理的要求。如下图所示：
-<center>{% img /images/2013/IMAG2013052901.png %}</center>
+<center><img src="/images/2013/IMAG2013052901.png"></center>
 </p>
 
 
@@ -98,7 +98,7 @@
 帧与它的下一帧的相似性，其定义如下：
 <center>$acf(\tau) = \sum_{i=0}^{n-1-\tau}s(i)s(i+\tau)$</center>
 其中$\tau$是一个延迟的时间间隔。在某个区间使得$acf(\tau)$取得最大值的那个$\tau$值就选为pitch的起止点，如下图所示：
-<center>{% img /images/2013/IMAG2013052902.png %}</center>
+<center><img src="/images/2013/IMAG2013052902.png"></center>
 也就是说，我们将原始语音信号与其平移延迟信号的重叠（时间上重叠）部分进行内积运算，从而得到ACF。下面看一个具体的实例，其代码如下：
 ``` py3
 import wave
@@ -156,7 +156,7 @@ pl.ylabel("ACF")
 pl.show()
 ```
 程序运行结果如下图所示：
-<center>{% img /images/2013/IMAG2013052903.png %}</center>
+<center><img src="/images/2013/IMAG2013052903.png"></center>
 </p>
 
 

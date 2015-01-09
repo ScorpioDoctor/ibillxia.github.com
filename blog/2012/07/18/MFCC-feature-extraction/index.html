@@ -258,8 +258,7 @@ $(document).ready(function(){
 输出的对数能量(log energy)，k = 1,2,… N。 再将此N个参数进行余弦变换(cosine transform)求出L阶的Mel-scale cepstrum参数。</p>
 
 <h2>4.Matlab程序实现</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -328,76 +327,76 @@ $(document).ready(function(){
 <span class='line-number'>67</span>
 <span class='line-number'>68</span>
 <span class='line-number'>69</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function r = mfcc(s, fs)
-</span><span class='line'>% MFCC参数提取
-</span><span class='line'>% Reference: 论文《MFCC和LPCC特征参数在说话人识别中的研究》
-</span><span class='line'>%
-</span><span class='line'>% Inputs: s  contains the signal to analize
-</span><span class='line'>%         fs is the sampling rate of the signal
-</span><span class='line'>%
-</span><span class='line'>% Output: r contains the transformed signal
-</span><span class='line'>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-</span><span class='line'>n = 256;  % 帧长
-</span><span class='line'>m = 100;  % 帧移
-</span><span class='line'>l = length(s);  % 信号总长度
-</span><span class='line'>nbFrame = floor((l - n) / m) + 1;  % 信号总帧数
-</span><span class='line'>for i = 1:n
-</span><span class='line'>  for j = 1:nbFrame
-</span><span class='line'>      M(i, j) = s(((j - 1) * m) + i);  % 分帧
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>h = hamming(n);  % Hamming窗w = 0.54 - 0.46*cos(2*pi*x);
-</span><span class='line'>M2 = diag(h) * M;  % 对M加窗，形成对角矩阵M2
-</span><span class='line'>for i = 1:nbFrame
-</span><span class='line'>frame(:,i) = fft(M2(:, i));   % 进行快速傅里叶变换，将其转换到频域上
-</span><span class='line'>end
-</span><span class='line'>t = n / 2;
-</span><span class='line'>% tmax = l / fs;
-</span><span class='line'>m = melfb(20, n, fs);  % 调用20阶MEL滤波器组进行滤波
-</span><span class='line'>n2 = 1 + floor(t);
-</span><span class='line'>z = m * abs(frame(1:n2, :  )).^2;  % 取前n2行帧列向量的平方
-</span><span class='line'>r = dct(log(z));  % 取对数后进行反余弦变换
-</span><span class='line'>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-</span><span class='line'>function m = melfb(p, n, fs)
-</span><span class='line'>% MELFB  Determine matrix for a mel-spaced filterbank
-</span><span class='line'>%
-</span><span class='line'>% Inputs:       p   number of filters in filterbank
-</span><span class='line'>%               n   length of fft
-</span><span class='line'>%               fs  sample rate in Hz
-</span><span class='line'>%
-</span><span class='line'>% Outputs:      x   a (sparse) matrix containing the filterbank amplitudes
-</span><span class='line'>%                   size(x) = [p, 1+floor(n/2)]
-</span><span class='line'>%
-</span><span class='line'>% Usage:        For example, to compute the mel-scale spectrum of a
-</span><span class='line'>%               colum-vector signal s, with length n and sample rate fs:
-</span><span class='line'>%               f = fft(s);
-</span><span class='line'>%               m = melfb(p, n, fs);
-</span><span class='line'>%               n2 = 1 + floor(n/2);
-</span><span class='line'>%               z = m * abs(f(1:n2)).^2;
-</span><span class='line'>%
-</span><span class='line'>%               z would contain p samples of the desired mel-scale spectrum
-</span><span class='line'>%
-</span><span class='line'>%               To plot filterbanks e.g.:
-</span><span class='line'>%               plot(linspace(0, (12500/2), 129), melfb(20, 256, 12500)'),
-</span><span class='line'>%               title('Mel-spaced filterbank'), xlabel('Frequency (Hz)');
-</span><span class='line'>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-</span><span class='line'>f0 = 700 / fs;
-</span><span class='line'>fn2 = floor(n/2);
-</span><span class='line'>lr = log(1 + 0.5/f0) / (p+1);
-</span><span class='line'>% convert to fft bin numbers with 0 for DC term
-</span><span class='line'>bl = n * (f0 * (exp([0 1 p p+1] * lr) - 1));
-</span><span class='line'>b1 = floor(bl(1)) + 1;
-</span><span class='line'>b2 = ceil(bl(2));
-</span><span class='line'>b3 = floor(bl(3));
-</span><span class='line'>b4 = min(fn2, ceil(bl(4))) - 1;
-</span><span class='line'>pf = log(1 + (b1:b4)/n/f0) / lr;
-</span><span class='line'>fp = floor(pf);
-</span><span class='line'>pm = pf - fp;
-</span><span class='line'>r = [fp(b2:b4) 1+fp(1:b3)];
-</span><span class='line'>c = [b2:b4 1:b3] + 1;
-</span><span class='line'>v = 2 * [1-pm(b2:b4) pm(1:b3)];
-</span><span class='line'>m = sparse(r, c, v, p, 1+fn2);</span></code></pre></td></tr></table></div></figure>
-
+</pre></td><td class='code'><pre><code class='matlab'><span class='line'><span class="k">function</span><span class="w"> </span>r <span class="p">=</span><span class="w"> </span><span class="nf">mfcc</span><span class="p">(</span>s, fs<span class="p">)</span><span class="w"></span>
+</span><span class='line'><span class="c">% MFCC参数提取</span>
+</span><span class='line'><span class="c">% Reference: 论文《MFCC和LPCC特征参数在说话人识别中的研究》</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">% Inputs: s  contains the signal to analize</span>
+</span><span class='line'><span class="c">%         fs is the sampling rate of the signal</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">% Output: r contains the transformed signal</span>
+</span><span class='line'><span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</span><span class='line'><span class="n">n</span> <span class="p">=</span> <span class="mi">256</span><span class="p">;</span>  <span class="c">% 帧长</span>
+</span><span class='line'><span class="n">m</span> <span class="p">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="c">% 帧移</span>
+</span><span class='line'><span class="n">l</span> <span class="p">=</span> <span class="nb">length</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>  <span class="c">% 信号总长度</span>
+</span><span class='line'><span class="n">nbFrame</span> <span class="p">=</span> <span class="nb">floor</span><span class="p">((</span><span class="n">l</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>  <span class="c">% 信号总帧数</span>
+</span><span class='line'><span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span>
+</span><span class='line'>  <span class="k">for</span> <span class="nb">j</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nbFrame</span>
+</span><span class='line'>      <span class="n">M</span><span class="p">(</span><span class="nb">i</span><span class="p">,</span> <span class="nb">j</span><span class="p">)</span> <span class="p">=</span> <span class="n">s</span><span class="p">(((</span><span class="nb">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span> <span class="o">+</span> <span class="nb">i</span><span class="p">);</span>  <span class="c">% 分帧</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">h</span> <span class="p">=</span> <span class="n">hamming</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>  <span class="c">% Hamming窗w = 0.54 - 0.46*cos(2*pi*x);</span>
+</span><span class='line'><span class="n">M2</span> <span class="p">=</span> <span class="nb">diag</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">M</span><span class="p">;</span>  <span class="c">% 对M加窗，形成对角矩阵M2</span>
+</span><span class='line'><span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nbFrame</span>
+</span><span class='line'><span class="n">frame</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">M2</span><span class="p">(:,</span> <span class="nb">i</span><span class="p">));</span>   <span class="c">% 进行快速傅里叶变换，将其转换到频域上</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'><span class="n">t</span> <span class="p">=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="c">% tmax = l / fs;</span>
+</span><span class='line'><span class="n">m</span> <span class="p">=</span> <span class="n">melfb</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">fs</span><span class="p">);</span>  <span class="c">% 调用20阶MEL滤波器组进行滤波</span>
+</span><span class='line'><span class="n">n2</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">floor</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+</span><span class='line'><span class="n">z</span> <span class="p">=</span> <span class="n">m</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="p">:</span>  <span class="p">))</span><span class="o">.^</span><span class="mi">2</span><span class="p">;</span>  <span class="c">% 取前n2行帧列向量的平方</span>
+</span><span class='line'><span class="n">r</span> <span class="p">=</span> <span class="n">dct</span><span class="p">(</span><span class="nb">log</span><span class="p">(</span><span class="n">z</span><span class="p">));</span>  <span class="c">% 取对数后进行反余弦变换</span>
+</span><span class='line'><span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</span><span class='line'><span class="k">function</span><span class="w"> </span>m <span class="p">=</span><span class="w"> </span><span class="nf">melfb</span><span class="p">(</span>p, n, fs<span class="p">)</span><span class="w"></span>
+</span><span class='line'><span class="c">% MELFB  Determine matrix for a mel-spaced filterbank</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">% Inputs:       p   number of filters in filterbank</span>
+</span><span class='line'><span class="c">%               n   length of fft</span>
+</span><span class='line'><span class="c">%               fs  sample rate in Hz</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">% Outputs:      x   a (sparse) matrix containing the filterbank amplitudes</span>
+</span><span class='line'><span class="c">%                   size(x) = [p, 1+floor(n/2)]</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">% Usage:        For example, to compute the mel-scale spectrum of a</span>
+</span><span class='line'><span class="c">%               colum-vector signal s, with length n and sample rate fs:</span>
+</span><span class='line'><span class="c">%               f = fft(s);</span>
+</span><span class='line'><span class="c">%               m = melfb(p, n, fs);</span>
+</span><span class='line'><span class="c">%               n2 = 1 + floor(n/2);</span>
+</span><span class='line'><span class="c">%               z = m * abs(f(1:n2)).^2;</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">%               z would contain p samples of the desired mel-scale spectrum</span>
+</span><span class='line'><span class="c">%</span>
+</span><span class='line'><span class="c">%               To plot filterbanks e.g.:</span>
+</span><span class='line'><span class="c">%               plot(linspace(0, (12500/2), 129), melfb(20, 256, 12500)&#39;),</span>
+</span><span class='line'><span class="c">%               title(&#39;Mel-spaced filterbank&#39;), xlabel(&#39;Frequency (Hz)&#39;);</span>
+</span><span class='line'><span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+</span><span class='line'><span class="n">f0</span> <span class="p">=</span> <span class="mi">700</span> <span class="o">/</span> <span class="n">fs</span><span class="p">;</span>
+</span><span class='line'><span class="n">fn2</span> <span class="p">=</span> <span class="nb">floor</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="n">lr</span> <span class="p">=</span> <span class="nb">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">/</span><span class="n">f0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="c">% convert to fft bin numbers with 0 for DC term</span>
+</span><span class='line'><span class="n">bl</span> <span class="p">=</span> <span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">f0</span> <span class="o">*</span> <span class="p">(</span><span class="nb">exp</span><span class="p">([</span><span class="mi">0</span> <span class="mi">1</span> <span class="n">p</span> <span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">lr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+</span><span class='line'><span class="n">b1</span> <span class="p">=</span> <span class="nb">floor</span><span class="p">(</span><span class="n">bl</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">b2</span> <span class="p">=</span> <span class="nb">ceil</span><span class="p">(</span><span class="n">bl</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+</span><span class='line'><span class="n">b3</span> <span class="p">=</span> <span class="nb">floor</span><span class="p">(</span><span class="n">bl</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+</span><span class='line'><span class="n">b4</span> <span class="p">=</span> <span class="n">min</span><span class="p">(</span><span class="n">fn2</span><span class="p">,</span> <span class="nb">ceil</span><span class="p">(</span><span class="n">bl</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">pf</span> <span class="p">=</span> <span class="nb">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">b1</span><span class="p">:</span><span class="n">b4</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="o">/</span><span class="n">f0</span><span class="p">)</span> <span class="o">/</span> <span class="n">lr</span><span class="p">;</span>
+</span><span class='line'><span class="n">fp</span> <span class="p">=</span> <span class="nb">floor</span><span class="p">(</span><span class="n">pf</span><span class="p">);</span>
+</span><span class='line'><span class="n">pm</span> <span class="p">=</span> <span class="n">pf</span> <span class="o">-</span> <span class="n">fp</span><span class="p">;</span>
+</span><span class='line'><span class="n">r</span> <span class="p">=</span> <span class="p">[</span><span class="n">fp</span><span class="p">(</span><span class="n">b2</span><span class="p">:</span><span class="n">b4</span><span class="p">)</span> <span class="mi">1</span><span class="o">+</span><span class="n">fp</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">b3</span><span class="p">)];</span>
+</span><span class='line'><span class="n">c</span> <span class="p">=</span> <span class="p">[</span><span class="n">b2</span><span class="p">:</span><span class="n">b4</span> <span class="mi">1</span><span class="p">:</span><span class="n">b3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">v</span> <span class="p">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="n">pm</span><span class="p">(</span><span class="n">b2</span><span class="p">:</span><span class="n">b4</span><span class="p">)</span> <span class="n">pm</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">b3</span><span class="p">)];</span>
+</span><span class='line'><span class="n">m</span> <span class="p">=</span> <span class="n">sparse</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">fn2</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 <h2>参考文献</h2>
 <p>[1] <a href="http://www.semxi.com/TechnologyDetail.aspx?nID=27">http://www.semxi.com/TechnologyDetail.aspx?nID=27</a> </br>

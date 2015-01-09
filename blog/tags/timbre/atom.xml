@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Timbre | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/timbre/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -89,7 +89,7 @@ plt.show()
 
 
 <p>程序运行的效果如下图：
-<center>{% img /images/2013/IMAG2013051801.png %}</center>
+<center><img src="/images/2013/IMAG2013051801.png"></center>
 虽然程序简单，但还有一些小bug，比如subplot(212)的xlabel和ylabel无法显示，这个问题暂时还没有解决。（更新：这个问题已解决，把mpp.show()放到
 最后一行就可以了，顺便图也更新了）</p>
 

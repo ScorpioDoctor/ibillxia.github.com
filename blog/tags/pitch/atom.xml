@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Pitch | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/pitch/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-08T22:20:57+08:00</updated>
+  <updated>2015-01-09T23:56:17+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -55,7 +55,7 @@
 
 <p>在切音框的过程中，我们允许左右音框的重叠，因此，我们定义「音框率」（Frame Rate）是每秒钟所出现的音框个数，如果取样频率是11025，音框长度是256 点，
 重叠点数是84，那么音框率就是11025/(256-84) = 64，换句话说，我们的电脑要能够每秒钟处理64 个音框，才能达到实时处理的要求。如下图所示：
-<center>{% img /images/2013/IMAG2013052901.png %}</center>
+<center><img src="/images/2013/IMAG2013052901.png"></center>
 </p>
 
 
@@ -98,7 +98,7 @@
 帧与它的下一帧的相似性，其定义如下：
 <center>$acf(\tau) = \sum_{i=0}^{n-1-\tau}s(i)s(i+\tau)$</center>
 其中$\tau$是一个延迟的时间间隔。在某个区间使得$acf(\tau)$取得最大值的那个$\tau$值就选为pitch的起止点，如下图所示：
-<center>{% img /images/2013/IMAG2013052902.png %}</center>
+<center><img src="/images/2013/IMAG2013052902.png"></center>
 也就是说，我们将原始语音信号与其平移延迟信号的重叠（时间上重叠）部分进行内积运算，从而得到ACF。下面看一个具体的实例，其代码如下：
 ``` py3
 import wave
@@ -156,7 +156,7 @@ pl.ylabel("ACF")
 pl.show()
 ```
 程序运行结果如下图所示：
-<center>{% img /images/2013/IMAG2013052903.png %}</center>
+<center><img src="/images/2013/IMAG2013052903.png"></center>
 </p>
 
 
@@ -214,7 +214,7 @@ $40 < \frac{fs}{pp} < 1000$，从而得到pp的范围：$\frac{fs}{1000} < pp < 
 <p>概念：音高（Pitch）是语音信号的一个很重要的特征，直觉上而言它表示声音频率的高低，这个频率是指基本频率（基频），也即基本周期的倒数。
 若直接观察语音的波形，只要语音信号稳定，我们可以很容易的看出基本周期的存在。例如我们取一个包含256个采样点的帧，单独绘制波形图，就可以明显的
 看到它的基本周期。如下图所示：
-<center>{% img /images/2013/IMAG2013051601.png %}</center>
+<center><img src="/images/2013/IMAG2013051601.png"></center>
 其中最上面的波形为|a|的发音，中间的为上图中红色双竖线（位于语音区）所对应的帧的具体波形，而最下面的是上图中绿色双竖线（位于静音区）所
 对应的帧的具体波形。很容易看到中间的波形具有明显的周期性。
 </p>
