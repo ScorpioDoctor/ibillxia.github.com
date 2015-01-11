@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C语言 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/cyu-yan/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-09T23:56:17+08:00</updated>
+  <updated>2015-01-11T10:09:32+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -243,6 +243,886 @@ return speech;
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[C语言中的异常处理机制]]></title>
+    <link href="http://ibillxia.github.io/blog/2011/05/03/Exception-handling-mechanism-in-c/"/>
+    <updated>2011-05-03T11:09:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2011/05/03/Exception-handling-mechanism-in-c</id>
+    <content type="html"><![CDATA[<h2>1.概述</h2>
+
+
+<p>什么是异常？异常一般指的是程序运行期（Run-Time）发生的非正常情况。异常一般是不可预测的，如：内存不足、打开文件失败、
+范围溢出等。UNIX 使用信号给出异常，并当发生异常时转跳到信号处理过程进行异常处理。DOS下的信号对比UNIX系统而言相对较少。</p>
+
+
+
+
+<p>我们知道，不管是在c++还是在java中，异常都被认为是一种很优雅的处理错误的机制。而如果想在c语言中使用异常就比较麻烦，
+但是我们仍然可以使用c语言中强大的setjmp和longjmp函数实现类似于c++的异常处理机制。</p>
+
+
+
+
+<p>异常处理的核心思想是，把功能模块代码与系统中可能出现错误的处理代码分离开来，以此来达到使我们的代码组织起来更美观、
+逻辑上更清晰，并且同时从根本上来提高我们软件系统长时间稳定运行的可靠性。那么，现在回过头来看，实际上在计算机系统的硬件
+设计中，操作系统的总体设计中，早期的许多面向结构化程序设计语言中(例如C语言)，都有异常处理的机制和方法的广泛运用。</p>
+
+
+
+
+<h2>2.基于goto语句的异常处理</h2>
+
+
+<p>goto语句，程序员朋友们对它太熟悉了，它是C语言中使用最为灵活的一条语句，由它也充分体现出了C语言的许多特点或者说是优点。
+它虽然是一条高级语言中提供的语句，但是它一般却直接对应一条“无条件直接跳转的机器指令”，所以说它非常地特别，它引起过许多
+争议，但是这条语句仍然一直被保留了下来，即便是今天的C++语言中，也有对它的支持(虽然不建议使用它)。</p>
+
+
+
+
+<!-- more -->
+
+
+<p>goto语句有非常多的用途或优点，例如，它特别适合于在编写系统程序中被使用，它能使编写出来的代码非常简练。另外，goto语句
+另外一个最重要的作用就是，它实际上是一种对异常处理编程，最初也最原始的支持手段或方法。它能把错误处理模块的代码有效与其
+它代码分离开来。例程如下</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func1</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func2</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">while</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">//do other job&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">has</span> <span class="n">error</span><span class="p">)</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="c1">//do other job&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// 错误处理模块&lt;br/&gt;</span>
+</span><span class='line'><span class="nl">Error:</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="n">process_error</span><span class="p">();</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">　　</span><span class="n">exit</span><span class="p">();</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>虽然goto 语句能有效地支持异常处理编程的实现。但是没有人却建议使用它，即便是在C语言中。因为：</br>
+(1) goto语句能破坏程序的结构化设计，使代码难于测试，且包含大量goto的代码模块不易理解和阅读。它一直遭结构化程序设计思想所抛弃，强烈建议程序员不易使用它;</br>
+(2) 与C++语言中提供的异常处理编程模型相比，它的确是太弱了一些。例如，它一般只能是在某个函数的局部作用域内跳转，也即它不能有效和方便地实现程序控制流的跨函数远程的跳转。</br>
+(3) 如果在C++语言中，用goto语句来实现异常处理，那么它将给面向对象构成极大破坏，并影响到效率。这一点，以后会继续深入阐述。</p>
+
+
+
+
+<p>虽然goto语句缺点多多，但不管如何，goto语句的确为程序员朋友们，在C语言中，有效运用异常处理思想来进行编程处理，提供了一种途径或简易的手段。
+当然，运用goto语句来进行异常处理编程已经成为历史。因为，在C语言中，早就已经提供了一种更加优雅的异常处理机制。</p>
+
+
+
+
+<h2>3.更优雅的异常处理机制：setjmp()函数与longjmp()函数</h2>
+
+
+<p>C标准库提供两个特殊的函数：setjmp() 及 longjmp()，这两个函数是结构化异常的基础，正是利用这两个函数的特性来实现异常。</p>
+
+
+<p>所以，异常的处理过程可以描述为这样：</br>
+·首先设置一个跳转点（setjmp() 函数可以实现这一功能），然后在其后的代码中任意地方调用 longjmp() 跳转回这个跳转点上，
+以此来实现当发生异常时，转到处理异常的程序上，在其后的介绍中将介绍如何实现。</br>
+·setjmp() 为跳转返回保存现场并为异常提供处理程序，longjmp() 则进行跳转（抛出异常），setjmp() 与 longjmp() 可以在函数
+间进行跳转，这就像一个全局的 goto 语句，可以跨函数跳转。</p>
+
+
+
+
+<p>举个例子，程序在 main() 函数内使用 setjmp() 设置跳转，并调用另一函数A，函数A内调用B，B抛出异常（调用longjmp() 函数），
+则程序直接跳回到 main() 函数内使用 setjmp() 的地方返回，并且返回一个值。</p>
+
+
+
+
+<h4>jmp_buf 异常结构</h4>
+
+
+<p>使用 setjmp() 及 longjmp() 函数前，需要先认识一下 jmp_buf 异常结构。jmp_buf 将使用在 setjmp() 函数中，用于保存当前程序现场（保存
+当前需要用到的寄存器的值），jmp_buf 结构在 setjmp.h 文件内声明：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">unsigned</span> <span class="n">j_sp</span><span class="p">;</span>  <span class="c1">// 堆栈指针寄存器</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ss</span><span class="p">;</span>  <span class="c1">// 堆栈段</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_flag</span><span class="p">;</span>  <span class="c1">// 标志寄存器</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_cs</span><span class="p">;</span>  <span class="c1">// 代码段</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ip</span><span class="p">;</span>  <span class="c1">// 指令指针寄存器</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_bp</span><span class="p">;</span> <span class="c1">// 基址指针</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_di</span><span class="p">;</span>  <span class="c1">// 目的指针</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_es</span><span class="p">;</span> <span class="c1">// 附加段</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_si</span><span class="p">;</span>  <span class="c1">// 源变址</span>
+</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ds</span><span class="p">;</span> <span class="c1">// 数据段</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="kt">jmp_buf</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>jmp_buf 结构存放了程序当前寄存器的值，以确保使用 longjmp() 后可以跳回到该执行点上继续执行。</p>
+
+
+
+
+<h4>setjmp() 与 longjmp() 函数详细说明</h4>
+
+
+<p>setjmp() 与 longjmp() 函数原型如下：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Cdecl</span> <span class="n">longjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">,</span> <span class="kt">int</span> <span class="n">retval</span><span class="p">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Cdecl</span> <span class="n">setjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>_Cdecl 声明函数的参数使用标准C的进栈方式（由右向左）压栈，_Cdecl 是C语言的一种调用约定，除此以外，PASCAL 也是
+调用约定之一。C标准调用约定（_Cdecl）所声明的函数不自动清除堆栈，这一事务由调用者自行负责——这也是C可以支持不固定
+个数的参数的原因。此外，这一调用约定将在函数名前添加一个下划线字符，如某一函数声明为：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">cdecl</span> <span class="nf">DoSomething</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>编译时将自动为 DoSomething 加上下划线前缀，即函数名变为：_DoSomething。</p>
+
+
+
+
+<p>setjmp() 与 longjmp() 函数都使用了 jmp_buf 结构作为形参，它们的调用关系是这样的：</br>
+首先调用 setjmp() 函数来初始化 jmp_buf 结构变量 jmpb，将当前CPU中的大部分影响到程序执行的寄存器的值存入 jmpb，
+为 longjmp() 函数提供跳转，setjmp() 函数是一个有趣的函数，它能返回两次，它应该是所有库函数中唯一一个能返回两次
+的函数，第一次是初始化时，返回零，第二次遇到 longjmp() 函数调用后，longjmp() 函数使 setjmp() 函数发生第二次返回，
+返回值由 longjmp() 的第二个参数给出（整型，这时不应该再返回零）。</p>
+
+
+
+
+<p>在使用 setjmp() 初始化 jmpb 后，可以其后的程序中任意地方使用 longjmp() 函数跳转会 setjmp() 函数的位置，longjmp() 
+的第一个参数便是 setjmp() 初始化的 jmpb，若想跳转回刚才设置的 setjmp() 处，则 longjmp() 函数的第一个参数是 setjmp() 
+所初始化的 jmpb 这个异常，这也说明一件事，即 jmpb 这个异常，一般需要定义为全局变量，否则，若是局部变量，当跨函数调用
+时就几乎无法使用（除非每次遇到函数调用都将 jmpb 以参数传递，然而明显地，是不值得这样做的）；longjmp() 函数的第二个参数
+是传给 setjmp() 的第二次返回值，这在介绍 setjmp() 函数时已经介绍过。</p>
+
+
+
+
+<h4>异常处理过程</h4>
+
+
+<p>先来对比（参考）一下 C++ 的异常处理，C++ 在语言层上便添加了异常处理机制，使用 try 块来包含那些可能出现错误的代码，
+你可以在 try 块代码中抛出异常，C++ 使用 throw 来抛出异常。抛出异常后，将转到异常处理程序中执行，C++ 使用 catch 块来
+包含那些处理异常的代码，catch 块可以接收不同类型的异常。需要说明的是，throw 一般不在 try 块内的代码中抛出异常，try 
+块内的代码调用了别的函数，如函数A，函数A 又调用了函数 B，throw 可以在函数B中抛出异常，或者更深的函数调用层，无论如何，
+只要有异常抛出，程序将转到 catch 处执行。</p>
+
+
+
+
+<p>C中如何实现，或者明确地说是模拟这一功能？下面介绍的是一些简单的方法。现在假设 longjmp() 第二个值为1，即 setjmp() 
+第二次将返回1。我们使用一组简单的宏来替代 setjmp() 和 longjmp() 以便使用：</br>
+首先定义一个全局的异常：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>因为 setjmp() 第一次调用初始化后返回0，第二次返回非0，可以这样定义一个宏使得它功能接近于 C++ 的 try。</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>define try if(!setjmp(Jump_Buffer))&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p> 当 setjmp() 函数第一次0 时，取非为真，则执行 try 块内的代码，如：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>当因为调用 longjmp() 抛出异常而导致 setjmp() 第二次返回时（程序将会转到 setjmp() 函数处返回，这时，这时应该执行
+的是异常处理代码。longjmp() 使 setjmp() 函数返回非0，if(!setjmp(JumpBuffer)) 中将值取非则为假，是以，异常处理放在
+其后应该使用一个 else：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">catch</span> <span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如此看起来便跟 C++ 相似了，setjmp() 函数的第二次返回导致 if() 中表达式值为假，刚好使 catch 块得以执行，如：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span>  <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="n">catch</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">puts</span><span class="p">(</span><span class="s">&quot;Error&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>实现如 C++ 的 throw 语句，事实上以宏替换 longjmp(jmp_buf, int) 的调用：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">throw</span> <span class="n">longjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>下面的例程解释如何使用这些宏：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;stdio.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;conio.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;setjmp.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">try</span> <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">setjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">))</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">catch</span> <span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">throw</span> <span class="n">longjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">Test</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="mi">100</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">throw</span><span class="p">;</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>      <span class="nf">puts</span><span class="p">(</span><span class="s">&quot;OK.&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">Test_T</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
+</span><span class='line'><span class="n">try</span><span class="p">{</span>
+</span><span class='line'>      <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input a value:&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">T</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">Test_T</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="n">catch</span><span class="p">{</span>
+</span><span class='line'>      <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input Error!&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="n">getch</span><span class="p">();</span>
+</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[C语言断言简介]]></title>
+    <link href="http://ibillxia.github.io/blog/2011/05/03/introduce-to-assert-in-c-language/"/>
+    <updated>2011-05-03T10:31:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2011/05/03/introduce-to-assert-in-c-language</id>
+    <content type="html"><![CDATA[<h2>1.概述</h2>
+
+
+<p> 断言是对某种假设条件进行检查（可理解为若条件成立则无动作，否则应报告），它可以快速发现并定位软件问题，
+同时对系统错误进行自动报警。断言可以对在系统中隐藏很深，用其它手段极难发现的问题进行定位，从而缩短软件问题定位时间，
+提高系统的可测性。实际应用时，可根据具体情况灵活地设计断言。</p>
+
+
+
+
+<h2>2.标准断言机制</h2>
+
+
+<p>原型定义：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">assert</span><span class="p">(</span> <span class="kt">int</span> <span class="n">expression_r_r_r</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>assert的作用是现计算表达式 expression_r_r_r ，如果其值为假（即为0），
+那么它先向stderr打印一条出错信息，然后通过调用 abort来终止程序运行。</p>
+
+
+
+
+<!-- more -->
+
+
+<h2>3.简单实例</h2>
+
+
+<p>下面给一个断言的简单实例：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdlib</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'>   <span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span> <span class="p">);</span><span class="c1">//以可写的方式打开一个文件，如果不存在就创建一个同名文件&lt;br/&gt;</span>
+</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里不会出错&lt;br/&gt;</span>
+</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;noexitfile.txt&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span> <span class="p">);</span><span class="c1">//以只读的方式打开一个文件，如果不存在就打开失败&lt;br/&gt;</span>
+</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里出错&lt;br/&gt;</span>
+</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//程序永远都执行不到这里来&lt;br/&gt;</span>
+</span><span class='line'>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>4.断言用法详解</h2>
+
+
+<p>1)在函数开始处检验传入参数的合法性，如:</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">resetBufferSize</span><span class="p">(</span><span class="kt">int</span> <span class="n">nNewSize</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">//功能:改变缓冲区大小,</span>
+</span><span class='line'>  <span class="c1">//参数:nNewSize 缓冲区新长度</span>
+</span><span class='line'>  <span class="c1">//返回值:缓冲区当前长度</span>
+</span><span class='line'>  <span class="c1">//说明:保持原信息内容不变，nNewSize&amp;lt;=0表示清除缓冲区</span>
+</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="n">MAX_BUFFER_SIZE</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>2)每个assert只检验一个条件,因为同时检验多个条件时,如果断言失败,无法直观的判断是哪个条件失败</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span><span class="n">m_nInfomationSize</span><span class="p">);</span>  <span class="c1">//不好</span>
+</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">//好</span>
+</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="n">m_nInfomationSize</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>3)不能使用改变环境的语句,因为assert只在DEBUG个生效,如果这么做,会使用程序在真正运行时遇到问题</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span><span class="o">++</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">100</span><span class="p">);</span>  <span class="c1">//错误</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这是因为如果出错，比如在执行之前i=100,那么这条语句就不会执行，那么i++这条命令就没有执行。</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">100</span><span class="p">);</span>    <span class="c1">//正确</span>
+</span><span class='line'><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>4)assert和后面的语句应空一行,以形成逻辑和视觉上的一致感</p>
+
+
+
+
+<p>5)有的地方,assert不能代替条件过滤</p>
+
+
+
+
+<h2>5注意事项：</h2>
+
+
+<p>1).使用assert的缺点是，频繁的调用会极大的影响程序的性能，增加额外的开销。
+在调试结束后，可以通过在包含#include <assert.h>的语句之前插入 #define NDEBUG 来禁用assert调用，
+示例代码如下：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">NDEBUG</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>2).ASSERT只有在Debug版本中才有效，如果编译为Release版本则被忽略掉。（在C中，ASSERT是宏而不是函数），
+使用ASSERT“断言”容易在debug时输出程序错误所在。而assert()的功能类似，它是ANSI C标准中规定的函数，
+它与ASSERT的一个重要区别是可以用在Release版本中。</p>
+
+
+
+
+<h3>推荐阅读</h3>
+
+
+<p><a href="http://www.cppblog.com/oosky/archive/2006/03/26/4625.html#_Toc131314725">华为软件编程规范</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[浅谈C语言的可变参数]]></title>
+    <link href="http://ibillxia.github.io/blog/2011/04/21/about-variable-parameters-in-c-language/"/>
+    <updated>2011-04-21T16:50:00+08:00</updated>
+    <id>http://ibillxia.github.io/blog/2011/04/21/about-variable-parameters-in-c-language</id>
+    <content type="html"><![CDATA[<h2>1.问题引入</h2>
+
+
+<p>
+C语言中有些函数使用可变参数，比如常见的 `int printf( const char *format [, argument]... );`，
+第一个参数format是固定的，其余的参数的个数和类型都不固定。例如：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enjoy yourself everyday!/n&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The value is %d!/n&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这种可变参数可以说是C语言一个比较难理解的部分，这里会由几个问题引发一些对它的分析。
+注意：在C++中有函数重载（overload）可以用来区别不同函数参数的调用，但它还是不能表示任意数量的函数参数。</p>
+
+
+
+
+<h2>2.printf（）实现原理</h2>
+
+
+<p>
+C语言用va_start等宏来处理这些可变参数。这些宏看起来很复杂，其实原理挺简单，
+就是根据参数入栈的特点从最靠近第一个可变参数的固定参数开始，依次获取每个可变参数的地址。
+下面我们来分析这些宏。</p>
+
+
+
+
+<!-- more -->
+
+
+<p>在`stdarg.h`头文件中，针对不同平台有不同的宏定义，我们选取X86平台下的宏定义：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="kt">char</span> <span class="o">*</span> <span class="kt">va_list</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">_INTSIZEOF</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="p">(</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="o">~</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="p">(</span> <span class="n">ap</span> <span class="o">=</span> <span class="p">(</span><span class="kt">va_list</span><span class="p">)</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">v</span> <span class="o">+</span> <span class="n">_INTSIZEOF</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">(</span><span class="n">t</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)((</span><span class="n">ap</span> <span class="o">+=</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">INTSIZEOF</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">-</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">INTSIZEOF</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span> <span class="p">(</span> <span class="n">ap</span> <span class="o">=</span> <span class="p">(</span><span class="kt">va_list</span><span class="p">)</span><span class="mi">0</span> <span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>_INTSIZEOF(n)宏是为了考虑那些内存地址需要对齐的系统，从宏的名字来应该是跟sizeof(int)对齐。
+一般的`sizeof(int)=4`，也就是参数在内存中的地址都为4的倍数。比如，如果sizeof(n)在1－4之间，
+那`_INTSIZEOF(n)＝4`；如果`sizeof(n)`在5－8之间，那么`_INTSIZEOF(n)=8`。</p>
+
+
+
+
+<p>为了能从固定参数依次得到每个可变参数，`va_start`，`va_arg`充分利用下面两点：</br>
+&nbsp;&nbsp;&nbsp;&nbsp;1．C语言在函数调用时，先将最后一个参数压入栈;</br>
+&nbsp;&nbsp;&nbsp;&nbsp;2．X86平台下的内存分配顺序是从高地址内存到低地址内存</br>
+<center><img src="/images/2011/IMAG2011042101.png"></center></p>
+
+
+
+
+<p>由上图可见，`v`是固定参数在内存中的地址，在调用`va_start`后，`ap`指向第一个可变参数。
+这个宏的作用就是在v的内存地址上增加v所占的内存大小，这样就得到了第一个可变参数的地址。</p>
+
+
+
+
+<p>接下来，可以这样设想，如果我能确定这个可变参数的类型，那么我就知道了它占用了多少内存，
+依葫芦画瓢，我就能得到下一个可变参数的地址。</p>
+
+
+
+
+<p>让我们再来看看`va_arg`，它先`ap`指向下一个可变参数，然后减去当前可变参数的大小即得到当前
+可变参数的内存地址，再做个类型转换，返回它的值。</br>
+要确定每个可变参数的类型，有两种做法，要么都是默认的类型，要么就在固定参数中包含足够的
+信息让程序可以确定每个可变参数的类型。比如，`printf`，程序通过分析`format`字符串就可以
+确定每个可变参数大类型。</br>
+最后一个宏就简单了，`va_end`使得`ap`不再指向有效的内存地址。</p>
+
+
+
+
+<p>看了这几个宏，不禁让我再次感慨，C语言太灵活了，而且代码可以写得非常简洁，
+虽然有时候让人看得不是很明白，但是一旦明白 过来，你肯定会为它击掌叫好！</br>
+其实在`varargs.h`头文件中定义了UNIX System V实行的`va`系列宏，而上面在`stdarg.h`头文件中
+定义的是ANSI C形式的宏，这两种宏是不兼容的，一般说来，我们应该使用ANSI C形式的`va`宏。</p>
+
+
+
+
+<h2>3.实战演练</h2>
+
+
+<p>有没有办法写一个函数，这个函数参数的具体形式可以在运行时才确定？</br>
+系统提供了`vprintf`系列格式化字符串的函数，用于编程人员封装自己的I/O函数。</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">vprintf</span> <span class="o">/</span> <span class="n">vscanf</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="kt">va_list</span> <span class="n">ap</span><span class="p">);</span> <span class="c1">// 从标准输入/输出格式化字符串</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">vfprintf</span> <span class="o">/</span> <span class="n">vfsacanf</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span> <span class="n">stream</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="kt">va_list</span> <span class="n">ap</span><span class="p">);</span><span class="c1">// 从文件流</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">vsprintf</span> <span class="o">/</span> <span class="n">vsscanf</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="kt">va_list</span> <span class="n">ap</span><span class="p">);</span> <span class="c1">// 从字符串</span>
+</span><span class='line'><span class="c1">// 例1：格式化到一个文件流，可用于日志文件</span>
+</span><span class='line'><span class="kt">FILE</span> <span class="o">*</span><span class="n">logfile</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">WriteLog</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="p">...)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="kt">va_list</span> <span class="n">arg_ptr</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">va_start</span><span class="p">(</span><span class="n">arg_ptr</span><span class="p">,</span> <span class="n">format</span><span class="p">);</span>
+</span><span class='line'>   <span class="kt">int</span> <span class="n">nWrittenBytes</span> <span class="o">=</span> <span class="n">vfprintf</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">arg_ptr</span><span class="p">);</span>
+</span><span class='line'>   <span class="n">va_end</span><span class="p">(</span><span class="n">arg_ptr</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">return</span> <span class="n">nWrittenBytes</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="c1">// 调用时，与使用printf()没有区别。</span>
+</span><span class='line'><span class="n">WriteLog</span><span class="p">(</span><span class="s">&quot;%04d-%02d-%02d %02d:%02d:%02d %s/%04d logged out.&quot;</span><span class="p">,</span> <span class="n">nYear</span><span class="p">,</span> <span class="n">nMonth</span><span class="p">,</span> <span class="n">nDay</span><span class="p">,</span> <span class="n">nHour</span><span class="p">,</span> <span class="n">nMinute</span><span class="p">,</span> <span class="n">szUserName</span><span class="p">,</span> <span class="n">nUserID</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>同理，也可以从文件中执行格式化输入；或者对标准输入输出，字符串执行格式化。</br>
+在上面的例1中，`WriteLog()`函数可以接受参数个数可变的输入，本质上，它的实现需要`vprintf()`的支持。
+如何真正实现属于自己的可变参数函数，包括控制每一个传入的可选参数。</p>
+
+
+
+
+<h2>4.关于va()函数和va宏</h2>
+
+
+<p>C语言支持`va`函数，作为C语言的扩展--C++同样支持`va`函数，但在C++中并不推荐使用，C++引入的
+多态性同样可以实现参数个数可变的函数。不过，C++的重载功能毕竟只能是有限多个可以预见的参数个数。
+比较而言，C中的`va`函数则可以定义无穷多个相当于C++的重载函数，这方面C++是无能为力的。`va`函数的
+优势表现在使用的方便性和易用性上，可以使代码更简洁。C编译器为了统一在不同的硬件架构、硬件
+平台上的实现，和增加代码的可移植性，提供了一系列宏来屏蔽硬件环境不同带来的差异。</p>
+
+
+
+
+<p>ANSI C标准下，`va`的宏定义在`stdarg.h`中，它们有：`va_list`，`va_start()`，`va_arg()`，`va_end()`。</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// 例2：求任意个自然数的平方和：</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">SqSum</span><span class="p">(</span><span class="kt">int</span> <span class="n">n1</span><span class="p">,</span> <span class="p">...)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="kt">va_list</span> <span class="n">arg_ptr</span><span class="p">;</span>
+</span><span class='line'>   <span class="kt">int</span> <span class="n">nSqSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n1</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">va_start</span><span class="p">(</span><span class="n">arg_ptr</span><span class="p">,</span> <span class="n">n1</span><span class="p">);</span>
+</span><span class='line'>   <span class="k">while</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'><span class="n">nSqSum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">n</span><span class="p">);</span>
+</span><span class='line'><span class="n">n</span> <span class="o">=</span> <span class="n">va_arg</span><span class="p">(</span><span class="n">arg_ptr</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">va_end</span><span class="p">(</span><span class="n">arg_ptr</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">nSqSum</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 调用时</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">nSqSum</span> <span class="o">=</span> <span class="n">SqSum</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可变参数函数的原型声明格式为：</p>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">type</span> <span class="nf">VAFunction</span><span class="p">(</span><span class="n">type</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">type</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>参数可以分为两部分：个数确定的固定参数和个数可变的可选参数。函数至少需要一个固定参数，
+固定参数的声明和普通函数一样；可选参数由于个数不确定，声明时用"..."表示。固定参数和可选
+参数公同构成一个函数的参数列表。借助上面这个简单的例2，来看看各个`va_xxx`的作用。</p>
+
+
+
+
+<p>`va_list arg_ptr`：定义一个指向个数可变的参数列表指针；</br>
+`va_start(arg_ptr, argN)`：使参数列表指针`arg_ptr`指向函数参数列表中的第一个可选参数，
+说明：`argN`是位于第一个可选参数之前的固定参数，（或者说，最后一个固定参数；...
+之前的一个参数），函数参数列表中参数在内存中的顺序与函数声明时的顺序是一致的。
+如果有一`va`函数的声明是`void va_test(char a, char b, char c, ...)`，则它的固定
+参数依次是a,b,c，最后一个固定参数argN为c，因此就是`va_start(arg_ptr, c)`。</br>
+`va_arg(arg_ptr, type)`：返回参数列表中指针`arg_ptr`所指的参数，返回类型为`type`，
+并使指针`arg_ptr`指向参数列表中下一个参数。</br>
+`va_copy(dest, src)`：`dest`，`src`的类型都是`va_list`，`va_copy()`用于复制参数列表指针，将`dest`初始化为`src`。</br>
+`va_end(arg_ptr)`：清空参数列表，并置参数指针`arg_ptr`无效。说明：指针`arg_ptr`被置无效后，
+可以通过调用`va_start()`、`va_copy()`恢复`arg_ptr`。每次调用`va_start() / va_copy()`后，
+必须得有相应的`va_end()`与之匹配。参数指针可以在参数列表中随意地来回移动，
+但必须在`va_start() ... va_end()`之内。</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[C语言输入输出缓冲区]]></title>
     <link href="http://ibillxia.github.io/blog/2009/06/05/io-buffer-in-c-language/"/>
     <updated>2009-06-05T23:02:00+08:00</updated>
@@ -422,94 +1302,6 @@ for(int i=0;i&lt;10;++i)
 <h2>4.总结</h2>
 
 <p>主要看 <code>getch()</code>，<code>getche()</code> 的是否显示，<code>getchar()</code> 是读取流，而且和前面两个函数不是一个库。掌握清空缓冲区的方法。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C语言编译过程全解析]]></title>
-    <link href="http://ibillxia.github.io/blog/2009/05/28/analysis-the-steps-of-compiling-c-language/"/>
-    <updated>2009-05-28T19:45:00+08:00</updated>
-    <id>http://ibillxia.github.io/blog/2009/05/28/analysis-the-steps-of-compiling-c-language</id>
-    <content type="html"><![CDATA[<h2>0.内容摘要</h2>
-
-<p>C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，深入了解整个编译过程对工程师理解应用程序的编写是有很大帮助的，希望大家可以多了解一些，在遇到问题时多思考、多实践。</p>
-
-<p>一般情况下，我们只需要知道分成编译和连接两个阶段:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;·编译阶段将源程序（*.c)转换成为目标代码（一般是obj文件，至于具体过程就是上面说的那些阶段）；<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;·连接阶段是把源程序转换成的目标代码（obj文件）与你程序里面调用的库函数对应的代码连接起来形成对应的可执行文件（exe文件）就可以了，其他的都需要在实践中多多体会才能有更深的理解。<br/>
-编译的概念：编译程序读取源程序（字符流），对之进行词法和语法的分析，将高级语言指令转换为功能等效的汇编代码，再由汇编程序转换为机器语言，并且按照操作系统对可执行文件格式的要求链接生成可执行程序。</p>
-
-<p>编译的完整过程：C源程序->预编译处理(.c)->编译、优化程序（.s、.asm）->汇编程序(.obj、.o、.a、.ko)->链接程序（.exe、.elf、.axf等）。</p>
-
-<h2>1.编译预处理</h2>
-
-<p>读取c源程序，对其中的伪指令（以#开头的指令）和特殊符号进行处理伪指令主要包括以下四个方面：</p>
-
-<!-- more -->
-
-
-<p><strong>（1）宏定义指令</strong>，如<code>#define Name TokenString</code>，<code>#undef</code>等。对于前一个伪指令，预编译所要做的是将程序中的所有Name用TokenString替换，但作为字符串常量的 Name则不被替换。对于后者，则将取消对某个宏的定义，使以后该串的出现不再被替换。</p>
-
-<p><strong>（2）条件编译指令</strong>，如<code>#ifdef</code>，<code>#ifndef</code>，<code>#else</code>，<code>#elif</code>，<code>#endif</code>等。这些伪指令的引入使得程序员可以通过定义不同的宏来决定编译程序对哪些代码进行处理。预编译程序将根据有关的文件，将那些不必要的代码过滤掉。</p>
-
-<p><strong>（3）头文件包含指令</strong>，如<code>#include "FileName"</code>或者<code>#include &lt;FileName&gt;</code>等。在头文件中一般用伪指令 <code>#define</code> 定义了大量的宏（最常见的是字符常量），同时包含有各种外部符号的声明。<br/>
-采用头文件的目的主要是为了使某些定义可以供多个不同的C源程序使用。因为在需要用到这些定义的C源程序中，只需加上一条 <code>#include</code> 语句即可，而不必再在此文件中将这些定义重复一遍。预编译程序将把头文件中的定义统统都加入到它所产生的输出文件中，以供编译程序对之进行处理。<br/>
-包含到c源程序中的头文件可以是系统提供的，这些头文件一般被放在 <code>/usr/include</code> 目录下。在程序中 <code>#include</code> 它们要使用尖括号（<code>&lt; &gt;</code>）。 另外开发人员也可以定义自己的头文件，这些文件一般与c源程序放在同一目录下，此时在 <code>#include</code>中要用双引号（""）。</p>
-
-<p><strong>（4）特殊符号</strong>，预编译程序可以识别一些特殊的符号。例如在源程序中出现的LINE标识将被解释为当前行号（十进制数），FILE则被解释为当前被编译的C源程序的名称。预编译程序对于在源程序中出现的这些串将用合适的值进行替换。<br/>
-预编译程序所完成的基本上是对源程序的“替代”工作。经过此种替代，生成一个没有宏定义、没有条件编译指令、没有特殊符号的输出文件。这个文件的含义同没有经过预处理的源文件是相同的，但内容有所不同。下一步，此输出文件将作为编译程序的输出而被翻译成为机器指令。</p>
-
-<h2>2.编译、优化阶段</h2>
-
-<p>经过预编译得到的输出文件中，只有常量；如数字、字符串、变量的定义，以及C语言的关键字，如 <code>main,if,else,for,while,{,}, +,-,*,/</code>等等。<br/>
-编译程序所要作得工作就是通过词法分析和语法分析，在确认所有的指令都符合语法规则之后，将其翻译成等价的中间代码表示或汇编代码。<br/>
-优化处理是编译系统中一项比较艰深的技术。它涉及到的问题不仅同编译技术本身有关，而且同机器的硬件环境也有很大的关系。优化一部分是对中间代码的优化。 这种优化不依赖于具体的计算机。另一种优化则主要针对目标代码的生成而进行的。</p>
-
-<p>对于前一种优化，主要的工作是删除公共表达式、循环优化（代码外提、强度削弱、变换循环控制条件、已知量的合并等）、复写传播，以及无用赋值的删除，等等。<br/>
-后一种类型的优化同机器的硬件结构密切相关，最主要的是考虑是如何充分利用机器的各个硬件寄存器存放的有关变量的值，以减少对于内存的访问次数。另外，如何根据机器硬件执行指令的特点（如流水线、RISC、CISC、VLIW等）而对指令进行
-一些调整使目标代码比较短，执行的效率比较高，也是一个重要的研究课题。</p>
-
-<p>经过优化得到的汇编代码必须经过汇编程序的汇编转换成相应的机器指令，方可能被机器执行。</p>
-
-<h2>3.汇编过程</h2>
-
-<p>汇编过程实际上指把汇编语言代码翻译成目标机器指令的过程。对于被翻译系统处理的每一个C语言源程序，都将最终经过这一处理而得到相应的目标文件。目标文件中所存放的也就是与源程序等效的目标的机器语言代码。<br/>
-目标文件由段组成。通常一个目标文件中至少有两个段：</p>
-
-<p>&nbsp;&nbsp;&nbsp;&nbsp;·代码段：该段中所包含的主要是程序的指令。该段一般是可读和可执行的，但一般却不可写。<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;·数据段：主要存放程序中要用到的各种全局变量或静态的数据。一般数据段都是可读，可写，可执行的。</p>
-
-<p>UNIX环境下主要有三种类型的目标文件：<br/>
-<strong>（1）可重定位文件</strong><br/>
-其中包含有适合于其它目标文件链接来创建一个可执行的或者共享的目标文件的代码和数据。<br/>
-<strong>（2）共享的目标文件</strong><br/>
-这种文件存放了适合于在两种上下文里链接的代码和数据。<br/>
-第一种是链接程序可把它与其它可重定位文件及共享的目标文件一起处理来创建另一个 目标文件；<br/>
-第二种是动态链接程序将它与另一个可执行文件及其它的共享目标文件结合到一起，创建一个进程映象。 <br/>
-<strong>（3）可执行文件</strong><br/>
-它包含了一个可以被操作系统创建一个进程来执行之的文件。<br/>
-汇编程序生成的实际上是第一种类型的目标文件。对于后两种还需要其他的一些处理方能得到，这个就是链接程序的工作了。</p>
-
-<h2>4.链接程序</h2>
-
-<p>由汇编程序生成的目标文件并不能立即就被执行，其中可能还有许多没有解决的问题。<br/>
-例如，某个源文件中的函数可能引用了另一个源文件中定义的某个符号（如变量或者函数调用等）；在程序中可能调用了某个库文件中的函数，等等。所有的这些问题，都需要经链接程序的处理方能得以解决。<br/>
-链接程序的主要工作就是将有关的目标文件彼此相连接，也即将在一个文件中引用的符号同该符号在另外一个文件中的定义连接起来，使得所有的这些目标文件成为一个能够诶操作系统装入执行的统一整体。<br/>
-根据开发人员指定的同库函数的链接方式的不同，链接处理可分为两种：</p>
-
-<p><strong>（1）静态链接</strong><br/>
-在这种链接方式下，函数的代码将从其所在地静态链接库中被拷贝到最终的可执行程序中。这样该程序在被执行时这些代码将被装入到该进程的虚拟地址空间中。静态链接库实际上是一个目标文件的集合，其中的每个文件含有库中的一个或者一组相关函数的代码。</p>
-
-<p><strong>（2） 动态链接</strong><br/>
-在此种方式下，函数的代码被放到称作是动态链接库或共享对象的某个目标文件中。链接程序此时所作的只是在最终的可执行程序中记录下共享对象的名字以及其它少量的登记信息。在此可执行文件被执行时，动态链接库的全部内容将被映射到运行时相应进程的虚地址空间。动态链接程序将根据可执行程序中记录的信息找到相应的函数代码。</p>
-
-<p>对于可执行文件中的函数调用，可分别采用动态链接或静态链接的方法。使用动态链接能够使最终的可执行文件比较短小，并且当共享对象被多个进程使用时能节约一些内存，因为在内存中只需要保存一份此共享对象的代码。但并不是使用动态链接就一定比使用静态链接要优越。在某些情况下动态链接可能带来一些性能上损害。</p>
-
-<h2>5.总结</h2>
-
-<p>C语言编译的整个过程是非常复杂的，里面涉及到的编译器知识、硬件知识、工具链知识都是非常多的，深入了解整个编译过程对工程师理解应用程序的编写是有很大帮助的，希望大家可以多了解一些，在遇到问题时多思考、多实践。</p>
-
-<p>一般情况下，我们只需要知道分成编译和连接两个阶段，编译阶段将源程序（*.c)转换成为目标代码（一般是obj文件，至于具体过程就是上面说的那些阶段），连接阶段是把源程序转换成的目标代码（obj文件）与你程序里面调用的库函数对应的代码连接起来形成对应的可执行文件（exe文件）就可以了，其他的都需要在实践中多多体会才能有更深的理解。</p>
 ]]></content>
   </entry>
   

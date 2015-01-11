@@ -224,8 +224,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>　　kernel_thread(kernel_init, NULL, CLONE_FS | CLONE_SIGHAND);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">　　</span><span class="n">kernel_thread</span><span class="p">(</span><span class="n">kernel_init</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">CLONE_FS</span> <span class="o">|</span> <span class="n">CLONE_SIGHAND</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -236,8 +237,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>　　current_thread_info()->status |= TS_POLLING;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">　　</span><span class="n">current_thread_info</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">|=</span> <span class="n">TS_POLLING</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -249,10 +251,11 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>　　task = copy_process(CLONE_VM, 0, idle_regs(?s), 0, NULL, NULL, 0);
-</span><span class='line'>　　init_idle(task, cpu);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">　　</span><span class="n">task</span> <span class="o">=</span> <span class="n">copy_process</span><span class="p">(</span><span class="n">CLONE_VM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">idle_regs</span><span class="p">(</span><span class="o">?</span><span class="n">s</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="err">　　</span><span class="n">init_idle</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">cpu</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -296,7 +299,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -318,28 +321,29 @@ $(document).ready(function(){
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void cpu_idle(void) {
-</span><span class='line'>  int cpu = smp_processor_id();
-</span><span class='line'>  current_thread_info()->status |= TS_POLLING;   /* endless idle loop with no priority at all */
-</span><span class='line'>  while (1) {
-</span><span class='line'>      tick_nohz_stop_sched_tick(1);
-</span><span class='line'>      while (!need_resched()) {
-</span><span class='line'>          check_pgt_cache();
-</span><span class='line'>          rmb();
-</span><span class='line'>          if (rcu_pending(cpu))  rcu_check_callbacks(cpu, 0);
-</span><span class='line'>          if (cpu_is_offline(cpu))  play_dead();
-</span><span class='line'>          local_irq_disable();
-</span><span class='line'>          __get_cpu_var(irq_stat).idle_timestamp = jiffies; /* Don't trace irqs off for idle */
-</span><span class='line'>          stop_critical_timings();
-</span><span class='line'>          pm_idle();
-</span><span class='line'>          start_critical_timings();
-</span><span class='line'>      }
-</span><span class='line'>      tick_nohz_restart_sched_tick();
-</span><span class='line'>      preempt_enable_no_resched();
-</span><span class='line'>      schedule();
-</span><span class='line'>      preempt_disable();
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="nf">cpu_idle</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">cpu</span> <span class="o">=</span> <span class="n">smp_processor_id</span><span class="p">();</span>
+</span><span class='line'>  <span class="n">current_thread_info</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">status</span> <span class="o">|=</span> <span class="n">TS_POLLING</span><span class="p">;</span>   <span class="cm">/* endless idle loop with no priority at all */</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">tick_nohz_stop_sched_tick</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">need_resched</span><span class="p">())</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">check_pgt_cache</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">rmb</span><span class="p">();</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">rcu_pending</span><span class="p">(</span><span class="n">cpu</span><span class="p">))</span>  <span class="n">rcu_check_callbacks</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">cpu_is_offline</span><span class="p">(</span><span class="n">cpu</span><span class="p">))</span>  <span class="n">play_dead</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">local_irq_disable</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">__get_cpu_var</span><span class="p">(</span><span class="n">irq_stat</span><span class="p">).</span><span class="n">idle_timestamp</span> <span class="o">=</span> <span class="n">jiffies</span><span class="p">;</span> <span class="cm">/* Don&#39;t trace irqs off for idle */</span>
+</span><span class='line'>          <span class="n">stop_critical_timings</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">pm_idle</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">start_critical_timings</span><span class="p">();</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="n">tick_nohz_restart_sched_tick</span><span class="p">();</span>
+</span><span class='line'>      <span class="n">preempt_enable_no_resched</span><span class="p">();</span>
+</span><span class='line'>      <span class="n">schedule</span><span class="p">();</span>
+</span><span class='line'>      <span class="n">preempt_disable</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -390,7 +394,7 @@ $(document).ready(function(){
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/linux/'>Linux</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/kernel/'>Kernel</a>, <a class='tag' href='/blog/tags/linux/'>Linux</a>, <a class='tag' href='/blog/tags/idle/'>idle</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/kernel/'>Kernel</a>, <a class='tag' href='/blog/tags/linux/'>Linux</a></span>
 		
     </p>
     

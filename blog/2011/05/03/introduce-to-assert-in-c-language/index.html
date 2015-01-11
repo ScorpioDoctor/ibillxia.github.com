@@ -211,10 +211,11 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;assert.h>
-</span><span class='line'>void assert( int expression_r_r_r );</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">assert</span><span class="p">(</span> <span class="kt">int</span> <span class="n">expression_r_r_r</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -236,7 +237,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -252,22 +253,23 @@ $(document).ready(function(){
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>  
-</span><span class='line'>#include &lt;assert.h>  
-</span><span class='line'>#include &lt;stdlib.h>  
-</span><span class='line'>int main( void )  
-</span><span class='line'>{  
-</span><span class='line'>   FILE *fp;  
-</span><span class='line'> 
-</span><span class='line'>   fp = fopen( "test.txt", "w" );//以可写的方式打开一个文件，如果不存在就创建一个同名文件  
-</span><span class='line'>   assert( fp );         //所以这里不会出错  
-</span><span class='line'>   fclose( fp );  
-</span><span class='line'> 
-</span><span class='line'>   fp = fopen( "noexitfile.txt", "r" );//以只读的方式打开一个文件，如果不存在就打开失败  
-</span><span class='line'>   assert( fp );         //所以这里出错  
-</span><span class='line'>   fclose( fp );         //程序永远都执行不到这里来  
-</span><span class='line'>   return 0;  
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;assert.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;  </span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span> <span class="p">);</span><span class="c1">//以可写的方式打开一个文件，如果不存在就创建一个同名文件  </span>
+</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里不会出错  </span>
+</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;noexitfile.txt&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span> <span class="p">);</span><span class="c1">//以只读的方式打开一个文件，如果不存在就打开失败  </span>
+</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里出错  </span>
+</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//程序永远都执行不到这里来  </span>
+</span><span class='line'>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -280,7 +282,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -290,16 +292,17 @@ $(document).ready(function(){
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int resetBufferSize(int nNewSize)
-</span><span class='line'>{
-</span><span class='line'>  //功能:改变缓冲区大小,
-</span><span class='line'>  //参数:nNewSize 缓冲区新长度
-</span><span class='line'>  //返回值:缓冲区当前长度
-</span><span class='line'>  //说明:保持原信息内容不变，nNewSize&lt;=0表示清除缓冲区
-</span><span class='line'>  assert(nNewSize >= 0);
-</span><span class='line'>  assert(nNewSize &lt;= MAX_BUFFER_SIZE);
-</span><span class='line'>  //...
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">resetBufferSize</span><span class="p">(</span><span class="kt">int</span> <span class="n">nNewSize</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">//功能:改变缓冲区大小,</span>
+</span><span class='line'>  <span class="c1">//参数:nNewSize 缓冲区新长度</span>
+</span><span class='line'>  <span class="c1">//返回值:缓冲区当前长度</span>
+</span><span class='line'>  <span class="c1">//说明:保持原信息内容不变，nNewSize&lt;=0表示清除缓冲区</span>
+</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&lt;=</span> <span class="n">MAX_BUFFER_SIZE</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -309,12 +312,13 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>assert(nOffset>=0 && nOffset+nSize&lt;=m_nInfomationSize);  //不好
-</span><span class='line'>assert(nOffset >= 0);   //好
-</span><span class='line'>assert(nOffset+nSize &lt;= m_nInfomationSize);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span><span class="o">&lt;=</span><span class="n">m_nInfomationSize</span><span class="p">);</span>  <span class="c1">//不好</span>
+</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">//好</span>
+</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span> <span class="o">&lt;=</span> <span class="n">m_nInfomationSize</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -324,8 +328,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>assert(i++ &lt; 100);  //错误</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span><span class="o">++</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">);</span>  <span class="c1">//错误</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -335,10 +340,11 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>assert(i &lt; 100);    //正确
-</span><span class='line'>i++;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">);</span>    <span class="c1">//正确</span>
+</span><span class='line'><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -363,12 +369,13 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;stdio.h>
-</span><span class='line'>#define NDEBUG
-</span><span class='line'>#include &lt;assert.h></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#define NDEBUG</span>
+</span><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -417,7 +424,7 @@ $(document).ready(function(){
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c/'>C</a>, <a class='tag' href='/blog/tags/assert/'>assert</a>, <a class='tag' href='/blog/tags/debug/'>debug</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cyu-yan/'>C语言</a>, <a class='tag' href='/blog/tags/duan-yan/'>断言</a></span>
 		
     </p>
     

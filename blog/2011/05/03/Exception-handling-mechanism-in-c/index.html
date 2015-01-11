@@ -235,7 +235,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -258,29 +258,30 @@ $(document).ready(function(){
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void main(int argc, char* argv[])  
-</span><span class='line'>{  
-</span><span class='line'>　　if (Call_Func1(in, param out) {  
-</span><span class='line'>　　　　// 函数调用成功，我们正常的处理  
-</span><span class='line'>　　　　if (Call_Func2(in, param out) {  
-</span><span class='line'>　　　　// 函数调用成功，我们正常的处理  
-</span><span class='line'>　　　　　　while(condition) {  
-</span><span class='line'>　　　　　　　　//do other job  
-</span><span class='line'>　　　　　　　　// 如果错误直接跳转  
-</span><span class='line'>　　　　　　　　if (has error) goto Error;  
-</span><span class='line'>　　　　　　//do other job  
-</span><span class='line'>　　　　　　}  
-</span><span class='line'>　　　　}  
-</span><span class='line'>　　　　// 如果错误直接跳转  
-</span><span class='line'>　　　　else goto Error;  
-</span><span class='line'>　　}  
-</span><span class='line'>　　// 如果错误直接跳转  
-</span><span class='line'>　　else goto Error;  
-</span><span class='line'>　　// 错误处理模块  
-</span><span class='line'>Error:  
-</span><span class='line'>　　process_error();  
-</span><span class='line'>　　exit();  
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func1</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理  </span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func2</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理  </span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="k">while</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">//do other job  </span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">// 如果错误直接跳转  </span>
+</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">has</span> <span class="n">error</span><span class="p">)</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="c1">//do other job  </span>
+</span><span class='line'><span class="err">　　　　　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　　　</span><span class="c1">// 如果错误直接跳转  </span>
+</span><span class='line'><span class="err">　　　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="p">}</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// 如果错误直接跳转  </span>
+</span><span class='line'><span class="err">　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span>
+</span><span class='line'><span class="err">　　</span><span class="c1">// 错误处理模块  </span>
+</span><span class='line'><span class="nl">Error:</span>
+</span><span class='line'><span class="err">　　</span><span class="n">process_error</span><span class="p">();</span>
+</span><span class='line'><span class="err">　　</span><span class="n">exit</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -329,7 +330,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -342,19 +343,20 @@ $(document).ready(function(){
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>typedef struct
-</span><span class='line'>{
-</span><span class='line'>  unsigned j_sp;  // 堆栈指针寄存器
-</span><span class='line'>  unsigned j_ss;  // 堆栈段
-</span><span class='line'>  unsigned j_flag;  // 标志寄存器
-</span><span class='line'>  unsigned j_cs;  // 代码段
-</span><span class='line'>  unsigned j_ip;  // 指令指针寄存器
-</span><span class='line'>  unsigned j_bp; // 基址指针
-</span><span class='line'>  unsigned j_di;  // 目的指针
-</span><span class='line'>  unsigned j_es; // 附加段
-</span><span class='line'>  unsigned j_si;  // 源变址
-</span><span class='line'>  unsigned j_ds; // 数据段
-</span><span class='line'>} jmp_buf;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_sp</span><span class="p">;</span>  <span class="c1">// 堆栈指针寄存器</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_ss</span><span class="p">;</span>  <span class="c1">// 堆栈段</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_flag</span><span class="p">;</span>  <span class="c1">// 标志寄存器</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_cs</span><span class="p">;</span>  <span class="c1">// 代码段</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_ip</span><span class="p">;</span>  <span class="c1">// 指令指针寄存器</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_bp</span><span class="p">;</span> <span class="c1">// 基址指针</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_di</span><span class="p">;</span>  <span class="c1">// 目的指针</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_es</span><span class="p">;</span> <span class="c1">// 附加段</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_si</span><span class="p">;</span>  <span class="c1">// 源变址</span>
+</span><span class='line'>  <span class="kt">unsigned</span> <span class="n">j_ds</span><span class="p">;</span> <span class="c1">// 数据段</span>
+</span><span class='line'><span class="p">}</span> <span class="kt">jmp_buf</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -372,10 +374,11 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void _Cdecl longjmp(jmp_buf jmpb, int retval);
-</span><span class='line'>int _Cdecl setjmp(jmp_buf jmpb);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="n">_Cdecl</span> <span class="nf">longjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">,</span> <span class="kt">int</span> <span class="n">retval</span><span class="p">);</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">_Cdecl</span> <span class="nf">setjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -387,8 +390,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>int cdecl DoSomething(void);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">cdecl</span> <span class="nf">DoSomething</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -435,8 +439,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>jmp_buf Jump_Buffer;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -457,12 +462,13 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>try {
-</span><span class='line'>  Test();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">Test</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -474,8 +480,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#define catch else</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#define catch else</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -485,16 +492,17 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>try  {
-</span><span class='line'>  Test();
-</span><span class='line'>} catch {
-</span><span class='line'>  puts("Error");
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span>  <span class="p">{</span>
+</span><span class='line'>  <span class="n">Test</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span> <span class="n">catch</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Error&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -504,8 +512,9 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#define throw longjmp(Jump_Buffer, 1)</span></code></pre></td></tr></table></div></figure>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#define throw longjmp(Jump_Buffer, 1)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -515,7 +524,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -549,40 +558,41 @@ $(document).ready(function(){
 <span class='line-number'>32</span>
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include"stdio.h"  
-</span><span class='line'>#include"conio.h"  
-</span><span class='line'>#include"setjmp.h"  
-</span><span class='line'>jmp_buf Jump_Buffer;  
-</span><span class='line'>#define try if(!setjmp(Jump_Buffer))  
-</span><span class='line'>#define catch else  
-</span><span class='line'>#define throw longjmp(Jump_Buffer,1)  
-</span><span class='line'>int Test(int T)  
-</span><span class='line'>{  
-</span><span class='line'>    if(T>100)  
-</span><span class='line'>        throw;  
-</span><span class='line'>    else  
-</span><span class='line'>          puts("OK.");  
-</span><span class='line'>    return 0;  
-</span><span class='line'>}  
-</span><span class='line'>int Test_T(int T)  
-</span><span class='line'>{  
-</span><span class='line'>    Test(T);  
-</span><span class='line'>    return 0;  
-</span><span class='line'>}  
-</span><span class='line'>int main()  
-</span><span class='line'>{  
-</span><span class='line'>    int T;  
-</span><span class='line'>    try{  
-</span><span class='line'>          puts("Input a value:");  
-</span><span class='line'>          scanf("%d",&T);  
-</span><span class='line'>          T++;  
-</span><span class='line'>          Test_T(T);  
-</span><span class='line'>      } catch{  
-</span><span class='line'>          puts("Input Error!");  
-</span><span class='line'>      }  
-</span><span class='line'>    getch();  
-</span><span class='line'>    return 0;  
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include&quot;stdio.h&quot;  </span>
+</span><span class='line'><span class="cp">#include&quot;conio.h&quot;  </span>
+</span><span class='line'><span class="cp">#include&quot;setjmp.h&quot;  </span>
+</span><span class='line'><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span>
+</span><span class='line'><span class="cp">#define try if(!setjmp(Jump_Buffer))  </span>
+</span><span class='line'><span class="cp">#define catch else  </span>
+</span><span class='line'><span class="cp">#define throw longjmp(Jump_Buffer,1)  </span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">Test</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">T</span><span class="o">&gt;</span><span class="mi">100</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">throw</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>          <span class="n">puts</span><span class="p">(</span><span class="s">&quot;OK.&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">Test_T</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">Test</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">try</span><span class="p">{</span>
+</span><span class='line'>          <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input a value:&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'>          <span class="n">T</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>          <span class="n">Test_T</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span> <span class="n">catch</span><span class="p">{</span>
+</span><span class='line'>          <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input Error!&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="n">getch</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -619,7 +629,7 @@ $(document).ready(function(){
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c/'>C</a>, <a class='tag' href='/blog/tags/exception/'>Exception</a>, <a class='tag' href='/blog/tags/goto/'>goto</a>, <a class='tag' href='/blog/tags/longjmp/'>longjmp</a>, <a class='tag' href='/blog/tags/setjmp/'>setjmp</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cyu-yan/'>C语言</a>, <a class='tag' href='/blog/tags/yi-chang/'>异常</a></span>
 		
     </p>
     

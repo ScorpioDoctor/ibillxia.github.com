@@ -892,10 +892,11 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include &lt;assert.h>
-</span><span class='line'>void assert( int expression_r_r_r );</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;assert.h&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">assert</span><span class="p">(</span> <span class="kt">int</span> <span class="n">expression_r_r_r</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -951,16 +952,17 @@ $(document).ready(function(){
 
 
 <p>
-C语言中有些函数使用可变参数，比如常见的int printf( const char *format [, argument]&#8230; );，
+C语言中有些函数使用可变参数，比如常见的 `int printf( const char *format [, argument]&#8230; );`，
 第一个参数format是固定的，其余的参数的个数和类型都不固定。例如：</p>
 
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>printf("Enjoy yourself everyday!/n");
-</span><span class='line'>printf("The value is %d!/n", value);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enjoy yourself everyday!/n&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The value is %d!/n&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
