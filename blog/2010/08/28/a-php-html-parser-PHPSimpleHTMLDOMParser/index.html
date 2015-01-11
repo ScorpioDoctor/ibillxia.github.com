@@ -264,7 +264,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -276,18 +276,19 @@ $(document).ready(function(){
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;? 
-</span><span class='line'>include('html_dom_parser.php');
-</span><span class='line'>$dom = file_get_dom('http://www.google.com/');
-</span><span class='line'>// 移除网页中所有图片 
-</span><span class='line'>$ret = $dom->find('img'); 
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '';}
-</span><span class='line'>// 修改网页中所有 input 标签 
-</span><span class='line'>$ret = $dom->find('input'); 
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '[INPUT]';}
-</span><span class='line'>// 显示修改后的网页 
-</span><span class='line'>echo $dom->save(); 
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?</span>
+</span><span class='line'><span class="k">include</span><span class="p">(</span><span class="s1">&#39;html_dom_parser.php&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$dom</span> <span class="o">=</span> <span class="nx">file_get_dom</span><span class="p">(</span><span class="s1">&#39;http://www.google.com/&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// 移除网页中所有图片 </span>
+</span><span class='line'><span class="nv">$ret</span> <span class="o">=</span> <span class="nv">$dom</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="k">foreach</span><span class="p">(</span><span class="nv">$ret</span> <span class="k">as</span> <span class="nv">$v</span><span class="p">)</span> <span class="p">{</span><span class="nv">$v</span><span class="o">-&gt;</span><span class="na">outertext</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;}</span>
+</span><span class='line'><span class="c1">// 修改网页中所有 input 标签 </span>
+</span><span class='line'><span class="nv">$ret</span> <span class="o">=</span> <span class="nv">$dom</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="k">foreach</span><span class="p">(</span><span class="nv">$ret</span> <span class="k">as</span> <span class="nv">$v</span><span class="p">)</span> <span class="p">{</span><span class="nv">$v</span><span class="o">-&gt;</span><span class="na">outertext</span> <span class="o">=</span> <span class="s1">&#39;[INPUT]&#39;</span><span class="p">;}</span>
+</span><span class='line'><span class="c1">// 显示修改后的网页 </span>
+</span><span class='line'><span class="k">echo</span> <span class="nv">$dom</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">();</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -297,7 +298,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -307,16 +308,17 @@ $(document).ready(function(){
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// Create DOM from URL
-</span><span class='line'>$html = file_get_html('http://slashdot.org/');
-</span><span class='line'>// Find all article blocks
-</span><span class='line'>foreach($html->find('div.article') as $article) {
-</span><span class='line'>    $item['title']     = $article->find('div.title', 0)->plaintext;
-</span><span class='line'>    $item['intro']    = $article->find('div.intro', 0)->plaintext;
-</span><span class='line'>    $item['details'] = $article->find('div.details', 0)->plaintext;
-</span><span class='line'>    $articles[] = $item;
-</span><span class='line'>}
-</span><span class='line'>print_r($articles);</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">// Create DOM from URL</span>
+</span><span class='line'><span class="x">$html = file_get_html(&#39;http://slashdot.org/&#39;);</span>
+</span><span class='line'><span class="x">// Find all article blocks</span>
+</span><span class='line'><span class="x">foreach($html-&gt;find(&#39;div.article&#39;) as $article) {</span>
+</span><span class='line'><span class="x">    $item[&#39;title&#39;]     = $article-&gt;find(&#39;div.title&#39;, 0)-&gt;plaintext;</span>
+</span><span class='line'><span class="x">    $item[&#39;intro&#39;]    = $article-&gt;find(&#39;div.intro&#39;, 0)-&gt;plaintext;</span>
+</span><span class='line'><span class="x">    $item[&#39;details&#39;] = $article-&gt;find(&#39;div.details&#39;, 0)-&gt;plaintext;</span>
+</span><span class='line'><span class="x">    $articles[] = $item;</span>
+</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="x">print_r($articles);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -353,7 +355,7 @@ $(document).ready(function(){
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/dom/'>DOM</a>, <a class='tag' href='/blog/tags/html/'>HTML</a>, <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/parser/'>Parser</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/dom/'>DOM</a>, <a class='tag' href='/blog/tags/html/'>HTML</a>, <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/jie-xi/'>解析</a></span>
 		
     </p>
     

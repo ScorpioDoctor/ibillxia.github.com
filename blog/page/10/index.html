@@ -587,23 +587,23 @@ LinkedIn有着商业范儿的严肃简洁，只有一些基本的联络和互动
   </header>
 
 
-  <div class="entry-content"><p>php安全过滤是防止注入的第一道防线，不得大意。提到PHP的安全过滤，不得不提的两个东西是set_magic_quotes_runtime 和 magic_quotes_gpc。</p>
+  <div class="entry-content"><p>php安全过滤是防止注入的第一道防线，不得大意。提到PHP的安全过滤，不得不提的两个东西是`set_magic_quotes_runtime` 和 `magic_quotes_gpc`。</p>
 
 
 
 
-<p>set_magic_quotes_runtime() 可以让程序员在代码中动态开启或关闭 magic_quotes_runtime，set_magic_quotes_runtime(1) 表示开启，
-set_magic_quotes_runtime(0) 则表示关闭。当set_magic_quotes_runtime(1)时，从数据库或通过fread之类的函数读取的文本，将自动对&#8217; &#8220;和\自动
+<p>`set_magic_quotes_runtime()` 可以让程序员在代码中动态开启或关闭 `magic_quotes_runtime`，`set_magic_quotes_runtime(1)` 表示开启，
+`set_magic_quotes_runtime(0)` 则表示关闭。当`set_magic_quotes_runtime(1)`时，从数据库或通过`fread`之类的函数读取的文本，将自动对&#8217; &#8220;和\自动
 加上反斜杠\进行转义，防止溢出。这在对数据库的数据进行转移的时候非常有用。但在一般情况下，应当将其关闭，否则从数据库读取出来的数据单引
-号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 set_magic_quotes_runtime(0); 强制关闭 
-magic_quotes_runtime 。</p>
+号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 `set_magic_quotes_runtime(0);` 强制关闭 
+`magic_quotes_runtime` 。</p>
 
 
 
 
-<p>magic_quotes_gpc 和 magic_quotes_runtime 的区别在于，magic_quotes_gpc 是对通过GET、POST、COOKIE传递的数据进行转义，一般在数据入库前
-要先进行转义，magic_quotes_gpc不能在代码中动态开启或关 闭，需要到php.ini将magic_quotes_gpc设置为on或off，代码中可以用get_magic_quotes_gpc
-获取 magic_quotes_gpc的状态。当magic_quotes_gpc为off时，需要手工对数据进行addslashes，代码如下：</p>
+<p>`magic_quotes_gpc` 和 `magic_quotes_runtime` 的区别在于，`magic_quotes_gpc` 是对通过GET、POST、COOKIE传递的数据进行转义，一般在数据入库前
+要先进行转义，`magic_quotes_gpc`不能在代码中动态开启或关 闭，需要到`php.ini`将`magic_quotes_gpc`设置为on或off，代码中可以用`get_magic_quotes_gpc`
+获取 `magic_quotes_gpc`的状态。当`magic_quotes_gpc`为off时，需要手工对数据进行addslashes，代码如下：</p>
 
 
 </div>
@@ -777,7 +777,7 @@ magic_quotes_runtime 。</p>
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -802,31 +802,32 @@ magic_quotes_runtime 。</p>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/**
-</span><span class='line'>* 输出变量的内容，通常用于调试
-</span><span class='line'>*
-</span><span class='line'>* @package Core
-</span><span class='line'>*
-</span><span class='line'>* @param mixed $vars 要输出的变量
-</span><span class='line'>* @param string $label
-</span><span class='line'>* @param boolean $return
-</span><span class='line'>*/
-</span><span class='line'>function dump($vars, $label = '', $return = false)
-</span><span class='line'>{
-</span><span class='line'>    if (ini_get('html_errors')) {
-</span><span class='line'>        $content = "&lt;pre>\n";
-</span><span class='line'>        if ($label != '') {
-</span><span class='line'>            $content .= "&lt;strong>{$label} :&lt;/strong>\n";
-</span><span class='line'>        }
-</span><span class='line'>        $content .= htmlspecialchars(print_r($vars, true));
-</span><span class='line'>        $content .= "\n&lt;/pre>\n";
-</span><span class='line'>    } else {
-</span><span class='line'>        $content = $label . " :\n" . print_r($vars, true);
-</span><span class='line'>    }
-</span><span class='line'>    if ($return) { return $content; }
-</span><span class='line'>    echo $content;
-</span><span class='line'>    return null;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/**</span>
+</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @package Core</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
+</span><span class='line'><span class="x">* @param string $label</span>
+</span><span class='line'><span class="x">* @param boolean $return</span>
+</span><span class='line'><span class="x">*/</span>
+</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
+</span><span class='line'><span class="x">{</span>
+</span><span class='line'><span class="x">    if (ini_get(&#39;html_errors&#39;)) {</span>
+</span><span class='line'><span class="x">        $content = &quot;&lt;pre&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">        if ($label != &#39;&#39;) {</span>
+</span><span class='line'><span class="x">            $content .= &quot;&lt;strong&gt;{$label} :&lt;/strong&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">        }</span>
+</span><span class='line'><span class="x">        $content .= htmlspecialchars(print_r($vars, true));</span>
+</span><span class='line'><span class="x">        $content .= &quot;\n&lt;/pre&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    } else {</span>
+</span><span class='line'><span class="x">        $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">    if ($return) { return $content; }</span>
+</span><span class='line'><span class="x">    echo $content;</span>
+</span><span class='line'><span class="x">    return null;</span>
+</span><span class='line'><span class="x">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 

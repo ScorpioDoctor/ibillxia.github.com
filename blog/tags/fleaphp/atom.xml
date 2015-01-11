@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: FleaPHP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/fleaphp/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-11T10:09:32+08:00</updated>
+  <updated>2015-01-11T15:21:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p>以下是从FleaPHP上挖来的，感谢FleaPHP的开发者们。</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -49,34 +49,35 @@
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/&lt;em>*
-</span><span class='line'>* 输出变量的内容，通常用于调试
-</span><span class='line'>*
-</span><span class='line'>* @package Core
-</span><span class='line'>*
-</span><span class='line'>* @param mixed $vars 要输出的变量
-</span><span class='line'>* @param string $label
-</span><span class='line'>* @param boolean $return
-</span><span class='line'>&lt;/em>/
-</span><span class='line'>function dump($vars, $label = '', $return = false)
-</span><span class='line'>{&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/&lt;em&gt;*</span>
+</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @package Core</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
+</span><span class='line'><span class="x">* @param string $label</span>
+</span><span class='line'><span class="x">* @param boolean $return</span>
+</span><span class='line'><span class="x">&lt;/em&gt;/</span>
+</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>if (ini_get('html_errors')) {
-</span><span class='line'>    $content = "&lt;pre&gt;\n";
-</span><span class='line'>    if ($label != '') {
-</span><span class='line'>        $content .= "&lt;strong&gt;{$label} :&lt;/strong&gt;\n";
-</span><span class='line'>    }
-</span><span class='line'>    $content .= htmlspecialchars(print_r($vars, true));
-</span><span class='line'>    $content .= "\n&lt;/pre&gt;\n";
-</span><span class='line'>} else {
-</span><span class='line'>    $content = $label . " :\n" . print_r($vars, true);
-</span><span class='line'>}
-</span><span class='line'>if ($return) { return $content; }
-</span><span class='line'>echo $content;
-</span><span class='line'>return null;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if (ini_get(&#39;html_errors&#39;)) {</span>
+</span><span class='line'><span class="x">    $content = &quot;&amp;lt;pre&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    if ($label != &#39;&#39;) {</span>
+</span><span class='line'><span class="x">        $content .= &quot;&amp;lt;strong&amp;gt;{$label} :&amp;lt;/strong&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">    $content .= htmlspecialchars(print_r($vars, true));</span>
+</span><span class='line'><span class="x">    $content .= &quot;\n&amp;lt;/pre&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">} else {</span>
+</span><span class='line'><span class="x">    $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
+</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="x">if ($return) { return $content; }</span>
+</span><span class='line'><span class="x">echo $content;</span>
+</span><span class='line'><span class="x">return null;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <!--more-->
 

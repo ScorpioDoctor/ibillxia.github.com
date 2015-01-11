@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: HTML | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/html/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-11T10:09:32+08:00</updated>
+  <updated>2015-01-11T15:21:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -82,7 +82,7 @@
 <p>如何修改 HTML 元素 </p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -94,23 +94,24 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?
-</span><span class='line'>include('html_dom_parser.php');
-</span><span class='line'>$dom = file_get_dom('http://www.google.com/');
-</span><span class='line'>// 移除网页中所有图片
-</span><span class='line'>$ret = $dom->find('img');
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '';}
-</span><span class='line'>// 修改网页中所有 input 标签
-</span><span class='line'>$ret = $dom->find('input');
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '[INPUT]';}
-</span><span class='line'>// 显示修改后的网页
-</span><span class='line'>echo $dom->save();
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">&amp;lt;?</span>
+</span><span class='line'><span class="x">include(&#39;html_dom_parser.php&#39;);</span>
+</span><span class='line'><span class="x">$dom = file_get_dom(&#39;http://www.google.com/&#39;);</span>
+</span><span class='line'><span class="x">// 移除网页中所有图片</span>
+</span><span class='line'><span class="x">$ret = $dom-&gt;find(&#39;img&#39;);</span>
+</span><span class='line'><span class="x">foreach($ret as $v) {$v-&gt;outertext = &#39;&#39;;}</span>
+</span><span class='line'><span class="x">// 修改网页中所有 input 标签</span>
+</span><span class='line'><span class="x">$ret = $dom-&gt;find(&#39;input&#39;);</span>
+</span><span class='line'><span class="x">foreach($ret as $v) {$v-&gt;outertext = &#39;[INPUT]&#39;;}</span>
+</span><span class='line'><span class="x">// 显示修改后的网页</span>
+</span><span class='line'><span class="x">echo $dom-&gt;save();</span>
+</span><span class='line'><span class="x">?&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Slashdot网站内容抓取</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -123,19 +124,20 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// Create DOM from URL
-</span><span class='line'>$html = file_get_html('http://slashdot.org/');
-</span><span class='line'>// Find all article blocks
-</span><span class='line'>foreach($html->find('div.article') as $article) {&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">// Create DOM from URL</span>
+</span><span class='line'><span class="x">$html = file_get_html(&#39;http://slashdot.org/&#39;);</span>
+</span><span class='line'><span class="x">// Find all article blocks</span>
+</span><span class='line'><span class="x">foreach($html-&gt;find(&#39;div.article&#39;) as $article) {&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>$item['title']     = $article-&gt;find('div.title', 0)-&gt;plaintext;
-</span><span class='line'>$item['intro']    = $article-&gt;find('div.intro', 0)-&gt;plaintext;
-</span><span class='line'>$item['details'] = $article-&gt;find('div.details', 0)-&gt;plaintext;
-</span><span class='line'>$articles[] = $item;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;$item[&#39;title&#39;]     = $article-&amp;gt;find(&#39;div.title&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$item[&#39;intro&#39;]    = $article-&amp;gt;find(&#39;div.intro&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$item[&#39;details&#39;] = $article-&amp;gt;find(&#39;div.details&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$articles[] = $item;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>print_r($articles);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span><span class='line'><span class="x">print_r($articles);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   

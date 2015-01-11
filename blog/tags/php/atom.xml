@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: PHP | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/php/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-11T10:09:32+08:00</updated>
+  <updated>2015-01-11T15:21:15+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -18,23 +18,23 @@
     <link href="http://ibillxia.github.io/blog/2010/09/24/PHP-string-filter-methods-for-safety/"/>
     <updated>2010-09-24T13:28:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2010/09/24/PHP-string-filter-methods-for-safety</id>
-    <content type="html"><![CDATA[<p>php安全过滤是防止注入的第一道防线，不得大意。提到PHP的安全过滤，不得不提的两个东西是set_magic_quotes_runtime 和 magic_quotes_gpc。</p>
+    <content type="html"><![CDATA[<p>php安全过滤是防止注入的第一道防线，不得大意。提到PHP的安全过滤，不得不提的两个东西是`set_magic_quotes_runtime` 和 `magic_quotes_gpc`。</p>
 
 
 
 
-<p>set_magic_quotes_runtime() 可以让程序员在代码中动态开启或关闭 magic_quotes_runtime，set_magic_quotes_runtime(1) 表示开启，
-set_magic_quotes_runtime(0) 则表示关闭。当set_magic_quotes_runtime(1)时，从数据库或通过fread之类的函数读取的文本，将自动对' "和\自动
+<p>`set_magic_quotes_runtime()` 可以让程序员在代码中动态开启或关闭 `magic_quotes_runtime`，`set_magic_quotes_runtime(1)` 表示开启，
+`set_magic_quotes_runtime(0)` 则表示关闭。当`set_magic_quotes_runtime(1)`时，从数据库或通过`fread`之类的函数读取的文本，将自动对' "和\自动
 加上反斜杠\进行转义，防止溢出。这在对数据库的数据进行转移的时候非常有用。但在一般情况下，应当将其关闭，否则从数据库读取出来的数据单引
-号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 set_magic_quotes_runtime(0); 强制关闭 
-magic_quotes_runtime 。</p>
+号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 `set_magic_quotes_runtime(0);` 强制关闭 
+`magic_quotes_runtime` 。</p>
 
 
 
 
-<p>magic_quotes_gpc 和 magic_quotes_runtime 的区别在于，magic_quotes_gpc 是对通过GET、POST、COOKIE传递的数据进行转义，一般在数据入库前
-要先进行转义，magic_quotes_gpc不能在代码中动态开启或关 闭，需要到php.ini将magic_quotes_gpc设置为on或off，代码中可以用get_magic_quotes_gpc
-获取 magic_quotes_gpc的状态。当magic_quotes_gpc为off时，需要手工对数据进行addslashes，代码如下：</p>
+<p>`magic_quotes_gpc` 和 `magic_quotes_runtime` 的区别在于，`magic_quotes_gpc` 是对通过GET、POST、COOKIE传递的数据进行转义，一般在数据入库前
+要先进行转义，`magic_quotes_gpc`不能在代码中动态开启或关 闭，需要到`php.ini`将`magic_quotes_gpc`设置为on或off，代码中可以用`get_magic_quotes_gpc`
+获取 `magic_quotes_gpc`的状态。当`magic_quotes_gpc`为off时，需要手工对数据进行addslashes，代码如下：</p>
 
 
 <!--more-->
@@ -88,7 +88,7 @@ magic_quotes_runtime 。</p>
 <p>php防注入函数,字符过滤函数</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -157,75 +157,76 @@ magic_quotes_runtime 。</p>
 <span class='line-number'>67</span>
 <span class='line-number'>68</span>
 <span class='line-number'>69</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//解码
-</span><span class='line'>function htmldecode($str)
-</span><span class='line'>{&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">//解码</span>
+</span><span class='line'><span class="x">function htmldecode($str)</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>if(empty($str)) return;
-</span><span class='line'>if($str=="") return $str;
-</span><span class='line'>$str=str_replace("sel&amp;#101;ct","select",$str);
-</span><span class='line'>$str=str_replace("jo&amp;#105;n","join",$str);
-</span><span class='line'>$str=str_replace("un&amp;#105;on","union",$str);
-</span><span class='line'>$str=str_replace("wh&amp;#101;re","where",$str);
-</span><span class='line'>$str=str_replace("ins&amp;#101;rt","insert",$str);
-</span><span class='line'>$str=str_replace("del&amp;#101;te","delete",$str);
-</span><span class='line'>$str=str_replace("up&amp;#100;ate","update",$str);
-</span><span class='line'>$str=str_replace("lik&amp;#101;","like",$str);
-</span><span class='line'>$str=str_replace("dro&amp;#112;","drop",$str);
-</span><span class='line'>$str=str_replace("cr&amp;#101;ate","create",$str);
-</span><span class='line'>$str=str_replace("mod&amp;#105;fy","modify",$str);
-</span><span class='line'>$str=str_replace("ren&amp;#097;me","rename",$str);
-</span><span class='line'>$str=str_replace("alt&amp;#101;r","alter",$str);
-</span><span class='line'>$str=str_replace("ca&amp;#115;","cast",$str);
-</span><span class='line'>$str=str_replace("&amp;amp;","&amp;",$str);
-</span><span class='line'>$str=str_replace("&amp;gt;","&gt;",$str);
-</span><span class='line'>$str=str_replace("&amp;lt;","&lt;",$str);
-</span><span class='line'>$str=str_replace("&amp;nbsp;",chr(32),$str);
-</span><span class='line'>$str=str_replace("&amp;nbsp;",chr(9),$str);
-</span><span class='line'>//$str=str_replace("&amp;#160;&amp;#160;&amp;#160;&amp;#160;",chr(9),$str);
-</span><span class='line'>$str=str_replace("&amp;",chr(34),$str);
-</span><span class='line'>$str=str_replace("&amp;#39;",chr(39),$str);
-</span><span class='line'>$str=str_replace("&lt;br /&gt;",chr(13),$str);
-</span><span class='line'>$str=str_replace("''","'",$str);
-</span><span class='line'>return $str;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if(empty($str)) return;</span>
+</span><span class='line'><span class="x">if($str==&quot;&quot;) return $str;</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;sel&amp;amp;#101;ct&quot;,&quot;select&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;jo&amp;amp;#105;n&quot;,&quot;join&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;un&amp;amp;#105;on&quot;,&quot;union&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;wh&amp;amp;#101;re&quot;,&quot;where&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;ins&amp;amp;#101;rt&quot;,&quot;insert&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;del&amp;amp;#101;te&quot;,&quot;delete&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;up&amp;amp;#100;ate&quot;,&quot;update&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;lik&amp;amp;#101;&quot;,&quot;like&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;dro&amp;amp;#112;&quot;,&quot;drop&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;cr&amp;amp;#101;ate&quot;,&quot;create&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;mod&amp;amp;#105;fy&quot;,&quot;modify&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;ren&amp;amp;#097;me&quot;,&quot;rename&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;alt&amp;amp;#101;r&quot;,&quot;alter&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;ca&amp;amp;#115;&quot;,&quot;cast&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;amp;&quot;,&quot;&amp;amp;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;gt;&quot;,&quot;&amp;gt;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;lt;&quot;,&quot;&amp;lt;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;nbsp;&quot;,chr(32),$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;nbsp;&quot;,chr(9),$str);</span>
+</span><span class='line'><span class="x">//$str=str_replace(&quot;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&quot;,chr(9),$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;&quot;,chr(34),$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;#39;&quot;,chr(39),$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;lt;br /&amp;gt;&quot;,chr(13),$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&#39;&#39;&quot;,&quot;&#39;&quot;,$str);</span>
+</span><span class='line'><span class="x">return $str;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>//编码
-</span><span class='line'>function htmlencode($str)
-</span><span class='line'>{&lt;/p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span><span class='line'><span class="x">//编码</span>
+</span><span class='line'><span class="x">function htmlencode($str)</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>if(empty($str)) return;
-</span><span class='line'>if($str=="") return $str;
-</span><span class='line'>$str=trim($str);
-</span><span class='line'>$str=str_replace("&amp;","&amp;amp;",$str);
-</span><span class='line'>$str=str_replace("&gt;","&amp;gt;",$str);
-</span><span class='line'>$str=str_replace("&lt;","&amp;lt;",$str);
-</span><span class='line'>$str=str_replace(chr(32),"&amp;nbsp;",$str);
-</span><span class='line'>$str=str_replace(chr(9),"&amp;nbsp;",$str);
-</span><span class='line'>//$str=str_replace(chr(9),"&amp;#160;&amp;#160;&amp;#160;&amp;#160;",$str);
-</span><span class='line'>$str=str_replace(chr(34),"&amp;",$str);
-</span><span class='line'>$str=str_replace(chr(39),"&amp;#39;",$str);
-</span><span class='line'>$str=str_replace(chr(13),"&lt;br /&gt;",$str);
-</span><span class='line'>$str=str_replace("'","''",$str);
-</span><span class='line'>$str=str_replace("select","sel&amp;#101;ct",$str);
-</span><span class='line'>$str=str_replace("join","jo&amp;#105;n",$str);
-</span><span class='line'>$str=str_replace("union","un&amp;#105;on",$str);
-</span><span class='line'>$str=str_replace("where","wh&amp;#101;re",$str);
-</span><span class='line'>$str=str_replace("insert","ins&amp;#101;rt",$str);
-</span><span class='line'>$str=str_replace("delete","del&amp;#101;te",$str);
-</span><span class='line'>$str=str_replace("update","up&amp;#100;ate",$str);
-</span><span class='line'>$str=str_replace("like","lik&amp;#101;",$str);
-</span><span class='line'>$str=str_replace("drop","dro&amp;#112;",$str);
-</span><span class='line'>$str=str_replace("create","cr&amp;#101;ate",$str);
-</span><span class='line'>$str=str_replace("modify","mod&amp;#105;fy",$str);
-</span><span class='line'>$str=str_replace("rename","ren&amp;#097;me",$str);
-</span><span class='line'>$str=str_replace("alter","alt&amp;#101;r",$str);
-</span><span class='line'>$str=str_replace("cast","ca&amp;#115;",$str);
-</span><span class='line'>return $str;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if(empty($str)) return;</span>
+</span><span class='line'><span class="x">if($str==&quot;&quot;) return $str;</span>
+</span><span class='line'><span class="x">$str=trim($str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;&quot;,&quot;&amp;amp;amp;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;gt;&quot;,&quot;&amp;amp;gt;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;lt;&quot;,&quot;&amp;amp;lt;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(chr(32),&quot;&amp;amp;nbsp;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(chr(9),&quot;&amp;amp;nbsp;&quot;,$str);</span>
+</span><span class='line'><span class="x">//$str=str_replace(chr(9),&quot;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(chr(34),&quot;&amp;amp;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(chr(39),&quot;&amp;amp;#39;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(chr(13),&quot;&amp;lt;br /&amp;gt;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;&#39;&quot;,&quot;&#39;&#39;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;select&quot;,&quot;sel&amp;amp;#101;ct&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;join&quot;,&quot;jo&amp;amp;#105;n&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;union&quot;,&quot;un&amp;amp;#105;on&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;where&quot;,&quot;wh&amp;amp;#101;re&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;insert&quot;,&quot;ins&amp;amp;#101;rt&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;delete&quot;,&quot;del&amp;amp;#101;te&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;update&quot;,&quot;up&amp;amp;#100;ate&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;like&quot;,&quot;lik&amp;amp;#101;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;drop&quot;,&quot;dro&amp;amp;#112;&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;create&quot;,&quot;cr&amp;amp;#101;ate&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;modify&quot;,&quot;mod&amp;amp;#105;fy&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;rename&quot;,&quot;ren&amp;amp;#097;me&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;alter&quot;,&quot;alt&amp;amp;#101;r&quot;,$str);</span>
+</span><span class='line'><span class="x">$str=str_replace(&quot;cast&quot;,&quot;ca&amp;amp;#115;&quot;,$str);</span>
+</span><span class='line'><span class="x">return $str;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
@@ -298,7 +299,7 @@ magic_quotes_runtime 。</p>
 <p>如何修改 HTML 元素 </p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -310,23 +311,24 @@ magic_quotes_runtime 。</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?
-</span><span class='line'>include('html_dom_parser.php');
-</span><span class='line'>$dom = file_get_dom('http://www.google.com/');
-</span><span class='line'>// 移除网页中所有图片
-</span><span class='line'>$ret = $dom->find('img');
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '';}
-</span><span class='line'>// 修改网页中所有 input 标签
-</span><span class='line'>$ret = $dom->find('input');
-</span><span class='line'>foreach($ret as $v) {$v->outertext = '[INPUT]';}
-</span><span class='line'>// 显示修改后的网页
-</span><span class='line'>echo $dom->save();
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">&amp;lt;?</span>
+</span><span class='line'><span class="x">include(&#39;html_dom_parser.php&#39;);</span>
+</span><span class='line'><span class="x">$dom = file_get_dom(&#39;http://www.google.com/&#39;);</span>
+</span><span class='line'><span class="x">// 移除网页中所有图片</span>
+</span><span class='line'><span class="x">$ret = $dom-&gt;find(&#39;img&#39;);</span>
+</span><span class='line'><span class="x">foreach($ret as $v) {$v-&gt;outertext = &#39;&#39;;}</span>
+</span><span class='line'><span class="x">// 修改网页中所有 input 标签</span>
+</span><span class='line'><span class="x">$ret = $dom-&gt;find(&#39;input&#39;);</span>
+</span><span class='line'><span class="x">foreach($ret as $v) {$v-&gt;outertext = &#39;[INPUT]&#39;;}</span>
+</span><span class='line'><span class="x">// 显示修改后的网页</span>
+</span><span class='line'><span class="x">echo $dom-&gt;save();</span>
+</span><span class='line'><span class="x">?&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Slashdot网站内容抓取</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -339,19 +341,20 @@ magic_quotes_runtime 。</p>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>// Create DOM from URL
-</span><span class='line'>$html = file_get_html('http://slashdot.org/');
-</span><span class='line'>// Find all article blocks
-</span><span class='line'>foreach($html->find('div.article') as $article) {&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">// Create DOM from URL</span>
+</span><span class='line'><span class="x">$html = file_get_html(&#39;http://slashdot.org/&#39;);</span>
+</span><span class='line'><span class="x">// Find all article blocks</span>
+</span><span class='line'><span class="x">foreach($html-&gt;find(&#39;div.article&#39;) as $article) {&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>$item['title']     = $article-&gt;find('div.title', 0)-&gt;plaintext;
-</span><span class='line'>$item['intro']    = $article-&gt;find('div.intro', 0)-&gt;plaintext;
-</span><span class='line'>$item['details'] = $article-&gt;find('div.details', 0)-&gt;plaintext;
-</span><span class='line'>$articles[] = $item;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;$item[&#39;title&#39;]     = $article-&amp;gt;find(&#39;div.title&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$item[&#39;intro&#39;]    = $article-&amp;gt;find(&#39;div.intro&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$item[&#39;details&#39;] = $article-&amp;gt;find(&#39;div.details&#39;, 0)-&amp;gt;plaintext;</span>
+</span><span class='line'><span class="x">$articles[] = $item;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>print_r($articles);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span><span class='line'><span class="x">print_r($articles);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
@@ -363,7 +366,7 @@ magic_quotes_runtime 。</p>
     <content type="html"><![CDATA[<p>以下是从FleaPHP上挖来的，感谢FleaPHP的开发者们。</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -391,34 +394,35 @@ magic_quotes_runtime 。</p>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 <span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/&lt;em>*
-</span><span class='line'>* 输出变量的内容，通常用于调试
-</span><span class='line'>*
-</span><span class='line'>* @package Core
-</span><span class='line'>*
-</span><span class='line'>* @param mixed $vars 要输出的变量
-</span><span class='line'>* @param string $label
-</span><span class='line'>* @param boolean $return
-</span><span class='line'>&lt;/em>/
-</span><span class='line'>function dump($vars, $label = '', $return = false)
-</span><span class='line'>{&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/&lt;em&gt;*</span>
+</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @package Core</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
+</span><span class='line'><span class="x">* @param string $label</span>
+</span><span class='line'><span class="x">* @param boolean $return</span>
+</span><span class='line'><span class="x">&lt;/em&gt;/</span>
+</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>if (ini_get('html_errors')) {
-</span><span class='line'>    $content = "&lt;pre&gt;\n";
-</span><span class='line'>    if ($label != '') {
-</span><span class='line'>        $content .= "&lt;strong&gt;{$label} :&lt;/strong&gt;\n";
-</span><span class='line'>    }
-</span><span class='line'>    $content .= htmlspecialchars(print_r($vars, true));
-</span><span class='line'>    $content .= "\n&lt;/pre&gt;\n";
-</span><span class='line'>} else {
-</span><span class='line'>    $content = $label . " :\n" . print_r($vars, true);
-</span><span class='line'>}
-</span><span class='line'>if ($return) { return $content; }
-</span><span class='line'>echo $content;
-</span><span class='line'>return null;
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if (ini_get(&#39;html_errors&#39;)) {</span>
+</span><span class='line'><span class="x">    $content = &quot;&amp;lt;pre&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    if ($label != &#39;&#39;) {</span>
+</span><span class='line'><span class="x">        $content .= &quot;&amp;lt;strong&amp;gt;{$label} :&amp;lt;/strong&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">    $content .= htmlspecialchars(print_r($vars, true));</span>
+</span><span class='line'><span class="x">    $content .= &quot;\n&amp;lt;/pre&amp;gt;\n&quot;;</span>
+</span><span class='line'><span class="x">} else {</span>
+</span><span class='line'><span class="x">    $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
+</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="x">if ($return) { return $content; }</span>
+</span><span class='line'><span class="x">echo $content;</span>
+</span><span class='line'><span class="x">return null;</span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <!--more-->
 
@@ -525,7 +529,7 @@ submitlinks(\$URI) </br>
 <p>Demo 1：抓取百度首页示例</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -547,33 +551,34 @@ submitlinks(\$URI) </br>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?
-</span><span class='line'>include "Snoopy.class.php";
-</span><span class='line'>$snoopy = new Snoopy;
-</span><span class='line'>$snoopy->proxy_host = "www.baidu.com";
-</span><span class='line'>$snoopy->proxy_port = "8080";
-</span><span class='line'>$snoopy->agent = "(compatible; MSIE 4.01; MSN 2.5; AOL 4.0; Windows 98)";
-</span><span class='line'>$snoopy->referer = "http://www.baidu.com/";
-</span><span class='line'>$snoopy->cookies["SessionID"] = 238472834723489l;
-</span><span class='line'>$snoopy->cookies["favoriteColor"] = "RED";
-</span><span class='line'>$snoopy->rawheaders["Pragma"] = "no-cache";
-</span><span class='line'>$snoopy->maxredirs = 2;
-</span><span class='line'>$snoopy->offsiteok = false;
-</span><span class='line'>$snoopy->expandlinks = false;
-</span><span class='line'>$snoopy->user = "joe";
-</span><span class='line'>$snoopy->pass = "bloe";
-</span><span class='line'>if($snoopy->fetchtext("http://www.baidu.com"))
-</span><span class='line'>{
-</span><span class='line'>echo " &lt;PRE>".htmlspecialchars($snoopy->results)." &lt;/PRE>\n"; &lt;BR>
-</span><span class='line'>} &lt;BR>
-</span><span class='line'>else &lt;BR>
-</span><span class='line'>echo "error fetching document: ".$snoopy->error."\n";
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">&amp;lt;?</span>
+</span><span class='line'><span class="x">include &quot;Snoopy.class.php&quot;;</span>
+</span><span class='line'><span class="x">$snoopy = new Snoopy;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;proxy_host = &quot;www.baidu.com&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;proxy_port = &quot;8080&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;agent = &quot;(compatible; MSIE 4.01; MSN 2.5; AOL 4.0; Windows 98)&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;referer = &quot;http://www.baidu.com/&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;cookies[&quot;SessionID&quot;] = 238472834723489l;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;cookies[&quot;favoriteColor&quot;] = &quot;RED&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;rawheaders[&quot;Pragma&quot;] = &quot;no-cache&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;maxredirs = 2;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;offsiteok = false;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;expandlinks = false;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;user = &quot;joe&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;pass = &quot;bloe&quot;;</span>
+</span><span class='line'><span class="x">if($snoopy-&gt;fetchtext(&quot;http://www.baidu.com&quot;))</span>
+</span><span class='line'><span class="x">{</span>
+</span><span class='line'><span class="x">echo &quot; &lt;PRE&gt;&quot;.htmlspecialchars($snoopy-&gt;results).&quot; &lt;/PRE&gt;\n&quot;; &lt;BR&gt;</span>
+</span><span class='line'><span class="x">} &lt;BR&gt;</span>
+</span><span class='line'><span class="x">else &lt;BR&gt;</span>
+</span><span class='line'><span class="x">echo &quot;error fetching document: &quot;.$snoopy-&gt;error.&quot;\n&quot;;</span>
+</span><span class='line'><span class="x">?&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Demo 2: snoopy登录并采集phpchina示例 </p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -760,202 +765,203 @@ submitlinks(\$URI) </br>
 <span class='line-number'>185</span>
 <span class='line-number'>186</span>
 <span class='line-number'>187</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?php
-</span><span class='line'>//采集phpchina
-</span><span class='line'>set_time_limit(0);
-</span><span class='line'>require_once("Snoopy.class.php");
-</span><span class='line'>$snoopy=new Snoopy();
-</span><span class='line'>//登陆论坛
-</span><span class='line'>$submit_url = "http://www.phpchina.com/bbs/logging.php?action=login";
-</span><span class='line'>$submit_vars["loginmode"] = "normal";
-</span><span class='line'>$submit_vars["styleid"] = "1";
-</span><span class='line'>$submit_vars["cookietime"] = "315360000";
-</span><span class='line'>$submit_vars["loginfield"] = "username";
-</span><span class='line'>$submit_vars["username"] = "&lt;strong>&lt;em>"; //你的用户名
-</span><span class='line'>$submit_vars["password"] = "&lt;/em>&lt;/strong>**"; //你的密码
-</span><span class='line'>$submit_vars["questionid"] = "0";
-</span><span class='line'>$submit_vars["answer"] = "";
-</span><span class='line'>$submit_vars["loginsubmit"] = "提 交";
-</span><span class='line'>$snoopy->submit($submit_url,$submit_vars);&lt;/p>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">&amp;lt;?php</span>
+</span><span class='line'><span class="x">//采集phpchina</span>
+</span><span class='line'><span class="x">set_time_limit(0);</span>
+</span><span class='line'><span class="x">require_once(&quot;Snoopy.class.php&quot;);</span>
+</span><span class='line'><span class="x">$snoopy=new Snoopy();</span>
+</span><span class='line'><span class="x">//登陆论坛</span>
+</span><span class='line'><span class="x">$submit_url = &quot;http://www.phpchina.com/bbs/logging.php?action=login&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;loginmode&quot;] = &quot;normal&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;styleid&quot;] = &quot;1&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;cookietime&quot;] = &quot;315360000&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;loginfield&quot;] = &quot;username&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;username&quot;] = &quot;&lt;strong&gt;&lt;em&gt;&quot;; //你的用户名</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;password&quot;] = &quot;&lt;/em&gt;&lt;/strong&gt;**&quot;; //你的密码</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;questionid&quot;] = &quot;0&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;answer&quot;] = &quot;&quot;;</span>
+</span><span class='line'><span class="x">$submit_vars[&quot;loginsubmit&quot;] = &quot;提 交&quot;;</span>
+</span><span class='line'><span class="x">$snoopy-&gt;submit($submit_url,$submit_vars);&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>if ($snoopy->results)
-</span><span class='line'>{&lt;/p>
+</span><span class='line'><span class="x">&lt;p&gt;if ($snoopy-&gt;results)</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>//获取连接地址 
-</span><span class='line'>$snoopy-&gt;fetchlinks("http://www.phpchina.com/bbs"); 
-</span><span class='line'>$url=array(); 
-</span><span class='line'>$url=$snoopy-&gt;results; 
-</span><span class='line'>//print_r($url); 
-</span><span class='line'>foreach ($url as $key=&gt;$value) 
-</span><span class='line'>{ 
-</span><span class='line'>    //匹配http://www.phpchina.com/bbs/forumdisplay.php?fid=156&amp;sid=VfcqTR地址即论坛板块地址 
-</span><span class='line'>    if (!preg_match("/^(http:\/\/www\.phpchina\.com\/bbs\/forumdisplay\.php\?fid=)[0-9]*&amp;sid=[a-zA-Z]{6}/i",$value)) 
-</span><span class='line'>    { 
-</span><span class='line'>        unset($url[$key]); 
-</span><span class='line'>    } 
-</span><span class='line'>} 
-</span><span class='line'>//print_r($url); 
-</span><span class='line'>//获取到板块数组$url，循环访问，此处获取第一个模块第一页的数据 
-</span><span class='line'>$i=0; 
-</span><span class='line'>foreach ($url as $key=&gt;$value) 
-</span><span class='line'>{ 
-</span><span class='line'>    if ($i&gt;=1) 
-</span><span class='line'>    { 
-</span><span class='line'>        //测试限制 
-</span><span class='line'>        break; 
-</span><span class='line'>    } 
-</span><span class='line'>    else 
-</span><span class='line'>    { 
-</span><span class='line'>        //访问该模块，提取帖子的连接地址，正式访问里需要提取帖子分页的数据，然后根据分页数据提取帖子数据 
-</span><span class='line'>        $snoopy=new Snoopy(); 
-</span><span class='line'>        $snoopy-&gt;fetchlinks($value); 
-</span><span class='line'>        $tie=array(); 
-</span><span class='line'>        $tie[$i]=$snoopy-&gt;results; 
-</span><span class='line'>        //print_r($tie); 
-</span><span class='line'>        //转换数组 
-</span><span class='line'>        foreach ($tie[$i] as $key=&gt;$value) 
-</span><span class='line'>        { 
-</span><span class='line'>            //匹配http://www.phpchina.com/bbs/viewthread.php?tid=68127&amp;amp; extra=page%3D1&amp;amp;page=1&amp;sid=iBLZfK 
-</span><span class='line'>            if (!preg_match("/^(http:\/\/www\.phpchina\.com\/bbs\/viewthread\.php\?tid=)[0-9]*&amp;amp;extra=page\%3D1&amp;amp;page=[0-9]*&amp;sid=[a-zA-Z]{6}/i",$value)) 
-</span><span class='line'>            { 
-</span><span class='line'>                unset($tie[$i][$key]); 
-</span><span class='line'>            } 
-</span><span class='line'>        } 
-</span><span class='line'>        //print_r($tie[$i]); 
-</span><span class='line'>        //归类数组，将同一个帖子不同页面的内容放一个数组里 
-</span><span class='line'>        $left='';//连接左边公用地址 
-</span><span class='line'>        $j=0; 
-</span><span class='line'>        $page=array(); 
-</span><span class='line'>        foreach ($tie[$i] as $key=&gt;$value) 
-</span><span class='line'>        { 
-</span><span class='line'>            $left=substr($value,0,52); 
-</span><span class='line'>            $m=0; 
-</span><span class='line'>            foreach ($tie[$i] as $pkey=&gt;$pvalue) 
-</span><span class='line'>            { 
-</span><span class='line'>                //重组数组 
-</span><span class='line'>                if (substr($pvalue,0,52)==$left) 
-</span><span class='line'>                { 
-</span><span class='line'>                    $page[$j][$m]=$pvalue; 
-</span><span class='line'>                    $m++; 
-</span><span class='line'>                } 
-</span><span class='line'>            } 
-</span><span class='line'>            $j++; 
-</span><span class='line'>        } 
-</span><span class='line'>        //去除重复项开始 
-</span><span class='line'>        //$page=array_unique($page);只能用于一维数组 
-</span><span class='line'>        $paget[0]=$page[0]; 
-</span><span class='line'>        $nums=count($page); 
-</span><span class='line'>        for ($n=1;$n &lt;$nums;$n++) 
-</span><span class='line'>        { 
-</span><span class='line'>            $paget[$n]=array_diff($page[$n],$page[$n-1]); 
-</span><span class='line'>        } 
-</span><span class='line'>        //去除多维数组重复值结束 
-</span><span class='line'>        //去除数组空值 
-</span><span class='line'>        unset($page); 
-</span><span class='line'>        $page=array();//重新定义page数组 
-</span><span class='line'>        $page=array_filter($paget); 
-</span><span class='line'>        //print_r($page); 
-</span><span class='line'>        $u=0; 
-</span><span class='line'>        $title=array(); 
-</span><span class='line'>        $content=array(); 
-</span><span class='line'>        $temp=''; 
-</span><span class='line'>        $tt=array(); 
-</span><span class='line'>        foreach ($page as $key=&gt;$value) 
-</span><span class='line'>        { 
-</span><span class='line'>            //外围循环，针对一个帖子 
-</span><span class='line'>            if (is_array($value)) 
-</span><span class='line'>            { 
-</span><span class='line'>                foreach ($value as $k1=&gt;$v1) 
-</span><span class='line'>                { 
-</span><span class='line'>                    //页内循环，针对一个帖子的N页 
-</span><span class='line'>                    $snoopy=new Snoopy(); 
-</span><span class='line'>                    $snoopy-&gt;fetch($v1); 
-</span><span class='line'>                    $temp=$snoopy-&gt;results; 
-</span><span class='line'>                    //读取标题 
-</span><span class='line'>                    if (!preg_match_all("/ &lt;h2&gt;(.*) &lt;\/h2&gt;/i",$temp,$tt)) 
-</span><span class='line'>                    { 
-</span><span class='line'>                        echo "no title"; 
-</span><span class='line'>                        exit; 
-</span><span class='line'>                    } 
-</span><span class='line'>                    else 
-</span><span class='line'>                    { 
-</span><span class='line'>                        $title[$u]=$tt[1][1]; 
-</span><span class='line'>                    } 
-</span><span class='line'>                    unset($tt); 
-</span><span class='line'>                    //读取内容 
-</span><span class='line'>                    if (!preg_match_all("/ &lt;div id=\"postmessage_[0-9]{1,8}\" class=\"t_msgfont\"&gt;(.*) &lt;\/div&gt;/i",$temp,$tt)) 
-</span><span class='line'>                    { 
-</span><span class='line'>                        print_r($tt); 
-</span><span class='line'>                        echo "no content1"; 
-</span><span class='line'>                        exit; 
-</span><span class='line'>                    } 
-</span><span class='line'>                    else 
-</span><span class='line'>                    { 
-</span><span class='line'>                        foreach ($tt[1] as $c=&gt;$c2) 
-</span><span class='line'>                        { 
-</span><span class='line'>                            $content[$u].=$c2; 
-</span><span class='line'>                        } 
-</span><span class='line'>                    } 
-</span><span class='line'>                } 
-</span><span class='line'>            } 
-</span><span class='line'>            else 
-</span><span class='line'>            { 
-</span><span class='line'>                //直接取页内容 
-</span><span class='line'>                $snoopy=new Snoopy(); 
-</span><span class='line'>                $snoopy-&gt;fetch($value); 
-</span><span class='line'>                $temp=$snoopy-&gt;results; 
-</span><span class='line'>                //读取标题 
-</span><span class='line'>                if (!preg_match_all("/ &lt;h2&gt;(.*) &lt;\/h2&gt;/i",$temp,$tt)) 
-</span><span class='line'>                { 
-</span><span class='line'>                    echo "no title"; 
-</span><span class='line'>                    exit; 
-</span><span class='line'>                } 
-</span><span class='line'>                else 
-</span><span class='line'>                { 
-</span><span class='line'>                    $title[$u]=$tt[1][1]; 
-</span><span class='line'>                } 
-</span><span class='line'>                unset($tt); 
-</span><span class='line'>                //读取内容 
-</span><span class='line'>                if (!preg_match_all("/ &lt;div id=\"postmessage_[0-9]*\" class=\"t_msgfont\"&gt;(.*) &lt;\/div&gt;/i",$temp,$tt)) 
-</span><span class='line'>                { 
-</span><span class='line'>                    echo "no content2"; 
-</span><span class='line'>                    exit; 
-</span><span class='line'>                } 
-</span><span class='line'>                else 
-</span><span class='line'>                { 
-</span><span class='line'>                    foreach ($tt[1] as $c=&gt;$c2) 
-</span><span class='line'>                    { 
-</span><span class='line'>                        $content[$u].=$c2; 
-</span><span class='line'>                    } 
-</span><span class='line'>                } 
-</span><span class='line'>            } 
-</span><span class='line'>            $u++; 
-</span><span class='line'>        } 
-</span><span class='line'>        print_r($content); 
-</span><span class='line'>    } 
-</span><span class='line'>    $i++; 
-</span><span class='line'>} 
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;//获取连接地址 </span>
+</span><span class='line'><span class="x">$snoopy-&amp;gt;fetchlinks(&quot;http://www.phpchina.com/bbs&quot;); </span>
+</span><span class='line'><span class="x">$url=array(); </span>
+</span><span class='line'><span class="x">$url=$snoopy-&amp;gt;results; </span>
+</span><span class='line'><span class="x">//print_r($url); </span>
+</span><span class='line'><span class="x">foreach ($url as $key=&amp;gt;$value) </span>
+</span><span class='line'><span class="x">{ </span>
+</span><span class='line'><span class="x">    //匹配http://www.phpchina.com/bbs/forumdisplay.php?fid=156&amp;amp;sid=VfcqTR地址即论坛板块地址 </span>
+</span><span class='line'><span class="x">    if (!preg_match(&quot;/^(http:\/\/www\.phpchina\.com\/bbs\/forumdisplay\.php\?fid=)[0-9]*&amp;amp;sid=[a-zA-Z]{6}/i&quot;,$value)) </span>
+</span><span class='line'><span class="x">    { </span>
+</span><span class='line'><span class="x">        unset($url[$key]); </span>
+</span><span class='line'><span class="x">    } </span>
+</span><span class='line'><span class="x">} </span>
+</span><span class='line'><span class="x">//print_r($url); </span>
+</span><span class='line'><span class="x">//获取到板块数组$url，循环访问，此处获取第一个模块第一页的数据 </span>
+</span><span class='line'><span class="x">$i=0; </span>
+</span><span class='line'><span class="x">foreach ($url as $key=&amp;gt;$value) </span>
+</span><span class='line'><span class="x">{ </span>
+</span><span class='line'><span class="x">    if ($i&amp;gt;=1) </span>
+</span><span class='line'><span class="x">    { </span>
+</span><span class='line'><span class="x">        //测试限制 </span>
+</span><span class='line'><span class="x">        break; </span>
+</span><span class='line'><span class="x">    } </span>
+</span><span class='line'><span class="x">    else </span>
+</span><span class='line'><span class="x">    { </span>
+</span><span class='line'><span class="x">        //访问该模块，提取帖子的连接地址，正式访问里需要提取帖子分页的数据，然后根据分页数据提取帖子数据 </span>
+</span><span class='line'><span class="x">        $snoopy=new Snoopy(); </span>
+</span><span class='line'><span class="x">        $snoopy-&amp;gt;fetchlinks($value); </span>
+</span><span class='line'><span class="x">        $tie=array(); </span>
+</span><span class='line'><span class="x">        $tie[$i]=$snoopy-&amp;gt;results; </span>
+</span><span class='line'><span class="x">        //print_r($tie); </span>
+</span><span class='line'><span class="x">        //转换数组 </span>
+</span><span class='line'><span class="x">        foreach ($tie[$i] as $key=&amp;gt;$value) </span>
+</span><span class='line'><span class="x">        { </span>
+</span><span class='line'><span class="x">            //匹配http://www.phpchina.com/bbs/viewthread.php?tid=68127&amp;amp;amp; extra=page%3D1&amp;amp;amp;page=1&amp;amp;sid=iBLZfK </span>
+</span><span class='line'><span class="x">            if (!preg_match(&quot;/^(http:\/\/www\.phpchina\.com\/bbs\/viewthread\.php\?tid=)[0-9]*&amp;amp;amp;extra=page\%3D1&amp;amp;amp;page=[0-9]*&amp;amp;sid=[a-zA-Z]{6}/i&quot;,$value)) </span>
+</span><span class='line'><span class="x">            { </span>
+</span><span class='line'><span class="x">                unset($tie[$i][$key]); </span>
+</span><span class='line'><span class="x">            } </span>
+</span><span class='line'><span class="x">        } </span>
+</span><span class='line'><span class="x">        //print_r($tie[$i]); </span>
+</span><span class='line'><span class="x">        //归类数组，将同一个帖子不同页面的内容放一个数组里 </span>
+</span><span class='line'><span class="x">        $left=&#39;&#39;;//连接左边公用地址 </span>
+</span><span class='line'><span class="x">        $j=0; </span>
+</span><span class='line'><span class="x">        $page=array(); </span>
+</span><span class='line'><span class="x">        foreach ($tie[$i] as $key=&amp;gt;$value) </span>
+</span><span class='line'><span class="x">        { </span>
+</span><span class='line'><span class="x">            $left=substr($value,0,52); </span>
+</span><span class='line'><span class="x">            $m=0; </span>
+</span><span class='line'><span class="x">            foreach ($tie[$i] as $pkey=&amp;gt;$pvalue) </span>
+</span><span class='line'><span class="x">            { </span>
+</span><span class='line'><span class="x">                //重组数组 </span>
+</span><span class='line'><span class="x">                if (substr($pvalue,0,52)==$left) </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    $page[$j][$m]=$pvalue; </span>
+</span><span class='line'><span class="x">                    $m++; </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">            } </span>
+</span><span class='line'><span class="x">            $j++; </span>
+</span><span class='line'><span class="x">        } </span>
+</span><span class='line'><span class="x">        //去除重复项开始 </span>
+</span><span class='line'><span class="x">        //$page=array_unique($page);只能用于一维数组 </span>
+</span><span class='line'><span class="x">        $paget[0]=$page[0]; </span>
+</span><span class='line'><span class="x">        $nums=count($page); </span>
+</span><span class='line'><span class="x">        for ($n=1;$n &amp;lt;$nums;$n++) </span>
+</span><span class='line'><span class="x">        { </span>
+</span><span class='line'><span class="x">            $paget[$n]=array_diff($page[$n],$page[$n-1]); </span>
+</span><span class='line'><span class="x">        } </span>
+</span><span class='line'><span class="x">        //去除多维数组重复值结束 </span>
+</span><span class='line'><span class="x">        //去除数组空值 </span>
+</span><span class='line'><span class="x">        unset($page); </span>
+</span><span class='line'><span class="x">        $page=array();//重新定义page数组 </span>
+</span><span class='line'><span class="x">        $page=array_filter($paget); </span>
+</span><span class='line'><span class="x">        //print_r($page); </span>
+</span><span class='line'><span class="x">        $u=0; </span>
+</span><span class='line'><span class="x">        $title=array(); </span>
+</span><span class='line'><span class="x">        $content=array(); </span>
+</span><span class='line'><span class="x">        $temp=&#39;&#39;; </span>
+</span><span class='line'><span class="x">        $tt=array(); </span>
+</span><span class='line'><span class="x">        foreach ($page as $key=&amp;gt;$value) </span>
+</span><span class='line'><span class="x">        { </span>
+</span><span class='line'><span class="x">            //外围循环，针对一个帖子 </span>
+</span><span class='line'><span class="x">            if (is_array($value)) </span>
+</span><span class='line'><span class="x">            { </span>
+</span><span class='line'><span class="x">                foreach ($value as $k1=&amp;gt;$v1) </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    //页内循环，针对一个帖子的N页 </span>
+</span><span class='line'><span class="x">                    $snoopy=new Snoopy(); </span>
+</span><span class='line'><span class="x">                    $snoopy-&amp;gt;fetch($v1); </span>
+</span><span class='line'><span class="x">                    $temp=$snoopy-&amp;gt;results; </span>
+</span><span class='line'><span class="x">                    //读取标题 </span>
+</span><span class='line'><span class="x">                    if (!preg_match_all(&quot;/ &amp;lt;h2&amp;gt;(.*) &amp;lt;\/h2&amp;gt;/i&quot;,$temp,$tt)) </span>
+</span><span class='line'><span class="x">                    { </span>
+</span><span class='line'><span class="x">                        echo &quot;no title&quot;; </span>
+</span><span class='line'><span class="x">                        exit; </span>
+</span><span class='line'><span class="x">                    } </span>
+</span><span class='line'><span class="x">                    else </span>
+</span><span class='line'><span class="x">                    { </span>
+</span><span class='line'><span class="x">                        $title[$u]=$tt[1][1]; </span>
+</span><span class='line'><span class="x">                    } </span>
+</span><span class='line'><span class="x">                    unset($tt); </span>
+</span><span class='line'><span class="x">                    //读取内容 </span>
+</span><span class='line'><span class="x">                    if (!preg_match_all(&quot;/ &amp;lt;div id=\&quot;postmessage_[0-9]{1,8}\&quot; class=\&quot;t_msgfont\&quot;&amp;gt;(.*) &amp;lt;\/div&amp;gt;/i&quot;,$temp,$tt)) </span>
+</span><span class='line'><span class="x">                    { </span>
+</span><span class='line'><span class="x">                        print_r($tt); </span>
+</span><span class='line'><span class="x">                        echo &quot;no content1&quot;; </span>
+</span><span class='line'><span class="x">                        exit; </span>
+</span><span class='line'><span class="x">                    } </span>
+</span><span class='line'><span class="x">                    else </span>
+</span><span class='line'><span class="x">                    { </span>
+</span><span class='line'><span class="x">                        foreach ($tt[1] as $c=&amp;gt;$c2) </span>
+</span><span class='line'><span class="x">                        { </span>
+</span><span class='line'><span class="x">                            $content[$u].=$c2; </span>
+</span><span class='line'><span class="x">                        } </span>
+</span><span class='line'><span class="x">                    } </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">            } </span>
+</span><span class='line'><span class="x">            else </span>
+</span><span class='line'><span class="x">            { </span>
+</span><span class='line'><span class="x">                //直接取页内容 </span>
+</span><span class='line'><span class="x">                $snoopy=new Snoopy(); </span>
+</span><span class='line'><span class="x">                $snoopy-&amp;gt;fetch($value); </span>
+</span><span class='line'><span class="x">                $temp=$snoopy-&amp;gt;results; </span>
+</span><span class='line'><span class="x">                //读取标题 </span>
+</span><span class='line'><span class="x">                if (!preg_match_all(&quot;/ &amp;lt;h2&amp;gt;(.*) &amp;lt;\/h2&amp;gt;/i&quot;,$temp,$tt)) </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    echo &quot;no title&quot;; </span>
+</span><span class='line'><span class="x">                    exit; </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">                else </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    $title[$u]=$tt[1][1]; </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">                unset($tt); </span>
+</span><span class='line'><span class="x">                //读取内容 </span>
+</span><span class='line'><span class="x">                if (!preg_match_all(&quot;/ &amp;lt;div id=\&quot;postmessage_[0-9]*\&quot; class=\&quot;t_msgfont\&quot;&amp;gt;(.*) &amp;lt;\/div&amp;gt;/i&quot;,$temp,$tt)) </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    echo &quot;no content2&quot;; </span>
+</span><span class='line'><span class="x">                    exit; </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">                else </span>
+</span><span class='line'><span class="x">                { </span>
+</span><span class='line'><span class="x">                    foreach ($tt[1] as $c=&amp;gt;$c2) </span>
+</span><span class='line'><span class="x">                    { </span>
+</span><span class='line'><span class="x">                        $content[$u].=$c2; </span>
+</span><span class='line'><span class="x">                    } </span>
+</span><span class='line'><span class="x">                } </span>
+</span><span class='line'><span class="x">            } </span>
+</span><span class='line'><span class="x">            $u++; </span>
+</span><span class='line'><span class="x">        } </span>
+</span><span class='line'><span class="x">        print_r($content); </span>
+</span><span class='line'><span class="x">    } </span>
+</span><span class='line'><span class="x">    $i++; </span>
+</span><span class='line'><span class="x">} </span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>else
-</span><span class='line'>{&lt;/p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span><span class='line'><span class="x">else</span>
+</span><span class='line'><span class="x">{&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>echo "login failed"; 
-</span><span class='line'>exit; 
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;echo &quot;login failed&quot;; </span>
+</span><span class='line'><span class="x">exit; </span>
+</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
 </span><span class='line'>
-</span><span class='line'>&lt;p>}
-</span><span class='line'>?></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'><span class="x">&lt;p&gt;}</span>
+</span><span class='line'><span class="x">?&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[PHP函数call_user_func和call_user_func_array详解]]></title>
+    <title type="html"><![CDATA[PHP函数`call_user_func`和`call_user_func_array`详解]]></title>
     <link href="http://ibillxia.github.io/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail/"/>
     <updated>2010-08-04T21:38:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2010/08/04/explain-php-function-call_user_func-and-call_user_func_array-in-detail</id>
-    <content type="html"><![CDATA[<p>call\_user_func函数类似于一种特别的调用函数的方法，使用方法如下：</p>
+    <content type="html"><![CDATA[<p>`call_user_func`函数类似于一种特别的调用函数的方法，使用方法如下：</p>
 
 
 <p>``` php
@@ -992,7 +998,7 @@ call_user_func(array("a", "b"),"111");
 //显示 111
 ```</p>
 
-<p>call_user_func_array函数和call_user_func很相似，只不过是换了一种方式传递了参数，让参数的结构更清晰:</p>
+<p>`call_user_func_array`函数和`call_user_func`很相似，只不过是换了一种方式传递了参数，让参数的结构更清晰:</p>
 
 
 <p>``` php
@@ -1008,7 +1014,7 @@ call_user_func_array('a', array("111", "222"));
 //显示 111 222
 ```</p>
 
-<p>call_user_func_array函数也可以调用类内部的方法的</p>
+<p>`call_user_func_array`函数也可以调用类内部的方法的</p>
 
 
 <p>``` php
@@ -1025,7 +1031,7 @@ call_user_func_array(array('ClassA','bc'), array("111", "222"));
 //显示 333
 ```</p>
 
-<p>call_user_func函数和call_user_func_array函数都支持引用，这让他们和普通的函数调用更趋于功能一致:</p>
+<p>`call_user_func`函数和`call_user_func_array`函数都支持引用，这让他们和普通的函数调用更趋于功能一致:</p>
 
 
 <p>``` php

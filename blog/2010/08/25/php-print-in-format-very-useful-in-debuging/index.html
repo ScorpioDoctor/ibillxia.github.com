@@ -198,7 +198,7 @@ $(document).ready(function(){
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -223,31 +223,32 @@ $(document).ready(function(){
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/**
-</span><span class='line'>* 输出变量的内容，通常用于调试
-</span><span class='line'>*
-</span><span class='line'>* @package Core
-</span><span class='line'>*
-</span><span class='line'>* @param mixed $vars 要输出的变量
-</span><span class='line'>* @param string $label
-</span><span class='line'>* @param boolean $return
-</span><span class='line'>*/
-</span><span class='line'>function dump($vars, $label = '', $return = false)
-</span><span class='line'>{
-</span><span class='line'>    if (ini_get('html_errors')) {
-</span><span class='line'>        $content = "&lt;pre>\n";
-</span><span class='line'>        if ($label != '') {
-</span><span class='line'>            $content .= "&lt;strong>{$label} :&lt;/strong>\n";
-</span><span class='line'>        }
-</span><span class='line'>        $content .= htmlspecialchars(print_r($vars, true));
-</span><span class='line'>        $content .= "\n&lt;/pre>\n";
-</span><span class='line'>    } else {
-</span><span class='line'>        $content = $label . " :\n" . print_r($vars, true);
-</span><span class='line'>    }
-</span><span class='line'>    if ($return) { return $content; }
-</span><span class='line'>    echo $content;
-</span><span class='line'>    return null;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/**</span>
+</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @package Core</span>
+</span><span class='line'><span class="x">*</span>
+</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
+</span><span class='line'><span class="x">* @param string $label</span>
+</span><span class='line'><span class="x">* @param boolean $return</span>
+</span><span class='line'><span class="x">*/</span>
+</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
+</span><span class='line'><span class="x">{</span>
+</span><span class='line'><span class="x">    if (ini_get(&#39;html_errors&#39;)) {</span>
+</span><span class='line'><span class="x">        $content = &quot;&lt;pre&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">        if ($label != &#39;&#39;) {</span>
+</span><span class='line'><span class="x">            $content .= &quot;&lt;strong&gt;{$label} :&lt;/strong&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">        }</span>
+</span><span class='line'><span class="x">        $content .= htmlspecialchars(print_r($vars, true));</span>
+</span><span class='line'><span class="x">        $content .= &quot;\n&lt;/pre&gt;\n&quot;;</span>
+</span><span class='line'><span class="x">    } else {</span>
+</span><span class='line'><span class="x">        $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
+</span><span class='line'><span class="x">    }</span>
+</span><span class='line'><span class="x">    if ($return) { return $content; }</span>
+</span><span class='line'><span class="x">    echo $content;</span>
+</span><span class='line'><span class="x">    return null;</span>
+</span><span class='line'><span class="x">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
@@ -290,7 +291,7 @@ $(document).ready(function(){
 		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
 		
 		
-		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/debug/'>Debug</a>, <a class='tag' href='/blog/tags/fleaphp/'>FleaPHP</a>, <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/print/'>Print</a></span>
+		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/fleaphp/'>FleaPHP</a>, <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/diao-shi/'>调试</a></span>
 		
     </p>
     
