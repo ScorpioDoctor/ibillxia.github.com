@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 机试 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/ji-shi/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-11T15:21:15+08:00</updated>
+  <updated>2015-01-12T23:25:49+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -1219,7 +1219,7 @@ D题的双重最短路初次做，表示不会，E题的测试数据又不按题
 
 
 <p>题目不是很好懂，但只要认真看题目，还是不是很难的，值得注意的是，
-如果在前面是关简数，而后面却是作为覆盖数的数，一律当做覆盖数而不是关键数。
+如果在前面是关键数，而后面却是作为覆盖数的数，一律当做覆盖数而不是关键数。
 代码如下：</p>
 
 
