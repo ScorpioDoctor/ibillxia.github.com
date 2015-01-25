@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 断言 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/duan-yan/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -34,17 +34,12 @@
 <p>原型定义：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">assert</span><span class="p">(</span> <span class="kt">int</span> <span class="n">expression_r_r_r</span> <span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>include &lt;assert.h></h1>
+
+<p>void assert( int expression_r_r_r );
+{% endcodeblock %}</p>
 
 <p>assert的作用是现计算表达式 expression_r_r_r ，如果其值为假（即为0），
 那么它先向stderr打印一条出错信息，然后通过调用 abort来终止程序运行。</p>
@@ -61,49 +56,28 @@
 <p>下面给一个断言的简单实例：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdlib</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'>   <span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span> <span class="p">);</span><span class="c1">//以可写的方式打开一个文件，如果不存在就创建一个同名文件&lt;br/&gt;</span>
-</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里不会出错&lt;br/&gt;</span>
-</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span> <span class="s">&quot;noexitfile.txt&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span> <span class="p">);</span><span class="c1">//以只读的方式打开一个文件，如果不存在就打开失败&lt;br/&gt;</span>
-</span><span class='line'>   <span class="n">assert</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//所以这里出错&lt;br/&gt;</span>
-</span><span class='line'>   <span class="n">fclose</span><span class="p">(</span> <span class="n">fp</span> <span class="p">);</span>         <span class="c1">//程序永远都执行不到这里来&lt;br/&gt;</span>
-</span><span class='line'>   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>include &lt;stdio.h></h1>
+
+<h1>include &lt;assert.h></h1>
+
+<h1>include &lt;stdlib.h></h1>
+
+<p>int main( void )<br/>
+{<br/>
+   FILE *fp;</p>
+
+<p>   fp = fopen( "test.txt", "w" );//以可写的方式打开一个文件，如果不存在就创建一个同名文件<br/>
+   assert( fp );         //所以这里不会出错<br/>
+   fclose( fp );</p>
+
+<p>   fp = fopen( "noexitfile.txt", "r" );//以只读的方式打开一个文件，如果不存在就打开失败<br/>
+   assert( fp );         //所以这里出错<br/>
+   fclose( fp );         //程序永远都执行不到这里来<br/>
+   return 0;<br/>
+}
+{% endcodeblock %}</p>
 
 <h2>4.断言用法详解</h2>
 
@@ -111,54 +85,42 @@
 <p>1)在函数开始处检验传入参数的合法性，如:</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">resetBufferSize</span><span class="p">(</span><span class="kt">int</span> <span class="n">nNewSize</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="c1">//功能:改变缓冲区大小,</span>
-</span><span class='line'>  <span class="c1">//参数:nNewSize 缓冲区新长度</span>
-</span><span class='line'>  <span class="c1">//返回值:缓冲区当前长度</span>
-</span><span class='line'>  <span class="c1">//说明:保持原信息内容不变，nNewSize&amp;lt;=0表示清除缓冲区</span>
-</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">assert</span><span class="p">(</span><span class="n">nNewSize</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="n">MAX_BUFFER_SIZE</span><span class="p">);</span>
-</span><span class='line'>  <span class="c1">//...</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+int resetBufferSize(int nNewSize)
+{
+  //功能:改变缓冲区大小,
+  //参数:nNewSize 缓冲区新长度
+  //返回值:缓冲区当前长度
+  //说明:保持原信息内容不变，nNewSize&lt;=0表示清除缓冲区
+  assert(nNewSize >= 0);
+  assert(nNewSize &lt;= MAX_BUFFER_SIZE);
+  //...
+}
+{% endcodeblock %}</p>
 
 <p>2)每个assert只检验一个条件,因为同时检验多个条件时,如果断言失败,无法直观的判断是哪个条件失败</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span><span class="n">m_nInfomationSize</span><span class="p">);</span>  <span class="c1">//不好</span>
-</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">//好</span>
-</span><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">nOffset</span><span class="o">+</span><span class="n">nSize</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span> <span class="n">m_nInfomationSize</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+assert(nOffset>=0 &amp;&amp; nOffset+nSize&lt;=m_nInfomationSize);  //不好
+assert(nOffset >= 0);   //好
+assert(nOffset+nSize &lt;= m_nInfomationSize);
+{% endcodeblock %}</p>
 
 <p>3)不能使用改变环境的语句,因为assert只在DEBUG个生效,如果这么做,会使用程序在真正运行时遇到问题</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span><span class="o">++</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">100</span><span class="p">);</span>  <span class="c1">//错误</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+assert(i++ &lt; 100);  //错误
+{% endcodeblock %}</p>
 
 <p>这是因为如果出错，比如在执行之前i=100,那么这条语句就不会执行，那么i++这条命令就没有执行。</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="mi">100</span><span class="p">);</span>    <span class="c1">//正确</span>
-</span><span class='line'><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+assert(i &lt; 100);    //正确
+i++;
+{% endcodeblock %}</p>
 
 <p>4)assert和后面的语句应空一行,以形成逻辑和视觉上的一致感</p>
 
@@ -178,25 +140,15 @@
 示例代码如下：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">NDEBUG</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">assert</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>include &lt;stdio.h></h1>
+
+<h1>define NDEBUG</h1>
+
+<h1>include &lt;assert.h></h1>
+
+<p>{% endcodeblock %}</p>
 
 <p>2).ASSERT只有在Debug版本中才有效，如果编译为Release版本则被忽略掉。（在C中，ASSERT是宏而不是函数），
 使用ASSERT“断言”容易在debug时输出程序错误所在。而assert()的功能类似，它是ANSI C标准中规定的函数，

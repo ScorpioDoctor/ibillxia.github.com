@@ -170,6 +170,54 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/06/04/a-simple-code-for-wave-recording-using-windows-api/">用Windows API实现一个简单的录音程序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-04T23:59:00+08:00" pubdate data-updated="true">Jun 4<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/06/04/a-simple-code-for-wave-recording-using-windows-api/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文介绍如何使用Windows API来录制语音信号兵保存到wave文件中，主要用到三个结构体和几个wave开头的API函数（在Winmm.lib文件中）。其中三个结构体是WAVEFORMATEX、WAVEHDR、MMTIME，其详细定义都在MMSystem.h中定义，
+可以转到定义看其详细内容及每一项的英文注释。用到的API函数的详细用法可以参见MSDN： http://msdn.microsoft.com/en-us/library/windows/desktop/dd743847(v=vs.85).aspx
+详细的使用过程请看下文的源代码，这是一个Win32 Application，需要手动添加Winmm.lib的依赖。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/04/a-simple-code-for-wave-recording-using-windows-api/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2013/05/29/audio-signal-processing-time-domain-pitch-tracking-and-python-realization/">语音信号处理之时域分析-音高追踪及其Python实现</a></h1>
     
     
@@ -725,87 +773,6 @@ $(document).ready(function(){
   
     <footer>
       <a rel="full-article" href="/blog/2013/05/01/go-hiking-International-Labour-Day/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/">使用Alize等工具构建说话人识别平台</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-26T22:07:00+08:00" pubdate data-updated="true">Apr 26<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
-开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>. 现在新版的 Alize 3.0 已经提供了更多的官方 demo，我也将 GitHub 的源码升级了 <a href="https://github.com/ibillxia/VoicePrintReco">VPR2.0</a>， 其中的Demos文件夹有Alize官方的4个demo和我自己写的这个demo。</p>
-
-<h3>基本流程</h3>
-
-<p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</p>
-
-<h4>1.Features extraction 特征提取</h4>
-
-<p>sfbcep.exe（MFCC）或slpcep.exe（LPCC）</p>
-
-<h4>2.Silence removal 静音检测和去除</h4>
-
-<p>NormFeat.exe 先能量规整<br/>
-EnergyDetector.exe 基于能量检测的静音去除</p>
-
-<h4>3.Features Normalization 特征规整</h4>
-
-<p>NormFeat.exe 再使用这个工具进行特征规整</br></p>
-
-<h4>4.World model training</h4>
-
-<p>TrainWorld.exe 训练UBM</br></p>
-
-<h4>5.Target model training</h4>
-
-<p>TrainTarget.exe 在训练好UBM的基础上训练training set的GMM</br></p>
-
-<h4>6.Testing</h4>
-
-<p>ComputeTest.exe 将testing set在training set的GMM上进行测试和打分</br></p>
-
-<h4>7.Score Normalization</h4>
-
-<p>ComputeNorm.exe 将得分进行规整</br></p>
-
-<h4>8. Compute EER 计算等错误率</h4>
-
-<p>你可以查查计算EER的matlab代码，NIST SRE的官网上有下载<a href="http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm">DETware_v2.1.tar.gz</a> 。_</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/">Read on &rarr;</a>
     </footer>
   
 

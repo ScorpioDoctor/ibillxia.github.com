@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 内存管理 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/nei-cun-guan-li/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -298,7 +298,7 @@ enum {_NFREELISTS = 16}; // _MAX_BYTES/_ALIGN  // 空闲链表个数
 
 <p>C++ 程序的存储空间可以分为静态/全局存储区、栈区和堆区。下图展示了一个典型的Linux C/C++ 程序内存空间布局：</p>
 
-<center><img src="/images/2014/IMAG2014051101.png"></center>
+<center>{% img /images/2014/IMAG2014051101.png %}</center>
 
 
 <p>其中，每一部分的具体涵义如下：<br/>

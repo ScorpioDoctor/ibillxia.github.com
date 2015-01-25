@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 说话人识别 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/shuo-hua-ren-shi-bie/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -303,7 +303,7 @@ Zanzibar OpenIVR 等。</p>
 
 <p>本文介绍了几种常见的语音交互平台，主要是语音识别、语音合成的软件或工具包，还顺便提到了声纹识别的内容，
 下面做一个简单的总结：</br>
-<center><img src="/images/2012/IMAG2012112401.jpg"></center>
+<center>{% img /images/2012/IMAG2012112401.jpg %}</center>
 以上总结的表格希望对读者有用！</p>
 
 
@@ -375,7 +375,7 @@ Kernel function examples: <a href="http://www.shamoxia.com/html/y2010/2292.html"
 
 <p>GMM Supervectors：given a speaker utterance, GMM-UBM training is performed by MAP adaptation of the means $m_{i}$, 
 and we form a GMM supervector $m = [m_{i}]$</br>
-<img src="/images/2012/IMAG2012081301.jpg"></br>
+{% img /images/2012/IMAG2012081301.jpg %}</br>
 GMM Supervectors Linear Kernel: a natural distance between the two utterances is the KL divergence, while it does n't satisfy 
 the Mercer condition, we consider the following approximation</br>
 <center>$\begin{align}
@@ -515,8 +515,8 @@ build GMM-UBM and all of the remained tasks.</p>
 
 <h2>4.实验结果</h2>
 <p>分别在无噪语料库YOHO和有噪语料库PHONE做实验，得到如下结果：</br>
-<center><img src="/images/2012/IMAG2012072001.jpg"></center></br>
-<center><img src="/images/2012/IMAG2012072002.jpg"></center>
+<center>{% img /images/2012/IMAG2012072001.jpg %}</center></br>
+<center>{% img /images/2012/IMAG2012072002.jpg %}</center>
 </p>
 
 <h2>5.复杂度分析</h2>

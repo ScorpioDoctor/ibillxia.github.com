@@ -170,6 +170,83 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2011/04/21/about-variable-parameters-in-c-language/">浅谈C语言的可变参数</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-21T16:50:00+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2011</time>
+        
+         | <a href="/blog/2011/04/21/about-variable-parameters-in-c-language/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.问题引入</h2>
+
+
+<p>
+C语言中有些函数使用可变参数，比如常见的 `int printf( const char *format [, argument]&#8230; );`，
+第一个参数format是固定的，其余的参数的个数和类型都不固定。例如：</p>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enjoy yourself everyday!/n&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The value is %d!/n&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p>这种可变参数可以说是C语言一个比较难理解的部分，这里会由几个问题引发一些对它的分析。
+注意：在C++中有函数重载（overload）可以用来区别不同函数参数的调用，但它还是不能表示任意数量的函数参数。</p>
+
+
+
+
+<h2>2.printf（）实现原理</h2>
+
+
+<p>
+C语言用va_start等宏来处理这些可变参数。这些宏看起来很复杂，其实原理挺简单，
+就是根据参数入栈的特点从最靠近第一个可变参数的固定参数开始，依次获取每个可变参数的地址。
+下面我们来分析这些宏。</p>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/04/21/about-variable-parameters-in-c-language/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2011/04/17/my-understanding-of-micro-blog/">我是如何理解微博的</a></h1>
     
     
@@ -736,107 +813,6 @@ LinkedIn有着商业范儿的严肃简洁，只有一些基本的联络和互动
   
     <footer>
       <a rel="full-article" href="/blog/2010/08/28/a-php-html-parser-PHPSimpleHTMLDOMParser/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/">PHP格式化打印数组，调试有用</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true">Aug 25<span>th</span>, 2010</time>
-        
-         | <a href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以下是从FleaPHP上挖来的，感谢FleaPHP的开发者们。</p>
-
-
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/**</span>
-</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
-</span><span class='line'><span class="x">*</span>
-</span><span class='line'><span class="x">* @package Core</span>
-</span><span class='line'><span class="x">*</span>
-</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
-</span><span class='line'><span class="x">* @param string $label</span>
-</span><span class='line'><span class="x">* @param boolean $return</span>
-</span><span class='line'><span class="x">*/</span>
-</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    if (ini_get(&#39;html_errors&#39;)) {</span>
-</span><span class='line'><span class="x">        $content = &quot;&lt;pre&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">        if ($label != &#39;&#39;) {</span>
-</span><span class='line'><span class="x">            $content .= &quot;&lt;strong&gt;{$label} :&lt;/strong&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">        }</span>
-</span><span class='line'><span class="x">        $content .= htmlspecialchars(print_r($vars, true));</span>
-</span><span class='line'><span class="x">        $content .= &quot;\n&lt;/pre&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">    } else {</span>
-</span><span class='line'><span class="x">        $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
-</span><span class='line'><span class="x">    }</span>
-</span><span class='line'><span class="x">    if ($return) { return $content; }</span>
-</span><span class='line'><span class="x">    echo $content;</span>
-</span><span class='line'><span class="x">    return null;</span>
-</span><span class='line'><span class="x">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2010/08/25/php-print-in-format-very-useful-in-debuging/">Read on &rarr;</a>
     </footer>
   
 

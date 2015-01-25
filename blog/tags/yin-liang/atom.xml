@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 音量 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/yin-liang/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -133,7 +133,7 @@ pl.show()
 ```</p>
 
 <p>运行以上程序得到下图：
-<center><img src="/images/2013/IMAG2013051501.png"></center>
+<center>{% img /images/2013/IMAG2013051501.png %}</center>
 </p>
 
 

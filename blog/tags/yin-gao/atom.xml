@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 音高 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/yin-gao/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>概念：音高（Pitch）是语音信号的一个很重要的特征，直觉上而言它表示声音频率的高低，这个频率是指基本频率（基频），也即基本周期的倒数。
 若直接观察语音的波形，只要语音信号稳定，我们可以很容易的看出基本周期的存在。例如我们取一个包含256个采样点的帧，单独绘制波形图，就可以明显的
 看到它的基本周期。如下图所示：
-<center><img src="/images/2013/IMAG2013051601.png"></center>
+<center>{% img /images/2013/IMAG2013051601.png %}</center>
 其中最上面的波形为|a|的发音，中间的为上图中红色双竖线（位于语音区）所对应的帧的具体波形，而最下面的是上图中绿色双竖线（位于静音区）所
 对应的帧的具体波形。很容易看到中间的波形具有明显的周期性。
 </p>

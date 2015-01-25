@@ -170,6 +170,87 @@ $(document).ready(function(){
       
   <header class="page-header">
     
+      <h1 class="entry-title"><a href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/">使用Alize等工具构建说话人识别平台</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-26T22:07:00+08:00" pubdate data-updated="true">Apr 26<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前段时间有好几位同学询问如何用Alize实现说话人识别的问题，由于寒假前赶Paper，来不及详细解答，更没时间写Demo。
+开学后不久抽时间写了一个Demo，并上传到了GitHub：<a href="https://github.com/ibillxia/VoicePrintReco/tree/master/Demo">VoicePrintReco-branch-master</a>. 现在新版的 Alize 3.0 已经提供了更多的官方 demo，我也将 GitHub 的源码升级了 <a href="https://github.com/ibillxia/VoicePrintReco">VPR2.0</a>， 其中的Demos文件夹有Alize官方的4个demo和我自己写的这个demo。</p>
+
+<h3>基本流程</h3>
+
+<p>下面将利用Alize+SPro进行简单的GMM-Based的说话人识别的基本流程总结如下：</p>
+
+<h4>1.Features extraction 特征提取</h4>
+
+<p>sfbcep.exe（MFCC）或slpcep.exe（LPCC）</p>
+
+<h4>2.Silence removal 静音检测和去除</h4>
+
+<p>NormFeat.exe 先能量规整<br/>
+EnergyDetector.exe 基于能量检测的静音去除</p>
+
+<h4>3.Features Normalization 特征规整</h4>
+
+<p>NormFeat.exe 再使用这个工具进行特征规整</br></p>
+
+<h4>4.World model training</h4>
+
+<p>TrainWorld.exe 训练UBM</br></p>
+
+<h4>5.Target model training</h4>
+
+<p>TrainTarget.exe 在训练好UBM的基础上训练training set的GMM</br></p>
+
+<h4>6.Testing</h4>
+
+<p>ComputeTest.exe 将testing set在training set的GMM上进行测试和打分</br></p>
+
+<h4>7.Score Normalization</h4>
+
+<p>ComputeNorm.exe 将得分进行规整</br></p>
+
+<h4>8. Compute EER 计算等错误率</h4>
+
+<p>你可以查查计算EER的matlab代码，NIST SRE的官网上有下载<a href="http://www.itl.nist.gov/iad/mig//tools/DETware_v2.1.targz.htm">DETware_v2.1.tar.gz</a> 。_</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/26/building-speaker-recognition-system-using-alize-etc/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
       <h1 class="entry-title"><a href="/blog/2013/04/22/VALSE2013/">VALSE2013</a></h1>
     
     
@@ -746,67 +827,6 @@ Boltzmann learning等。然后介绍一些学习的方式，如监督学习、�
   
     <footer>
       <a rel="full-article" href="/blog/2013/03/24/classes-of-neural-networks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/20/basics-of-neural-networks/">神经网络简介</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-20T23:21:00+08:00" pubdate data-updated="true">Mar 20<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/03/20/basics-of-neural-networks/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Deep Learning的本质是多层的神经网络，因此在深入学习Deep Learning之前，有必要了解一些神经网络的基本知识。
-本文首先对神经网络的发展历史进行简要的介绍，然后给出神经元模型的形式化描述，接着是神经网络模型的定义、特性，
-最后是一些最新的进展等。关于神经网络的分类、学习方法、应用场景等将在后续文章中介绍。</p>
-
-
-
-
-<h2>1.发展简史</h2>
-
-
-<p>1943年，心理学家W.S.McCulloch和数理逻辑学家W.Pitts建立了神经网络和数学模型，称为MP模型。他们通过MP模型提出
-了神经元的形式化数学描述和网络结构方法，证明了单个神经元能执行逻辑功能，从而开创了人工神经网络研究的时代。</br>
-1945年，Von Neumann在成功的试制了存储程序式电子计算机后，他也对人脑的结构与存储式计算机进行的根本区别的比较，还提出了以简单神经元构成的自再生自动机网络结构。</br>
-1949年，心理学家D.O.Heb提出了突触联系强度可变的设想，并据此提出神经元的学习准则——Hebb规则，为神经网络的学习算法奠定了基础。</br>
-1958年，F.Rosenblatt提出了感知模型，该模型是由阈值神经元组成的，它试图模拟动物和人的感知和学习能力。</br>
-1962年Widrow提出了自适应线性元件，这是一种连续的取值的线性网络，主要用于自适应信号处理和自适应控制。</p>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/20/basics-of-neural-networks/">Read on &rarr;</a>
     </footer>
   
 

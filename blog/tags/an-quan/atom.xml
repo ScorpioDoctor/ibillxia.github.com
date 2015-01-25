@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 安全 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/an-quan/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -40,193 +40,105 @@
 <!--more-->
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if (!get_magic_quotes_gpc()) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> add_slashes($_GET);
-</span><span class='line'> add_slashes($_POST);
-</span><span class='line'> add_slashes($_COOKIE);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>function add_slashes($string) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> if (is_array($string)) {    
-</span><span class='line'>     foreach ($string as $key =&gt; $value) {    
-</span><span class='line'>         $string[$key] = add_slashes($value);    
-</span><span class='line'>     }    
-</span><span class='line'> } else {    
-</span><span class='line'>     $string = addslashes($string);    
-</span><span class='line'> }    
-</span><span class='line'> return $string;    
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>}&lt;br/></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}
+if (!get_magic_quotes_gpc()) {</p>
+
+<pre><code> add_slashes($_GET);
+ add_slashes($_POST);
+ add_slashes($_COOKIE);
+</code></pre>
+
+<p>}</p>
+
+<p>function add_slashes($string) {</p>
+
+<pre><code> if (is_array($string)) {    
+     foreach ($string as $key =&gt; $value) {    
+         $string[$key] = add_slashes($value);    
+     }    
+ } else {    
+     $string = addslashes($string);    
+ }    
+ return $string;    
+</code></pre>
+
+<p>}<br/>
+{% endcodeblock %}</p>
 
 <p>php防注入函数,字符过滤函数</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">//解码</span>
-</span><span class='line'><span class="x">function htmldecode($str)</span>
-</span><span class='line'><span class="x">{&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if(empty($str)) return;</span>
-</span><span class='line'><span class="x">if($str==&quot;&quot;) return $str;</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;sel&amp;amp;#101;ct&quot;,&quot;select&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;jo&amp;amp;#105;n&quot;,&quot;join&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;un&amp;amp;#105;on&quot;,&quot;union&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;wh&amp;amp;#101;re&quot;,&quot;where&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;ins&amp;amp;#101;rt&quot;,&quot;insert&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;del&amp;amp;#101;te&quot;,&quot;delete&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;up&amp;amp;#100;ate&quot;,&quot;update&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;lik&amp;amp;#101;&quot;,&quot;like&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;dro&amp;amp;#112;&quot;,&quot;drop&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;cr&amp;amp;#101;ate&quot;,&quot;create&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;mod&amp;amp;#105;fy&quot;,&quot;modify&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;ren&amp;amp;#097;me&quot;,&quot;rename&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;alt&amp;amp;#101;r&quot;,&quot;alter&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;ca&amp;amp;#115;&quot;,&quot;cast&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;amp;&quot;,&quot;&amp;amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;gt;&quot;,&quot;&amp;gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;lt;&quot;,&quot;&amp;lt;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;nbsp;&quot;,chr(32),$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;nbsp;&quot;,chr(9),$str);</span>
-</span><span class='line'><span class="x">//$str=str_replace(&quot;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&quot;,chr(9),$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;&quot;,chr(34),$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;#39;&quot;,chr(39),$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;lt;br /&amp;gt;&quot;,chr(13),$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&#39;&#39;&quot;,&quot;&#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">return $str;</span>
-</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="x">&lt;p&gt;}</span>
-</span><span class='line'><span class="x">//编码</span>
-</span><span class='line'><span class="x">function htmlencode($str)</span>
-</span><span class='line'><span class="x">{&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="x">&lt;pre&gt;&lt;code&gt;if(empty($str)) return;</span>
-</span><span class='line'><span class="x">if($str==&quot;&quot;) return $str;</span>
-</span><span class='line'><span class="x">$str=trim($str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;amp;&quot;,&quot;&amp;amp;amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;gt;&quot;,&quot;&amp;amp;gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&amp;lt;&quot;,&quot;&amp;amp;lt;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(chr(32),&quot;&amp;amp;nbsp;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(chr(9),&quot;&amp;amp;nbsp;&quot;,$str);</span>
-</span><span class='line'><span class="x">//$str=str_replace(chr(9),&quot;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&amp;amp;#160;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(chr(34),&quot;&amp;amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(chr(39),&quot;&amp;amp;#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(chr(13),&quot;&amp;lt;br /&amp;gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;&#39;&quot;,&quot;&#39;&#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;select&quot;,&quot;sel&amp;amp;#101;ct&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;join&quot;,&quot;jo&amp;amp;#105;n&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;union&quot;,&quot;un&amp;amp;#105;on&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;where&quot;,&quot;wh&amp;amp;#101;re&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;insert&quot;,&quot;ins&amp;amp;#101;rt&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;delete&quot;,&quot;del&amp;amp;#101;te&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;update&quot;,&quot;up&amp;amp;#100;ate&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;like&quot;,&quot;lik&amp;amp;#101;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;drop&quot;,&quot;dro&amp;amp;#112;&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;create&quot;,&quot;cr&amp;amp;#101;ate&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;modify&quot;,&quot;mod&amp;amp;#105;fy&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;rename&quot;,&quot;ren&amp;amp;#097;me&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;alter&quot;,&quot;alt&amp;amp;#101;r&quot;,$str);</span>
-</span><span class='line'><span class="x">$str=str_replace(&quot;cast&quot;,&quot;ca&amp;amp;#115;&quot;,$str);</span>
-</span><span class='line'><span class="x">return $str;</span>
-</span><span class='line'><span class="x">&lt;/code&gt;&lt;/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="x">&lt;p&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:php %}
+//解码
+function htmldecode($str)
+{</p>
+
+<pre><code>if(empty($str)) return;
+if($str=="") return $str;
+$str=str_replace("sel&amp;#101;ct","select",$str);
+$str=str_replace("jo&amp;#105;n","join",$str);
+$str=str_replace("un&amp;#105;on","union",$str);
+$str=str_replace("wh&amp;#101;re","where",$str);
+$str=str_replace("ins&amp;#101;rt","insert",$str);
+$str=str_replace("del&amp;#101;te","delete",$str);
+$str=str_replace("up&amp;#100;ate","update",$str);
+$str=str_replace("lik&amp;#101;","like",$str);
+$str=str_replace("dro&amp;#112;","drop",$str);
+$str=str_replace("cr&amp;#101;ate","create",$str);
+$str=str_replace("mod&amp;#105;fy","modify",$str);
+$str=str_replace("ren&amp;#097;me","rename",$str);
+$str=str_replace("alt&amp;#101;r","alter",$str);
+$str=str_replace("ca&amp;#115;","cast",$str);
+$str=str_replace("&amp;amp;","&amp;",$str);
+$str=str_replace("&amp;gt;","&gt;",$str);
+$str=str_replace("&amp;lt;","&lt;",$str);
+$str=str_replace("&amp;nbsp;",chr(32),$str);
+$str=str_replace("&amp;nbsp;",chr(9),$str);
+//$str=str_replace("&amp;#160;&amp;#160;&amp;#160;&amp;#160;",chr(9),$str);
+$str=str_replace("&amp;",chr(34),$str);
+$str=str_replace("&amp;#39;",chr(39),$str);
+$str=str_replace("&lt;br /&gt;",chr(13),$str);
+$str=str_replace("''","'",$str);
+return $str;
+</code></pre>
+
+<p>}
+//编码
+function htmlencode($str)
+{</p>
+
+<pre><code>if(empty($str)) return;
+if($str=="") return $str;
+$str=trim($str);
+$str=str_replace("&amp;","&amp;amp;",$str);
+$str=str_replace("&gt;","&amp;gt;",$str);
+$str=str_replace("&lt;","&amp;lt;",$str);
+$str=str_replace(chr(32),"&amp;nbsp;",$str);
+$str=str_replace(chr(9),"&amp;nbsp;",$str);
+//$str=str_replace(chr(9),"&amp;#160;&amp;#160;&amp;#160;&amp;#160;",$str);
+$str=str_replace(chr(34),"&amp;",$str);
+$str=str_replace(chr(39),"&amp;#39;",$str);
+$str=str_replace(chr(13),"&lt;br /&gt;",$str);
+$str=str_replace("'","''",$str);
+$str=str_replace("select","sel&amp;#101;ct",$str);
+$str=str_replace("join","jo&amp;#105;n",$str);
+$str=str_replace("union","un&amp;#105;on",$str);
+$str=str_replace("where","wh&amp;#101;re",$str);
+$str=str_replace("insert","ins&amp;#101;rt",$str);
+$str=str_replace("delete","del&amp;#101;te",$str);
+$str=str_replace("update","up&amp;#100;ate",$str);
+$str=str_replace("like","lik&amp;#101;",$str);
+$str=str_replace("drop","dro&amp;#112;",$str);
+$str=str_replace("create","cr&amp;#101;ate",$str);
+$str=str_replace("modify","mod&amp;#105;fy",$str);
+$str=str_replace("rename","ren&amp;#097;me",$str);
+$str=str_replace("alter","alt&amp;#101;r",$str);
+$str=str_replace("cast","ca&amp;#115;",$str);
+return $str;
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
@@ -250,12 +162,11 @@
 <p>我们同时假设主机A和B之间的通信遵守TCP／IP的三次握手机制。握手方法是：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A->：SYN（序列号=M）
-</span><span class='line'>B->A：SYN（序列号＝N），ACK（应答序号=M+1）
-</span><span class='line'>A->B：ACK（应答序号＝N+1）</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}
+A->：SYN（序列号=M）
+B->A：SYN（序列号＝N），ACK（应答序号=M+1）
+A->B：ACK（应答序号＝N+1）
+{% endcodeblock %}</p>
 
 <!--more-->
 
@@ -270,12 +181,11 @@
 主机X只有算出B的序列号，才能创建TCP连接。其过程描述如下：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>X->B：SYN（序列号=M），SRC=A
-</span><span class='line'>B->A：SYN（序列号=N），ACK（应答号=M+1）
-</span><span class='line'>X->B：ACK（应答号＝N+1），SRC＝A</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}
+X->B：SYN（序列号=M），SRC=A
+B->A：SYN（序列号=N），ACK（应答号=M+1）
+X->B：ACK（应答号＝N+1），SRC＝A
+{% endcodeblock %}</p>
 
 <p>同时，主机X应该阻止主机A响应主机B的包。为此，X可以等到主机A因某种原因终止运行，或者阻塞主机A的操作系统协议部分，使它不能响应主机B。
 一旦主机X完成了以上操作，它就可以向主机B发送命令。主机B将执行这些命令，认为他们是由合法主机A发来的。</p>

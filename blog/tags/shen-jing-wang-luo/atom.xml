@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 神经网络 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/shen-jing-wang-luo/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -109,7 +109,7 @@ Networks)，条件随机场，最大化边界马尔科夫网络以及一些流�
 
 
 <p>限制性玻尔兹曼机（RBM）进一步加一些约束，在RBM中不存在可见单元与可见单元的链接，也不存在隐含单元与隐含单元的链接，如下图所示
-<center><img src="/images/2013/IMAG2013041201.png"></center>
+<center>{% img /images/2013/IMAG2013041201.png %}</center>
 RBM的能量函数$E(v,h)$定义为，
 <center>$E(v,h) = -b'v - c'h - h'Wv$.</center>
 其中'表示转置，$b,c,W$为模型的参数，$b,c$分别为可见层和隐含层的偏置，$W$为可见层与隐含层的链接权重。此时，对应的自由能量为，
@@ -288,7 +288,7 @@ EndFor
 <p>卷积网络通过在相邻两层之间强制使用局部连接模式来利用图像的空间局部特性，在第m层的隐层单元只与第m-1层的输入单元的局部区域有连接，第m-1层的这些局部
 区域被称为空间连续的接受域。我们可以将这种结构描述如下：</br>
 设第m-1层为视网膜输入层，第m层的接受域的宽度为3，也就是说该层的每个单元与且仅与输入层的3个相邻的神经元相连，第m层与第m+1层具有类似的链接规则，如下图所示。
-<center><img src="/images/2013/IMAG2013040201.jpg"></center>
+<center>{% img /images/2013/IMAG2013040201.jpg %}</center>
 可以看到m+1层的神经元相对于第m层的接受域的宽度也为3，但相对于输入层的接受域为5，这种结构将学习到的过滤器（对应于输入信号中被最大激活的单元）限制在局部空间
 模式（因为每个单元对它接受域外的variation不做反应）。从上图也可以看出，多个这样的层堆叠起来后，会使得过滤器（不再是线性的）逐渐成为全局的（也就是覆盖到了更
 大的视觉区域）。例如上图中第m+1层的神经元可以对宽度为5的输入进行一个非线性的特征编码。
@@ -301,7 +301,7 @@ EndFor
 
 
 <p>在卷积网络中，每个稀疏过滤器<em>$h_{i}$</em>通过共享权值都会覆盖整个可视域，这些共享权值的单元构成一个特征映射，如下图所示。
-<center><img src="/images/2013/IMAG2013040202.jpg"></center>
+<center>{% img /images/2013/IMAG2013040202.jpg %}</center>
 在图中，有3个隐层单元，他们属于同一个特征映射。同种颜色的链接的权值是相同的，我们仍然可以使用梯度下降的方法来学习这些权值，只需要对原始算法做一些小的改动，
 这里共享权值的梯度是所有共享参数的梯度的总和。我们不禁会问为什么要权重共享呢？一方面，重复单元能够对特征进行识别，而不考虑它在可视域中的位置。另一方面，权值
 共享使得我们能更有效的进行特征抽取，因为它极大的减少了需要学习的自由变量的个数。通过控制模型的规模，卷积网络对视觉问题可以具有很好的泛化能力。
@@ -330,7 +330,7 @@ EndFor
 
 
 <p>下图是一个卷积网络的实例
-<center><img src="/images/2013/IMAG2013040203.jpg"></center>
+<center>{% img /images/2013/IMAG2013040203.jpg %}</center>
 图中的卷积网络工作流程如下，输入层由32×32个感知节点组成，接收原始图像。然后，计算流程在卷积和子抽样之间交替进行，如下所
 述：第一隐藏层进行卷积，它由8个特征映射组成，每个特征映射由28×28个神经元组成，每个神经元指定一个 5×5 的接受域；第二隐藏层实现子
 抽样和局部平均，它同样由 8 个特征映射组成，但其每个特征映射由14×14 个神经元组成。每个神经元具有一个 2×2 的接受域，一个可训练
@@ -356,7 +356,7 @@ EndFor
 
 
 <p>总体而言，前面提到的卷积网络可以简化为下图所示模型：
-<center><img src="/images/2013/IMAG2013040204.jpg"></center>
+<center>{% img /images/2013/IMAG2013040204.jpg %}</center>
 其中，input 到C1、S4到C5、C5到output是全连接，C1到S2、C3到S4是一一对应的连接，S2到C3为了消除网络对称性，去掉了一部分连接，
 可以让特征映射更具多样性。需要注意的是 C5 卷积核的尺寸要和 S4 的输出相同，只有这样才能保证输出是一维向量。</p>
 
@@ -367,7 +367,7 @@ EndFor
 
 
 <p>卷积层的典型结构如下图所示。
-<center><img src="/images/2013/IMAG2013040205.jpg"></center>
+<center>{% img /images/2013/IMAG2013040205.jpg %}</center>
 </p>
 
 
@@ -428,7 +428,7 @@ ConvolutionLayer::bprop(input,output,in_dx,out_dx) {
 
 <h3>3.2 子采样层的学习</h3>
 <p>子采样层的典型结构如下图所示。
-<center><img src="/images/2013/IMAG2013040206.jpg"></center></p>
+<center>{% img /images/2013/IMAG2013040206.jpg %}</center></p>
 
 <p>类似的字采样层的输出的计算式为：</br>
 <center>输出= Sigmoid( 采样*权重 +偏移量)</center>
@@ -534,7 +534,7 @@ SubSamplingLayer::bprop(input,output,in_dx,out_dx) {
 
 
 <p>一个典型的BP神经网络模型如图1所示。</br>
-<center><img src="/images/2013/IMAG2013033001.jpg"></center>
+<center>{% img /images/2013/IMAG2013033001.jpg %}</center>
 <center>图1 典型的BP神经网络模型</center></p>
 
 
@@ -700,7 +700,9 @@ Boltzmann learning等。然后介绍一些学习的方式，如监督学习、�
 
 <p>好的学习方法固然重要，但知识的表示，直接影响到feature的表示，也是非常重要的，因此在正式讨论学习方法之前，我们首先谈谈知识的表示。
 首先一个问题是，什么是知识？在PRML中我们有如下定义：</br>
-<blockquote><p>Knowledge refers to stored information or models used by a person or machine to interpret, predict, and appropriately respond to the outside world.</p><footer><strong>Fischler and Firschein</strong> <cite>Intelligence: The Eye，the Brain and the Computer</cite></footer></blockquote>
+{% blockquote Fischler and Firschein, Intelligence: the eye，the brain and the computer %}
+Knowledge refers to stored information or models used by a person or machine to interpret, predict, and appropriately respond to the outside world.
+{% endblockquote %}
 </p>
 
 
@@ -761,7 +763,9 @@ original input data. Probably the most suitable technique to be used for neural 
 
 
 <p>首先我们对NN的学习做如下的定义：</br>
-<blockquote><p>Learning is a process by which the free parameters of a neural network are adapted through a process of stimulation by the environment in which the network is embedded. The type of learning is determined by the manner in which the parameters changes take place.</p><footer><strong>Simon Haykin</strong> <cite>Neural Networks: A Comprehensive Foundation</cite></footer></blockquote>
+{% blockquote Simon Haykin, Neural Networks: A Comprehensive Foundation %}
+Learning is a process by which the free parameters of a neural network are adapted through a process of stimulation by the environment in which the network is embedded. The type of learning is determined by the manner in which the parameters changes take place.
+{% endblockquote %}
 这个定义蕴含以下几个意思：</br>
 1). The neural network is <em>stimulated</em> by an envirnment.</br>
 2). The neural network <em>undergoes changes</em> in its free parameters as a result of this stimulation.</br>

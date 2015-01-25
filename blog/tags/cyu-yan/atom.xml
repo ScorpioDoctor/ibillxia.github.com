@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C语言 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/cyu-yan/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-01-12T23:25:49+08:00</updated>
+  <updated>2015-01-25T23:53:39+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -530,7 +530,7 @@ swap(<em>Tp&amp; __a, </em>Tp&amp; <strong>b)
 <p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
 一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
 数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center><img src="/images/2013/IMAG2013072001.gif"></center>
+<center>{% img /images/2013/IMAG2013072001.gif %}</center>
 </p>
 
 
@@ -630,7 +630,7 @@ Data: 真正的语音数据部分。</br>
 24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
 ```
 则其个字段的解析如下图：
-<center><img src="/images/2013/IMAG2013072002.gif"></center>
+<center>{% img /images/2013/IMAG2013072002.gif %}</center>
 </p>
 
 
@@ -793,53 +793,31 @@ return speech;
 它代码分离开来。例程如下</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func1</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">Call_Func2</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">param</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="c1">// 函数调用成功，我们正常的处理&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　</span><span class="k">while</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">//do other job&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　　　</span><span class="k">if</span> <span class="p">(</span><span class="n">has</span> <span class="n">error</span><span class="p">)</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　</span><span class="c1">//do other job&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="c1">// 如果错误直接跳转&lt;br/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="k">else</span> <span class="k">goto</span> <span class="n">Error</span><span class="p">;</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="c1">// 错误处理模块&lt;br/&gt;</span>
-</span><span class='line'><span class="nl">Error:</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="n">process_error</span><span class="p">();</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="err">　　</span><span class="n">exit</span><span class="p">();</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+void main(int argc, char* argv[])<br/>
+{<br/>
+　　if (Call_Func1(in, param out) {<br/>
+　　　　// 函数调用成功，我们正常的处理<br/>
+　　　　if (Call_Func2(in, param out) {<br/>
+　　　　// 函数调用成功，我们正常的处理<br/>
+　　　　　　while(condition) {<br/>
+　　　　　　　　//do other job<br/>
+　　　　　　　　// 如果错误直接跳转<br/>
+　　　　　　　　if (has error) goto Error;<br/>
+　　　　　　//do other job<br/>
+　　　　　　}<br/>
+　　　　}<br/>
+　　　　// 如果错误直接跳转<br/>
+　　　　else goto Error;<br/>
+　　}<br/>
+　　// 如果错误直接跳转<br/>
+　　else goto Error;<br/>
+　　// 错误处理模块<br/>
+Error:<br/>
+　　process_error();<br/>
+　　exit();<br/>
+}
+{% endcodeblock %}</p>
 
 <p>虽然goto 语句能有效地支持异常处理编程的实现。但是没有人却建议使用它，即便是在C语言中。因为：</br>
 (1) goto语句能破坏程序的结构化设计，使代码难于测试，且包含大量goto的代码模块不易理解和阅读。它一直遭结构化程序设计思想所抛弃，强烈建议程序员不易使用它;</br>
@@ -883,39 +861,24 @@ return speech;
 当前需要用到的寄存器的值），jmp_buf 结构在 setjmp.h 文件内声明：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">typedef</span> <span class="k">struct</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">unsigned</span> <span class="n">j_sp</span><span class="p">;</span>  <span class="c1">// 堆栈指针寄存器</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ss</span><span class="p">;</span>  <span class="c1">// 堆栈段</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_flag</span><span class="p">;</span>  <span class="c1">// 标志寄存器</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_cs</span><span class="p">;</span>  <span class="c1">// 代码段</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ip</span><span class="p">;</span>  <span class="c1">// 指令指针寄存器</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_bp</span><span class="p">;</span> <span class="c1">// 基址指针</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_di</span><span class="p">;</span>  <span class="c1">// 目的指针</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_es</span><span class="p">;</span> <span class="c1">// 附加段</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_si</span><span class="p">;</span>  <span class="c1">// 源变址</span>
-</span><span class='line'><span class="kt">unsigned</span> <span class="n">j_ds</span><span class="p">;</span> <span class="c1">// 数据段</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="kt">jmp_buf</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+typedef struct
+{</p>
+
+<pre><code>unsigned j_sp;  // 堆栈指针寄存器
+unsigned j_ss;  // 堆栈段
+unsigned j_flag;  // 标志寄存器
+unsigned j_cs;  // 代码段
+unsigned j_ip;  // 指令指针寄存器
+unsigned j_bp; // 基址指针
+unsigned j_di;  // 目的指针
+unsigned j_es; // 附加段
+unsigned j_si;  // 源变址
+unsigned j_ds; // 数据段
+</code></pre>
+
+<p>} jmp_buf;
+{% endcodeblock %}</p>
 
 <p>jmp_buf 结构存放了程序当前寄存器的值，以确保使用 longjmp() 后可以跳回到该执行点上继续执行。</p>
 
@@ -928,20 +891,19 @@ return speech;
 <p>setjmp() 与 longjmp() 函数原型如下：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Cdecl</span> <span class="n">longjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">,</span> <span class="kt">int</span> <span class="n">retval</span><span class="p">);</span>
-</span><span class='line'><span class="kt">int</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Cdecl</span> <span class="n">setjmp</span><span class="p">(</span><span class="kt">jmp_buf</span> <span class="n">jmpb</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+void <em>Cdecl longjmp(jmp_buf jmpb, int retval);
+int </em>Cdecl setjmp(jmp_buf jmpb);
+{% endcodeblock %}</p>
 
 <p>_Cdecl 声明函数的参数使用标准C的进栈方式（由右向左）压栈，_Cdecl 是C语言的一种调用约定，除此以外，PASCAL 也是
 调用约定之一。C标准调用约定（_Cdecl）所声明的函数不自动清除堆栈，这一事务由调用者自行负责——这也是C可以支持不固定
 个数的参数的原因。此外，这一调用约定将在函数名前添加一个下划线字符，如某一函数声明为：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">cdecl</span> <span class="nf">DoSomething</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+int cdecl DoSomething(void);
+{% endcodeblock %}</p>
 
 <p>编译时将自动为 DoSomething 加上下划线前缀，即函数名变为：_DoSomething。</p>
 
@@ -983,208 +945,124 @@ return speech;
 首先定义一个全局的异常：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+jmp_buf Jump_Buffer;
+{% endcodeblock %}</p>
 
 <p>因为 setjmp() 第一次调用初始化后返回0，第二次返回非0，可以这样定义一个宏使得它功能接近于 C++ 的 try。</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;h1>define try if(!setjmp(Jump_Buffer))&lt;/h1>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock %}</p>
+
+<h1>define try if(!setjmp(Jump_Buffer))</h1>
+
+<p>{% endcodeblock %}</p>
 
 <p> 当 setjmp() 函数第一次0 时，取非为真，则执行 try 块内的代码，如：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+try {</p>
+
+<pre><code>Test();
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>当因为调用 longjmp() 抛出异常而导致 setjmp() 第二次返回时（程序将会转到 setjmp() 函数处返回，这时，这时应该执行
 的是异常处理代码。longjmp() 使 setjmp() 函数返回非0，if(!setjmp(JumpBuffer)) 中将值取非则为假，是以，异常处理放在
 其后应该使用一个 else：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">catch</span> <span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>define catch else</h1>
+
+<p>{% endcodeblock %}</p>
 
 <p>如此看起来便跟 C++ 相似了，setjmp() 函数的第二次返回导致 if() 中表达式值为假，刚好使 catch 块得以执行，如：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">try</span>  <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="n">catch</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">puts</span><span class="p">(</span><span class="s">&quot;Error&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}
+try  {</p>
+
+<pre><code>Test();
+</code></pre>
+
+<p>} catch {</p>
+
+<pre><code>puts("Error");
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 
 <p>实现如 C++ 的 throw 语句，事实上以宏替换 longjmp(jmp_buf, int) 的调用：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">throw</span> <span class="n">longjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>define throw longjmp(Jump_Buffer, 1)</h1>
+
+<p>{% endcodeblock %}</p>
 
 <p>下面的例程解释如何使用这些宏：</p>
 
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;stdio.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;conio.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span><span class="s">&quot;setjmp.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">jmp_buf</span> <span class="n">Jump_Buffer</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">try</span> <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">setjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">))</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">catch</span> <span class="k">else</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">throw</span> <span class="n">longjmp</span><span class="p">(</span><span class="n">Jump_Buffer</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">Test</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="mi">100</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">throw</span><span class="p">;</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>      <span class="nf">puts</span><span class="p">(</span><span class="s">&quot;OK.&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">Test_T</span><span class="p">(</span><span class="kt">int</span> <span class="n">T</span><span class="p">)</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Test</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
-</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">T</span><span class="p">;</span>
-</span><span class='line'><span class="n">try</span><span class="p">{</span>
-</span><span class='line'>      <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input a value:&quot;</span><span class="p">);</span>
-</span><span class='line'>      <span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">T</span><span class="p">);</span>
-</span><span class='line'>      <span class="n">T</span><span class="o">++</span><span class="p">;</span>
-</span><span class='line'>      <span class="n">Test_T</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span> <span class="n">catch</span><span class="p">{</span>
-</span><span class='line'>      <span class="n">puts</span><span class="p">(</span><span class="s">&quot;Input Error!&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="n">getch</span><span class="p">();</span>
-</span><span class='line'><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:c %}</p>
+
+<h1>include"stdio.h"</h1>
+
+<h1>include"conio.h"</h1>
+
+<h1>include"setjmp.h"</h1>
+
+<p>jmp_buf Jump_Buffer;</p>
+
+<h1>define try if(!setjmp(Jump_Buffer))</h1>
+
+<h1>define catch else</h1>
+
+<h1>define throw longjmp(Jump_Buffer,1)</h1>
+
+<p>int Test(int T)<br/>
+{</p>
+
+<pre><code>if(T&gt;100)  
+    throw;  
+else  
+      puts("OK.");  
+return 0;  
+</code></pre>
+
+<p>}<br/>
+int Test_T(int T)<br/>
+{</p>
+
+<pre><code>Test(T);  
+return 0;  
+</code></pre>
+
+<p>}<br/>
+int main()<br/>
+{</p>
+
+<pre><code>int T;  
+try{  
+      puts("Input a value:");  
+      scanf("%d",&amp;T);  
+      T++;  
+      Test_T(T);  
+  } catch{  
+      puts("Input Error!");  
+  }  
+getch();  
+return 0;  
+</code></pre>
+
+<p>}
+{% endcodeblock %}</p>
 ]]></content>
   </entry>
   
