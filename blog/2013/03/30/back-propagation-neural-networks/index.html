@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2013-03-30T21:37:00+08:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
+<time datetime="2013-03-30T21:37:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -250,26 +235,26 @@ $(document).ready(function(){
 
 
 <p>神经网络的关键之一是权值的确定，也即神经网络的学习，下面主要讨论一下BP神经网络的学习方法，它是一种监督学习的方法。</br>
-假定我们有$q$个带label的样本(即输入)$p_{1},p_{2},&#8230;,p_{q}$，对应的label(即期望输出Target)为$T_{1},T_{2},&#8230;,T_{q}$，神经网络的实际输出
-为$a2_{1},a2_{2},&#8230;,a2_{q}$，隐层的输出为$a1[.]$那么可以定义误差函数：</br>
+假定我们有$q$个带label的样本(即输入)$p_{1},p_{2},...,p_{q}$，对应的label(即期望输出Target)为$T_{1},T_{2},...,T_{q}$，神经网络的实际输出
+为$a2_{1},a2_{2},...,a2_{q}$，隐层的输出为$a1[.]$那么可以定义误差函数：</br>
 <center>$\boldsymbol{E(W,B)} = \frac{1}{2}\sum_{k=1}^{n}(t_{k} - a2_{k})^{2} $.</center>
 BP算法的目标是使得实际输出approximate期望输出，即使得训练误差最小化。BP算法利用梯度下降(Gradient Descent)法来求权值的变化及
 误差的反向传播。对于图1中的BP神经网络，我们首先计算输出层的权值的变化量，从第$i$个输入到第$k$个输出的权值改变为：</br>
-<center>$\Delta w2_{ki} = - \eta \frac{\partial E}{\partial w2_{ki}} &#92;
-= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial w2_{ki}} &#92;
-= \eta (t_{k}-a2_{k})f_{2}&#8217;a1_{i} = \eta \delta_{ki}a1_{i}$.</center>
+<center>$\Delta w2_{ki} = - \eta \frac{\partial E}{\partial w2_{ki}} \\
+= - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial w2_{ki}} \\
+= \eta (t_{k}-a2_{k})f_{2}'a1_{i} = \eta \delta_{ki}a1_{i}$.</center>
 其中$\eta$为学习速率。同理可得：</br>
 <center>$\Delta b2_{ki} = - \eta \frac{\partial E}{\partial b2_{ki}} 
 = - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial b2_{ki}}
-= \eta (t_{k}-a2_{k})f_{2}&#8217; = \eta \delta_{ki}$.</center>
+= \eta (t_{k}-a2_{k})f_{2}' = \eta \delta_{ki}$.</center>
 而隐层的权值变化为：</br>
 <center>$\Delta w1_{ij} = - \eta \frac{\partial E}{\partial w1_{ij}} 
 = - \eta \frac{\partial E}{\partial a2_{k}} \frac{\partial a2_{k}}{\partial a1_{i}} \frac{\partial a1_{i}}{\partial w1_{ij}}
-= \eta \sum_{k=1}^{n}(t_{k}-a2_{k})f_{2}&#8217;w2_{ki}f_{1}&#8217;p_{j} = \eta \delta_{ij}p_{j}$.</center>
-其中，$\delta_{ij} = e_{i}f_{1}&#8217;, e_{i} = \sum_{k=1}^{n}\delta_{ki}w2_{ki}$</br>
+= \eta \sum_{k=1}^{n}(t_{k}-a2_{k})f_{2}'w2_{ki}f_{1}'p_{j} = \eta \delta_{ij}p_{j}$.</center>
+其中，$\delta_{ij} = e_{i}f_{1}', e_{i} = \sum_{k=1}^{n}\delta_{ki}w2_{ki}$</br>
 同理可得，$\Delta b1_{i} = \eta \delta_{ij}$。</br>
 这里我们注意到，输出层的误差为$e_{j},j=1..n$，隐层的误差为$e_{i},i=1..m$，其中$e_{i}$可以认为是$e_{j}$的加权组合，由于作用函数的
-存在，$e_{j}$的等效作用为$\delta_{ji} = e_{j}f&#8217;()$。
+存在，$e_{j}$的等效作用为$\delta_{ji} = e_{j}f'()$。
 </p>
 
 
@@ -399,11 +384,11 @@ BP算法的目标是使得实际输出approximate期望输出，即使得训练�
   
 
 
-<time datetime="2013-03-30T21:37:00+08:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
+<time datetime="2013-03-30T21:37:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>PRML</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>prml</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/bpnn/'>BPNN</a>, <a class='tag' href='/blog/tags/ti-du-xia-jiang/'>梯度下降</a>, <a class='tag' href='/blog/tags/shen-jing-wang-luo/'>神经网络</a></span>
@@ -411,24 +396,7 @@ BP算法的目标是使得实际输出approximate期望输出，即使得训练�
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -465,12 +433,10 @@ BP算法的目标是使得实际输出approximate期望输出，即使得训练�
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

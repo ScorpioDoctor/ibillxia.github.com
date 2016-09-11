@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 适配器 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/gua-pei-qi/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -41,30 +41,25 @@
 
 <p>其中 insert iterator 是将一般的迭代器的赋值（assign）操作变为插入（insert）操作，而其他的自增和自减操作则不做任何处理的返回当前迭代器本身，包括从尾部插入的 <code>back_insert_iterator</code> 和从头部插入的 <code>front_insert_iterator</code> ，尾部插入的 insert iterator 的定义主要内容如下：</p>
 
-<p>``` cpp
-template <class _Container>
+<pre><code class="cpp">template &lt;class _Container&gt; 
 class back_insert_iterator {
 public:
-  back_insert_iterator<_Container>&amp;
-  operator=(const typename _Container::value_type&amp; __value) { // 赋值变为尾部插入</p>
-
-<pre><code>container-&gt;push_back(__value);
-return *this;
-</code></pre>
-
-<p>  }
-  back_insert_iterator<_Container>&amp; operator<em>() { return </em>this; } // 一下操作均返回迭代器本身
-  back_insert_iterator<_Container>&amp; operator++() { return <em>this; }
-  back_insert_iterator<_Container>&amp; operator++(int) { return </em>this; }
+  back_insert_iterator&lt;_Container&gt;&amp;
+  operator=(const typename _Container::value_type&amp; __value) { // 赋值变为尾部插入
+    container-&gt;push_back(__value);
+    return *this;
+  }
+  back_insert_iterator&lt;_Container&gt;&amp; operator*() { return *this; } // 一下操作均返回迭代器本身
+  back_insert_iterator&lt;_Container&gt;&amp; operator++() { return *this; }
+  back_insert_iterator&lt;_Container&gt;&amp; operator++(int) { return *this; }
 };
-```</p>
+</code></pre>
 
 <h4>3.2 reverse iterator</h4>
 
 <p>reverse iterator 则将一般的迭代器的行进方向逆转，是原本应该前进的 <code>operator++</code> 变为后退操作，而 <code>operator--</code> 变为前进操作，这样做对于需要从尾部开始遍历的算法非常有用。该迭代器的主要定义如下：</p>
 
-<p><code>
-template &lt;class _Iterator&gt;
+<pre><code>template &lt;class _Iterator&gt;
 class reverse_iterator {
 protected:
   _Iterator current;
@@ -81,8 +76,8 @@ public:
   _Self operator-(difference_type __n) const { return _Self(current + __n); }
   _Self&amp; operator-=(difference_type __n) { current += __n; return *this; }
   reference operator[](difference_type __n) const { return *(*this + __n); }  
-};
-</code></p>
+}; 
+</code></pre>
 
 <p>这种逆向的迭代器只用于那些具有双向迭代器的容器（如vector，list，deque等，而slist，stack，queue，priority queue等则不行）或需要逆向遍历的算法（如copy backward等）。</p>
 
@@ -92,42 +87,32 @@ public:
 
 <p>以 istream iterator 为例，它将迭代器绑定到一个输入数据流对象（istream object）上，其实就是在 istream iterator 内部维护一个 istream member，用户对这个 istream iterator 所做的 <code>operator++</code> 操作会被该迭代器变为这个 istream member 的输入操作 <code>operator&gt;&gt;</code>，这个迭代器是一个 input iterator，没有 <code>operator--</code> 操作，核心实现如下：</p>
 
-<p>```
-template <class _Tp, class _CharT = char, class _Traits = char_traits<_CharT>,</p>
-
-<pre><code>      class _Dist = ptrdiff_t&gt; 
-</code></pre>
-
-<p>class istream_iterator {
+<pre><code>template &lt;class _Tp, class _CharT = char, class _Traits = char_traits&lt;_CharT&gt;,
+          class _Dist = ptrdiff_t&gt; 
+class istream_iterator {
 public:
-  typedef <em>CharT                         char_type;
-  typedef </em>Traits                        traits_type;
-  typedef basic_istream&lt;<em>CharT, </em>Traits> istream_type;
-  reference operator<em>() const { return _M_value; }
-  pointer operator->() const { return &amp;(operator</em>()); }
-  istream_iterator&amp; operator++() { <em>M_read(); return <em>this; } // ++ 变为 >>
-  istream_iterator operator++(int)  { istream_iterator __tmp = </em>this; </em>M_read(); return <strong>tmp; }
-  bool _M_equal(const istream_iterator&amp; </strong>x) const</p>
-
-<pre><code>{ return (_M_ok == __x._M_ok) &amp;&amp; (!_M_ok || _M_stream == __x._M_stream); }
-</code></pre>
-
-<p>private:
-  istream_type* <em>M_stream;
-  </em>Tp <em>M_value;
-  bool </em>M_ok;
-  void _M_read() {</p>
-
-<pre><code>_M_ok = (_M_stream &amp;&amp; *_M_stream) ? true : false;
-if (_M_ok) {
-  *_M_stream &gt;&gt; _M_value; // 转变为输入操作（&gt;&gt;）
-  _M_ok = *_M_stream ? true : false;
-}
-</code></pre>
-
-<p>  }
+  typedef _CharT                         char_type;
+  typedef _Traits                        traits_type;
+  typedef basic_istream&lt;_CharT, _Traits&gt; istream_type;
+  reference operator*() const { return _M_value; }
+  pointer operator-&gt;() const { return &amp;(operator*()); }
+  istream_iterator&amp; operator++() { _M_read(); return *this; } // ++ 变为 &gt;&gt;
+  istream_iterator operator++(int)  { istream_iterator __tmp = *this; _M_read(); return __tmp; }
+  bool _M_equal(const istream_iterator&amp; __x) const
+    { return (_M_ok == __x._M_ok) &amp;&amp; (!_M_ok || _M_stream == __x._M_stream); }
+private:
+  istream_type* _M_stream;
+  _Tp _M_value;
+  bool _M_ok;
+  void _M_read() {
+    _M_ok = (_M_stream &amp;&amp; *_M_stream) ? true : false;
+    if (_M_ok) {
+      *_M_stream &gt;&gt; _M_value; // 转变为输入操作（&gt;&gt;）
+      _M_ok = *_M_stream ? true : false;
+    }
+  }
 };
-```</p>
+</code></pre>
 
 <p>可以看到以上的迭代器均非一般意义上的迭代器了，而是一个经过适配了的特殊的迭代器。</p>
 
@@ -137,38 +122,33 @@ if (_M_ok) {
 
 <p>STL中标准的 functor adaptor 包括对返回值进行逻辑否定的 <code>not1</code>，<code>not2</code>；对参数进行绑定的 <code>bind1st</code>，<code>bind2nd</code>；用于函数合成的 <code>compose1</code>，<code>compose2</code> （非STL标准，SGI私有）；用于函数指针的 <code>ptr_fun</code>；用于成员函数指针的 <code>mem_fun</code>，<code>mem_fun_ref</code> 等。其中逻辑否定、参数绑定、函数合成的比较简单，如下：</p>
 
-<p>```
-// not1其实是对unary_negate函数的一个简单的封装，定义了一个unary_negate类型匿名对象（函数）
-inline unary_negate<_Predicate> // 实际效果：!pred(param)
-not1(const <em>Predicate&amp; <strong>pred){ return unary_negate<_Predicate>(</strong>pred);}
-inline binary_negate<_Predicate> // 实际效果：!pred(param1,param2)
-not2(const </em>Predicate&amp; <strong>pred){ return binary_negate<_Predicate>(</strong>pred); }
-inline binder1st<_Operation> // 实际效果：op(x,param)
-bind1st(const <em>Operation&amp; __fn, const </em>Tp&amp; <strong>x) {
-  return binder1st<_Operation>(</strong>fn, <em>Arg1_type(__x));
+<pre><code>// not1其实是对unary_negate函数的一个简单的封装，定义了一个unary_negate类型匿名对象（函数）
+inline unary_negate&lt;_Predicate&gt; // 实际效果：!pred(param)
+not1(const _Predicate&amp; __pred){ return unary_negate&lt;_Predicate&gt;(__pred);} 
+inline binary_negate&lt;_Predicate&gt; // 实际效果：!pred(param1,param2)
+not2(const _Predicate&amp; __pred){ return binary_negate&lt;_Predicate&gt;(__pred); }
+inline binder1st&lt;_Operation&gt; // 实际效果：op(x,param)
+bind1st(const _Operation&amp; __fn, const _Tp&amp; __x) {
+  return binder1st&lt;_Operation&gt;(__fn, _Arg1_type(__x));
 }
-inline binder2nd<_Operation> // 实际效果：op(param,x)
-bind2nd(const </em>Operation&amp; <strong>fn, const _Tp&amp; </strong>x) {
-  return binder2nd<_Operation>(<strong>fn, _Arg2_type(</strong>x));
+inline binder2nd&lt;_Operation&gt; // 实际效果：op(param,x)
+bind2nd(const _Operation&amp; __fn, const _Tp&amp; __x) { 
+  return binder2nd&lt;_Operation&gt;(__fn, _Arg2_type(__x));
 }
-inline unary_compose&lt;<em>Operation1,</em>Operation2> // 实际效果：op1(op2(param))
-compose1(const <em>Operation1&amp; __fn1, const </em>Operation2&amp; <strong>fn2) {
-  return unary_compose&lt;<em>Operation1,</em>Operation2>(</strong>fn1, <strong>fn2);
+inline unary_compose&lt;_Operation1,_Operation2&gt; // 实际效果：op1(op2(param))
+compose1(const _Operation1&amp; __fn1, const _Operation2&amp; __fn2) {
+  return unary_compose&lt;_Operation1,_Operation2&gt;(__fn1, __fn2);
 }
-inline binary_compose&lt;<em>Operation1, </em>Operation2, <em>Operation3> // 实际效果：op1(op2(param),op3(param))
-compose2(const </em>Operation1&amp; </strong>fn1, const <em>Operation2&amp; __fn2, const </em>Operation3&amp; <em><em>fn3) {
-  return binary_compose&lt;</em>Operation1,</em>Operation2,_Operation3></p>
-
-<pre><code>(__fn1, __fn2, __fn3);
+inline binary_compose&lt;_Operation1, _Operation2, _Operation3&gt; // 实际效果：op1(op2(param),op3(param))
+compose2(const _Operation1&amp; __fn1, const _Operation2&amp; __fn2, const _Operation3&amp; __fn3) {
+  return binary_compose&lt;_Operation1,_Operation2,_Operation3&gt;
+    (__fn1, __fn2, __fn3);
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>用于函数指针的 <code>ptr_fun</code> 适配器使得我们可以将一般函数当做仿函数使用，就像原生指针可以当做迭代器传给STL算法一样，它的实际效果相当如 <code>fp(param)</code> 或 <code>fp(param1,param2)</code> ，前者定义如下：</p>
 
-<p><code>
-template &lt;class _Arg, class _Result&gt;
+<pre><code>template &lt;class _Arg, class _Result&gt;
 class pointer_to_unary_function : public unary_function&lt;_Arg, _Result&gt; {
 protected:
   _Result (*_M_ptr)(_Arg);
@@ -182,12 +162,11 @@ inline pointer_to_unary_function&lt;_Arg, _Result&gt; // 返回值型别
 ptr_fun(_Result (*__x)(_Arg)) { // 对pointer_to_unary_function 的封装
   return pointer_to_unary_function&lt;_Arg, _Result&gt;(__x);
 }
-</code></p>
+</code></pre>
 
 <p>用于成员函数指针的 <code>mem_fun</code> 适配器使得我们可以将成员函数当做仿函数使用，于是成员函数可以搭配各种泛型算法，而当使用父类的虚拟成员函数作为仿函数时，还可以使用泛型算法完成所谓的多态调用（polymorphic function call），这是泛型（genericity）与多态（polymorphism）之间的结合。另外需要注意的是，虽然多态可以对指针或引用起作用，但STL容器只支持“实值语意”，不支持“引用语意”，及容器的内容应该为实值而非引用（类似于<code>vecotr&lt;X&amp;&gt; vc</code> 这种）。一下是 <code>mem_fun</code> 的具体定义（还有很多个版本，这里只是最简单的一个）：</p>
 
-<p><code>
-// 无任何参数，通过pointer调用，non-const成员函数
+<pre><code>// 无任何参数，通过pointer调用，non-const成员函数
 template &lt;class _Ret, class _Tp&gt;
 class mem_fun_t : public unary_function&lt;_Tp*,_Ret&gt; {
 public:
@@ -199,7 +178,7 @@ private:
 template &lt;class _Ret, class _Tp&gt;
 inline mem_fun_t&lt;_Ret,_Tp&gt; // 返回类型
 mem_fun(_Ret (_Tp::*__f)()) { return mem_fun_t&lt;_Ret,_Tp&gt;(__f); } // mem_fun_t的匿名对象
-</code></p>
+</code></pre>
 
 <h2>推荐阅读：</h2>
 

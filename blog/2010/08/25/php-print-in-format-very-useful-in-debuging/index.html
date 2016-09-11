@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true">Aug 25<span>th</span>, 2010</time>
+<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -196,9 +181,7 @@ $(document).ready(function(){
 <div class="entry-content"><p>以下是从FleaPHP上挖来的，感谢FleaPHP的开发者们。</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -223,34 +206,32 @@ $(document).ready(function(){
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">/**</span>
-</span><span class='line'><span class="x">* 输出变量的内容，通常用于调试</span>
-</span><span class='line'><span class="x">*</span>
-</span><span class='line'><span class="x">* @package Core</span>
-</span><span class='line'><span class="x">*</span>
-</span><span class='line'><span class="x">* @param mixed $vars 要输出的变量</span>
-</span><span class='line'><span class="x">* @param string $label</span>
-</span><span class='line'><span class="x">* @param boolean $return</span>
-</span><span class='line'><span class="x">*/</span>
-</span><span class='line'><span class="x">function dump($vars, $label = &#39;&#39;, $return = false)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    if (ini_get(&#39;html_errors&#39;)) {</span>
-</span><span class='line'><span class="x">        $content = &quot;&lt;pre&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">        if ($label != &#39;&#39;) {</span>
-</span><span class='line'><span class="x">            $content .= &quot;&lt;strong&gt;{$label} :&lt;/strong&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">        }</span>
-</span><span class='line'><span class="x">        $content .= htmlspecialchars(print_r($vars, true));</span>
-</span><span class='line'><span class="x">        $content .= &quot;\n&lt;/pre&gt;\n&quot;;</span>
-</span><span class='line'><span class="x">    } else {</span>
-</span><span class='line'><span class="x">        $content = $label . &quot; :\n&quot; . print_r($vars, true);</span>
-</span><span class='line'><span class="x">    }</span>
-</span><span class='line'><span class="x">    if ($return) { return $content; }</span>
-</span><span class='line'><span class="x">    echo $content;</span>
-</span><span class='line'><span class="x">    return null;</span>
-</span><span class='line'><span class="x">}</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd">* 输出变量的内容，通常用于调试</span>
+</span><span class='line'><span class="sd">*</span>
+</span><span class='line'><span class="sd">* @package Core</span>
+</span><span class='line'><span class="sd">*</span>
+</span><span class='line'><span class="sd">* @param mixed $vars 要输出的变量</span>
+</span><span class='line'><span class="sd">* @param string $label</span>
+</span><span class='line'><span class="sd">* @param boolean $return</span>
+</span><span class='line'><span class="sd">*/</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">dump</span><span class="p">(</span><span class="nv">$vars</span><span class="p">,</span> <span class="nv">$label</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$return</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">ini_get</span><span class="p">(</span><span class="s1">&#39;html_errors&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$content</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$label</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$content</span> <span class="o">.=</span> <span class="s2">&quot;&lt;strong&gt;</span><span class="si">{</span><span class="nv">$label</span><span class="si">}</span><span class="s2"> :&lt;/strong&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="nv">$content</span> <span class="o">.=</span> <span class="nb">htmlspecialchars</span><span class="p">(</span><span class="nb">print_r</span><span class="p">(</span><span class="nv">$vars</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+</span><span class='line'>        <span class="nv">$content</span> <span class="o">.=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&lt;/pre&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$content</span> <span class="o">=</span> <span class="nv">$label</span> <span class="o">.</span> <span class="s2">&quot; :</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">.</span> <span class="nb">print_r</span><span class="p">(</span><span class="nv">$vars</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nv">$return</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$content</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="k">echo</span> <span class="nv">$content</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
 
 
 <!--more-->
@@ -284,11 +265,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true">Aug 25<span>th</span>, 2010</time>
+<time datetime="2010-08-25T10:08:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/fleaphp/'>FleaPHP</a>, <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/diao-shi/'>调试</a></span>
@@ -296,24 +277,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -350,12 +314,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

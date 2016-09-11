@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 集合 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/ji-he/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -28,9 +28,8 @@
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) __f(*__first);
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) __f(*__first);
+</code></pre>
 
 <p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
 
@@ -40,9 +39,8 @@ for ( ; __first != __last; ++__first) __f(*__first);
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<p><code>cpp
-while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
-</code></p>
+<pre><code class="cpp">while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
+</code></pre>
 
 <p>另外，关于find，考虑偏特化特性，还有在迭代器为随机存取迭代器时，每次循环进行4次判断和自增，这是所谓的 <a href="http://en.wikipedia.org/wiki/Loop_unrolling">loop unrolling</a>，在StackOverflow 上也有相关解释 <a href="http://stackoverflow.com/questions/24295972/">questions-24295972</a>。如果学过体系结构，应该也会提及循环展开的加速方法。</p>
 
@@ -53,13 +51,9 @@ while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++__first)</p>
-
-<pre><code>if (*__first == __value) ++__n;
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
+    if (*__first == __value) ++__n;
 </code></pre>
-
-<p>```</p>
 
 <p>以上这个是非STL标准的，另外还有一个版本返回值为迭代器的 <code>difference_type</code> 的偏特化版本，这个才是STL标准。</p>
 
@@ -71,68 +65,50 @@ for ( ; <strong>first != </strong>last; ++__first)</p>
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
-
-<pre><code>iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2)
+    iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
 </code></pre>
-
-<p>```</p>
 
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
-
-<pre><code>*__result = __opr(*__first);
+<pre><code class="cpp">for ( ; __first != __last; ++__first, ++__result)
+    *__result = __opr(*__first);
 </code></pre>
-
-<p>```</p>
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, ++__result)</p>
-
-<pre><code>*__result = __binary_op(*__first1, *__first2);
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2, ++__result)
+    *__result = __binary_op(*__first1, *__first2);
 </code></pre>
-
-<p>```</p>
 
 <p>注意该算法不需要传入第二个区间的last迭代器。</p>
 
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first)
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
    if (*__first == __old_value) *__first = __new_value;
-</code></p>
+</code></pre>
 
 <p>另外还有三个版本的替换： <code>replace_if</code>，判断条件可以自己指定，而不一定是相等；<code>replace_copy</code>，将修改后的结果存到一个新的序列中；<code>replace_copy_if</code> 是前两者的合体。</p>
 
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) *__first = __gen();
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) *__first = __gen();
+</code></pre>
 
 <p>还有一个 <code>generate_n</code> 将序列中的前n个元素的值按给定函数赋值。</p>
 
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<p>``` cpp
-<strong>first = find(</strong>first, <strong>last, </strong>value);
-_ForwardIter <strong>i = </strong>first;
-return <strong>first == </strong>last ? __first</p>
-
-<pre><code>               : remove_copy(++__i, __last, __first, __value);
+<pre><code class="cpp">__first = find(__first, __last, __value);
+_ForwardIter __i = __first;
+return __first == __last ? __first 
+                   : remove_copy(++__i, __last, __first, __value);
 </code></pre>
-
-<p>```</p>
 
 <p><strong>11.unique和unique_copy</strong><br/>
 将区间的元素的值唯一化，即去掉相邻的重复的项。由于判断时是针对相邻的元素，所以一般需要结合sort使用，如果序列无序需要先对序列排序再进行唯一化。<code>unique</code> 的实现是调用 <code>unique_copy</code> 来实现的，只是将参数中result仍设为输入序列的first。</p>
@@ -142,9 +118,8 @@ return <strong>first == </strong>last ? __first</p>
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<p><code>cpp
-while (__first &lt; __last) iter_swap(__first++, --__last);
-</code></p>
+<pre><code class="cpp">while (__first &lt; __last) iter_swap(__first++, --__last);
+</code></pre>
 
 <p>还有迭代器为双向迭代器的版本和非质变算法版本 <code>reverse_copy</code>。</p>
 
@@ -156,13 +131,9 @@ while (__first &lt; __last) iter_swap(__first++, --__last);
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<p>``` cpp
-for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>last; ++__i)</p>
-
-<pre><code>iter_swap(__i, __first + __random_number((__i - __first) + 1));
+<pre><code class="cpp">for (_RandomAccessIter __i = __first + 1; __i != __last; ++__i)
+    iter_swap(__i, __first + __random_number((__i - __first) + 1));
 </code></pre>
-
-<p>```</p>
 
 <p>除了这个版本采用STL的random函数生成随机数的版本外，还有一个版本可以自己指定随机数生成函数。</p>
 
@@ -257,99 +228,69 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 <!-- more -->
 
 
-<p>``` cpp
-template <class _Key, class _Compare, class _Alloc>
+<pre><code class="cpp">template &lt;class _Key, class _Compare, class _Alloc&gt;
 class set {
 public:
-  typedef <em>Key     key_type;
-  typedef </em>Key     value_type; // 实值与键值同类型
+  typedef _Key     key_type;
+  typedef _Key     value_type; // 实值与键值同类型
 private:
-  typedef <em>Rb_tree&lt;key_type, value_type, </em>Identity<value_type>, key_compare, <em>Alloc> </em>Rep_type;
-  <em>Rep_type </em>M_t;  // 底层使用红黑树作为容器
-  set() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
-  set(const set&lt;<em>Key,</em>Compare,<em>Alloc>&amp; __x) : </em>M_t(<strong>x._M_t) {}  // 拷贝构造函数
-  pair&lt;iterator,bool> insert(const value_type&amp; </strong>x) { // 插入操作</p>
-
-<pre><code>pair&lt;typename _Rep_type::iterator, bool&gt; __p = _M_t.insert_unique(__x); 
-return pair&lt;iterator, bool&gt;(__p.first, __p.second);
-</code></pre>
-
-<p>  }
-  void erase(iterator __position) { // 删除操作</p>
-
-<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
-_M_t.erase((_Rep_iterator&amp;)__position); 
-</code></pre>
-
-<p>  }
-  void clear() { <em>M_t.clear(); } // 清空操作
-  iterator find(const key_type&amp; __x) const { return </em>M_t.find(<strong>x); } // 查找
-  size_type count(const key_type&amp; </strong>x) const { // 计数</p>
-
-<pre><code>return _M_t.find(__x) == _M_t.end() ? 0 : 1;
-</code></pre>
-
-<p>  }
+  typedef _Rb_tree&lt;key_type, value_type, _Identity&lt;value_type&gt;, key_compare, _Alloc&gt; _Rep_type;
+  _Rep_type _M_t;  // 底层使用红黑树作为容器
+  set() : _M_t(_Compare(), allocator_type()) {} // 默认构造函数
+  set(const set&lt;_Key,_Compare,_Alloc&gt;&amp; __x) : _M_t(__x._M_t) {}  // 拷贝构造函数
+  pair&lt;iterator,bool&gt; insert(const value_type&amp; __x) { // 插入操作
+    pair&lt;typename _Rep_type::iterator, bool&gt; __p = _M_t.insert_unique(__x); 
+    return pair&lt;iterator, bool&gt;(__p.first, __p.second);
+  }
+  void erase(iterator __position) { // 删除操作
+    typedef typename _Rep_type::iterator _Rep_iterator;
+    _M_t.erase((_Rep_iterator&amp;)__position); 
+  }
+  void clear() { _M_t.clear(); } // 清空操作
+  iterator find(const key_type&amp; __x) const { return _M_t.find(__x); } // 查找
+  size_type count(const key_type&amp; __x) const { // 计数
+    return _M_t.find(__x) == _M_t.end() ? 0 : 1;
+  }
 };
-template <class _Key, class _Compare, class _Alloc>
-inline bool operator==(const set&lt;<em>Key,</em>Compare,_Alloc>&amp; __x,</p>
-
-<pre><code>                   const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较相等操作符
+template &lt;class _Key, class _Compare, class _Alloc&gt;
+inline bool operator==(const set&lt;_Key,_Compare,_Alloc&gt;&amp; __x, 
+                       const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较相等操作符
+  return __x._M_t == __y._M_t;
+}
+template &lt;class _Key, class _Compare, class _Alloc&gt;
+inline bool operator&lt;(const set&lt;_Key,_Compare,_Alloc&gt;&amp; __x, 
+                      const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较大小操作符
+  return __x._M_t &lt; __y._M_t;
+}
 </code></pre>
 
-<p>  return <strong>x._M_t == </strong>y.<em>M_t;
-}
-template <class _Key, class _Compare, class _Alloc>
-inline bool operator&lt;(const set&lt;</em>Key,<em>Compare,</em>Alloc>&amp; __x,</p>
-
-<pre><code>                  const set&lt;_Key,_Compare,_Alloc&gt;&amp; __y) { // 比较大小操作符
-</code></pre>
-
-<p>  return <strong>x._M_t &lt; </strong>y.<em>M_t;
-}
-<code>``
-可以看到基本都是调用</code></em>M_t<code>的方法来实现的，而这里的</code>_M_t` 是一个红黑树对象。</p>
+<p>可以看到基本都是调用 <code>_M_t</code> 的方法来实现的，而这里的 <code>_M_t</code> 是一个红黑树对象。</p>
 
 <h2>3. multiset</h2>
 
 <p>multiset 的特性和用法与 set 基本相同，唯一差别在于它允许有重复的键值，因此它的插入操作使用的底层机制是 RB-tree 的 <code>insert_equal()</code> 而不是 <code>insert_unique()</code> ，下面是 multiset 的主要代码，主要列出了与 set 不同的部分。<br/>
-``` cpp
-template <class _Key, class _Compare, class _Alloc>
+<code>cpp
+template &lt;class _Key, class _Compare, class _Alloc&gt;
 class multiset {
 public:
-  multiset(const value_type<em> __first, const value_type</em> __last)</p>
-
-<pre><code>: _M_t(_Compare(), allocator_type())
-{ _M_t.insert_equal(__first, __last); } // 构造函数
-</code></pre>
-
-<p>  iterator insert(const value_type&amp; __x) { // 插入操作</p>
-
-<pre><code>return _M_t.insert_equal(__x);
-</code></pre>
-
-<p>  }
-  iterator insert(iterator <strong>position, const value_type&amp; </strong>x) {</p>
-
-<pre><code>typedef typename _Rep_type::iterator _Rep_iterator;
-return _M_t.insert_equal((_Rep_iterator&amp;)__position, __x);
-</code></pre>
-
-<p>  }
-  void insert(const value_type<em> __first, const value_type</em> __last) {</p>
-
-<pre><code>_M_t.insert_equal(__first, __last);
-</code></pre>
-
-<p>  }
-  void insert(const_iterator <strong>first, const_iterator </strong>last) {</p>
-
-<pre><code>_M_t.insert_equal(__first, __last);
-</code></pre>
-
-<p>  }
+  multiset(const value_type* __first, const value_type* __last)
+    : _M_t(_Compare(), allocator_type())
+    { _M_t.insert_equal(__first, __last); } // 构造函数
+  iterator insert(const value_type&amp; __x) { // 插入操作
+    return _M_t.insert_equal(__x);
+  }
+  iterator insert(iterator __position, const value_type&amp; __x) {
+    typedef typename _Rep_type::iterator _Rep_iterator;
+    return _M_t.insert_equal((_Rep_iterator&amp;)__position, __x);
+  }
+  void insert(const value_type* __first, const value_type* __last) {
+    _M_t.insert_equal(__first, __last);
+  }
+  void insert(const_iterator __first, const_iterator __last) {
+    _M_t.insert_equal(__first, __last);
+  }
 };
-```
+</code>
 其他部分基本与 set 一样。</p>
 ]]></content>
   </entry>

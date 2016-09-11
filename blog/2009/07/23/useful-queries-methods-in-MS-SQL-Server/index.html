@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2009</time>
+<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -462,144 +447,146 @@ AVG 函数求该列统计值之平均值， MAX 函数求该列最大值， MIN 
 
 
 
-<p>例 29 统计年龄小于等于 22 岁的学生人数。（统计） 
+<p><p>例 29 统计年龄小于等于 22 岁的学生人数。（统计）
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select COUNT(*) FROM STUDENTS Where AGE &lt; ＝ 22 </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select COUNT(*) FROM STUDENTS Where AGE &lt; ＝ 22 </span></code></pre></td></tr></table></div></figure></p>
 
-例 30 找出学生的平均成绩和所学课程门数。 
+<p>例 30 找出学生的平均成绩和所学课程门数。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNO, AVG(GRADE), COURSES ＝ COUNT(*) FROM ENROLLS GROUP BY SNO </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNO, AVG(GRADE), COURSES ＝ COUNT(*) FROM ENROLLS GROUP BY SNO </span></code></pre></td></tr></table></div></figure></p>
 
-例 31 找出年龄超过平均年龄的学生姓名。 
+<p>例 31 找出年龄超过平均年龄的学生姓名。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME FROM STUDENTS 
-</span><span class='line'>Where AGE ＞ (Select AVG(AGE) FROM STUDENTS) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME FROM STUDENTS
+</span><span class='line'>Where AGE ＞ (Select AVG(AGE) FROM STUDENTS) </span></code></pre></td></tr></table></div></figure></p>
 
-例 32 找出各课程的平均成绩，按课程号分组，且只选择学生超过 3 人的课程的成绩。【 GROUP BY 与 HAVING  GROUP BY 子句
+<p>例 32 找出各课程的平均成绩，按课程号分组，且只选择学生超过 3 人的课程的成绩。【 GROUP BY 与 HAVING  GROUP BY 子句
 把一个表按某一指定列（或一些列）上的值相等的原则分组，然后再对每组数据进行规定的操作。 GROUP BY 子句总是跟在 Where 子句
-后面，当 Where 子句缺省时，它跟在 FROM 子句后面。 HAVING 子句常用于在计算出聚集之后对行的查询进行控制。】 
+后面，当 Where 子句缺省时，它跟在 FROM 子句后面。 HAVING 子句常用于在计算出聚集之后对行的查询进行控制。】
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select CNO, AVG(GRADE), STUDENTS ＝ COUNT(*) FROM ENROLLS  GROUP BY CNO HAVING COUNT(*) &gt;= 3 </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select CNO, AVG(GRADE), STUDENTS ＝ COUNT(<em>) FROM ENROLLS  GROUP BY CNO HAVING COUNT(</em>) &gt;= 3 </span></code></pre></td></tr></table></div></figure></p>
 
-## 七、相关子查询   
-例 33 查询没有选任何课程的学生的学号和姓名。【当一个子查询涉及到一个来自外部查询的列时，称为相关子查询（ Correlated Subquery) 。
+<h2>七、相关子查询</h2>
+
+<p>例 33 查询没有选任何课程的学生的学号和姓名。【当一个子查询涉及到一个来自外部查询的列时，称为相关子查询（ Correlated Subquery) 。
 相关子查询要用到存在测试谓词 EXISTS 和 NOT EXISTS ，以及 ALL 、 ANY （ SOME ）等 。】
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNO, SNAME FROM STUDENTS Where NOT EXISTS 
-</span><span class='line'>(Select * FROM ENROLLS Where ENROLLS.SNO=STUDENTS.SNO) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNO, SNAME FROM STUDENTS Where NOT EXISTS
+</span><span class='line'>(Select * FROM ENROLLS Where ENROLLS.SNO=STUDENTS.SNO) </span></code></pre></td></tr></table></div></figure></p>
 
-例 34 查询哪些课程只有男生选读。 
+<p>例 34 查询哪些课程只有男生选读。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select DISTINCT CNAME FROM COURSES C 
-</span><span class='line'>Where ' 男 ' ＝ ALL 
-</span><span class='line'>(Select SEX FROM ENROLLS , STUDENTS Where ENROLLS.SNO=STUDENTS.SNO AND ENROLLS.CNO=C.CNO) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select DISTINCT CNAME FROM COURSES C
+</span><span class='line'>Where ' 男 ' ＝ ALL
+</span><span class='line'>(Select SEX FROM ENROLLS , STUDENTS Where ENROLLS.SNO=STUDENTS.SNO AND ENROLLS.CNO=C.CNO) </span></code></pre></td></tr></table></div></figure></p>
 
-例 35 要求给出一张学生、籍贯列表，该表中的学生的籍贯省份，也是其他一些学生的籍贯省份。 
+<p>例 35 要求给出一张学生、籍贯列表，该表中的学生的籍贯省份，也是其他一些学生的籍贯省份。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME, BPLACE FROM STUDENTS A Where EXISTS 
-</span><span class='line'>(Select * FROM STUDENTS B Where A.BPLACE=B.BPLACE AND A.SNO &lt; &gt; B.SNO) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME, BPLACE FROM STUDENTS A Where EXISTS
+</span><span class='line'>(Select * FROM STUDENTS B Where A.BPLACE=B.BPLACE AND A.SNO &lt; &gt; B.SNO) </span></code></pre></td></tr></table></div></figure></p>
 
-例 36 找出选修了全部课程的学生的姓名。本查询可以改为：查询这样一些学生，没有一门课程是他不选修的。
+<p>例 36 找出选修了全部课程的学生的姓名。本查询可以改为：查询这样一些学生，没有一门课程是他不选修的。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME FROM STUDENTS Where NOT EXISTS 
-</span><span class='line'>(Select * FROM COURSES Where NOT EXISTS 
-</span><span class='line'>(Select * FROM ENROLLS Where ENROLLS.SNO ＝ STUDENTS.SNO AND ENROLLS.CNO= </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select SNAME FROM STUDENTS Where NOT EXISTS
+</span><span class='line'>(Select * FROM COURSES Where NOT EXISTS
+</span><span class='line'>(Select * FROM ENROLLS Where ENROLLS.SNO ＝ STUDENTS.SNO AND ENROLLS.CNO= </span></code></pre></td></tr></table></div></figure></p>
 
-#### 关系代数运算  
-例 37 设有某商场工作人员的两张表：营业员表 SP_SUBORD 和营销经理表 SP_MGR ，其关系数据模式如下： 
+<h4>关系代数运算</h4>
+
+<p>例 37 设有某商场工作人员的两张表：营业员表 SP_SUBORD 和营销经理表 SP_MGR ，其关系数据模式如下：
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>SP_SUBORD (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE) 
+</pre></td><td class='code'><pre><code class=''><span class='line'>SP_SUBORD (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE)
 </span><span class='line'>SP_MGR (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE) </span></code></pre></td></tr></table></div></figure>
-其中，属性 SALPERS_ID 为工作人员的编号 , SALPERS_NAME 为工作人员的姓名 , `MANAGER_ID` 为所在部门经理的编号 , `OFFICE` 为工作地点。 
-(1) 若查询全部商场工作人员，可以用下面的 SQL 语句：  
+其中，属性 SALPERS_ID 为工作人员的编号 , SALPERS_NAME 为工作人员的姓名 , <code>MANAGER_ID</code> 为所在部门经理的编号 , <code>OFFICE</code> 为工作地点。
+(1) 若查询全部商场工作人员，可以用下面的 SQL 语句：<br/>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM SP_SUBORD) UNION (Select * FROM SP_MGR) </span></code></pre></td></tr></table></div></figure>
-或等价地用下面的 SQL 语句：  
+或等价地用下面的 SQL 语句：<br/>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>Select * FROM (TABLE SP_SUBORD UNION TABLE SP_MGR) </span></code></pre></td></tr></table></div></figure>
-(2) `INTERSECT (Select * FROM SP_SUBORD)`  
+(2) <code>INTERSECT (Select * FROM SP_SUBORD)</code><br/>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>INTERSECT (Select * FROM SP_MGR) </span></code></pre></td></tr></table></div></figure>
-或等价地用下面的 SQL 语句： 
+或等价地用下面的 SQL 语句：
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>Select * FROM (TABLE SP_SUBORD INTERSECT TABLE SP_MGR) </span></code></pre></td></tr></table></div></figure>
-或用带 ALL 的 SQL 语句： 
+或用带 ALL 的 SQL 语句：
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM SP_SUBORD) INTERSECT ALL (Select * FROM SP_MGR) </span></code></pre></td></tr></table></div></figure>
-或 
+或
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>Select * FROM (TABLE SP_SUBORD INTERSECT ALL TABLE SP_MGR) </span></code></pre></td></tr></table></div></figure>
-(3) `EXCEPT (Select * FROM SP_MGR)` 
+(3) <code>EXCEPT (Select * FROM SP_MGR)</code>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>EXCEPT (Select * FROM SP_SUBORD) </span></code></pre></td></tr></table></div></figure>
-或等价地用下面的 SQL 语句： 
+或等价地用下面的 SQL 语句：
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>Select * FROM (TABLE SP_MGR EXCEPT TABLE SP_ SUBORD) </span></code></pre></td></tr></table></div></figure>
-或用带 ALL 的 SQL 语句： 
+或用带 ALL 的 SQL 语句：
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM SP_MGR) EXCEPT ALL (Select * FROM SP_SUBORD) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM SP_MGR) EXCEPT ALL (Select * FROM SP_SUBORD) </span></code></pre></td></tr></table></div></figure></p>
 
-例 38 查询籍贯为四川、课程成绩在 80 分以上的学生信息及其成绩。（自然连接） 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM STUDENTS Where BPLACE=‘ 四川 ') NATURAL JOIN 
-</span><span class='line'>(Select * FROM ENROLLS Where GRADE &gt;=80) </span></code></pre></td></tr></table></div></figure>
-
-例39 列出全部教师的姓名及其任课的课程号、班级。【外连接与外部并外连接允许在结果表中保留非匹配元组，空缺部分填以 NULL 。
-外连接的作用是在做连接操作时避免丢失信息。 外连接有 3 类：   
-(1)左外连接（ Left Outer Join ）:连接运算谓词为 LEFT [OUTER] JOIN ，其结果表中保留左关系的所有元组。   
-(2)右外连接（ Right Outer Join ）:连接运算谓词为 RIGHT [OUTER] JOIN ，其结果表中保留右关系的所有元组。   
-(3)全外连接（ Full Outer Join ）:连接运算谓词为 FULL [OUTER] JOIN ，其结果表中保留左右两关系的所有元组。】 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Select TNAME, CNO, CLASS FROM TEACHERS LEFT OUTER JOIN TEACHING USING (TNO) </span></code></pre></td></tr></table></div></figure>
-
-## 八、SQL 的数据操纵  
-例 40 把教师李映雪的记录加入到教师表 TEACHERS 中。（插入） 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Insert INTO TEACHERS VALUES(1476 ， ' 李映雪 ' ， 44 ， ' 副教授 ') </span></code></pre></td></tr></table></div></figure>
-
-例 41 成绩优秀的学生将留下当教师。 
+<p>例 38 查询籍贯为四川、课程成绩在 80 分以上的学生信息及其成绩。（自然连接）
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Insert INTO TEACHERS (TNO ， TNAME) Select DISTINCT SNO ， SNAME FROM STUDENTS ， ENROLLS 
-</span><span class='line'>Where STUDENTS.SNO＝ENROLLS.SNO AND GRADE ＞＝ 90 </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(Select * FROM STUDENTS Where BPLACE=‘ 四川 ') NATURAL JOIN
+</span><span class='line'>(Select * FROM ENROLLS Where GRADE &gt;=80) </span></code></pre></td></tr></table></div></figure></p>
 
-例 42 把所有学生的年龄增加一岁。（修改） 
+<p>例39 列出全部教师的姓名及其任课的课程号、班级。【外连接与外部并外连接允许在结果表中保留非匹配元组，空缺部分填以 NULL 。
+外连接的作用是在做连接操作时避免丢失信息。 外连接有 3 类： <br/>
+(1)左外连接（ Left Outer Join ）:连接运算谓词为 LEFT [OUTER] JOIN ，其结果表中保留左关系的所有元组。 <br/>
+(2)右外连接（ Right Outer Join ）:连接运算谓词为 RIGHT [OUTER] JOIN ，其结果表中保留右关系的所有元组。 <br/>
+(3)全外连接（ Full Outer Join ）:连接运算谓词为 FULL [OUTER] JOIN ，其结果表中保留左右两关系的所有元组。】
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Update STUDENTS SET AGE ＝ AGE+1</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Select TNAME, CNO, CLASS FROM TEACHERS LEFT OUTER JOIN TEACHING USING (TNO) </span></code></pre></td></tr></table></div></figure></p>
 
-例 43 学生张春明在数据库课考试中作弊，该课成绩应作零分计。 
+<h2>八、SQL 的数据操纵</h2>
+
+<p>例 40 把教师李映雪的记录加入到教师表 TEACHERS 中。（插入）
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Insert INTO TEACHERS VALUES(1476 ， ' 李映雪 ' ， 44 ， ' 副教授 ') </span></code></pre></td></tr></table></div></figure></p>
+
+<p>例 41 成绩优秀的学生将留下当教师。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Update ENROLLS SET GRADE ＝ 0 Where CNO ＝ 'C1' AND 
-</span><span class='line'>' 张春明 ' ＝ (Select SNAME FROM STUDENTS Where STUDENTS.SNO=ENROLLS.SNO) </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Insert INTO TEACHERS (TNO ， TNAME) Select DISTINCT SNO ， SNAME FROM STUDENTS ， ENROLLS
+</span><span class='line'>Where STUDENTS.SNO＝ENROLLS.SNO AND GRADE ＞＝ 90 </span></code></pre></td></tr></table></div></figure></p>
 
-例 49 从教师表中删除年龄已到 60 岁的退休教师的数据。（删除） 
+<p>例 42 把所有学生的年龄增加一岁。（修改）
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Delete FROM TEACHERS Where AGE ＞＝ 60 </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Update STUDENTS SET AGE ＝ AGE+1</span></code></pre></td></tr></table></div></figure></p>
 
-## 九、SQL 的数据控制  
-例 50 授予 LILI 有对表 STUDENTS 的查询权。（表／视图特权的授予 一个 SQL 特权允许一个被授权者在给定的数据库对象上进行特定的操作。
-授权操作的数据库对象包括：表 / 视图、列、域等。授权的操作包括： Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 、 
-UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 有对表做相应操作的权限，故称为表特权。） 
+<p>例 43 学生张春明在数据库课考试中作弊，该课成绩应作零分计。
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GRANT Select ON STUDENTS TO LILI WITH GRANT OPTION </span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Update ENROLLS SET GRADE ＝ 0 Where CNO ＝ 'C1' AND
+</span><span class='line'>' 张春明 ' ＝ (Select SNAME FROM STUDENTS Where STUDENTS.SNO=ENROLLS.SNO) </span></code></pre></td></tr></table></div></figure></p>
 
-例 51 取消 LILI 的存取 STUDENTS 表的特权。 
+<p>例 49 从教师表中删除年龄已到 60 岁的退休教师的数据。（删除）
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>REVOKE ALL ON STUDENTS FROM LILI CASCADE </span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Delete FROM TEACHERS Where AGE ＞＝ 60 </span></code></pre></td></tr></table></div></figure></p>
 
+<h2>九、SQL 的数据控制</h2>
 
-本文来自: 脚本之家[www.jb51.net](http://www.jb51.net/article/8863_3.htm)
+<p>例 50 授予 LILI 有对表 STUDENTS 的查询权。（表／视图特权的授予 一个 SQL 特权允许一个被授权者在给定的数据库对象上进行特定的操作。
+授权操作的数据库对象包括：表 / 视图、列、域等。授权的操作包括： Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 、
+UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 有对表做相应操作的权限，故称为表特权。）
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GRANT Select ON STUDENTS TO LILI WITH GRANT OPTION </span></code></pre></td></tr></table></div></figure></p>
 
+<p>例 51 取消 LILI 的存取 STUDENTS 表的特权。
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>REVOKE ALL ON STUDENTS FROM LILI CASCADE </span></code></pre></td></tr></table></div></figure></p>
+
+<p>本文来自: 脚本之家<a href="http://www.jb51.net/article/8863_3.htm">www.jb51.net</a></p>
 </div>
 <div id="copyleft" class="well" >
 	<span>Original Link: <a rel="full-article" href="">http://ibillxia.github.io/blog/2009/07/23/useful-queries-methods-in-MS-SQL-Server/</a></br>
@@ -626,11 +613,11 @@ UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select
   
 
 
-<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2009</time>
+<time datetime="2009-07-23T22:31:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/engineering/'>Engineering</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/engineering/'>engineering</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/sql/'>SQL</a>, <a class='tag' href='/blog/tags/shu-ju-ku/'>数据库</a></span>
@@ -638,24 +625,7 @@ UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -692,12 +662,10 @@ UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

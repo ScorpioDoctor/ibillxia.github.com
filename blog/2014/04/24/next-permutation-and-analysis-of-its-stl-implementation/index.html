@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2014</time>
+<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -207,13 +192,13 @@ $(document).ready(function(){
 然后递归的对剩下的所有元素进行全排列；
 直到一个元素的全排列是其本身。</p></blockquote>
 
-<p>假设给定的元素序列为 &lt;e1, e2, &#8230;, en>，其全排列表示为 P(e1, e2, &#8230;, en)，则对递归的第一步展开有：</p>
+<p>假设给定的元素序列为 &lt;e1, e2, ..., en>，其全排列表示为 P(e1, e2, ..., en)，则对递归的第一步展开有：</p>
 
-<blockquote><p>P(e1, e2, &#8230;, en) = {
-&lt;e1, P(e2, e3, &#8230;, en)>,
-&lt;e2, P(e1, e3, &#8230;, en)>,
-&#8230; &#8230;
-&lt;en, P(e1, e2, &#8230;, e(n-1))> }</p></blockquote>
+<blockquote><p>P(e1, e2, ..., en) = {
+&lt;e1, P(e2, e3, ..., en)>,
+&lt;e2, P(e1, e3, ..., en)>,
+... ...
+&lt;en, P(e1, e2, ..., e(n-1))> }</p></blockquote>
 
 <!-- more -->
 
@@ -233,7 +218,7 @@ $(document).ready(function(){
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
 </span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>
 </span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
 </span><span class='line'>          <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="p">;</span>
@@ -251,11 +236,11 @@ $(document).ready(function(){
 
 <p>这个实现非常精简易懂，但却存在一个问题，那就是当数组 A 中存在重复元素时，得到的排列是有重复的，这是因为在第8行的循环中，可能会选取重复的 A[j] 值。 为了去掉重复排列，我们可以在选取第 i 个数 A[j] 之前（即交换 A[i] 和 A[j] 之前），判断值为 A[j] 的元素是否选取过，即要判断在 A[i] 到 A[j-1] 中是否存在与 A[j] 相等的元素，如果出现过，说明 A[i] 选 A[j] 这个排列已经生成过了，可以直接跳过当前的 A[j] 看看是否可以选取 A[j+1] 作为 A[i] 了。比如上面的 e1 = e2，那么无重复的全排列应该是：</p>
 
-<blockquote><p>P(e1, e2, &#8230;, en) = {
-&lt;e1, P(e2, e3, &#8230;, en)>,
-&lt;e3, P(e1, e2, e4, &#8230;, en)>,
-&#8230; &#8230;
-&lt;en, P(e1, e2, &#8230;, e(n-1))> }</p></blockquote>
+<blockquote><p>P(e1, e2, ..., en) = {
+&lt;e1, P(e2, e3, ..., en)>,
+&lt;e3, P(e1, e2, e4, ..., en)>,
+... ...
+&lt;en, P(e1, e2, ..., e(n-1))> }</p></blockquote>
 
 <p>添加这个限制的递归实现代码如下：</p>
 
@@ -275,7 +260,7 @@ $(document).ready(function(){
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">recursive_permute2</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">recursive_permute2</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
 </span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>
 </span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
 </span><span class='line'>          <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="s">&quot; &quot;</span><span class="p">;</span>
@@ -301,7 +286,7 @@ $(document).ready(function(){
 <p>非递归法求全排列的一种最常用算法是基于字典序的全排列生成算法，其基本思路为，先解决生成一个序列在字典序下的下一个排列这个问题，然后利用这个来一次求解每一个排列。其中求解给定序列在字典序下的下一个排列序列的基本思想如下：</p>
 
 <blockquote><ol>
-<li>对于给定序列 &lt;e1, e2, &#8230;, en> 从右往左找到第一个非递增点，设下标为 i；</li>
+<li>对于给定序列 &lt;e1, e2, ..., en> 从右往左找到第一个非递增点，设下标为 i；</li>
 <li>从右往左查找第一个比 e[i] 大的数，设其下标为 j;</li>
 <li>交换 e[i] 和 e[j] 的值；</li>
 <li>将序列 e[i+1..n] 逆置。</li>
@@ -335,14 +320,14 @@ $(document).ready(function(){
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">bool</span> <span class="n">next_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">bool</span> <span class="nf">next_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
 </span><span class='line'>  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
 </span><span class='line'>  <span class="c1">// step .1</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span><span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span><span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">){</span>
 </span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="k">break</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span><span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// A[0] is maximum, no next permute for it</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span><span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// A[0] is maximum, no next permute for it</span>
 </span><span class='line'>  <span class="c1">// step .2</span>
 </span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">--</span><span class="p">){</span>
 </span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">&gt;</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="k">break</span><span class="p">;</span>
@@ -353,7 +338,7 @@ $(document).ready(function(){
 </span><span class='line'>  <span class="k">while</span><span class="p">(</span><span class="o">++</span><span class="n">i</span> <span class="o">&lt;</span> <span class="o">--</span><span class="n">n</span><span class="p">){</span>
 </span><span class='line'>      <span class="n">swap</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">]);</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -368,7 +353,7 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="n">non_recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">void</span> <span class="nf">non_recursive_permute</span><span class="p">(</span><span class="kt">int</span> <span class="n">A</span><span class="p">[],</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span>
 </span><span class='line'>  <span class="n">sort</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="o">+</span><span class="n">n</span><span class="p">);</span>
 </span><span class='line'>  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">do</span><span class="p">{</span>
@@ -460,11 +445,11 @@ $(document).ready(function(){
 </span><span class='line'>    <span class="n">__glibcxx_requires_valid_range</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__first</span> <span class="o">==</span> <span class="n">__last</span><span class="p">)</span>  <span class="c1">// 容器中没有元素，没有 next permute</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">_BidirectionalIterator</span> <span class="n">__i</span> <span class="o">=</span> <span class="n">__first</span><span class="p">;</span>
 </span><span class='line'>    <span class="o">++</span><span class="n">__i</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">__i</span> <span class="o">==</span> <span class="n">__last</span><span class="p">)</span>  <span class="c1">// 容器中只有一个元素，同没有</span>
-</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">__i</span> <span class="o">=</span> <span class="n">__last</span><span class="p">;</span>
 </span><span class='line'>    <span class="o">--</span><span class="n">__i</span><span class="p">;</span>  <span class="c1">// 将 __i 指向最后一个元素</span>
 </span><span class='line'>
@@ -477,11 +462,11 @@ $(document).ready(function(){
 </span><span class='line'>            <span class="p">}</span>
 </span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">iter_swap</span><span class="p">(</span><span class="n">__i</span><span class="p">,</span> <span class="n">__j</span><span class="p">);</span>  <span class="c1">// step .3 交换</span>
 </span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">__ii</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>  <span class="c1">// step .4 逆置</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 </span><span class='line'>        <span class="p">}</span>
 </span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">__i</span> <span class="o">==</span> <span class="n">__first</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 直到 __i = __first 还是没有 *__i &lt; *__ii ，说明序列是递减排列的</span>
 </span><span class='line'>            <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span> <span class="c1">// 本应该没有下一个排列，但这里将字典序中第一个排列作为最后一个排列的 next permute</span>
-</span><span class='line'>            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// 这里返回 false 而不是 true</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// 这里返回 false 而不是 true</span>
 </span><span class='line'>        <span class="p">}</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
@@ -536,11 +521,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2014</time>
+<time datetime="2014-04-24T23:24:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/leetcode/'>Leetcode</a>, <a class='tag' href='/blog/tags/stl/'>STL</a>, <a class='tag' href='/blog/tags/pai-lie-zu-he/'>排列组合</a></span>
@@ -548,24 +533,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -602,12 +570,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

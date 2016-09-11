@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time>
+<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -246,28 +231,28 @@ $(document).ready(function(){
 <span class='line-number'>27</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">class</span> <span class="nc">bad_alloc</span> <span class="o">:</span> <span class="k">public</span> <span class="n">exception</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="nl">public:</span>
 </span><span class='line'>      <span class="n">bad_alloc</span><span class="p">()</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
 </span><span class='line'>      <span class="k">virtual</span> <span class="o">~</span><span class="n">bad_alloc</span><span class="p">()</span> <span class="k">throw</span><span class="p">();</span>
-</span><span class='line'>      <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'>      <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">throw</span><span class="p">();</span>
 </span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>  <span class="k">struct</span> <span class="n">nothrow_t</span> <span class="p">{</span> <span class="p">};</span>
-</span><span class='line'>  <span class="k">extern</span> <span class="k">const</span> <span class="n">nothrow_t</span> <span class="n">nothrow</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">new_handler</span><span class="p">)();</span>
-</span><span class='line'>  <span class="n">new_handler</span> <span class="n">set_new_handler</span><span class="p">(</span><span class="n">new_handler</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">struct</span> <span class="kt">nothrow_t</span> <span class="p">{</span> <span class="p">};</span>
+</span><span class='line'>  <span class="k">extern</span> <span class="k">const</span> <span class="kt">nothrow_t</span> <span class="n">nothrow</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">new_handler</span><span class="p">)();</span>
+</span><span class='line'>  <span class="n">new_handler</span> <span class="nf">set_new_handler</span><span class="p">(</span><span class="n">new_handler</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
 </span><span class='line'><span class="p">}</span> <span class="c1">// namespace std</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>  <span class="c1">// (1)</span>
-</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
-</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>  <span class="c1">// (1)</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
 </span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
-</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>  <span class="c1">// (2)</span>
-</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
-</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
-</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="kt">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>  <span class="c1">// (2)</span>
+</span><span class='line'><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="kt">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="kt">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="kt">nothrow_t</span><span class="o">&amp;</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
 </span><span class='line'><span class="c1">// Default placement versions of operator new.</span>
-</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// (3)</span>
-</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// (3)</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__p</span><span class="p">;</span> <span class="p">}</span>
 </span><span class='line'><span class="c1">// Default placement versions of operator delete.</span>
 </span><span class='line'><span class="kr">inline</span> <span class="kt">void</span>  <span class="k">operator</span> <span class="k">delete</span>  <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
 </span><span class='line'><span class="kr">inline</span> <span class="kt">void</span>  <span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
@@ -327,9 +312,9 @@ $(document).ready(function(){
 </span><span class='line'><span class="cp">#include&lt;Windows.h&gt;</span>
 </span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 </span><span class='line'><span class="kt">char</span> <span class="o">*</span><span class="n">gPool</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</span><span class='line'><span class="kt">void</span> <span class="n">my_new_handler</span><span class="p">();</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">my_new_handler</span><span class="p">();</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
 </span><span class='line'>    <span class="n">set_new_handler</span><span class="p">(</span><span class="n">my_new_handler</span><span class="p">);</span>
 </span><span class='line'>    <span class="n">gPool</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">512</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">];</span>
 </span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">gPool</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">){</span>
@@ -345,7 +330,7 @@ $(document).ready(function(){
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">void</span> <span class="n">my_new_handler</span><span class="p">(){</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">my_new_handler</span><span class="p">(){</span>
 </span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">gPool</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">){</span>
 </span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;try to get more memory...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 </span><span class='line'>        <span class="k">delete</span><span class="p">[]</span> <span class="n">gPool</span><span class="p">;</span> <span class="c1">// 释放512MB内存空间</span>
@@ -376,7 +361,7 @@ $(document).ready(function(){
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">Preserve</span> <span class="mi">512</span><span class="n">MB</span> <span class="n">memory</span> <span class="n">at</span> <span class="mf">7e0020</span><span class="p">.</span>
 </span><span class='line'><span class="mi">1</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">207f</span><span class="mo">0020</span>
 </span><span class='line'><span class="mi">2</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">40800020</span>
-</span><span class='line'><span class="k">try</span> <span class="n">to</span> <span class="n">get</span> <span class="n">more</span> <span class="n">memory</span><span class="p">...</span>
+</span><span class='line'><span class="n">try</span> <span class="n">to</span> <span class="n">get</span> <span class="n">more</span> <span class="n">memory</span><span class="p">...</span>
 </span><span class='line'><span class="mi">3</span> <span class="o">*</span> <span class="mi">512</span><span class="n">M</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mf">7e0020</span>
 </span><span class='line'><span class="n">I</span> <span class="n">can</span> <span class="n">not</span> <span class="n">help</span><span class="p">...</span>
 </span><span class='line'><span class="n">terminate</span> <span class="n">called</span> <span class="n">after</span> <span class="n">throwing</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="err">&#39;</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="err">&#39;</span>
@@ -409,7 +394,7 @@ $(document).ready(function(){
 </span><span class='line'><span class="cp">#include &lt;new&gt;</span>
 </span><span class='line'><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="kt">char</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span> <span class="c1">// call placement new</span>
@@ -536,7 +521,7 @@ $(document).ready(function(){
 </span><span class='line'><span class="cp">#endif</span>
 </span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -569,11 +554,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time>
+<time datetime="2014-05-11T20:33:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/nei-cun-guan-li/'>内存管理</a>, <a class='tag' href='/blog/tags/xing-neng-you-hua/'>性能优化</a></span>
@@ -581,24 +566,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -635,12 +603,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

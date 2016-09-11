@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -206,10 +191,8 @@ $(document).ready(function(){
 <p>水题，不解释，直接上代码：</p>
 
 
-
-
 <figure class='code'><figcaption><span>Problem A </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -239,7 +222,7 @@ $(document).ready(function(){
 <span class='line-number'>28</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
 </span><span class='line'><span class="kt">long</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">f</span><span class="p">;</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">30</span><span class="p">];</span>
@@ -283,10 +266,8 @@ $(document).ready(function(){
 </p>
 
 
-
-
 <figure class='code'><figcaption><span>Problem B </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -314,7 +295,7 @@ $(document).ready(function(){
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
 </span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
 </span><span class='line'><span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">1001</span><span class="p">];</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">;</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
@@ -353,7 +334,7 @@ hdoj AC的代码如下：</p>
 
 
 <figure class='code'><figcaption><span>Problem C </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -435,14 +416,14 @@ hdoj AC的代码如下：</p>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">no</span><span class="p">,</span><span class="n">fs</span><span class="p">,</span><span class="n">pm</span><span class="p">,</span><span class="n">bc</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span><span class="n">a</span><span class="p">[</span><span class="mi">10005</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="mi">10005</span><span class="p">];</span> <span class="c1">//fs表示排序方式，bc表示本次排名，pm表示最终排名</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">com1</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">gold</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">gold</span><span class="p">;}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">com2</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">medal</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">medal</span><span class="p">;}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">com3</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">gm</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">gm</span><span class="p">;}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">com4</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">mm</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">mm</span><span class="p">;}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">com5</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">no</span><span class="o">&lt;</span><span class="n">b</span><span class="p">.</span><span class="n">no</span><span class="p">;}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">com1</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">gold</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">gold</span><span class="p">;}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">com2</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">medal</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">medal</span><span class="p">;}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">com3</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">gm</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">gm</span><span class="p">;}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">com4</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">mm</span><span class="o">&gt;</span><span class="n">b</span><span class="p">.</span><span class="n">mm</span><span class="p">;}</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">com5</span><span class="p">(</span><span class="n">node</span> <span class="n">a</span><span class="p">,</span><span class="n">node</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">no</span><span class="o">&lt;</span><span class="n">b</span><span class="p">.</span><span class="n">no</span><span class="p">;}</span>
 </span><span class='line'>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">;</span>
 </span><span class='line'>    <span class="c1">//freopen(&quot;in.txt&quot;,&quot;r&quot;,stdin);</span>
@@ -502,10 +483,8 @@ hdoj AC的代码如下：</p>
 <p>双重最短路问题，用dijkstra算法（模板题）。代码如下：</p>
 
 
-
-
 <figure class='code'><figcaption><span>Problem D </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -567,7 +546,7 @@ hdoj AC的代码如下：</p>
 </span><span class='line'><span class="cp">#define INF 0x1fffffff</span>
 </span><span class='line'><span class="cp">#define N 1000</span>
 </span><span class='line'><span class="kt">int</span> <span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">g</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span><span class="n">lp</span><span class="p">[</span><span class="n">N</span><span class="p">],</span><span class="n">lc</span><span class="p">[</span><span class="n">N</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
-</span><span class='line'><span class="kt">void</span> <span class="n">dijkstra</span><span class="p">(){</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">dijkstra</span><span class="p">(){</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">md</span><span class="p">,</span><span class="n">mp</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">memset</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
 </span><span class='line'>    <span class="n">memset</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">lp</span><span class="p">));</span>
@@ -594,7 +573,7 @@ hdoj AC的代码如下：</p>
 </span><span class='line'>            <span class="p">}</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">p</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">while</span><span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d&quot;</span><span class="p">,</span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span><span class="o">&amp;</span><span class="n">m</span><span class="p">)</span><span class="o">!=</span><span class="n">EOF</span><span class="p">){</span>
@@ -631,10 +610,8 @@ hdoj AC的代码如下：</p>
 没办法，改用指针实现，果断AC了，代码如下：</p>
 
 
-
-
 <figure class='code'><figcaption><span>Problem E </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -704,7 +681,7 @@ hdoj AC的代码如下：</p>
 </span><span class='line'><span class="p">}</span><span class="n">btnode</span><span class="p">,</span><span class="o">*</span><span class="n">btree</span><span class="p">;</span>
 </span><span class='line'><span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
 </span><span class='line'><span class="n">btree</span> <span class="n">ta</span><span class="p">,</span><span class="n">tb</span><span class="p">;</span>
-</span><span class='line'><span class="kt">void</span> <span class="n">creat</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span><span class="p">[],</span><span class="n">btree</span> <span class="o">*</span><span class="n">t</span><span class="p">){</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">creat</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span><span class="p">[],</span><span class="n">btree</span> <span class="o">*</span><span class="n">t</span><span class="p">){</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">btree</span> <span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="sc">&#39;\0&#39;</span><span class="p">){</span><span class="n">t</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span><span class="k">return</span><span class="p">;}</span>
@@ -728,7 +705,7 @@ hdoj AC的代码如下：</p>
 </span><span class='line'>        <span class="n">i</span><span class="o">++</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">cmp</span><span class="p">(</span><span class="n">btree</span> <span class="n">ta</span><span class="p">,</span><span class="n">btree</span> <span class="n">tb</span><span class="p">){</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">cmp</span><span class="p">(</span><span class="n">btree</span> <span class="n">ta</span><span class="p">,</span><span class="n">btree</span> <span class="n">tb</span><span class="p">){</span>
 </span><span class='line'>    <span class="n">btree</span> <span class="n">p</span><span class="p">,</span><span class="n">q</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">p</span><span class="o">=</span><span class="n">ta</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="n">tb</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">if</span><span class="p">((</span><span class="n">p</span><span class="o">&amp;&amp;!</span><span class="n">q</span><span class="p">)</span><span class="o">||</span><span class="p">(</span><span class="n">q</span><span class="o">&amp;&amp;!</span><span class="n">p</span><span class="p">)</span><span class="o">||</span><span class="p">(</span><span class="n">p</span><span class="o">&amp;&amp;</span><span class="n">q</span><span class="o">&amp;&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">!=</span><span class="n">q</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">))</span><span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -737,7 +714,7 @@ hdoj AC的代码如下：</p>
 </span><span class='line'>            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
 </span><span class='line'>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">la</span><span class="p">,</span><span class="n">lb</span><span class="p">;</span>
@@ -793,11 +770,11 @@ D题的双重最短路初次做，表示不会，E题的测试数据又不按题
   
 
 
-<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true">Mar 7<span>th</span>, 2012</time>
+<time datetime="2012-03-07T12:08:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/zju/'>ZJU</a>, <a class='tag' href='/blog/tags/bing-cha-ji/'>并查集</a>, <a class='tag' href='/blog/tags/kuai-pai/'>快排</a>, <a class='tag' href='/blog/tags/ji-shi/'>机试</a></span>
@@ -805,24 +782,7 @@ D题的双重最短路初次做，表示不会，E题的测试数据又不按题
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -859,12 +819,10 @@ D题的双重最短路初次做，表示不会，E题的测试数据又不按题
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

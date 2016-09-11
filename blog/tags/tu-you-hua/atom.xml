@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 凸优化 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/tu-you-hua/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -19,7 +19,7 @@
     <updated>2012-09-26T23:03:00+08:00</updated>
     <id>http://ibillxia.github.io/blog/2012/09/26/convex-optimization-overview</id>
     <content type="html"><![CDATA[<p>在machine learning 的很多问题中，我们最终往往要求解某个函数的最优值。用数学术语表示就是，
-给定一个函数 $f: R<sup>{n}</sup> \rightarrow R$，求 $ x \in R<sup>{n}</sup> $使得$f(x)$ 取得最小（大）值。例如least-square,
+给定一个函数 $f: R^{n} \rightarrow R$，求 $ x \in R^{n} $使得$f(x)$ 取得最小（大）值。例如least-square,
 logistic regression, linear regression, svm, etc. 这类问题统称为优化问题。</p>
 
 <h2>1.引言</h2>
@@ -39,7 +39,7 @@ logistic regression, linear regression, svm, etc. 这类问题统称为优化问
 <p><strong>凸集的定义</strong>：一个集合$C$是凸集，当且仅当对任意$x,y\in C$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
 <center>$\theta x + (1-\theta)y \in C$.</center>
 其几何意义在于，在集合C中任取两个点，连接两点的直线段上的任一点也在集合C中。下图是凸集和非凸集的例子：</br>
-{% img /images/201209026/IMAG20120902601.jpg %}
+<img src="/images/201209026/IMAG20120902601.jpg">
 </p>
 
 
@@ -67,7 +67,7 @@ logistic regression, linear regression, svm, etc. 这类问题统称为优化问
 且对任意的$x,y\in D(f)$和$\theta \in R$且$0\leq \theta \leq 1$，都有</br>
 <center>$f(\theta x + (1-\theta)y \leq \theta f(x) + (1-\theta) f(y))$.</center>
 设$f(x)$为一元函数，那么上式的几何意义在于，曲线上任意两点处的割线在函数曲线的上方，如下图所示：</br>
-{% img /images/2012/IMAG20120902602.jpg %}
+<img src="/images/2012/IMAG20120902602.jpg">
 </p>
 
 

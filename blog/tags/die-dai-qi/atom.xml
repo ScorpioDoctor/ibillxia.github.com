@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 迭代器 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/die-dai-qi/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -61,50 +61,44 @@
 <p>在 <code>stl_iterator.h</code> 文件中，设计了 <code>back_insert_iterator</code>, <code>front_insert_iterator</code>, <code>insert_iterator</code>, <code>reverse_bidirectional_iterator</code>, <code>reverse_iterator</code>, <code>istream_iterator</code>, <code>ostream_iterator</code>,  等标准的迭代器，其中前3中都使用 <code>output_iterator</code> 的只写特性（只进行插入操作，只是插入的位置不同而已），而第4种使用的是 <code>bidirectional_iterator</code> 的双向访问特性，第5种使用的是 <code>random_access_iterator</code> 的随机访问特性。而最后两种标准迭代器分别是使用 <code>input_iterator</code> 和 <code>output_iterator</code> 特性的迭代器。从这几个标准的迭代器的定义中可以看出，主要是实现了 <code>operator=</code>, <code>operator*</code>, <code>operator-&gt;</code>, <code>operator==</code>, <code>operator++</code>, <code>operator--</code>, <code>operator+</code>, <code>operator-</code>, <code>operator+=</code>, <code>operator-=</code> 等指针操作的标准接口。根据定义的操作符的不同，就是不同类型的迭代器了。</p>
 
 <p>例如，下面是 <code>back_insert_iterator</code> 的标准定义：
-``` cpp
-template <class _Container>
+<code>cpp
+template &lt;class _Container&gt;
 class back_insert_iterator {
 protected:
-  <em>Container* container;
+  _Container* container;
 public:
   // member variables
-  typedef </em>Container          container_type;
+  typedef _Container          container_type;
   typedef output_iterator_tag iterator_category;
   typedef void                value_type;
   typedef void                difference_type;
   typedef void                pointer;
   typedef void                reference;
   // member functions, mainly about operator overloading
-  explicit back_insert_iterator(<em>Container&amp; <strong>x) : container(&amp;</strong>x) {}
-  back_insert_iterator<_Container>&amp;
-  operator=(const typename </em>Container::value_type&amp; __value) {</p>
-
-<pre><code>container-&gt;push_back(__value);
-return *this;
-</code></pre>
-
-<p>  }
-  back_insert_iterator<_Container>&amp; operator<em>() { return </em>this; }
-  back_insert_iterator<_Container>&amp; operator++() { return <em>this; }
-  back_insert_iterator<_Container>&amp; operator++(int) { return </em>this; }
+  explicit back_insert_iterator(_Container&amp; __x) : container(&amp;__x) {}
+  back_insert_iterator&lt;_Container&gt;&amp;
+  operator=(const typename _Container::value_type&amp; __value) {
+    container-&gt;push_back(__value);
+    return *this;
+  }
+  back_insert_iterator&lt;_Container&gt;&amp; operator*() { return *this; }
+  back_insert_iterator&lt;_Container&gt;&amp; operator++() { return *this; }
+  back_insert_iterator&lt;_Container&gt;&amp; operator++(int) { return *this; }
 };
-```</p>
+</code></p>
 
 <h2>3. 迭代器相应型别与Traits编程技巧</h2>
 
 <h3>3.1 迭代器相应型别</h3>
 
 <p>在算法中运用迭代器是，很可能需要获取器相应型别，即迭代器所指对象的类型。此时需要使用到 function template 的参数推导（argument deducation）机制，在传入迭代器模板类型的同时，传入迭代器所指对象的模板类型，例如：<br/>
-``` cpp
-template<class I, class T>
-void func_impl(I iter, T t){</p>
-
-<pre><code>// TODO: Add your code here
-</code></pre>
-
-<p>}
-<code>``
-这里不仅要传入类型</code>class I<code>, 还要传入类型</code>class T`。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
+<code>cpp
+template&lt;class I, class T&gt;
+void func_impl(I iter, T t){
+    // TODO: Add your code here
+}
+</code>
+这里不仅要传入类型 <code>class I</code>, 还要传入类型 <code>class T</code>。然而，迭代器的相应型别并不仅仅只有 “迭代器所指对象的类型” 这一种，例如在STL中就有如下5种：</p>
 
 <ul>
 <li>value_type: 迭代器所指对象的类型。</li>
@@ -120,21 +114,18 @@ void func_impl(I iter, T t){</p>
 <h3>3.2 Traits 编程技巧</h3>
 
 <p>在STL的每个标准迭代器中，都定义了5个迭代器相应型别的成员变量，在STL定义了一个统一的接口：<br/>
-``` cpp
+<code>cpp
 // In file stl_iterator_base.h
-template &lt;class <em>Category, class </em>Tp, class _Distance = ptrdiff_t,</p>
-
-<pre><code>      class _Pointer = _Tp*, class _Reference = _Tp&amp;&gt;
-</code></pre>
-
-<p>struct iterator {
-  typedef <em>Category  iterator_category;
-  typedef </em>Tp        value_type;
-  typedef <em>Distance  difference_type;
-  typedef </em>Pointer   pointer;
+template &lt;class _Category, class _Tp, class _Distance = ptrdiff_t,
+          class _Pointer = _Tp*, class _Reference = _Tp&amp;&gt;
+struct iterator {
+  typedef _Category  iterator_category;
+  typedef _Tp        value_type;
+  typedef _Distance  difference_type;
+  typedef _Pointer   pointer;
   typedef _Reference reference;
 };
-```
+</code>
 其他的迭代器都可以继承这个标注类，由于后面3个模板参数都有默认值，因此新的迭代器只需提供前两个参数即可（但在SGI STL中并没有使用继承机制）。这样在使用该迭代器的泛型算法中，可以返回这5种类型中的任意一种，而不需要依赖于 template 参数推导的机制。</p>
 
 <p>在SGI STL中，如果启用 <code>__STL_CLASS_PARTIAL_SPECIALIZATION</code> 这个宏定义，还有这样一个标准的 <code>iterator_traits</code> ：<br/>

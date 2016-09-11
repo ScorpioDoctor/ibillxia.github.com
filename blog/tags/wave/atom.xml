@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: wave | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/wave/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>WAVE文件格式是微软RIFF(Resource Interchange File Format,资源交换文件标准)的一种，是针对于多媒体文件存储的一种文件格式和标准。
 一般而言，RIFF文件由文件头和数据两部分组成，一个WAVE文件由一个“WAVE”数据块组成，这个“WAVE”块又由一个"fmt"子数据块和一个“data”子
 数据块组成，也称这种格式为“Canonical form”（权威/牧师格式），如下图所示：
-<center>{% img /images/2013/IMAG2013072001.gif %}</center>
+<center><img src="/images/2013/IMAG2013072001.gif"></center>
 </p>
 
 
@@ -48,23 +48,37 @@ Format: 4字节，内容为“WAVE”的ASCII码(0x57415645)，以大端存储�
 0x4000:   0x34</br>
 0x4001:   0x12</br>
 用程序在区别的话，可以考虑：
-``` c
-#include <stdio.h>
-#include <stdlib.h>
-int main(int argc, char *argv[])
-{
-       union w
-      {
-       short int a;
-       char b;
-      }c;
-      c.a=1;
-      if( c.b==1 )  printf("little endian\n");
-      else printf("big endian\n");
-      system("PAUSE"); 
-      return 0;
-}
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>       <span class="k">union</span> <span class="n">w</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>       <span class="kt">short</span> <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+</span><span class='line'>       <span class="kt">char</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span><span class="n">c</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">c</span><span class="p">.</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="o">==</span><span class="mi">1</span> <span class="p">)</span>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;little endian</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">else</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;big endian</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">system</span><span class="p">(</span><span class="s">&quot;PAUSE&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
@@ -88,18 +102,27 @@ ExtraParams: 扩展段其他自定义的一些参数的具体内容，大小由�
 
 
 <p>其中，对于每个采样点的bit数，不同的bit数读取数据的方式不同：
-``` c
-// data 为读取到的采样点的值，speech为原始数据流，
-//对应于下面的"WAVE"格式文件的第二个子数据块“data”块的“Data”部分。
-for(i=0;i<NumSample;i++){
-    if(BitsPerSample==8)
-        data[i] = (int)*((char*)speech+i);
-    else if(BitsPerSample==16)
-        data[i] = (int)*((short*)speech+i);
-    else if(BitsPerSample==32)
-        data[i] = (int)*((int*)speech+i);
-}
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="c1">// data 为读取到的采样点的值，speech为原始数据流，</span>
+</span><span class='line'><span class="c1">//对应于下面的&quot;WAVE&quot;格式文件的第二个子数据块“data”块的“Data”部分。</span>
+</span><span class='line'><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">NumSample</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">8</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">16</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">short</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">BitsPerSample</span><span class="o">==</span><span class="mi">32</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">speech</span><span class="o">+</span><span class="n">i</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
@@ -118,13 +141,15 @@ Data: 真正的语音数据部分。</br>
 
 
 <p>设一个wave文件的前72个字节的十六进制内容如下(可以使用Ultra Edit等工具查看wave文件头)：
-```
-52 49 46 46 24 08 00 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 02 00 
-22 56 00 00 88 58 01 00 04 00 10 00 64 61 74 61 00 08 00 00 00 00 00 00 
-24 17 1e f3 3c 13 3c 14 16 f9 18 f9 34 e7 23 a6 3c f2 24 f2 11 ce 1a 0d 
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="mi">52</span> <span class="mi">49</span> <span class="mi">46</span> <span class="mi">46</span> <span class="mi">24</span> <span class="mi">08</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mi">57</span> <span class="mi">41</span> <span class="mi">56</span> <span class="mi">45</span> <span class="mi">66</span> <span class="mi">6</span><span class="n">d</span> <span class="mi">74</span> <span class="mi">20</span> <span class="mi">10</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">01</span> <span class="mo">00</span> <span class="mo">02</span> <span class="mo">00</span>
+</span><span class='line'><span class="mi">22</span> <span class="mi">56</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mi">88</span> <span class="mi">58</span> <span class="mo">01</span> <span class="mo">00</span> <span class="mo">04</span> <span class="mo">00</span> <span class="mi">10</span> <span class="mo">00</span> <span class="mi">64</span> <span class="mi">61</span> <span class="mi">74</span> <span class="mi">61</span> <span class="mo">00</span> <span class="mi">08</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span>
+</span><span class='line'><span class="mi">24</span> <span class="mi">17</span> <span class="mi">1</span><span class="n">e</span> <span class="n">f3</span> <span class="mi">3</span><span class="n">c</span> <span class="mi">13</span> <span class="mi">3</span><span class="n">c</span> <span class="mi">14</span> <span class="mi">16</span> <span class="n">f9</span> <span class="mi">18</span> <span class="n">f9</span> <span class="mi">34</span> <span class="n">e7</span> <span class="mi">23</span> <span class="n">a6</span> <span class="mi">3</span><span class="n">c</span> <span class="n">f2</span> <span class="mi">24</span> <span class="n">f2</span> <span class="mi">11</span> <span class="n">ce</span> <span class="mi">1</span><span class="n">a</span> <span class="mi">0</span><span class="n">d</span>
+</span></code></pre></td></tr></table></div></figure>
 则其个字段的解析如下图：
-<center>{% img /images/2013/IMAG2013072002.gif %}</center>
+<center><img src="/images/2013/IMAG2013072002.gif"></center>
 </p>
 
 
@@ -136,99 +161,86 @@ Data: 真正的语音数据部分。</br>
 <p>这里给出一个用基本的C语言文件操作库函数实现的Wave文件读取的实例代码，可以跨Windows和Linux平台。</p>
 
 
-<p>``` c</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
 
-<h1>include &lt;stdio.h></h1>
-
-<h1>include &lt;stdlib.h></h1>
-
-<h1>include &lt;string.h></h1>
-
-<p>// define Wave format structure
+// define Wave format structure
 typedef struct tWAVEFORMATEX
-{</p>
+{
+    short wFormatTag;         /* format type */
+    short nChannels;          /* number of channels (i.e. mono, stereo...) */
+    unsigned int nSamplesPerSec;     /* sample rate */
+    unsigned int nAvgBytesPerSec;    /* for buffer estimation */
+    short nBlockAlign;        /* block size of data */
+    short wBitsPerSample;     /* number of bits per sample of mono data */
+    short cbSize;             /* the count in bytes of the size of */
+                                    /* extra information (after cbSize) */
+} WAVEFORMATEX, *PWAVEFORMATEX;
 
-<pre><code>short wFormatTag;         /* format type */
-short nChannels;          /* number of channels (i.e. mono, stereo...) */
-unsigned int nSamplesPerSec;     /* sample rate */
-unsigned int nAvgBytesPerSec;    /* for buffer estimation */
-short nBlockAlign;        /* block size of data */
-short wBitsPerSample;     /* number of bits per sample of mono data */
-short cbSize;             /* the count in bytes of the size of */
-                                /* extra information (after cbSize) */
+char* wavread(char *fname, WAVEFORMATEX *wf);
+
+int main(){
+    char fname[] = "test.wav";
+    char *speech;
+    WAVEFORMATEX wf;
+
+    speech = wavread(fname, &amp;wf);
+    // afterward processing...
+
+    return 0;
+}
+
+// read wave file
+char* wavread(char *fname, WAVEFORMATEX *wf){
+    FILE* fp;
+    char str[32];
+    char *speech;
+    unsigned int subchunk1size; // head size
+    unsigned int subchunk2size; // speech data size
+
+    // check format type
+    fp = fopen(fname,"r");
+    if(!fp){
+        fprintf(stderr,"Can not open the wave file: %s.\n",fname);
+        return NULL;
+    }
+    fseek(fp, 8, SEEK_SET);
+    fread(str, sizeof(char), 7, fp);
+    str[7] = '\0';
+    if(strcmp(str,"WAVEfmt")){
+        fprintf(stderr,"The file is not in WAVE format!\n");
+        return NULL;
+    }
+
+    // read format header
+    fseek(fp, 16, SEEK_SET);
+    fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
+    fseek(fp, 20, SEEK_SET);
+    fread(wf, subchunk1size, 1, fp);
+
+    // read wave data
+    fseek(fp, 20+subchunk1size, SEEK_SET);
+    fread(str, 1, 4, fp);
+    str[4] = '\0';
+    if(strcmp(str,"data")){
+        fprintf(stderr,"Locating data start point failed!\n");
+        return NULL;
+    }
+    fseek(fp, 20+subchunk1size+4, SEEK_SET);
+    fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
+    speech = (char*)malloc(sizeof(char)*subchunk2size);
+    if(!speech){
+        fprintf(stderr, "Memory alloc failed!\n");
+        return NULL;
+    }
+    fseek(fp, 20+subchunk1size+8, SEEK_SET);
+    fread(speech, 1, subchunk2size, fp);
+
+    fclose(fp);
+    return speech;
+}
 </code></pre>
-
-<p>} WAVEFORMATEX, *PWAVEFORMATEX;</p>
-
-<p>char<em> wavread(char </em>fname, WAVEFORMATEX *wf);</p>
-
-<p>int main(){</p>
-
-<pre><code>char fname[] = "test.wav";
-char *speech;
-WAVEFORMATEX wf;
-
-speech = wavread(fname, &amp;wf);
-// afterward processing...
-
-return 0;
-</code></pre>
-
-<p>}</p>
-
-<p>// read wave file
-char<em> wavread(char </em>fname, WAVEFORMATEX *wf){</p>
-
-<pre><code>FILE* fp;
-char str[32];
-char *speech;
-unsigned int subchunk1size; // head size
-unsigned int subchunk2size; // speech data size
-
-// check format type
-fp = fopen(fname,"r");
-if(!fp){
-    fprintf(stderr,"Can not open the wave file: %s.\n",fname);
-    return NULL;
-}
-fseek(fp, 8, SEEK_SET);
-fread(str, sizeof(char), 7, fp);
-str[7] = '\0';
-if(strcmp(str,"WAVEfmt")){
-    fprintf(stderr,"The file is not in WAVE format!\n");
-    return NULL;
-}
-
-// read format header
-fseek(fp, 16, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk1size),4,1,fp);
-fseek(fp, 20, SEEK_SET);
-fread(wf, subchunk1size, 1, fp);
-
-// read wave data
-fseek(fp, 20+subchunk1size, SEEK_SET);
-fread(str, 1, 4, fp);
-str[4] = '\0';
-if(strcmp(str,"data")){
-    fprintf(stderr,"Locating data start point failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+4, SEEK_SET);
-fread((unsigned int*)(&amp;subchunk2size), 4, 1, fp);
-speech = (char*)malloc(sizeof(char)*subchunk2size);
-if(!speech){
-    fprintf(stderr, "Memory alloc failed!\n");
-    return NULL;
-}
-fseek(fp, 20+subchunk1size+8, SEEK_SET);
-fread(speech, 1, subchunk2size, fp);
-
-fclose(fp);
-return speech;
-</code></pre>
-
-<p>}
-```</p>
 
 <h2>参考</h2>
 
@@ -262,208 +274,198 @@ return speech;
 <p>实例程序</p>
 
 
-<p>``` c
-// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> FileName: WinMain.cpp </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>**********
+<pre><code class="c">// ******************* FileName: WinMain.cpp *****************************
 // 该源程序需要加入到 VC6 的 Win32 Application 的 empty Project 中
-// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib</p>
+// 对于工程的 Link 选项，至少要包含以下库: msvcrt.lib Winmm.lib
 
-<h1>include &lt;stdio.h></h1>
+#include &lt;stdio.h&gt;
+#include &lt;atlstr.h&gt;
+#include &lt;windows.h&gt;
+#include &lt;Mmsystem.h&gt;
 
-<h1>include &lt;atlstr.h></h1>
+#pragma comment(lib,"Winmm.lib")
 
-<h1>include &lt;windows.h></h1>
+char lpTemp[256];
 
-<h1>include &lt;Mmsystem.h></h1>
-
-<h1>pragma comment(lib,"Winmm.lib")</h1>
-
-<p>char lpTemp[256];</p>
-
-<p>DWORD FCC(LPSTR lpStr)
-{</p>
-
-<pre><code>DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
-return Number;
-</code></pre>
-
-<p>}</p>
-
-<p>int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-{</p>
-
-<pre><code>DWORD datasize = 48000;
-
-// 设置录音采样参数
-WAVEFORMATEX waveformat;
-waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
-waveformat.nChannels=1;
-waveformat.nSamplesPerSec=8000;
-waveformat.nBlockAlign=1;
-waveformat.wBitsPerSample=8;
-waveformat.cbSize=0;
-waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
-
-sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-
-HWAVEIN m_hWaveIn;
-if ( !waveInGetNumDevs() )
+DWORD FCC(LPSTR lpStr)
 {
-    MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
-    return 0;
+    DWORD Number = lpStr[0] + lpStr[1] *0x100 + lpStr[2] *0x10000 + lpStr[3] *0x1000000 ;
+    return Number;
 }
 
-// 打开录音设备
-int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
-if ( res != MMSYSERR_NOERROR )
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-   sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
-   MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-   return 0;
-}
+    DWORD datasize = 48000;
 
-WAVEHDR m_pWaveHdr;
-m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
-memset(m_pWaveHdr.lpData, 0, datasize );
-m_pWaveHdr.dwBufferLength = datasize;
-m_pWaveHdr.dwBytesRecorded = 0;
-m_pWaveHdr.dwUser = 0;
-m_pWaveHdr.dwFlags = 0;
-m_pWaveHdr.dwLoops = 0;
-sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+    // 设置录音采样参数
+    WAVEFORMATEX waveformat;
+    waveformat.wFormatTag=WAVE_FORMAT_PCM; // 指定录音格式
+    waveformat.nChannels=1;
+    waveformat.nSamplesPerSec=8000;
+    waveformat.nBlockAlign=1;
+    waveformat.wBitsPerSample=8;
+    waveformat.cbSize=0;
+    waveformat.nAvgBytesPerSec=waveformat.nChannels*waveformat.nSamplesPerSec*waveformat.wBitsPerSample/8;
 
-// 准备内存块录音
-int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
-if ( resPrepare != MMSYSERR_NOERROR) 
-{
-    sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
+    sprintf(lpTemp,"WAVEFORMATEX size = %lu", sizeof(WAVEFORMATEX));
     MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-    return 0;
-}
 
-resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
-if ( resPrepare != MMSYSERR_NOERROR) 
-{
-    sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
-    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (! waveInStart(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
-    return 0;
-}
-Sleep(30000);
-
-MMTIME mmt;
-mmt.wType = TIME_BYTES;
-sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
-MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
-
-if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
-{
-    MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (mmt.wType != TIME_BYTES) 
-{
-    MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (! waveInStop(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
-}
-else  
-{
-    MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
-}
-
-if ( waveInReset(m_hWaveIn) ) 
-{
-    MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
-    return 0;
-}
-
-m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
-DWORD NumToWrite=0;
-DWORD dwNumber = 0;
-HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
-    FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-// memset(m_pWaveHdr.lpData, 0, datasize);
-dwNumber = FCC("RIFF");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = FCC("WAVE");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = FCC("fmt ");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = 18L;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
-dwNumber = FCC("data");
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-dwNumber = m_pWaveHdr.dwBytesRecorded;
-WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
-WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
-SetEndOfFile(FileHandle);
-CloseHandle( FileHandle );  
-FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
-MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
-
-if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
-{
-    MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
-{
-    MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
-}
-else 
-{
-    MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
-    return 0;
-}
-
-if (res == MMSYSERR_NOERROR ) // 关闭录音设备
-{
-    if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
+    HWAVEIN m_hWaveIn;
+    if ( !waveInGetNumDevs() )
     {
-        MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
-    }
-    else
-    {
-        MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
+        MessageBox(NULL,CString("没有可以使用的 WaveIn 通道"),CString("提示"),MB_OK);
         return 0;
     }
+
+    // 打开录音设备
+    int res = waveInOpen(&amp;m_hWaveIn,WAVE_MAPPER, &amp;waveformat, (DWORD)NULL,0L,CALLBACK_WINDOW); 
+    if ( res != MMSYSERR_NOERROR )
+    {
+       sprintf(lpTemp, "打开 waveIn 通道失败，Error_Code = 0x%x", res );
+       MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+       return 0;
+    }
+
+    WAVEHDR m_pWaveHdr;
+    m_pWaveHdr.lpData = (char *)GlobalLock( GlobalAlloc(GMEM_MOVEABLE|GMEM_SHARE, datasize) );
+    memset(m_pWaveHdr.lpData, 0, datasize );
+    m_pWaveHdr.dwBufferLength = datasize;
+    m_pWaveHdr.dwBytesRecorded = 0;
+    m_pWaveHdr.dwUser = 0;
+    m_pWaveHdr.dwFlags = 0;
+    m_pWaveHdr.dwLoops = 0;
+    sprintf( lpTemp, "WAVEHDR size = %lu", sizeof(WAVEHDR) );
+    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+
+    // 准备内存块录音
+    int resPrepare = waveInPrepareHeader( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) ); 
+    if ( resPrepare != MMSYSERR_NOERROR) 
+    {
+        sprintf(lpTemp, "不能开辟录音头文件，Error_Code = 0x%03X", resPrepare );
+        MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    resPrepare = waveInAddBuffer( m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR) );
+    if ( resPrepare != MMSYSERR_NOERROR) 
+    {
+        sprintf(lpTemp, "不能开辟录音用缓冲，Error_Code = 0x%03X", resPrepare );
+        MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    if (! waveInStart(m_hWaveIn) ) 
+    {
+        MessageBox(NULL,CString("开始录音"),CString("提示"),MB_OK);
+    }
+    else 
+    {
+        MessageBox(NULL,CString("开始录音失败"),CString("提示"),MB_OK);
+        return 0;
+    }
+    Sleep(30000);
+
+    MMTIME mmt;
+    mmt.wType = TIME_BYTES;
+    sprintf( lpTemp, "sizeof(MMTIME) = %d, sizeof(UINT) = %d", sizeof(MMTIME), sizeof(UINT) );
+    MessageBox(NULL,CString(lpTemp),CString("提示"),MB_OK);
+
+    if (! waveInGetPosition(m_hWaveIn, &amp;mmt, sizeof(MMTIME)) )
+    {
+        MessageBox(NULL,CString("取得现在音频位置"),CString("提示"),MB_OK);
+    }
+    else 
+    {
+        MessageBox(NULL,CString("不能取得音频长度"),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    if (mmt.wType != TIME_BYTES) 
+    {
+        MessageBox(NULL,CString("指定的 TIME_BYTES 格式音频长度不支持"),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    if (! waveInStop(m_hWaveIn) ) 
+    {
+        MessageBox(NULL,CString("停止录音"),CString("提示"),MB_OK);
+    }
+    else  
+    {
+        MessageBox(NULL,CString("停止录音失败"),CString("提示"),MB_OK);
+    }
+
+    if ( waveInReset(m_hWaveIn) ) 
+    {
+        MessageBox(NULL,CString("重置内存区失败"),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    m_pWaveHdr.dwBytesRecorded = mmt.u.cb;
+    DWORD NumToWrite=0;
+    DWORD dwNumber = 0;
+    HANDLE FileHandle = CreateFile( CString("myTest.wav"), GENERIC_WRITE, 
+        FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    // memset(m_pWaveHdr.lpData, 0, datasize);
+    dwNumber = FCC("RIFF");
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    dwNumber = m_pWaveHdr.dwBytesRecorded + 18 + 20;
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    dwNumber = FCC("WAVE");
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    dwNumber = FCC("fmt ");
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    dwNumber = 18L;
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    WriteFile(FileHandle, &amp;waveformat, sizeof(WAVEFORMATEX), &amp;NumToWrite, NULL);
+    dwNumber = FCC("data");
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    dwNumber = m_pWaveHdr.dwBytesRecorded;
+    WriteFile(FileHandle, &amp;dwNumber, 4, &amp;NumToWrite, NULL);
+    WriteFile(FileHandle, m_pWaveHdr.lpData, m_pWaveHdr.dwBytesRecorded, &amp;NumToWrite, NULL);
+    SetEndOfFile(FileHandle);
+    CloseHandle( FileHandle );  
+    FileHandle = INVALID_HANDLE_VALUE; // 收尾关闭句柄
+    MessageBox(NULL,CString("应该已生成 myTest.wav 文件"),CString("提示"),MB_OK);
+
+    if ( waveInUnprepareHeader(m_hWaveIn, &amp;m_pWaveHdr, sizeof(WAVEHDR)) ) 
+    {
+        MessageBox(NULL,CString("Un_Prepare Header 失败"),CString("提示"),MB_OK);
+    }
+    else 
+    {
+        MessageBox(NULL,CString("Un_Prepare Header 成功"),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    if ( GlobalFree(GlobalHandle( m_pWaveHdr.lpData )) ) 
+    {
+        MessageBox(NULL,CString("Global Free 失败"),CString("提示"),MB_OK);
+    }
+    else 
+    {
+        MessageBox(NULL,CString("Global Free 成功"),CString("提示"),MB_OK);
+        return 0;
+    }
+
+    if (res == MMSYSERR_NOERROR ) // 关闭录音设备
+    {
+        if (waveInClose(m_hWaveIn)==MMSYSERR_NOERROR)
+        {
+            MessageBox(NULL,CString("正常关闭录音设备"),CString("提示"),MB_OK);
+        }
+        else
+        {
+            MessageBox(NULL,CString("非正常关闭录音设备"),CString("提示"),MB_OK);
+            return 0;
+        }
+    }
+
+    return 0;
 }
-
-return 0;
+// ******************* End of File ************************
 </code></pre>
-
-<p>}
-// <strong><strong><strong><strong><strong><strong><strong><strong><strong><em> End of File </em></strong></strong></strong></strong></strong></strong></strong></strong></strong>*****
-```</p>
 
 <p>这里提供的代码有点杂乱，现已整理成一个小的接口，并提供了一个简单的示例，放在GitHub上：https://github.com/ibillxia/Demo/tree/master/DemoSpeechRecord</p>
 

@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2011-04-21T16:50:00+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2011</time>
+<time datetime="2011-04-21T16:50:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -197,19 +182,15 @@ $(document).ready(function(){
 
 
 <p>
-C语言中有些函数使用可变参数，比如常见的 `int printf( const char *format [, argument]&#8230; );`，
+C语言中有些函数使用可变参数，比如常见的 `int printf( const char *format [, argument]... );`，
 第一个参数format是固定的，其余的参数的个数和类型都不固定。例如：</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Enjoy yourself everyday!/n&quot;</span><span class="p">);</span>
 </span><span class='line'><span class="n">printf</span><span class="p">(</span><span class="s">&quot;The value is %d!/n&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
 
 
 <p>这种可变参数可以说是C语言一个比较难理解的部分，这里会由几个问题引发一些对它的分析。
@@ -235,9 +216,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 <p>在`stdarg.h`头文件中，针对不同平台有不同的宏定义，我们选取X86平台下的宏定义：</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -248,8 +227,6 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 </span><span class='line'><span class="cp">#define va_arg(ap,t) ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )</span>
 </span><span class='line'><span class="cp">#define va_end(ap) ( ap = (va_list)0 )</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
 
 
 <p>_INTSIZEOF(n)宏是为了考虑那些内存地址需要对齐的系统，从宏的名字来应该是跟sizeof(int)对齐。
@@ -304,9 +281,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 系统提供了`vprintf`系列格式化字符串的函数，用于编程人员封装自己的I/O函数。</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -341,8 +316,6 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 </span></code></pre></td></tr></table></div></figure>
 
 
-
-
 <p>同理，也可以从文件中执行格式化输入；或者对标准输入输出，字符串执行格式化。</br>
 在上面的例1中，`WriteLog()`函数可以接受参数个数可变的输入，本质上，它的实现需要`vprintf()`的支持。
 如何真正实现属于自己的可变参数函数，包括控制每一个传入的可选参数。</p>
@@ -353,7 +326,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 <h2>4.关于va()函数和va宏</h2>
 
 
-<p>C语言支持`va`函数，作为C语言的扩展&#8211;C++同样支持`va`函数，但在C++中并不推荐使用，C++引入的
+<p>C语言支持`va`函数，作为C语言的扩展--C++同样支持`va`函数，但在C++中并不推荐使用，C++引入的
 多态性同样可以实现参数个数可变的函数。不过，C++的重载功能毕竟只能是有限多个可以预见的参数个数。
 比较而言，C中的`va`函数则可以定义无穷多个相当于C++的重载函数，这方面C++是无能为力的。`va`函数的
 优势表现在使用的方便性和易用性上，可以使代码更简洁。C编译器为了统一在不同的硬件架构、硬件
@@ -365,9 +338,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 <p>ANSI C标准下，`va`的宏定义在`stdarg.h`中，它们有：`va_list`，`va_start()`，`va_arg()`，`va_end()`。</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -407,9 +378,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 <p>可变参数函数的原型声明格式为：</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='c'><span class='line'><span class="n">type</span> <span class="nf">VAFunction</span><span class="p">(</span><span class="n">type</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">type</span> <span class="n">arg2</span><span class="p">,</span> <span class="p">...</span> <span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -417,7 +386,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 
 
 <p>参数可以分为两部分：个数确定的固定参数和个数可变的可选参数。函数至少需要一个固定参数，
-固定参数的声明和普通函数一样；可选参数由于个数不确定，声明时用&#8221;&#8230;&#8221;表示。固定参数和可选
+固定参数的声明和普通函数一样；可选参数由于个数不确定，声明时用"..."表示。固定参数和可选
 参数公同构成一个函数的参数列表。借助上面这个简单的例2，来看看各个`va_xxx`的作用。</p>
 
 
@@ -425,9 +394,9 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 
 <p>`va_list arg_ptr`：定义一个指向个数可变的参数列表指针；</br>
 `va_start(arg_ptr, argN)`：使参数列表指针`arg_ptr`指向函数参数列表中的第一个可选参数，
-说明：`argN`是位于第一个可选参数之前的固定参数，（或者说，最后一个固定参数；&#8230;
+说明：`argN`是位于第一个可选参数之前的固定参数，（或者说，最后一个固定参数；...
 之前的一个参数），函数参数列表中参数在内存中的顺序与函数声明时的顺序是一致的。
-如果有一`va`函数的声明是`void va_test(char a, char b, char c, &#8230;)`，则它的固定
+如果有一`va`函数的声明是`void va_test(char a, char b, char c, ...)`，则它的固定
 参数依次是a,b,c，最后一个固定参数argN为c，因此就是`va_start(arg_ptr, c)`。</br>
 `va_arg(arg_ptr, type)`：返回参数列表中指针`arg_ptr`所指的参数，返回类型为`type`，
 并使指针`arg_ptr`指向参数列表中下一个参数。</br>
@@ -435,7 +404,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 `va_end(arg_ptr)`：清空参数列表，并置参数指针`arg_ptr`无效。说明：指针`arg_ptr`被置无效后，
 可以通过调用`va_start()`、`va_copy()`恢复`arg_ptr`。每次调用`va_start() / va_copy()`后，
 必须得有相应的`va_end()`与之匹配。参数指针可以在参数列表中随意地来回移动，
-但必须在`va_start() &#8230; va_end()`之内。</p>
+但必须在`va_start() ... va_end()`之内。</p>
 
 
 
@@ -465,11 +434,11 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
   
 
 
-<time datetime="2011-04-21T16:50:00+08:00" pubdate data-updated="true">Apr 21<span>st</span>, 2011</time>
+<time datetime="2011-04-21T16:50:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cyu-yan/'>C语言</a>, <a class='tag' href='/blog/tags/zhan/'>栈</a></span>
@@ -477,24 +446,7 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -531,12 +483,10 @@ C语言用va_start等宏来处理这些可变参数。这些宏看起来很复�
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true">Jun 5<span>th</span>, 2009</time>
+<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -212,7 +197,7 @@ $(document).ready(function(){
 
 <p>那我们来看看 <code>getch()</code> 到底起的什么作用， <code>getch()</code> 实际是一个输入命令，作用是从键盘接收一个字符，而且并不把这个字符显示出来，就是说，你按了一个键后它并不在屏幕上显示你按的什么，而继续运行后面的代码，所以我们在C++中可以用它来实现“按任意键继续”的效果，即程序中遇到getch();这行语句，它就会把程序暂停下来，等你按任意键，它接收了这个字符键后再继续执行后面的代码。</p>
 
-<p>你也许会问，为什么我们在C++中就没有在程序的末尾加上 <code>getch()</code> ，解释是，软件总是不断更新的，不好的地方当然要进行改正， <code>getch()</code> 加在程序末尾，它又不赋值给任何变量，所以它在这个地方完全是垃圾代码，与程序无关。C++中考虑到这一点，于是在每次程序运行完了并不退出，而是自动把屏幕停下来，并显示 “press any key&#8230;” 叫你按任意键退出，这就好比C++在它的环境中运行程序，在程序的末尾自动加上了一行 <code>getch();</code> 语句，并且在这行语句前还添加了一行输出语句 <code>cout&lt;&lt;"press any key...";</code> 来提示你程序结束了，按任意键继续。</p>
+<p>你也许会问，为什么我们在C++中就没有在程序的末尾加上 <code>getch()</code> ，解释是，软件总是不断更新的，不好的地方当然要进行改正， <code>getch()</code> 加在程序末尾，它又不赋值给任何变量，所以它在这个地方完全是垃圾代码，与程序无关。C++中考虑到这一点，于是在每次程序运行完了并不退出，而是自动把屏幕停下来，并显示 “press any key...” 叫你按任意键退出，这就好比C++在它的环境中运行程序，在程序的末尾自动加上了一行 <code>getch();</code> 语句，并且在这行语句前还添加了一行输出语句 <code>cout&lt;&lt;"press any key...";</code> 来提示你程序结束了，按任意键继续。</p>
 
 <p>实际上我们编译好的程序在程序结束了本身是不会停下来的，我们可以在编译产生的Debug目录中找到这个编译好的应用程序（扩展名exe），在文件夹中双击运行它，你会发现屏幕闪了一下MS-DOS窗口就关闭了，因为程序运行完就自动退出了，回到了windows环境，当然，如果我们在DOS环境中运行这个程序，我们就可以直接在看到DOS屏幕上看到程序运行结果，因为程序运行完后并不清屏。但是，visual stdio.net2003有返回到了tc那样的情况，你必需要有个 <code>getch()</code> 才行。</p></p>
 
@@ -358,13 +343,13 @@ $(document).ready(function(){
 
 <p>因为我们输入的字符串并不是取了第一个字符就把剩下的字符串丢掉了，它还在我们的内存中，就好比，开闸放水，我们把水放到闸里去以后，开一次闸就放掉一点，开一次就放掉一点，直到放光了为止，这里开闸动作就相当于调用一次 <code>getchar()</code> 。我们输入的字符串也是这么一回事，首先我们输入的字符串是放在内存的缓冲区中的，我们调用一次 <code>getchar()</code> 就把缓冲区中里出口最近的一个字符输出，也就是最前面的一个字符输出，输出后，就把它释放掉了，但后面还有字符串，所以我们就用循环把最前面的一个字符一个个的在内存中释放掉，直到不满足循环条件退出为止。</p>
 
-<p>例子中循环条件里的 <code>'/n'</code> 实际上就是你输入字符串后的回车符，所以意思就是说，直到遇到回车符才结束循环，而 <code>getchar()</code> 函数就是等待输入（或缓冲区中的数据）直到按回车才结束，所以实现了整个字符串的输出。当然，我们也可以把循环条件改一下，比如 <code>while ((c=getchar())!='a')</code> ，什么意思呢，意思就是遇到字符&#8217;a&#8217;就停止循环，当然意思是如果你输入 <code>“12345a213123/n”</code> 那么只会输出到 <code>a</code> ，结果是 <code>12345a</code> 。</p>
+<p>例子中循环条件里的 <code>'/n'</code> 实际上就是你输入字符串后的回车符，所以意思就是说，直到遇到回车符才结束循环，而 <code>getchar()</code> 函数就是等待输入（或缓冲区中的数据）直到按回车才结束，所以实现了整个字符串的输出。当然，我们也可以把循环条件改一下，比如 <code>while ((c=getchar())!='a')</code> ，什么意思呢，意思就是遇到字符'a'就停止循环，当然意思是如果你输入 <code>“12345a213123/n”</code> 那么只会输出到 <code>a</code> ，结果是 <code>12345a</code> 。</p>
 
 <p>再次注意：用 <code>getchar()</code> 它是从“流”中间去读取，所以第一个 <code>getchar()</code> 接受的是刚刚中断的流队列中即将出列的第一个字符（不限于回车符，上面举过例子了），如果流队列不为空，执行 <code>getchar()</code> 就继续放水，直到把回车符也放空为止，空了之后再在执行 <code>getchar()</code> 就停下等待你的输入了；我们用 <code>getch()</code> 为什么每次都是等待用户的输入呢？因为 <code>getch()</code> 是从键盘接收，即时的接收，并不是从 <code>stdin</code> 流中去读取数据。</p>
 
 <p>补充：按键盘上的回车产生了2个字符:回车符(<code>'/r'</code>)和换行符(<code>'/n'</code>)。回车符<code>'/r'</code>(CR:carriage return:倒车）使光标回到这行的首部，换行符(<code>'/n'</code>)(new line)然后再换行。</p>
 
-<p>所以当输入字符&#8217;w&#8217;,并按下回车键以后。首先得到回车符。那个 <code>getchar</code> 函数结束了。 但是还存在一个换行符。所以如果用 <code>getchar()</code> 来做判断的时候。最好再写一次 <code>getchar()</code> 清除缓冲区的&#8217;/n&#8217;.</p>
+<p>所以当输入字符'w',并按下回车键以后。首先得到回车符。那个 <code>getchar</code> 函数结束了。 但是还存在一个换行符。所以如果用 <code>getchar()</code> 来做判断的时候。最好再写一次 <code>getchar()</code> 清除缓冲区的'/n'.</p>
 
 <h2>3.如何清空输入缓冲区的内容？</h2>
 
@@ -428,11 +413,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true">Jun 5<span>th</span>, 2009</time>
+<time datetime="2009-06-05T23:02:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/cyu-yan/'>C语言</a>, <a class='tag' href='/blog/tags/io/'>IO</a>, <a class='tag' href='/blog/tags/huan-chong-qu/'>缓冲区</a></span>
@@ -440,24 +425,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -494,12 +462,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

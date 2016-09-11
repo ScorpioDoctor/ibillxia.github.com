@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 音高 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/yin-gao/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -24,7 +24,7 @@
 <p>概念：音高（Pitch）是语音信号的一个很重要的特征，直觉上而言它表示声音频率的高低，这个频率是指基本频率（基频），也即基本周期的倒数。
 若直接观察语音的波形，只要语音信号稳定，我们可以很容易的看出基本周期的存在。例如我们取一个包含256个采样点的帧，单独绘制波形图，就可以明显的
 看到它的基本周期。如下图所示：
-<center>{% img /images/2013/IMAG2013051601.png %}</center>
+<center><img src="/images/2013/IMAG2013051601.png"></center>
 其中最上面的波形为|a|的发音，中间的为上图中红色双竖线（位于语音区）所对应的帧的具体波形，而最下面的是上图中绿色双竖线（位于静音区）所
 对应的帧的具体波形。很容易看到中间的波形具有明显的周期性。
 </p>
@@ -34,53 +34,97 @@
 
 
 <p>其代码如下：
-``` py3
-import wave
-import numpy as np
-import pylab as pl
-
-# ============ test the algorithm =============
-# read wave file and get parameters.
-fw = wave.open('a.wav','rb')
-params = fw.getparams()
-print(params)
-nchannels, sampwidth, framerate, nframes = params[:4]
-strData = fw.readframes(nframes)
-waveData = np.fromstring(strData, dtype=np.int16)
-waveData = waveData*1.0/max(abs(waveData))  # normalization
-fw.close()
-
-# plot the wave
-time = np.arange(0, len(waveData)) * (1.0 / framerate)
-
-index1 = 10000.0 / framerate
-index2 = 10512.0 / framerate
-index3 = 15000.0 / framerate
-index4 = 15512.0 / framerate
-
-pl.subplot(311)
-pl.plot(time, waveData)
-pl.plot([index1,index1],[-1,1],'r')
-pl.plot([index2,index2],[-1,1],'r')
-pl.plot([index3,index3],[-1,1],'g')
-pl.plot([index4,index4],[-1,1],'g')
-pl.xlabel("time (seconds)")
-pl.ylabel("Amplitude")
-
-pl.subplot(312)
-pl.plot(np.arange(512),waveData[10000:10512],'r')
-pl.plot([59,59],[-1,1],'b')
-pl.plot([169,169],[-1,1],'b')
-print(1/( (169-59)*1.0/framerate ))
-pl.xlabel("index in 1 frame")
-pl.ylabel("Amplitude")
-
-pl.subplot(313)
-pl.plot(np.arange(512),waveData[15000:15512],'g')
-pl.xlabel("index in 1 frame")
-pl.ylabel("Amplitude")
-pl.show()
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='py3'><span class='line'><span class="kn">import</span> <span class="nn">wave</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># ============ test the algorithm =============</span>
+</span><span class='line'><span class="c"># read wave file and get parameters.</span>
+</span><span class='line'><span class="n">fw</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;a.wav&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">params</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
+</span><span class='line'><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span><span class='line'><span class="n">nchannels</span><span class="p">,</span> <span class="n">sampwidth</span><span class="p">,</span> <span class="n">framerate</span><span class="p">,</span> <span class="n">nframes</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+</span><span class='line'><span class="n">strData</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
+</span><span class='line'><span class="n">waveData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">strData</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+</span><span class='line'><span class="n">waveData</span> <span class="o">=</span> <span class="n">waveData</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">waveData</span><span class="p">))</span>  <span class="c"># normalization</span>
+</span><span class='line'><span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># plot the wave</span>
+</span><span class='line'><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">waveData</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">framerate</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">index1</span> <span class="o">=</span> <span class="mf">10000.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'><span class="n">index2</span> <span class="o">=</span> <span class="mf">10512.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'><span class="n">index3</span> <span class="o">=</span> <span class="mf">15000.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'><span class="n">index4</span> <span class="o">=</span> <span class="mf">15512.0</span> <span class="o">/</span> <span class="n">framerate</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">311</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">waveData</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index1</span><span class="p">,</span><span class="n">index1</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index2</span><span class="p">,</span><span class="n">index2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index3</span><span class="p">,</span><span class="n">index3</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">index4</span><span class="p">,</span><span class="n">index4</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;time (seconds)&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">312</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">512</span><span class="p">),</span><span class="n">waveData</span><span class="p">[</span><span class="mi">10000</span><span class="p">:</span><span class="mi">10512</span><span class="p">],</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">59</span><span class="p">,</span><span class="mi">59</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">169</span><span class="p">,</span><span class="mi">169</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span> <span class="p">(</span><span class="mi">169</span><span class="o">-</span><span class="mi">59</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">framerate</span> <span class="p">))</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;index in 1 frame&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">313</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">512</span><span class="p">),</span><span class="n">waveData</span><span class="p">[</span><span class="mi">15000</span><span class="p">:</span><span class="mi">15512</span><span class="p">],</span><span class="s">&#39;g&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;index in 1 frame&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 

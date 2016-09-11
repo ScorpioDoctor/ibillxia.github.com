@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2013-04-12T22:12:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+<time datetime="2013-04-12T22:12:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -212,13 +197,13 @@ Networks)，条件随机场，最大化边界马尔科夫网络以及一些流�
 
 
 <p>基于能量的概率模型通过一个能量函数来定义概率分布，
-<center>$p(x) = \frac{e^{E(x)}}{Z}.$ &#8230; ①</center>
+<center>$p(x) = \frac{e^{E(x)}}{Z}.$ ... ①</center>
 其中Z为规整因子，
-<center>$Z = \sum _{x} e^{-E(x)}.$ &#8230; ②</center>
+<center>$Z = \sum _{x} e^{-E(x)}.$ ... ②</center>
 基于能量的模型可以利用使用梯度下降或随机梯度下降的方法来学习，具体而言，就是以训练集的负对数作为损失函数，
-<center>$l(\theta,D) = -L(\theta,D) = - \frac{1}{N}\sum_{x^{(i)}\in D} log p(x^{(i)}).$ &#8230; ③</center>
+<center>$l(\theta,D) = -L(\theta,D) = - \frac{1}{N}\sum_{x^{(i)}\in D} log p(x^{(i)}).$ ... ③</center>
 其中$\theta$为模型的参数，将损失函数对$\theta$求偏导，
-<center>$\Delta = \frac{\partial l(\theta,D)}{\partial \theta} = - \frac{1}{N} \frac{\partial \sum log p(x^{(i)})}{\partial \theta}.$ &#8230; ④</center>
+<center>$\Delta = \frac{\partial l(\theta,D)}{\partial \theta} = - \frac{1}{N} \frac{\partial \sum log p(x^{(i)})}{\partial \theta}.$ ... ④</center>
 即得到损失函数下降最快的方向。</p>
 
 
@@ -233,15 +218,15 @@ Networks)，条件随机场，最大化边界马尔科夫网络以及一些流�
 
 
 <p>在很多情况下，我们无法观察到样本的所有属性，或者我们需要引进一些没有观察到的变量，以增加模型的表达能力，这样得到的就是包含隐含变量的EBM，
-<center>$P(x) = \sum _{h} P(x,h) = \sum _{h} \frac{e^{-E(x,h)}}{Z}.$ &#8230; ⑤</center>
+<center>$P(x) = \sum _{h} P(x,h) = \sum _{h} \frac{e^{-E(x,h)}}{Z}.$ ... ⑤</center>
 其中$h$表示隐含变量。在这种情况下，为了与不包含隐含变量的模型进行统一，我们引入如下的自由能量函数，
-<center>$F(x) = - log \sum_{h}e^{-E(x,h)}.$ &#8230; ⑥</center>
+<center>$F(x) = - log \sum_{h}e^{-E(x,h)}.$ ... ⑥</center>
 这样$P(x)$就可以写成，
-<center>$P(x) = \frac{e^{-F(x)}}{Z}, where Z = \sum_{x} e^{-F(x)}.$ &#8230; ⑦</center>
+<center>$P(x) = \frac{e^{-F(x)}}{Z}, where Z = \sum_{x} e^{-F(x)}.$ ... ⑦</center>
 此时，损失函数还是类似的定义，只是在进行梯度下降求解时稍微有些不同，
 <center>$\Delta = - \frac{\partial log p(x)}{\partial \theta} 
 = - \frac{\partial (-F(x) -log Z)}{\partial \theta} 
-= \frac{\partial F(x)}{\partial \theta} - \sum_{\hat{x}} p(\hat{x}) \frac{\partial F(\hat{x})}{\partial \theta}$. &#8230; ⑧</center>
+= \frac{\partial F(x)}{\partial \theta} - \sum_{\hat{x}} p(\hat{x}) \frac{\partial F(\hat{x})}{\partial \theta}$. ... ⑧</center>
 该梯度表达式中包含两项，他们都影响着模型所定义的分布密度：第一项增加训练数据的概率（通过减小对应的自由能量），而第二项则减小模型
 生成的样本的概率。</p>
 
@@ -266,12 +251,12 @@ Networks)，条件随机场，最大化边界马尔科夫网络以及一些流�
 <p>限制性玻尔兹曼机（RBM）进一步加一些约束，在RBM中不存在可见单元与可见单元的链接，也不存在隐含单元与隐含单元的链接，如下图所示
 <center><img src="/images/2013/IMAG2013041201.png"></center>
 RBM的能量函数$E(v,h)$定义为，
-<center>$E(v,h) = -b&#8217;v - c&#8217;h - h&#8217;Wv$.</center>
-其中&#8217;表示转置，$b,c,W$为模型的参数，$b,c$分别为可见层和隐含层的偏置，$W$为可见层与隐含层的链接权重。此时，对应的自由能量为，
-<center>$F(v) = -b&#8217;v - \sum_{i}log\sum_{h_{i}}e^{h_{i}(c_{i}+W_{i}v)}.$ &#8230; ⑨</center>
+<center>$E(v,h) = -b'v - c'h - h'Wv$.</center>
+其中'表示转置，$b,c,W$为模型的参数，$b,c$分别为可见层和隐含层的偏置，$W$为可见层与隐含层的链接权重。此时，对应的自由能量为，
+<center>$F(v) = -b'v - \sum_{i}log\sum_{h_{i}}e^{h_{i}(c_{i}+W_{i}v)}.$ ... ⑨</center>
 另外，由于RBM的特殊结构，可见层/隐含层内个单元之间是相互独立的，所以我们有，
 <center>$p(h|v) = \prod _{i} p(h_{i}|v)$,</center>
-<center>$p(v|h) = \prod _{j} p(v_{j}|h).$ &#8230; ⑩</center>
+<center>$p(v|h) = \prod _{j} p(v_{j}|h).$ ... ⑩</center>
 </p>
 
 
@@ -282,13 +267,13 @@ RBM的能量函数$E(v,h)$定义为，
 
 <p>如果RBM中的每个单元都是二值的，即有$v_{j},h_{i} \in \{0,1\}$，我们可以得到，
 <center>$p(h_{i}=1|v) = sigmoid(c_{i} + W_{i}v)$,</center>
-<center>$p(v_{j}=1|h) = sigmoid(b_{j} + W_{j}&#8217;h).$ &#8230; ⑪</center>
+<center>$p(v_{j}=1|h) = sigmoid(b_{j} + W_{j}'h).$ ... ⑪</center>
 而对应的自由能量函数为，
-<center>$F(v) = -b&#8217;v - \sum_{i}log(1+e^{c_{i}+W_{i}v}).$ &#8230; ⑫</center>
+<center>$F(v) = -b'v - \sum_{i}log(1+e^{c_{i}+W_{i}v}).$ ... ⑫</center>
 使用梯度下降法求解模型参数时，各参数的梯度值如下[2]，
 <center>$-\frac{\partial logp(v)}{\partial W_{ij}} = E_{v}[p(h_{i}|v) * v_{j}] - v_{j}^{(i)} * sigmoid(W_{i} * v^{(i)}+c_{i}),$</center>
 <center>$-\frac{\partial logp(v)}{\partial c_{i}} = E_{v}[p(h_{i}|v) * v_{j}] - sigmoid(W_{i} * v^{(i)}),$</center>
-<center>$-\frac{\partial logp(v)}{\partial b_{j}} = E_{v}[p(h_{i}|v) * v_{j}] - v_{j}^{(i)}.$ &#8230; ⑬</center>
+<center>$-\frac{\partial logp(v)}{\partial b_{j}} = E_{v}[p(h_{i}|v) * v_{j}] - v_{j}^{(i)}.$ ... ⑬</center>
 </p>
 
 
@@ -306,10 +291,10 @@ $\theta = \{c, b, W\}$的值。</p>
 <h3>3.1 Gibbs采样</h3>
 
 
-<p>Gibbs采样是一种基于马尔科夫链蒙特卡罗(Markov Chain Monte Carlo,MCMC)策略的采样方法。对于一个$K$为随机向量$X = (X_{1},X_{2},&#8230;,X_{K})$，
+<p>Gibbs采样是一种基于马尔科夫链蒙特卡罗(Markov Chain Monte Carlo,MCMC)策略的采样方法。对于一个$K$为随机向量$X = (X_{1},X_{2},...,X_{K})$，
 假设我们无法求得关于$X$的联合分布$P(X)$，但我们知道给定$X$的其他分量时，其第$k$个分量$X_{k}$的条件分布，即$P(X_{k}|X_{k^{-}})$，其中$X_{k^{-}} = 
-(X_{1},X_{2},&#8230;,X_{k-1},X_{k+1},&#8230;,X_{K})$，那么，我们可以从$X$的一个任意状态(比如[$x_{1}(0),x_{2}(0),&#8230;,x_{K}(0)$])开始，利用上述条件
-分布，迭代的对其分量依次采样，随着采样次数的增加，随机变量[$x_{1}(n),x_{2}(n),&#8230;,x_{K}(n)$]的概率分布将以$n$的几何级数的速度收敛于$X$的联合
+(X_{1},X_{2},...,X_{k-1},X_{k+1},...,X_{K})$，那么，我们可以从$X$的一个任意状态(比如[$x_{1}(0),x_{2}(0),...,x_{K}(0)$])开始，利用上述条件
+分布，迭代的对其分量依次采样，随着采样次数的增加，随机变量[$x_{1}(n),x_{2}(n),...,x_{K}(n)$]的概率分布将以$n$的几何级数的速度收敛于$X$的联合
 概率分布$P(X)$。也就是说，我们可以在未知联合概率分布的条件下对其进行采样。</p>
 
 
@@ -319,7 +304,7 @@ $\theta = \{c, b, W\}$的值。</p>
 算法为：用一个训练样本(或可见层的任何随机化状态)初始化可见层的状态$v0$，交替进行如下采样：
 <center>$h_{0} \sim P(h|v_{0}), v_{1} \sim P(v|h_{0}),$</center>
 <center>$h_{1} \sim P(h|v_{1}), v_{2} \sim P(v|h_{1}),$</center>
-<center>$&#8230; &#8230;, v_{k+1} \sim P(v|h_{k})$.</center>
+<center>$... ..., v_{k+1} \sim P(v|h_{k})$.</center>
 在经过步数$k$足够大的情况下，我们可以得到服从RBM所定义的分布的样本。此外，使用Gibbs采样我们也可以得到式⑧中第一项的近似。</p>
 
 
@@ -434,11 +419,11 @@ $\theta = \{c, b, W\}$的值。</p>
   
 
 
-<time datetime="2013-04-12T22:12:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+<time datetime="2013-04-12T22:12:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>PRML</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>prml</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/rbm/'>RBM</a>, <a class='tag' href='/blog/tags/shen-jing-wang-luo/'>神经网络</a></span>
@@ -446,24 +431,7 @@ $\theta = \{c, b, W\}$的值。</p>
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -500,12 +468,10 @@ $\theta = \{c, b, W\}$的值。</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

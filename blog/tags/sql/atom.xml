@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: SQL | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/sql/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -220,160 +220,162 @@ AVG 函数求该列统计值之平均值， MAX 函数求该列最大值， MIN 
 Select MIN(AGE) FROM TEACHERS
 </code></p>
 
-<p>例 29 统计年龄小于等于 22 岁的学生人数。（统计） 
-``` 
-Select COUNT(*) FROM STUDENTS Where AGE < ＝ 22 
-```
+<p><p>例 29 统计年龄小于等于 22 岁的学生人数。（统计）
+<code>
+Select COUNT(*) FROM STUDENTS Where AGE &lt; ＝ 22
+</code></p>
 
-例 30 找出学生的平均成绩和所学课程门数。 
-```
-Select SNO, AVG(GRADE), COURSES ＝ COUNT(*) FROM ENROLLS GROUP BY SNO 
-```
+<p>例 30 找出学生的平均成绩和所学课程门数。
+<code>
+Select SNO, AVG(GRADE), COURSES ＝ COUNT(*) FROM ENROLLS GROUP BY SNO
+</code></p>
 
-例 31 找出年龄超过平均年龄的学生姓名。 
-```
-Select SNAME FROM STUDENTS 
-Where AGE ＞ (Select AVG(AGE) FROM STUDENTS) 
-```
+<p>例 31 找出年龄超过平均年龄的学生姓名。
+<code>
+Select SNAME FROM STUDENTS
+Where AGE ＞ (Select AVG(AGE) FROM STUDENTS)
+</code></p>
 
-例 32 找出各课程的平均成绩，按课程号分组，且只选择学生超过 3 人的课程的成绩。【 GROUP BY 与 HAVING  GROUP BY 子句
+<p>例 32 找出各课程的平均成绩，按课程号分组，且只选择学生超过 3 人的课程的成绩。【 GROUP BY 与 HAVING  GROUP BY 子句
 把一个表按某一指定列（或一些列）上的值相等的原则分组，然后再对每组数据进行规定的操作。 GROUP BY 子句总是跟在 Where 子句
-后面，当 Where 子句缺省时，它跟在 FROM 子句后面。 HAVING 子句常用于在计算出聚集之后对行的查询进行控制。】 
-```
-Select CNO, AVG(GRADE), STUDENTS ＝ COUNT(*) FROM ENROLLS  GROUP BY CNO HAVING COUNT(*) >= 3 
-```
+后面，当 Where 子句缺省时，它跟在 FROM 子句后面。 HAVING 子句常用于在计算出聚集之后对行的查询进行控制。】
+<code>
+Select CNO, AVG(GRADE), STUDENTS ＝ COUNT(*) FROM ENROLLS  GROUP BY CNO HAVING COUNT(*) &gt;= 3
+</code></p>
 
-## 七、相关子查询   
-例 33 查询没有选任何课程的学生的学号和姓名。【当一个子查询涉及到一个来自外部查询的列时，称为相关子查询（ Correlated Subquery) 。
+<h2>七、相关子查询</h2>
+
+<p>例 33 查询没有选任何课程的学生的学号和姓名。【当一个子查询涉及到一个来自外部查询的列时，称为相关子查询（ Correlated Subquery) 。
 相关子查询要用到存在测试谓词 EXISTS 和 NOT EXISTS ，以及 ALL 、 ANY （ SOME ）等 。】
-```
-Select SNO, SNAME FROM STUDENTS Where NOT EXISTS 
-(Select * FROM ENROLLS Where ENROLLS.SNO=STUDENTS.SNO) 
-```
+<code>
+Select SNO, SNAME FROM STUDENTS Where NOT EXISTS
+(Select * FROM ENROLLS Where ENROLLS.SNO=STUDENTS.SNO)
+</code></p>
 
-例 34 查询哪些课程只有男生选读。 
-```
-Select DISTINCT CNAME FROM COURSES C 
-Where ' 男 ' ＝ ALL 
-(Select SEX FROM ENROLLS , STUDENTS Where ENROLLS.SNO=STUDENTS.SNO AND ENROLLS.CNO=C.CNO) 
-```
+<p>例 34 查询哪些课程只有男生选读。
+<code>
+Select DISTINCT CNAME FROM COURSES C
+Where ' 男 ' ＝ ALL
+(Select SEX FROM ENROLLS , STUDENTS Where ENROLLS.SNO=STUDENTS.SNO AND ENROLLS.CNO=C.CNO)
+</code></p>
 
-例 35 要求给出一张学生、籍贯列表，该表中的学生的籍贯省份，也是其他一些学生的籍贯省份。 
-```
-Select SNAME, BPLACE FROM STUDENTS A Where EXISTS 
-(Select * FROM STUDENTS B Where A.BPLACE=B.BPLACE AND A.SNO < > B.SNO) 
-```
+<p>例 35 要求给出一张学生、籍贯列表，该表中的学生的籍贯省份，也是其他一些学生的籍贯省份。
+<code>
+Select SNAME, BPLACE FROM STUDENTS A Where EXISTS
+(Select * FROM STUDENTS B Where A.BPLACE=B.BPLACE AND A.SNO &lt; &gt; B.SNO)
+</code></p>
 
-例 36 找出选修了全部课程的学生的姓名。本查询可以改为：查询这样一些学生，没有一门课程是他不选修的。
-```
-Select SNAME FROM STUDENTS Where NOT EXISTS 
-(Select * FROM COURSES Where NOT EXISTS 
-(Select * FROM ENROLLS Where ENROLLS.SNO ＝ STUDENTS.SNO AND ENROLLS.CNO= 
-```
+<p>例 36 找出选修了全部课程的学生的姓名。本查询可以改为：查询这样一些学生，没有一门课程是他不选修的。
+<code>
+Select SNAME FROM STUDENTS Where NOT EXISTS
+(Select * FROM COURSES Where NOT EXISTS
+(Select * FROM ENROLLS Where ENROLLS.SNO ＝ STUDENTS.SNO AND ENROLLS.CNO=
+</code></p>
 
-#### 关系代数运算  
-例 37 设有某商场工作人员的两张表：营业员表 SP_SUBORD 和营销经理表 SP_MGR ，其关系数据模式如下： 
-```
-SP_SUBORD (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE) 
-SP_MGR (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE) 
-```
-其中，属性 SALPERS_ID 为工作人员的编号 , SALPERS_NAME 为工作人员的姓名 , `MANAGER_ID` 为所在部门经理的编号 , `OFFICE` 为工作地点。 
-(1) 若查询全部商场工作人员，可以用下面的 SQL 语句：  
-```
-(Select * FROM SP_SUBORD) UNION (Select * FROM SP_MGR) 
-```
-或等价地用下面的 SQL 语句：  
-```
-Select * FROM (TABLE SP_SUBORD UNION TABLE SP_MGR) 
-```
-(2) `INTERSECT (Select * FROM SP_SUBORD)`  
-```
-INTERSECT (Select * FROM SP_MGR) 
-```
-或等价地用下面的 SQL 语句： 
-```
-Select * FROM (TABLE SP_SUBORD INTERSECT TABLE SP_MGR) 
-```
-或用带 ALL 的 SQL 语句： 
-```
-(Select * FROM SP_SUBORD) INTERSECT ALL (Select * FROM SP_MGR) 
-```
-或 
-```
-Select * FROM (TABLE SP_SUBORD INTERSECT ALL TABLE SP_MGR) 
-```
-(3) `EXCEPT (Select * FROM SP_MGR)` 
-```
-EXCEPT (Select * FROM SP_SUBORD) 
-```
-或等价地用下面的 SQL 语句： 
-```
-Select * FROM (TABLE SP_MGR EXCEPT TABLE SP_ SUBORD) 
-```
-或用带 ALL 的 SQL 语句： 
-```
-(Select * FROM SP_MGR) EXCEPT ALL (Select * FROM SP_SUBORD) 
-```
+<h4>关系代数运算</h4>
 
-例 38 查询籍贯为四川、课程成绩在 80 分以上的学生信息及其成绩。（自然连接） 
-```
-(Select * FROM STUDENTS Where BPLACE=‘ 四川 ') NATURAL JOIN 
-(Select * FROM ENROLLS Where GRADE >=80) 
-```
+<p>例 37 设有某商场工作人员的两张表：营业员表 SP_SUBORD 和营销经理表 SP_MGR ，其关系数据模式如下：
+<code>
+SP_SUBORD (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE)
+SP_MGR (SALPERS_ID, SALPERS_NAME, MANAGER_ID, OFFICE)
+</code>
+其中，属性 SALPERS_ID 为工作人员的编号 , SALPERS_NAME 为工作人员的姓名 , <code>MANAGER_ID</code> 为所在部门经理的编号 , <code>OFFICE</code> 为工作地点。
+(1) 若查询全部商场工作人员，可以用下面的 SQL 语句：<br/>
+<code>
+(Select * FROM SP_SUBORD) UNION (Select * FROM SP_MGR)
+</code>
+或等价地用下面的 SQL 语句：<br/>
+<code>
+Select * FROM (TABLE SP_SUBORD UNION TABLE SP_MGR)
+</code>
+(2) <code>INTERSECT (Select * FROM SP_SUBORD)</code><br/>
+<code>
+INTERSECT (Select * FROM SP_MGR)
+</code>
+或等价地用下面的 SQL 语句：
+<code>
+Select * FROM (TABLE SP_SUBORD INTERSECT TABLE SP_MGR)
+</code>
+或用带 ALL 的 SQL 语句：
+<code>
+(Select * FROM SP_SUBORD) INTERSECT ALL (Select * FROM SP_MGR)
+</code>
+或
+<code>
+Select * FROM (TABLE SP_SUBORD INTERSECT ALL TABLE SP_MGR)
+</code>
+(3) <code>EXCEPT (Select * FROM SP_MGR)</code>
+<code>
+EXCEPT (Select * FROM SP_SUBORD)
+</code>
+或等价地用下面的 SQL 语句：
+<code>
+Select * FROM (TABLE SP_MGR EXCEPT TABLE SP_ SUBORD)
+</code>
+或用带 ALL 的 SQL 语句：
+<code>
+(Select * FROM SP_MGR) EXCEPT ALL (Select * FROM SP_SUBORD)
+</code></p>
 
-例39 列出全部教师的姓名及其任课的课程号、班级。【外连接与外部并外连接允许在结果表中保留非匹配元组，空缺部分填以 NULL 。
-外连接的作用是在做连接操作时避免丢失信息。 外连接有 3 类：   
-(1)左外连接（ Left Outer Join ）:连接运算谓词为 LEFT [OUTER] JOIN ，其结果表中保留左关系的所有元组。   
-(2)右外连接（ Right Outer Join ）:连接运算谓词为 RIGHT [OUTER] JOIN ，其结果表中保留右关系的所有元组。   
-(3)全外连接（ Full Outer Join ）:连接运算谓词为 FULL [OUTER] JOIN ，其结果表中保留左右两关系的所有元组。】 
-```
-Select TNAME, CNO, CLASS FROM TEACHERS LEFT OUTER JOIN TEACHING USING (TNO) 
-```
+<p>例 38 查询籍贯为四川、课程成绩在 80 分以上的学生信息及其成绩。（自然连接）
+<code>
+(Select * FROM STUDENTS Where BPLACE=‘ 四川 ') NATURAL JOIN
+(Select * FROM ENROLLS Where GRADE &gt;=80)
+</code></p>
 
-## 八、SQL 的数据操纵  
-例 40 把教师李映雪的记录加入到教师表 TEACHERS 中。（插入） 
-```
-Insert INTO TEACHERS VALUES(1476 ， ' 李映雪 ' ， 44 ， ' 副教授 ') 
-```
+<p>例39 列出全部教师的姓名及其任课的课程号、班级。【外连接与外部并外连接允许在结果表中保留非匹配元组，空缺部分填以 NULL 。
+外连接的作用是在做连接操作时避免丢失信息。 外连接有 3 类： <br/>
+(1)左外连接（ Left Outer Join ）:连接运算谓词为 LEFT [OUTER] JOIN ，其结果表中保留左关系的所有元组。 <br/>
+(2)右外连接（ Right Outer Join ）:连接运算谓词为 RIGHT [OUTER] JOIN ，其结果表中保留右关系的所有元组。 <br/>
+(3)全外连接（ Full Outer Join ）:连接运算谓词为 FULL [OUTER] JOIN ，其结果表中保留左右两关系的所有元组。】
+<code>
+Select TNAME, CNO, CLASS FROM TEACHERS LEFT OUTER JOIN TEACHING USING (TNO)
+</code></p>
 
-例 41 成绩优秀的学生将留下当教师。 
-```
-Insert INTO TEACHERS (TNO ， TNAME) Select DISTINCT SNO ， SNAME FROM STUDENTS ， ENROLLS 
-Where STUDENTS.SNO＝ENROLLS.SNO AND GRADE ＞＝ 90 
-```
+<h2>八、SQL 的数据操纵</h2>
 
-例 42 把所有学生的年龄增加一岁。（修改） 
-```
+<p>例 40 把教师李映雪的记录加入到教师表 TEACHERS 中。（插入）
+<code>
+Insert INTO TEACHERS VALUES(1476 ， ' 李映雪 ' ， 44 ， ' 副教授 ')
+</code></p>
+
+<p>例 41 成绩优秀的学生将留下当教师。
+<code>
+Insert INTO TEACHERS (TNO ， TNAME) Select DISTINCT SNO ， SNAME FROM STUDENTS ， ENROLLS
+Where STUDENTS.SNO＝ENROLLS.SNO AND GRADE ＞＝ 90
+</code></p>
+
+<p>例 42 把所有学生的年龄增加一岁。（修改）
+<code>
 Update STUDENTS SET AGE ＝ AGE+1
-```
+</code></p>
 
-例 43 学生张春明在数据库课考试中作弊，该课成绩应作零分计。 
-```
-Update ENROLLS SET GRADE ＝ 0 Where CNO ＝ 'C1' AND 
-' 张春明 ' ＝ (Select SNAME FROM STUDENTS Where STUDENTS.SNO=ENROLLS.SNO) 
-```
+<p>例 43 学生张春明在数据库课考试中作弊，该课成绩应作零分计。
+<code>
+Update ENROLLS SET GRADE ＝ 0 Where CNO ＝ 'C1' AND
+' 张春明 ' ＝ (Select SNAME FROM STUDENTS Where STUDENTS.SNO=ENROLLS.SNO)
+</code></p>
 
-例 49 从教师表中删除年龄已到 60 岁的退休教师的数据。（删除） 
-```
-Delete FROM TEACHERS Where AGE ＞＝ 60 
-```
+<p>例 49 从教师表中删除年龄已到 60 岁的退休教师的数据。（删除）
+<code>
+Delete FROM TEACHERS Where AGE ＞＝ 60
+</code></p>
 
-## 九、SQL 的数据控制  
-例 50 授予 LILI 有对表 STUDENTS 的查询权。（表／视图特权的授予 一个 SQL 特权允许一个被授权者在给定的数据库对象上进行特定的操作。
-授权操作的数据库对象包括：表 / 视图、列、域等。授权的操作包括： Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 、 
-UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 有对表做相应操作的权限，故称为表特权。） 
-```
-GRANT Select ON STUDENTS TO LILI WITH GRANT OPTION 
-```
+<h2>九、SQL 的数据控制</h2>
 
-例 51 取消 LILI 的存取 STUDENTS 表的特权。 
-```
-REVOKE ALL ON STUDENTS FROM LILI CASCADE 
-```
+<p>例 50 授予 LILI 有对表 STUDENTS 的查询权。（表／视图特权的授予 一个 SQL 特权允许一个被授权者在给定的数据库对象上进行特定的操作。
+授权操作的数据库对象包括：表 / 视图、列、域等。授权的操作包括： Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 、
+UNDER 、 USAGE 、 EXECUTE 等。其中 Insert 、 Update 、 Delete 、 Select 、 REFERENCES 、 TRIGGER 有对表做相应操作的权限，故称为表特权。）
+<code>
+GRANT Select ON STUDENTS TO LILI WITH GRANT OPTION
+</code></p>
 
+<p>例 51 取消 LILI 的存取 STUDENTS 表的特权。
+<code>
+REVOKE ALL ON STUDENTS FROM LILI CASCADE
+</code></p>
 
-本文来自: 脚本之家[www.jb51.net](http://www.jb51.net/article/8863_3.htm)
-
+<p>本文来自: 脚本之家<a href="http://www.jb51.net/article/8863_3.htm">www.jb51.net</a></p>
 ]]></content>
   </entry>
   
@@ -403,10 +405,9 @@ select convert(varchar(30),login_time,120) from   master..sysprocesses where spi
 </code>
 查看数据库服务器名和实例名</p>
 
-<p><code>
-print 'Server Name...............: ' + convert(varchar(30),@@SERVERNAME)
+<pre><code>print 'Server Name...............: ' + convert(varchar(30),@@SERVERNAME) 
 print 'Instance..................: ' + convert(varchar(30),@@SERVICENAME)
-</code></p>
+</code></pre>
 
 <!--more-->
 

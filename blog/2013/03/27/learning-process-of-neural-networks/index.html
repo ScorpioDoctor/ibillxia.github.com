@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2013</time>
+<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -301,7 +286,7 @@ occurred in its internal structure.</br>
 
 
 <p>Memory-Based Learning，顾名思义，是一种将past experiences全部保存起来的策略。假设我们的经验数据集为：</br>
-<center>{$(x_{1},d_{1}),(x_{2},d_{2}),&#8230;,(x_{N},d_{N})$}.</center></br>
+<center>{$(x_{1},d_{1}),(x_{2},d_{2}),...,(x_{N},d_{N})$}.</center></br>
 那么对于新来的测试数据$\mathbf{x} _{test}$，我们需要分析它与经验数据的关系，主要就是需要找出与它最相近的经验数据，即它的local neighborhood。
 在Memory-Based Learning方法中，主要涉及两个问题，一个是定义local neighborhood的标准，另一个是训练样本集上的学习规则。一个最简单的学习规则是
 最近邻规则(nearest-neighbor rule)。另外我们可以构造Memory-Based Classifier，如k-nearest-neighbor classifier，radial-basis function networks 
@@ -453,7 +438,7 @@ PS:这一段表示看不太懂，有些概念无法理解！</p>
 
 
 <p>设有一个非线性的输入输出映射$d = f(x)$，其中$x$为输入，$d$为输出，而映射函数$f(.)$是未知的，但我们知道的是一系列带label的样本</br>
-<center>$\mathscr{F} = $ { $(x_{1},d_{1}),(x_{2},d_{2}),&#8230;,(x_{N},d_{N})$ }.</center></br>
+<center>$\mathscr{F} = $ { $(x_{1},d_{1}),(x_{2},d_{2}),...,(x_{N},d_{N})$ }.</center></br>
 那么NN的目标就是找到一个映射$F(.)$最大可能的接近$f(.)$。如果有足够的训练样本和free parameters，那个这个目标是可以实现的。</p>
 
 
@@ -533,11 +518,11 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
   
 
 
-<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2013</time>
+<time datetime="2013-03-27T23:51:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>PRML</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>prml</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/ji-qi-xue-xi/'>机器学习</a>, <a class='tag' href='/blog/tags/shen-jing-wang-luo/'>神经网络</a></span>
@@ -545,24 +530,7 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -599,12 +567,10 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

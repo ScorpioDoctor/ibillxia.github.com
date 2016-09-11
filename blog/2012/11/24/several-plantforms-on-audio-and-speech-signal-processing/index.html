@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2012-11-24T18:54:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+<time datetime="2012-11-24T18:54:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -274,7 +259,7 @@ $(document).ready(function(){
 <p>1992年，IBM引入了它的第一个听写系统，称为“IBM Speech Server Series (ISSS)”。1996年发布了新版的听写系统，成为“VoiceType3.0”，
 这是viaVoice的原型，这个版本的语音识别系统不需要训练，可以实现孤立单词的听写和连续命令的识别。VoiceType3.0支持Windows95系统，
 并被集成到了OS/2 WARP系统之中。与此同时，IBM还发布了世界上首个连续听写系统“MedSpeak Radiology”。最后，IBM及时的在假日购物季节
-发布了大众化的实用的“VoiceType Simply Speaking”系统，它是世界上首个消费版的听写产品(the world&#8217;s first consumer dictation product).</p>
+发布了大众化的实用的“VoiceType Simply Speaking”系统，它是世界上首个消费版的听写产品(the world's first consumer dictation product).</p>
 
 
 
@@ -533,11 +518,11 @@ Zanzibar OpenIVR 等。</p>
   
 
 
-<time datetime="2012-11-24T18:54:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+<time datetime="2012-11-24T18:54:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/assp/'>ASSP</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/assp/'>assp</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/htk/'>HTK</a>, <a class='tag' href='/blog/tags/nuance/'>Nuance</a>, <a class='tag' href='/blog/tags/sphinx/'>Sphinx</a>, <a class='tag' href='/blog/tags/yu-yin-he-cheng/'>语音合成</a>, <a class='tag' href='/blog/tags/yu-yin-shi-bie/'>语音识别</a>, <a class='tag' href='/blog/tags/shuo-hua-ren-shi-bie/'>说话人识别</a></span>
@@ -545,24 +530,7 @@ Zanzibar OpenIVR 等。</p>
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -599,12 +567,10 @@ Zanzibar OpenIVR 等。</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

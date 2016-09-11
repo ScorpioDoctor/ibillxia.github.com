@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 指针 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/zhi-zhen/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,52 +29,38 @@
 <!-- more -->
 
 
-<p>``` c</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
 
-<h1>include &lt;stdio.h></h1>
-
-<p>// 函数原型
+// 函数原型
 int add(int x, int y);
 int subtract(int x, int y);
-int domath(int (*mathop)(int, int), int x, int y);</p>
+int domath(int (*mathop)(int, int), int x, int y);
 
-<p>// 加法 x+ y
-int add(int x, init y) {</p>
+// 加法 x+ y
+int add(int x, init y) {
+    return x + y;
+}
 
-<pre><code>return x + y;
+// 减法 x - y
+int subtract(int x, int y) {
+    return x - y;
+}
+
+// 根据输入执行函数指针
+int domath(int (*mathop)(int, int), int x, int y) {
+    return (*mathop)(x, y);
+}
+
+int main() {
+    // 用加法调用domath
+    int a = domath(add, 10, 2);
+    printf("Add gives: %d\n", a);
+
+    // 用减法调用domath
+    int b = domath(subtract, 10, 2);
+    printf("Subtract gives: %d\n", b);
+}
 </code></pre>
-
-<p>}</p>
-
-<p>// 减法 x - y
-int subtract(int x, int y) {</p>
-
-<pre><code>return x - y;
-</code></pre>
-
-<p>}</p>
-
-<p>// 根据输入执行函数指针
-int domath(int (*mathop)(int, int), int x, int y) {</p>
-
-<pre><code>return (*mathop)(x, y);
-</code></pre>
-
-<p>}</p>
-
-<p>int main() {</p>
-
-<pre><code>// 用加法调用domath
-int a = domath(add, 10, 2);
-printf("Add gives: %d\n", a);
-
-// 用减法调用domath
-int b = domath(subtract, 10, 2);
-printf("Subtract gives: %d\n", b);
-</code></pre>
-
-<p>}
-```</p>
 
 <p>在函数 <code>domath</code> 中，我们可以根据传入的 <code>mathop</code> 函数指针来做不同的计算操作。另外，在该文中，最后提到函数名会被隐式的转换为函数指针，就像作为参数传递的时候，数组名被隐式的转换为指针一样。在函数指针被要求当作输入的任何地方，都能够使用函数名，解引用符 <code>*</code> 和取地址符 <code>&amp;</code> 用在函数名之前基本上都是多余的。这个之前还真不知道，新技能get，哈哈</p>
 
@@ -89,12 +75,11 @@ printf("Subtract gives: %d\n", b);
 
 <p>这里 <code>typedef</code> 的使用方法与一般的 <code>typedef A B</code> 的使用方式不不大一样的，如果没有接触过这种用法，可能开起来很别扭（在很多开源库中可能经常会碰到）。下面是其具体使用的实例（不完整代码）：</p>
 
-<p><code>c
-FunctionFunc x;
+<pre><code class="c">FunctionFunc x;
 void doSomething() { printf("Hello there\n"); }
 x = &amp;doSomething;
 x(); //prints "Hello there"
-</code></p>
+</code></pre>
 
 <p>根据上面提到的隐式转换，这里的取址符其实是没有必要的。关于C语言的函数指针就介绍到这儿了，接下来介绍一下C++的函数调用操作符。</p>
 
@@ -104,46 +89,34 @@ x(); //prints "Hello there"
 
 <p>在C++中，对应于C中函数指针的东西是仿函数（functor），使用起来就像函数一样。其实现方法是对某个 class 进行 <code>operator()</code> 重载，他就成为一个仿函数。而要成为一个可适配（adaptable）的仿函数，还需要其他的一些努力（在《STL源码剖析》一书的第8章，关于适配器（adaptor）的内容）。这里，我们只拿书中的那个例子来简单的看一下仿函数的定义和使用方法吧。代码如下：</p>
 
-<p>``` cpp</p>
+<pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
 
-<h1>include <iostream></h1>
+// 对plus进行operator() 重载，使得 plus 变成了一个仿函数
+template&lt;class T&gt;
+struct plus{
+    T operator() (const T &amp;x, const T &amp;y) const {return x+y;}
+};
 
-<p>using namespace std;</p>
+// 对 minus 进行operator() 重载，使得 minus 变成了一个仿函数
+template&lt;class T&gt;
+struct minus{
+    T operator() (const T &amp;x, const T &amp;y) const {return x-y;}
+};
 
-<p>// 对plus进行operator() 重载，使得 plus 变成了一个仿函数
-template<class T>
-struct plus{</p>
-
-<pre><code>T operator() (const T &amp;x, const T &amp;y) const {return x+y;}
+int main(){
+    // 以下产生仿函数对象
+    plus&lt;int&gt; plusObj;
+    minus&lt;int&gt; minusObj;
+    // 以下使用仿函数，就像使用一般函数一样
+    cout&lt;&lt;plusObj(3,5)&lt;&lt;endl;
+    cout&lt;&lt;minusObj(3,5)&lt;&lt;endl;
+    // 也可以这样使用，通过临时对象（匿名对象）
+    cout&lt;&lt;plus&lt;int&gt;()(3,5)&lt;&lt;endl;
+    cout&lt;&lt;minus&lt;int&gt;()(3,5)&lt;&lt;endl;
+    return 0;
+}
 </code></pre>
-
-<p>};</p>
-
-<p>// 对 minus 进行operator() 重载，使得 minus 变成了一个仿函数
-template<class T>
-struct minus{</p>
-
-<pre><code>T operator() (const T &amp;x, const T &amp;y) const {return x-y;}
-</code></pre>
-
-<p>};</p>
-
-<p>int main(){</p>
-
-<pre><code>// 以下产生仿函数对象
-plus&lt;int&gt; plusObj;
-minus&lt;int&gt; minusObj;
-// 以下使用仿函数，就像使用一般函数一样
-cout&lt;&lt;plusObj(3,5)&lt;&lt;endl;
-cout&lt;&lt;minusObj(3,5)&lt;&lt;endl;
-// 也可以这样使用，通过临时对象（匿名对象）
-cout&lt;&lt;plus&lt;int&gt;()(3,5)&lt;&lt;endl;
-cout&lt;&lt;minus&lt;int&gt;()(3,5)&lt;&lt;endl;
-return 0;
-</code></pre>
-
-<p>}
-```</p>
 
 <p>这里的 <code>plus&lt;T&gt;</code> 和 <code>minus&lt;T&gt;</code> 已经非常接近 STL 的实现了，唯一的差别是它缺乏“可适配能力”，关于 STL 中的适配器（adaptor），我现在也还没看完该书，也还不太了解，在后续文章中应该会介绍到。读者可以自行google。</p>
 
@@ -151,74 +124,55 @@ return 0;
 
 <p>为了加深对函数调用操作符的理解，并将其真正用到实际中，这里拿快排这个非常典型的例子，并充分利用C++及STL的特性。下面是核心代码：</p>
 
-<p>``` cpp
-template<typename InIt,typename FuncType>
-void myqsort(InIt begin, InIt end, FuncType cmp){</p>
-
-<pre><code>if(begin==end||begin==end-1)return;
-InIt it = mysplit(begin,end,cmp);
-if(it!=end){
-    myqsort(begin,it,cmp);
-    myqsort(it+1,end,cmp);
+<pre><code class="cpp">template&lt;typename InIt,typename FuncType&gt;
+void myqsort(InIt begin, InIt end, FuncType cmp){
+    if(begin==end||begin==end-1)return;
+    InIt it = mysplit(begin,end,cmp);
+    if(it!=end){
+        myqsort(begin,it,cmp);
+        myqsort(it+1,end,cmp);
+    }
 }
-</code></pre>
 
-<p>}</p>
-
-<p>template<typename InIt,typename FuncType>
-InIt mysplit(InIt begin, InIt end, FuncType cmp){</p>
-
-<pre><code>InIt itl,itr;
-itl=begin;
-itr=end-1;
-while(itl != itr){
-    while(itl != itr &amp;&amp; cmp(*itr,*begin)&gt;0)itr--;
-    if(itl==itr)break;
-    while(itl != itr &amp;&amp; cmp(*begin,*itl)&gt;0)itl++;
-    if(itl==itr)break;
-    swap(*itl,*itr);
-    itr--;
+template&lt;typename InIt,typename FuncType&gt;
+InIt mysplit(InIt begin, InIt end, FuncType cmp){
+    InIt itl,itr;
+    itl=begin;
+    itr=end-1;
+    while(itl != itr){
+        while(itl != itr &amp;&amp; cmp(*itr,*begin)&gt;0)itr--;
+        if(itl==itr)break;
+        while(itl != itr &amp;&amp; cmp(*begin,*itl)&gt;0)itl++;
+        if(itl==itr)break;
+        swap(*itl,*itr);
+        itr--;
+    }
+    return itl;
 }
-return itl;
+
+class Test{
+public:
+    double m_lf;
+    string m_str;
+public:
+    void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
+    void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
+};
+
+struct cmpd{
+    int operator()(Test a,Test b){
+        if(abs(a.m_lf - b.m_lf)&lt;INF)return 0;
+        if(a.m_lf &gt; b.m_lf)return 1;
+        return -1;
+    }
+};
+
+struct cmps{
+    int operator()(Test a,Test b){
+        return a.m_str.compare(b.m_str);
+    }
+};
 </code></pre>
-
-<p>}</p>
-
-<p>class Test{
-public:</p>
-
-<pre><code>double m_lf;
-string m_str;
-</code></pre>
-
-<p>public:</p>
-
-<pre><code>void set(){ cin&gt;&gt;m_lf&gt;&gt;m_str; }
-void print(){ cout&lt;&lt;m_lf&lt;&lt;" "&lt;&lt;m_str&lt;&lt;endl; }
-</code></pre>
-
-<p>};</p>
-
-<p>struct cmpd{</p>
-
-<pre><code>int operator()(Test a,Test b){
-    if(abs(a.m_lf - b.m_lf)&lt;INF)return 0;
-    if(a.m_lf &gt; b.m_lf)return 1;
-    return -1;
-}
-</code></pre>
-
-<p>};</p>
-
-<p>struct cmps{</p>
-
-<pre><code>int operator()(Test a,Test b){
-    return a.m_str.compare(b.m_str);
-}
-</code></pre>
-
-<p>};
-```</p>
 
 <p>完整的代码及测试输入可以通过以下链接打包下载：<a href="https://ibillxia.github.io/upload/code/20140525.tar.gz">code-2014-05-25</a>。</p>
 ]]></content>

@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-09-24T13:28:00+08:00" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+<time datetime="2010-09-24T13:28:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -199,7 +184,7 @@ $(document).ready(function(){
 
 
 <p>`set_magic_quotes_runtime()` 可以让程序员在代码中动态开启或关闭 `magic_quotes_runtime`，`set_magic_quotes_runtime(1)` 表示开启，
-`set_magic_quotes_runtime(0)` 则表示关闭。当`set_magic_quotes_runtime(1)`时，从数据库或通过`fread`之类的函数读取的文本，将自动对&#8217; &#8220;和\自动
+`set_magic_quotes_runtime(0)` 则表示关闭。当`set_magic_quotes_runtime(1)`时，从数据库或通过`fread`之类的函数读取的文本，将自动对' "和\自动
 加上反斜杠\进行转义，防止溢出。这在对数据库的数据进行转移的时候非常有用。但在一般情况下，应当将其关闭，否则从数据库读取出来的数据单引
 号、双引号和反斜杠都会被加上\，导致显示不正常。像Discuz，PHPWind都在公共文件的头部加上一句 `set_magic_quotes_runtime(0);` 强制关闭 
 `magic_quotes_runtime` 。</p>
@@ -213,8 +198,6 @@ $(document).ready(function(){
 
 
 <!--more-->
-
-
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -256,9 +239,7 @@ $(document).ready(function(){
 <p>php防注入函数,字符过滤函数</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -321,69 +302,69 @@ $(document).ready(function(){
 <span class='line-number'>61</span>
 <span class='line-number'>62</span>
 <span class='line-number'>63</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">//解码</span>
-</span><span class='line'><span class="x">function htmldecode($str)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">  if(empty($str)) return;</span>
-</span><span class='line'><span class="x">  if($str==&quot;&quot;) return $str;</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;sel&amp;#101;ct&quot;,&quot;select&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;jo&amp;#105;n&quot;,&quot;join&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;un&amp;#105;on&quot;,&quot;union&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;wh&amp;#101;re&quot;,&quot;where&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;ins&amp;#101;rt&quot;,&quot;insert&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;del&amp;#101;te&quot;,&quot;delete&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;up&amp;#100;ate&quot;,&quot;update&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;lik&amp;#101;&quot;,&quot;like&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;dro&amp;#112;&quot;,&quot;drop&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;cr&amp;#101;ate&quot;,&quot;create&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;mod&amp;#105;fy&quot;,&quot;modify&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;ren&amp;#097;me&quot;,&quot;rename&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;alt&amp;#101;r&quot;,&quot;alter&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;ca&amp;#115;&quot;,&quot;cast&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;amp;&quot;,&quot;&amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;gt;&quot;,&quot;&gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;lt;&quot;,&quot;&lt;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;nbsp;&quot;,chr(32),$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;nbsp;&quot;,chr(9),$str);</span>
-</span><span class='line'><span class="x">  //$str=str_replace(&quot;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;,chr(9),$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;&quot;,chr(34),$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;#39;&quot;,chr(39),$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&lt;br /&gt;&quot;,chr(13),$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&#39;&#39;&quot;,&quot;&#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">  return $str;</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">//编码</span>
-</span><span class='line'><span class="x">function htmlencode($str)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">  if(empty($str)) return;</span>
-</span><span class='line'><span class="x">  if($str==&quot;&quot;) return $str;</span>
-</span><span class='line'><span class="x">  $str=trim($str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&amp;&quot;,&quot;&amp;amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&gt;&quot;,&quot;&amp;gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&lt;&quot;,&quot;&amp;lt;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(chr(32),&quot;&amp;nbsp;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(chr(9),&quot;&amp;nbsp;&quot;,$str);</span>
-</span><span class='line'><span class="x">  //$str=str_replace(chr(9),&quot;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(chr(34),&quot;&amp;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(chr(39),&quot;&amp;#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(chr(13),&quot;&lt;br /&gt;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;&#39;&quot;,&quot;&#39;&#39;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;select&quot;,&quot;sel&amp;#101;ct&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;join&quot;,&quot;jo&amp;#105;n&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;union&quot;,&quot;un&amp;#105;on&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;where&quot;,&quot;wh&amp;#101;re&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;insert&quot;,&quot;ins&amp;#101;rt&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;delete&quot;,&quot;del&amp;#101;te&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;update&quot;,&quot;up&amp;#100;ate&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;like&quot;,&quot;lik&amp;#101;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;drop&quot;,&quot;dro&amp;#112;&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;create&quot;,&quot;cr&amp;#101;ate&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;modify&quot;,&quot;mod&amp;#105;fy&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;rename&quot;,&quot;ren&amp;#097;me&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;alter&quot;,&quot;alt&amp;#101;r&quot;,$str);</span>
-</span><span class='line'><span class="x">  $str=str_replace(&quot;cast&quot;,&quot;ca&amp;#115;&quot;,$str);</span>
-</span><span class='line'><span class="x">  return $str;</span>
-</span><span class='line'><span class="x">} </span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">//解码</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">htmldecode</span><span class="p">(</span><span class="nv">$str</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$str</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="nv">$str</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="nv">$str</span><span class="p">;</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;sel&amp;#101;ct&quot;</span><span class="p">,</span><span class="s2">&quot;select&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;jo&amp;#105;n&quot;</span><span class="p">,</span><span class="s2">&quot;join&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;un&amp;#105;on&quot;</span><span class="p">,</span><span class="s2">&quot;union&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;wh&amp;#101;re&quot;</span><span class="p">,</span><span class="s2">&quot;where&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;ins&amp;#101;rt&quot;</span><span class="p">,</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;del&amp;#101;te&quot;</span><span class="p">,</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;up&amp;#100;ate&quot;</span><span class="p">,</span><span class="s2">&quot;update&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;lik&amp;#101;&quot;</span><span class="p">,</span><span class="s2">&quot;like&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;dro&amp;#112;&quot;</span><span class="p">,</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;cr&amp;#101;ate&quot;</span><span class="p">,</span><span class="s2">&quot;create&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;mod&amp;#105;fy&quot;</span><span class="p">,</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;ren&amp;#097;me&quot;</span><span class="p">,</span><span class="s2">&quot;rename&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;alt&amp;#101;r&quot;</span><span class="p">,</span><span class="s2">&quot;alter&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;ca&amp;#115;&quot;</span><span class="p">,</span><span class="s2">&quot;cast&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;amp;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;lt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//$str=str_replace(&quot;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;,chr(9),$str);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="mi">34</span><span class="p">),</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;#39;&quot;</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">),</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&lt;br /&gt;&quot;</span><span class="p">,</span><span class="nb">chr</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$str</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">//编码</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">htmlencode</span><span class="p">(</span><span class="nv">$str</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$str</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="nv">$str</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="nv">$str</span><span class="p">;</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nx">trim</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;amp;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;gt;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;lt;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span><span class="s2">&quot;&amp;nbsp;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="c1">//$str=str_replace(chr(9),&quot;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;,$str);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">34</span><span class="p">),</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">39</span><span class="p">),</span><span class="s2">&quot;&amp;#39;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span><span class="s2">&quot;&lt;br /&gt;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">,</span><span class="s2">&quot;sel&amp;#101;ct&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;join&quot;</span><span class="p">,</span><span class="s2">&quot;jo&amp;#105;n&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;union&quot;</span><span class="p">,</span><span class="s2">&quot;un&amp;#105;on&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;where&quot;</span><span class="p">,</span><span class="s2">&quot;wh&amp;#101;re&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span><span class="s2">&quot;ins&amp;#101;rt&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span><span class="s2">&quot;del&amp;#101;te&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">,</span><span class="s2">&quot;up&amp;#100;ate&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;like&quot;</span><span class="p">,</span><span class="s2">&quot;lik&amp;#101;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span><span class="s2">&quot;dro&amp;#112;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span><span class="s2">&quot;cr&amp;#101;ate&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;modify&quot;</span><span class="p">,</span><span class="s2">&quot;mod&amp;#105;fy&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;rename&quot;</span><span class="p">,</span><span class="s2">&quot;ren&amp;#097;me&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;alter&quot;</span><span class="p">,</span><span class="s2">&quot;alt&amp;#101;r&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$str</span><span class="o">=</span><span class="nb">str_replace</span><span class="p">(</span><span class="s2">&quot;cast&quot;</span><span class="p">,</span><span class="s2">&quot;ca&amp;#115;&quot;</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$str</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
@@ -412,11 +393,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-09-24T13:28:00+08:00" pubdate data-updated="true">Sep 24<span>th</span>, 2010</time>
+<time datetime="2010-09-24T13:28:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/an-quan/'>安全</a></span>
@@ -424,24 +405,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -478,12 +442,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

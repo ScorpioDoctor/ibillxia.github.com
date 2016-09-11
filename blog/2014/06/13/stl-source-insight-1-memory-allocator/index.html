@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-06-13T22:04:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+<time datetime="2014-06-13T22:04:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -247,8 +232,8 @@ $(document).ready(function(){
 <span class='line-number'>28</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 标识数据类型的成员变量，关于中间的6个变量的涵义见后续文章（关于Traits编程技巧）</span>
 </span><span class='line'><span class="k">typedef</span> <span class="n">alloc</span> <span class="n">_Alloc</span><span class="p">;</span>
-</span><span class='line'><span class="k">typedef</span> <span class="n">size_t</span>     <span class="n">size_type</span><span class="p">;</span>
-</span><span class='line'><span class="k">typedef</span> <span class="n">ptrdiff_t</span>  <span class="n">difference_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">size_t</span>     <span class="n">size_type</span><span class="p">;</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">ptrdiff_t</span>  <span class="n">difference_type</span><span class="p">;</span>
 </span><span class='line'><span class="k">typedef</span> <span class="n">_Tp</span><span class="o">*</span>       <span class="n">pointer</span><span class="p">;</span>
 </span><span class='line'><span class="k">typedef</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">*</span> <span class="n">const_pointer</span><span class="p">;</span>
 </span><span class='line'><span class="k">typedef</span> <span class="n">_Tp</span><span class="o">&amp;</span>       <span class="n">reference</span><span class="p">;</span>
@@ -270,7 +255,7 @@ $(document).ready(function(){
 </span><span class='line'><span class="p">}</span> <span class="c1">//这里的 alloc 在 SGI STL 中默认使用的是__default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, 0&gt;这个实现（见第402行）</span>
 </span><span class='line'><span class="kt">void</span> <span class="n">deallocate</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">,</span> <span class="n">size_type</span> <span class="n">__n</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Alloc</span><span class="o">::</span><span class="n">deallocate</span><span class="p">(</span><span class="n">__p</span><span class="p">,</span> <span class="n">__n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">));</span> <span class="p">}</span> <span class="c1">// 释放空间</span>
 </span><span class='line'><span class="n">size_type</span> <span class="n">max_size</span><span class="p">()</span> <span class="k">const</span> <span class="n">__STL_NOTHROW</span>  <span class="c1">// max_size() 函数，返回可成功配置的最大值</span>
-</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="n">size_t</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">//这里没看懂，这里的size_t(-1)是什么意思？</span>
+</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="kt">size_t</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_Tp</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">//这里没看懂，这里的size_t(-1)是什么意思？</span>
 </span><span class='line'><span class="kt">void</span> <span class="n">construct</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">,</span> <span class="k">const</span> <span class="n">_Tp</span><span class="o">&amp;</span> <span class="n">__val</span><span class="p">)</span> <span class="p">{</span> <span class="k">new</span><span class="p">(</span><span class="n">__p</span><span class="p">)</span> <span class="n">_Tp</span><span class="p">(</span><span class="n">__val</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 调用 new 来给新变量分配空间并赋值</span>
 </span><span class='line'><span class="kt">void</span> <span class="n">destroy</span><span class="p">(</span><span class="n">pointer</span> <span class="n">__p</span><span class="p">)</span> <span class="p">{</span> <span class="n">__p</span><span class="o">-&gt;~</span><span class="n">_Tp</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// 调用 _Tp 的析构函数来释放空间</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -295,7 +280,7 @@ $(document).ready(function(){
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">debug_alloc</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span> <span class="n">threads</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inst</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">__default_alloc_template</span> <span class="c1">// Default node allocator.</span>
 </span><span class='line'><span class="k">typedef</span> <span class="n">__default_alloc_template</span><span class="o">&lt;</span><span class="n">__NODE_ALLOCATOR_THREADS</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">alloc</span>
-</span><span class='line'><span class="k">typedef</span> <span class="n">__default_alloc_template</span><span class="o">&lt;</span><span class="kc">false</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">single_client_alloc</span>
+</span><span class='line'><span class="k">typedef</span> <span class="n">__default_alloc_template</span><span class="o">&lt;</span><span class="nb">false</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span> <span class="n">single_client_alloc</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">allocator</span>
 </span><span class='line'><span class="k">template</span><span class="o">&lt;&gt;</span><span class="k">class</span> <span class="nc">allocator</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span><span class="k">struct</span> <span class="n">__allocator</span>
@@ -320,12 +305,12 @@ $(document).ready(function(){
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">private</span><span class="o">:</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="nl">private:</span>
 </span><span class='line'><span class="cp">#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">)();</span>  <span class="c1">// 函数指针</span>
+</span><span class='line'>  <span class="k">static</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">)();</span>  <span class="c1">// 函数指针</span>
 </span><span class='line'><span class="cp">#endif</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__set_malloc_handler</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">__f</span><span class="p">)()))()</span> <span class="c1">// 设置函数指针的public方法</span>
+</span><span class='line'><span class="nl">public:</span>
+</span><span class='line'>  <span class="k">static</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__set_malloc_handler</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">__f</span><span class="p">)()))()</span> <span class="c1">// 设置函数指针的public方法</span>
 </span><span class='line'>  <span class="p">{</span>
 </span><span class='line'>    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span> <span class="n">__old</span><span class="p">)()</span> <span class="o">=</span> <span class="n">__malloc_alloc_oom_handler</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">__malloc_alloc_oom_handler</span> <span class="o">=</span> <span class="n">__f</span><span class="p">;</span>
@@ -381,7 +366,7 @@ $(document).ready(function(){
 
 <h2>3. SGI STL 内置轻量级内存池的实现</h2>
 
-<p>第一级配置器 <code>__malloc_alloc_template</code> 仅仅只是对 <code>malloc</code> 的一层封装，没有考虑可能出现的内存碎片化问题。内存碎片化问题在大量申请小块内存是可能非常严重，最终导致碎片化的空闲内存无法充分利用。SGI 于是在第二级配置器 <code>__default_alloc_template</code> 中 内置了一个轻量级的内存池。 对于小内存块的申请，从内置的内存池中分配。然后维护一些空闲内存块的链表（简记为空闲链表，free list），小块内存使用完后都回收到空闲链表中，这样如果新来一个小内存块申请，如果对应的空闲链表不为空，就可以从空闲链表中分配空间给用户。具体而言SGI默认最大的小块内存大小为128bytes，并设置了128/8=16 个free list，每个list 分别维护大小为 8, 16, 24, &#8230;, 128bytes 的空间内存块（均为8的整数倍），如果用户申请的空间大小不足8的倍数，则向上取整。</p>
+<p>第一级配置器 <code>__malloc_alloc_template</code> 仅仅只是对 <code>malloc</code> 的一层封装，没有考虑可能出现的内存碎片化问题。内存碎片化问题在大量申请小块内存是可能非常严重，最终导致碎片化的空闲内存无法充分利用。SGI 于是在第二级配置器 <code>__default_alloc_template</code> 中 内置了一个轻量级的内存池。 对于小内存块的申请，从内置的内存池中分配。然后维护一些空闲内存块的链表（简记为空闲链表，free list），小块内存使用完后都回收到空闲链表中，这样如果新来一个小内存块申请，如果对应的空闲链表不为空，就可以从空闲链表中分配空间给用户。具体而言SGI默认最大的小块内存大小为128bytes，并设置了128/8=16 个free list，每个list 分别维护大小为 8, 16, 24, ..., 128bytes 的空间内存块（均为8的整数倍），如果用户申请的空间大小不足8的倍数，则向上取整。</p>
 
 <p>SGI STL内置内存池的实现请看 <code>__default_alloc_template</code> 中被定义为 private 的这些成员变量和方法（去掉了部分预处理代码和互斥处理的代码）：</p>
 
@@ -406,27 +391,27 @@ $(document).ready(function(){
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">private</span><span class="o">:</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="nl">private:</span>
 </span><span class='line'><span class="cp">#if ! (defined(__SUNPRO_CC) || defined(__GNUC__))</span>
 </span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_ALIGN</span> <span class="o">=</span> <span class="mi">8</span><span class="p">};</span> <span class="c1">// 对齐大小</span>
 </span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_MAX_BYTES</span> <span class="o">=</span> <span class="mi">128</span><span class="p">};</span> <span class="c1">// 最大有内置内存池来分配的内存大小</span>
 </span><span class='line'>    <span class="k">enum</span> <span class="p">{</span><span class="n">_NFREELISTS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">};</span> <span class="c1">// _MAX_BYTES/_ALIGN  // 空闲链表个数</span>
 </span><span class='line'><span class="cp"># endif</span>
-</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span>  <span class="n">_S_round_up</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="c1">// 不是8的倍数，向上取整</span>
-</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">((</span><span class="n">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">size_t</span>  <span class="nf">_S_round_up</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="c1">// 不是8的倍数，向上取整</span>
+</span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span> <span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span> <span class="p">}</span>
 </span><span class='line'><span class="nl">__PRIVATE:</span>
 </span><span class='line'>  <span class="k">union</span> <span class="n">_Obj</span> <span class="p">{</span> <span class="c1">// 空闲链表的每个node的定义</span>
 </span><span class='line'>        <span class="k">union</span> <span class="n">_Obj</span><span class="o">*</span> <span class="n">_M_free_list_link</span><span class="p">;</span>
 </span><span class='line'>        <span class="kt">char</span> <span class="n">_M_client_data</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>   <span class="p">};</span>
 </span><span class='line'>  <span class="k">static</span> <span class="n">_Obj</span><span class="o">*</span> <span class="n">__STL_VOLATILE</span> <span class="n">_S_free_list</span><span class="p">[];</span> <span class="c1">// 空闲链表数组</span>
-</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_freelist_index</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// __bytes 对应的free list的index</span>
-</span><span class='line'>        <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size_t</span><span class="p">)</span><span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">size_t</span><span class="p">)</span><span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">size_t</span> <span class="nf">_S_freelist_index</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">__bytes</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// __bytes 对应的free list的index</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">(((</span><span class="n">__bytes</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">_ALIGN</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">_ALIGN</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_S_refill</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__n</span><span class="p">);</span> <span class="c1">// 从内存池中申请空间并构建free list，然后从free list中分配空间给用户</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_chunk_alloc</span><span class="p">(</span><span class="n">size_t</span> <span class="n">__size</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__nobjs</span><span class="p">);</span> <span class="c1">// 从内存池中分配空间</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="nf">_S_refill</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">__n</span><span class="p">);</span> <span class="c1">// 从内存池中申请空间并构建free list，然后从free list中分配空间给用户</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="nf">_S_chunk_alloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">__size</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__nobjs</span><span class="p">);</span> <span class="c1">// 从内存池中分配空间</span>
 </span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_start_free</span><span class="p">;</span>  <span class="c1">// 内存池空闲部分的起始地址</span>
 </span><span class='line'>  <span class="k">static</span> <span class="kt">char</span><span class="o">*</span> <span class="n">_S_end_free</span><span class="p">;</span> <span class="c1">// 内存池结束地址</span>
-</span><span class='line'>  <span class="k">static</span> <span class="n">size_t</span> <span class="n">_S_heap_size</span><span class="p">;</span> <span class="c1">// 内存池堆大小，主要用于配置内存池的大小</span>
+</span><span class='line'>  <span class="k">static</span> <span class="kt">size_t</span> <span class="n">_S_heap_size</span><span class="p">;</span> <span class="c1">// 内存池堆大小，主要用于配置内存池的大小</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -449,8 +434,8 @@ $(document).ready(function(){
 <blockquote><p>首先计算新内存池大小 <code>size_t __bytes_to_get = 2 * __total_bytes + _S_round_up(_S_heap_size &gt;&gt; 4)</code><br/>
 将现在内存池中剩余空间插入到适当的free list中<br/>
 调用 <code>malloc</code> 来获取一大片空间作为新的内存池：<br/>
-&#8211; 如果分配成功，则调整 <code>_S_end_free</code> 和 <code>_S_heap_size</code> 的值，并重新调用自身，从新的内存池中给用户分配空间；
-&#8211; 否则，分配失败，考虑从比当前申请的空间大的free list中分配空间，如果无法找不到这样的非空free list，则调用第一级配置器的allocate，看oom机制能否解决问题</p></blockquote></blockquote>
+-- 如果分配成功，则调整 <code>_S_end_free</code> 和 <code>_S_heap_size</code> 的值，并重新调用自身，从新的内存池中给用户分配空间；
+-- 否则，分配失败，考虑从比当前申请的空间大的free list中分配空间，如果无法找不到这样的非空free list，则调用第一级配置器的allocate，看oom机制能否解决问题</p></blockquote></blockquote>
 
 <p>SGI STL的轻量级内存池的实现就是酱紫了，其实并不复杂。</p>
 
@@ -492,7 +477,7 @@ $(document).ready(function(){
 </span><span class='line'>    <span class="k">static</span> <span class="n">_STL_mutex_lock</span> <span class="n">_S_node_allocator_lock</span><span class="p">;</span> <span class="c1">// 互斥锁变量</span>
 </span><span class='line'><span class="cp"># endif</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">_Lock</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="nl">public:</span>
 </span><span class='line'>        <span class="n">_Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">__NODE_ALLOCATOR_LOCK</span><span class="p">;</span> <span class="p">}</span>
 </span><span class='line'>        <span class="o">~</span><span class="n">_Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">__NODE_ALLOCATOR_UNLOCK</span><span class="p">;</span> <span class="p">}</span>
 </span><span class='line'><span class="p">};</span>
@@ -546,11 +531,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-06-13T22:04:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2014</time>
+<time datetime="2014-06-13T22:04:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/stl/'>STL</a>, <a class='tag' href='/blog/tags/nei-cun-guan-li/'>内存管理</a></span>
@@ -558,24 +543,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -612,12 +580,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

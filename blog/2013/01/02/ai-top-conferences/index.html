@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2013-01-02T19:17:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+<time datetime="2013-01-02T19:17:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -215,7 +200,7 @@ $(document).ready(function(){
 不过从录用率上来看倒不太低,基本上20%左右, 因为内行人都会掂掂分量, 没希望的就别浪费reviewer的时间了. 最近中国大陆投往国际会议
 的文章象潮水一样, 而且因为国内很少有能自己把关的研究组, 所以很多会议都在complain说中国的低质量文章严重妨碍了PC的工作效
 率（囧o(╯□╰)o）. 在这种情况下, 估计这几年国际会议的录用率都会降下去. 另外, 以前的IJCAI是没有poster的, 03年开始, 为了减少
-被误杀的好人, 增加了2页纸的poster.值得一提的是, IJCAI是由貌似一个公司的&#8221;IJCAI Inc.&#8221;主办的(当然实际上并不是公司, 实际上是
+被误杀的好人, 增加了2页纸的poster.值得一提的是, IJCAI是由貌似一个公司的"IJCAI Inc."主办的(当然实际上并不是公司, 实际上是
 个基金会), 每次会议上要发几个奖, 其中最重要的两个是IJCAI Research Excellence Award 和 Computer& Thoughts Award, 前者是终身
 成就奖, 每次一个人, 基本上是AI的最高奖(有趣的是, 以AI为主业拿图灵奖的6位中, 有2位还没得到这个奖), 后者是奖给35岁以下的青年
 科学家,每次一个人. 这两个奖的获奖演说是每次IJCAI的一个重头戏.另外, IJCAI 的 PC member相当于其他会议的area chair, 权力很大, 
@@ -235,7 +220,7 @@ $(document).ready(function(){
 <!-- more -->
 
 
-<p>AAAI (1): 美国人工智能学会AAAI的年会. 是一个很好的会议, 但其档次不稳定, 可以给到1+, 也可以给到1-或者2+, 总的来说我给它&#8221;1&#8221;. 
+<p>AAAI (1): 美国人工智能学会AAAI的年会. 是一个很好的会议, 但其档次不稳定, 可以给到1+, 也可以给到1-或者2+, 总的来说我给它"1". 
 这是因为它的开法完全受IJCAI制约: 每年开, 但如果这一年的IJCAI在北美举行, 那么就停开. 所以, 偶数年里因为没有IJCAI, 它就 是最好
 的AI综合性会议, 但因为号召力毕竟比IJCAI要小一些, 特别是欧洲人捧AAAI场的比IJCAI少得多(其实亚洲人也是), 所以比IJCAI还是要稍弱
 一点, 基本上在1和1+之间; 在奇数年, 如果IJCAI不在北美, AAAI自然就变成了比IJCAI低一级的会议(1-或2+), 例如2005年既有IJCAI又有AAAI, 
@@ -247,7 +232,7 @@ PC chair也在一直催, 说大家一定要快, 因为AAAI那边一直在担心I
 
 
 <p>COLT (1): 这是计算学习理论最好的会议, ACM主办, 每年举行. 计算学习理论基本上可以看成理论计算机科学和机器学习的交叉, 所以这个
-会被一些人看成是理论计算机科学的会而不是AI的会. 我一个朋友用一句话对它进行了精彩的刻画: &#8220;一小群数学家在开会&#8221;. 因为 COLT的领域
+会被一些人看成是理论计算机科学的会而不是AI的会. 我一个朋友用一句话对它进行了精彩的刻画: "一小群数学家在开会". 因为 COLT的领域
 比较小, 所以每年会议基本上都是那些人. 这里顺便提一件有趣的事, 因为最近国内搞的会议太多太滥, 而且很多会议都是LNCS/LNAI出论文集, 
 LNCS/LNAI基本上已经被搞臭了, 但很不幸的是,LNCS/LNAI中有一些很好的会议, 例如COLT.</p>
 
@@ -255,8 +240,8 @@ LNCS/LNAI基本上已经被搞臭了, 但很不幸的是,LNCS/LNAI中有一些�
 
 
 <p>CVPR (1): 计算机视觉和模式识别方面最好的会议之一, IEEE主办, 每年举行. 虽然题目上有计算机视觉, 但个人认为它的模式识别味道更重
-一些. 事实上它应该是模式识别最好的会 议, 而在计算机视觉方面, 还有ICCV与之相当. IEEE一直有个倾向, 要把会办成&#8221;盛会&#8221;, 历史上已经有
-些会被它从quality很好的会办成&#8221;盛会&#8221;了. CVPR搞不好也要走这条路. 这几年录的文章已经不少了. 最近负责CVPR会议的TC的chair发信说, 对这
+一些. 事实上它应该是模式识别最好的会 议, 而在计算机视觉方面, 还有ICCV与之相当. IEEE一直有个倾向, 要把会办成"盛会", 历史上已经有
+些会被它从quality很好的会办成"盛会"了. CVPR搞不好也要走这条路. 这几年录的文章已经不少了. 最近负责CVPR会议的TC的chair发信说, 对这
 个community来说, 让好人被误杀比被坏人漏网更糟糕, 所以我们是不是要减少好人被误杀的机会啊? 所以我估计明 年或者后年的CVPR就要扩招了.
 （YM我们实验室一位已经毕业的中过两篇CVPR的师兄！）</p>
 
@@ -274,11 +259,11 @@ LNCS/LNAI基本上已经被搞臭了, 但很不幸的是,LNCS/LNAI中有一些�
 
 
 <p>NIPS (1): 神经计算方面最好的会议之一, NIPS主办, 每年举行. 值得注意的是, 这个会每年的举办地都是一样的, 以前是美国丹佛, 现在是
-加拿大温哥华; 而且它是年底开会,会开完后第2年才出论文集, 也就是说, NIPS&#8217;05的论文集是06年出. 会议的名字是&#8221;Advances in Neural Information 
-Processing Systems&#8221;, 所以, 与ICML\ECML这样的&#8221;标准的&#8221;机器学习会议不同, NIPS里有相当一部分神经科学的内容, 和机器学习有一定的距离. 
+加拿大温哥华; 而且它是年底开会,会开完后第2年才出论文集, 也就是说, NIPS'05的论文集是06年出. 会议的名字是"Advances in Neural Information 
+Processing Systems", 所以, 与ICML\ECML这样的"标准的"机器学习会议不同, NIPS里有相当一部分神经科学的内容, 和机器学习有一定的距离. 
 但由于会议的主体内容是机器学习, 或者说与机器学习关系紧密, 所以不少人把NIPS看成是机器学习方面最好的会议之一. 这个会议基本上控制
 在Michael Jordan的徒子徒孙手中, 所以对Jordan系的人来说, 发NIPS并不是难事, 一些未必很强的工作也能发上去, 但对这个圈子之外的人来说, 
-想发一篇实在很难, 因为留给&#8221;外人&#8221;的口子很小. 所以对Jordan系以外的人来说, 发NIPS的难度比ICML更大. 换句话说,ICML比较开放, 小圈子的
+想发一篇实在很难, 因为留给"外人"的口子很小. 所以对Jordan系以外的人来说, 发NIPS的难度比ICML更大. 换句话说,ICML比较开放, 小圈子的
 影响不象NIPS那么大, 所以北美和欧洲人都认, 而NIPS则有些人( 特别是一些欧洲人, 包括一些大家)坚决不投稿. 这对会议本身当然并不是好事, 
 但因为Jordan系很强大, 所以它似乎也不太care. 最近IMLS(国际机器学习学会)改选理事, 有资格提名的人包括近三年在ICML\ECML\COLT发过文章
 的人, NIPS则被排除在外了. 无论如何, 这是一个非常好的会.</p>
@@ -309,7 +294,7 @@ Processing Systems&#8221;, 所以, 与ICML\ECML这样的&#8221;标准的&#8221;�
 
 
 
-<p>UAI (1-): 名字叫&#8221;人工智能中的不确定性&#8221;, 涉及表示\推理\学习等很多方面, AUAI(Association of UAI) 主办, 每年开.</p>
+<p>UAI (1-): 名字叫"人工智能中的不确定性", 涉及表示\推理\学习等很多方面, AUAI(Association of UAI) 主办, 每年开.</p>
 
 
 
@@ -521,11 +506,11 @@ PRICAI (3): Pacific-Rim International Conference on Artificial Intelligence</p>
   
 
 
-<time datetime="2013-01-02T19:17:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+<time datetime="2013-01-02T19:17:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>PRML</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/prml/'>prml</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/ai/'>AI</a>, <a class='tag' href='/blog/tags/conference/'>Conference</a></span>
@@ -533,24 +518,7 @@ PRICAI (3): Pacific-Rim International Conference on Artificial Intelligence</p>
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -587,12 +555,10 @@ PRICAI (3): Pacific-Rim International Conference on Artificial Intelligence</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

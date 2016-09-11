@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-08-03T21:30:00+08:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2014</time>
+<time datetime="2014-08-03T21:30:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -270,8 +255,8 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">typedef</span> <span class="kt">bool</span> <span class="n">_Rb_tree_Color_type</span><span class="p">;</span>
-</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_red</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_black</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_red</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class='line'><span class="k">const</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_S_rb_tree_black</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
 </span><span class='line'><span class="c1">//======================================</span>
 </span><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_node_base</span> <span class="p">{</span> <span class="c1">// 节点的定义</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_Color_type</span> <span class="n">_Color_type</span><span class="p">;</span>
@@ -281,11 +266,11 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 </span><span class='line'>  <span class="n">_Base_ptr</span> <span class="n">_M_left</span><span class="p">;</span>
 </span><span class='line'>  <span class="n">_Base_ptr</span> <span class="n">_M_right</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="n">_S_minimum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="nf">_S_minimum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_left</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">__x</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="n">_S_maximum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">_Base_ptr</span> <span class="nf">_S_maximum</span><span class="p">(</span><span class="n">_Base_ptr</span> <span class="n">__x</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_right</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">__x</span> <span class="o">=</span> <span class="n">__x</span><span class="o">-&gt;</span><span class="n">_M_right</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">__x</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
@@ -321,10 +306,10 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">_Rb_tree_base</span> <span class="p">{</span> <span class="c1">// RB-tree的定义</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_Alloc</span> <span class="n">allocator_type</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">allocator_type</span> <span class="n">get_allocator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">allocator_type</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">allocator_type</span> <span class="nf">get_allocator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">allocator_type</span><span class="p">();</span> <span class="p">}</span>
 </span><span class='line'>  <span class="n">_Rb_tree_base</span><span class="p">(</span><span class="k">const</span> <span class="n">allocator_type</span><span class="o">&amp;</span><span class="p">)</span>  <span class="o">:</span> <span class="n">_M_header</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">_M_header</span> <span class="o">=</span> <span class="n">_M_get_node</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// 构造函数</span>
 </span><span class='line'>  <span class="o">~</span><span class="n">_Rb_tree_base</span><span class="p">()</span> <span class="p">{</span> <span class="n">_M_put_node</span><span class="p">(</span><span class="n">_M_header</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 析构函数</span>
-</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'><span class="nl">protected:</span>
 </span><span class='line'>  <span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_header</span><span class="p">;</span> <span class="c1">// 根节点</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">simple_alloc</span><span class="o">&lt;</span><span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_Alloc</span><span class="o">&gt;</span> <span class="n">_Alloc_type</span><span class="p">;</span> <span class="c1">// 空间配置器</span>
 </span><span class='line'>  <span class="n">_Rb_tree_node</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;*</span> <span class="n">_M_get_node</span><span class="p">()</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">_Alloc_type</span><span class="o">::</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// 分配一个节点的空间</span>
@@ -344,7 +329,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 
 <h2>3. RB-tree的迭代器</h2>
 
-<p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator&#8211;）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下：</p>
+<p>要将RB-tree实现为一个泛型容器并用作set、map的低层容器，迭代器的设计是一个关键。RB-tree的迭代器是一个双向迭代器，但不具备随机访问能力，其引用（dereference）和访问（access）操作与list十分类似，较为特殊的是自增（operator++）和自减（operator--）操作，这里的自增/自减操作是指将迭代器移动到RB-tree按键值大小排序后当前节点的下一个/上一个节点，也即按中序遍历RB-tree时当前节点的下一个/上一个节点。RB-tree的迭代器的定义如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -360,8 +345,8 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_base_iterator</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_Rb_tree_node_base</span><span class="o">::</span><span class="n">_Base_ptr</span> <span class="n">_Base_ptr</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">bidirectional_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_decrement</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="nf">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="nf">_M_decrement</span><span class="p">()</span>  <span class="p">{</span> <span class="p">}</span>
 </span><span class='line'><span class="p">};</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Value</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ref</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Ptr</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">struct</span> <span class="n">_Rb_tree_iterator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">_Rb_tree_base_iterator</span> <span class="p">{</span>
@@ -388,7 +373,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'>  <span class="kt">void</span> <span class="n">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="c1">// 自增操作，中序遍历的下一个节点</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'>  <span class="kt">void</span> <span class="nf">_M_increment</span><span class="p">()</span>  <span class="p">{</span> <span class="c1">// 自增操作，中序遍历的下一个节点</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_right</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 当前节点有右子树</span>
 </span><span class='line'>      <span class="n">_M_node</span> <span class="o">=</span> <span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_right</span><span class="p">;</span>
 </span><span class='line'>      <span class="k">while</span> <span class="p">(</span><span class="n">_M_node</span><span class="o">-&gt;</span><span class="n">_M_left</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// 右子树的最左节点即为所求</span>
@@ -485,7 +470,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 </span><span class='line'>  <span class="n">_S_right</span><span class="p">(</span><span class="n">__z</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span><span class='line'>  <span class="n">_Rb_tree_rebalance</span><span class="p">(</span><span class="n">__z</span><span class="p">,</span> <span class="n">_M_header</span><span class="o">-&gt;</span><span class="n">_M_parent</span><span class="p">);</span> <span class="c1">// 调整RB-tree使之恢复平衡</span>
 </span><span class='line'>  <span class="o">++</span><span class="n">_M_node_count</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">iterator</span><span class="p">(</span><span class="n">__z</span><span class="p">);</span> <span class="c1">// 返回指向新节点的迭代器</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nf">iterator</span><span class="p">(</span><span class="n">__z</span><span class="p">);</span> <span class="c1">// 返回指向新节点的迭代器</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -601,11 +586,11 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
   
 
 
-<time datetime="2014-08-03T21:30:00+08:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2014</time>
+<time datetime="2014-08-03T21:30:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/stl/'>STL</a>, <a class='tag' href='/blog/tags/rong-qi/'>容器</a>, <a class='tag' href='/blog/tags/hong-hei-shu/'>红黑树</a></span>
@@ -613,24 +598,7 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -667,12 +635,10 @@ SGI STL中RB-tree的数据结构比较简单，其中每个节点的数据结构
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

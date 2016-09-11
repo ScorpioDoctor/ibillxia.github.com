@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 排序 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/pai-xu/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -28,9 +28,8 @@
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) __f(*__first);
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) __f(*__first);
+</code></pre>
 
 <p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
 
@@ -40,9 +39,8 @@ for ( ; __first != __last; ++__first) __f(*__first);
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<p><code>cpp
-while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
-</code></p>
+<pre><code class="cpp">while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
+</code></pre>
 
 <p>另外，关于find，考虑偏特化特性，还有在迭代器为随机存取迭代器时，每次循环进行4次判断和自增，这是所谓的 <a href="http://en.wikipedia.org/wiki/Loop_unrolling">loop unrolling</a>，在StackOverflow 上也有相关解释 <a href="http://stackoverflow.com/questions/24295972/">questions-24295972</a>。如果学过体系结构，应该也会提及循环展开的加速方法。</p>
 
@@ -53,13 +51,9 @@ while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++__first)</p>
-
-<pre><code>if (*__first == __value) ++__n;
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
+    if (*__first == __value) ++__n;
 </code></pre>
-
-<p>```</p>
 
 <p>以上这个是非STL标准的，另外还有一个版本返回值为迭代器的 <code>difference_type</code> 的偏特化版本，这个才是STL标准。</p>
 
@@ -71,68 +65,50 @@ for ( ; <strong>first != </strong>last; ++__first)</p>
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
-
-<pre><code>iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2)
+    iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
 </code></pre>
-
-<p>```</p>
 
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
-
-<pre><code>*__result = __opr(*__first);
+<pre><code class="cpp">for ( ; __first != __last; ++__first, ++__result)
+    *__result = __opr(*__first);
 </code></pre>
-
-<p>```</p>
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, ++__result)</p>
-
-<pre><code>*__result = __binary_op(*__first1, *__first2);
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2, ++__result)
+    *__result = __binary_op(*__first1, *__first2);
 </code></pre>
-
-<p>```</p>
 
 <p>注意该算法不需要传入第二个区间的last迭代器。</p>
 
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first)
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
    if (*__first == __old_value) *__first = __new_value;
-</code></p>
+</code></pre>
 
 <p>另外还有三个版本的替换： <code>replace_if</code>，判断条件可以自己指定，而不一定是相等；<code>replace_copy</code>，将修改后的结果存到一个新的序列中；<code>replace_copy_if</code> 是前两者的合体。</p>
 
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) *__first = __gen();
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) *__first = __gen();
+</code></pre>
 
 <p>还有一个 <code>generate_n</code> 将序列中的前n个元素的值按给定函数赋值。</p>
 
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<p>``` cpp
-<strong>first = find(</strong>first, <strong>last, </strong>value);
-_ForwardIter <strong>i = </strong>first;
-return <strong>first == </strong>last ? __first</p>
-
-<pre><code>               : remove_copy(++__i, __last, __first, __value);
+<pre><code class="cpp">__first = find(__first, __last, __value);
+_ForwardIter __i = __first;
+return __first == __last ? __first 
+                   : remove_copy(++__i, __last, __first, __value);
 </code></pre>
-
-<p>```</p>
 
 <p><strong>11.unique和unique_copy</strong><br/>
 将区间的元素的值唯一化，即去掉相邻的重复的项。由于判断时是针对相邻的元素，所以一般需要结合sort使用，如果序列无序需要先对序列排序再进行唯一化。<code>unique</code> 的实现是调用 <code>unique_copy</code> 来实现的，只是将参数中result仍设为输入序列的first。</p>
@@ -142,9 +118,8 @@ return <strong>first == </strong>last ? __first</p>
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<p><code>cpp
-while (__first &lt; __last) iter_swap(__first++, --__last);
-</code></p>
+<pre><code class="cpp">while (__first &lt; __last) iter_swap(__first++, --__last);
+</code></pre>
 
 <p>还有迭代器为双向迭代器的版本和非质变算法版本 <code>reverse_copy</code>。</p>
 
@@ -156,13 +131,9 @@ while (__first &lt; __last) iter_swap(__first++, --__last);
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<p>``` cpp
-for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>last; ++__i)</p>
-
-<pre><code>iter_swap(__i, __first + __random_number((__i - __first) + 1));
+<pre><code class="cpp">for (_RandomAccessIter __i = __first + 1; __i != __last; ++__i)
+    iter_swap(__i, __first + __random_number((__i - __first) + 1));
 </code></pre>
-
-<p>```</p>
 
 <p>除了这个版本采用STL的random函数生成随机数的版本外，还有一个版本可以自己指定随机数生成函数。</p>
 

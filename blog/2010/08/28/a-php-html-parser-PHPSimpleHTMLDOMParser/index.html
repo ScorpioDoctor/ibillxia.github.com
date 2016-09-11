@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-28T20:49:00+08:00" pubdate data-updated="true">Aug 28<span>th</span>, 2010</time>
+<time datetime="2010-08-28T20:49:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -213,8 +198,6 @@ $(document).ready(function(){
 
 
 <p>如何读取 HTML 元素 </p>
-
-
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -262,9 +245,7 @@ $(document).ready(function(){
 <p>如何修改 HTML 元素 </p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -276,7 +257,7 @@ $(document).ready(function(){
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span>
 </span><span class='line'><span class="k">include</span><span class="p">(</span><span class="s1">&#39;html_dom_parser.php&#39;</span><span class="p">);</span>
 </span><span class='line'><span class="nv">$dom</span> <span class="o">=</span> <span class="nx">file_get_dom</span><span class="p">(</span><span class="s1">&#39;http://www.google.com/&#39;</span><span class="p">);</span>
 </span><span class='line'><span class="c1">// 移除网页中所有图片 </span>
@@ -296,9 +277,7 @@ $(document).ready(function(){
 <p>Slashdot网站内容抓取</p>
 
 
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -308,19 +287,17 @@ $(document).ready(function(){
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">// Create DOM from URL</span>
-</span><span class='line'><span class="x">$html = file_get_html(&#39;http://slashdot.org/&#39;);</span>
-</span><span class='line'><span class="x">// Find all article blocks</span>
-</span><span class='line'><span class="x">foreach($html-&gt;find(&#39;div.article&#39;) as $article) {</span>
-</span><span class='line'><span class="x">    $item[&#39;title&#39;]     = $article-&gt;find(&#39;div.title&#39;, 0)-&gt;plaintext;</span>
-</span><span class='line'><span class="x">    $item[&#39;intro&#39;]    = $article-&gt;find(&#39;div.intro&#39;, 0)-&gt;plaintext;</span>
-</span><span class='line'><span class="x">    $item[&#39;details&#39;] = $article-&gt;find(&#39;div.details&#39;, 0)-&gt;plaintext;</span>
-</span><span class='line'><span class="x">    $articles[] = $item;</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">print_r($articles);</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="c1">// Create DOM from URL</span>
+</span><span class='line'><span class="nv">$html</span> <span class="o">=</span> <span class="nx">file_get_html</span><span class="p">(</span><span class="s1">&#39;http://slashdot.org/&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// Find all article blocks</span>
+</span><span class='line'><span class="k">foreach</span><span class="p">(</span><span class="nv">$html</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;div.article&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$article</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nv">$item</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>     <span class="o">=</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;div.title&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">plaintext</span><span class="p">;</span>
+</span><span class='line'>    <span class="nv">$item</span><span class="p">[</span><span class="s1">&#39;intro&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;div.intro&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">plaintext</span><span class="p">;</span>
+</span><span class='line'>    <span class="nv">$item</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="s1">&#39;div.details&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">plaintext</span><span class="p">;</span>
+</span><span class='line'>    <span class="nv">$articles</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$item</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nb">print_r</span><span class="p">(</span><span class="nv">$articles</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
 
 </div>
 <div id="copyleft" class="well" >
@@ -348,11 +325,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-28T20:49:00+08:00" pubdate data-updated="true">Aug 28<span>th</span>, 2010</time>
+<time datetime="2010-08-28T20:49:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/dom/'>DOM</a>, <a class='tag' href='/blog/tags/html/'>HTML</a>, <a class='tag' href='/blog/tags/php/'>PHP</a></span>
@@ -360,24 +337,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -414,12 +374,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

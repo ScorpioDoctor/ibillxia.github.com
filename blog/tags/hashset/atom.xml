@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: hashset | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/hashset/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -29,43 +29,36 @@
 <!-- more -->
 
 
-<p>``` cpp
-template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
+<pre><code class="cpp">template &lt;class _Value, class _HashFcn, class _EqualKey, class _Alloc&gt;
 class hash_set {
 private:
-  typedef hashtable&lt;<em>Value, </em>Value, <em>HashFcn, </em>Identity<_Value>, <em>EqualKey, </em>Alloc> <em>Ht;
-  </em>Ht <em>M_ht; // 底层容器的定义
+  typedef hashtable&lt;_Value, _Value, _HashFcn, _Identity&lt;_Value&gt;, _EqualKey, _Alloc&gt; _Ht;
+  _Ht _M_ht; // 底层容器的定义
 public:
-  hash_set() : </em>M_ht(100, hasher(), key_equal(), allocator_type()) {} // 构造函数
-  iterator find(const key_type&amp; <strong>key) const { return _M_ht.find(</strong>key); } // 查找
-  size_type count(const key_type&amp; <strong>key) const { return _M_ht.count(</strong>key); } // 计数
-  size_type size() const { return <em>M_ht.size(); } // 表格大小
-  size_type max_size() const { return </em>M_ht.max_size(); }
-  bool empty() const { return <em>M_ht.empty(); } // 是否为空
-  void swap(hash_set&amp; __hs) { </em>M_ht.swap(<strong>hs.<em>M_ht); } // 交换
-  iterator begin() const { return </em>M_ht.begin(); }
+  hash_set() : _M_ht(100, hasher(), key_equal(), allocator_type()) {} // 构造函数
+  iterator find(const key_type&amp; __key) const { return _M_ht.find(__key); } // 查找
+  size_type count(const key_type&amp; __key) const { return _M_ht.count(__key); } // 计数
+  size_type size() const { return _M_ht.size(); } // 表格大小
+  size_type max_size() const { return _M_ht.max_size(); } 
+  bool empty() const { return _M_ht.empty(); } // 是否为空
+  void swap(hash_set&amp; __hs) { _M_ht.swap(__hs._M_ht); } // 交换
+  iterator begin() const { return _M_ht.begin(); }
   iterator end() const { return _M_ht.end(); }
-  pair&lt;iterator, bool> insert(const value_type&amp; </strong>obj){ // 插入</p>
-
-<pre><code>  pair&lt;typename _Ht::iterator, bool&gt; __p = _M_ht.insert_unique(__obj);
-  return pair&lt;iterator,bool&gt;(__p.first, __p.second);
-</code></pre>
-
-<p>  }
-  size_type erase(const key_type&amp; <strong>key) {return _M_ht.erase(</strong>key); } // 擦除
-  void erase(iterator <strong>it) { _M_ht.erase(</strong>it); }
-  void erase(iterator <strong>f, iterator </strong>l) { <em>M_ht.erase(<strong>f, </strong>l); }
-  void clear() { </em>M_ht.clear(); } // 清空
+  pair&lt;iterator, bool&gt; insert(const value_type&amp; __obj){ // 插入
+      pair&lt;typename _Ht::iterator, bool&gt; __p = _M_ht.insert_unique(__obj);
+      return pair&lt;iterator,bool&gt;(__p.first, __p.second);
+  }
+  size_type erase(const key_type&amp; __key) {return _M_ht.erase(__key); } // 擦除
+  void erase(iterator __it) { _M_ht.erase(__it); } 
+  void erase(iterator __f, iterator __l) { _M_ht.erase(__f, __l); }
+  void clear() { _M_ht.clear(); } // 清空
 };
-template <class _Value, class _HashFcn, class _EqualKey, class _Alloc>
-inline bool operator==(const hash_set&lt;<em>Value,</em>HashFcn,<em>EqualKey,</em>Alloc>&amp; __hs1,</p>
-
-<pre><code>       const hash_set&lt;_Value,_HashFcn,_EqualKey,_Alloc&gt;&amp; __hs2) {
-</code></pre>
-
-<p>  return <strong>hs1._M_ht == </strong>hs2._M_ht;
+template &lt;class _Value, class _HashFcn, class _EqualKey, class _Alloc&gt;
+inline bool operator==(const hash_set&lt;_Value,_HashFcn,_EqualKey,_Alloc&gt;&amp; __hs1,
+           const hash_set&lt;_Value,_HashFcn,_EqualKey,_Alloc&gt;&amp; __hs2) {
+  return __hs1._M_ht == __hs2._M_ht;
 }
-```</p>
+</code></pre>
 
 <h2>2. hashmap 和 hash_multi_map</h2>
 

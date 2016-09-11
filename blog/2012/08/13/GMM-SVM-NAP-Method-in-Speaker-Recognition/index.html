@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -229,11 +214,11 @@ Kernel function examples: <a href="http://www.shamoxia.com/html/y2010/2292.html"
 <p>GMM Supervectors：given a speaker utterance, GMM-UBM training is performed by MAP adaptation of the means $m_{i}$, 
 and we form a GMM supervector $m = [m_{i}]$</br>
 <img src="/images/2012/IMAG2012081301.jpg"></br>
-GMM Supervectors Linear Kernel: a natural distance between the two utterances is the KL divergence, while it does n&#8217;t satisfy 
+GMM Supervectors Linear Kernel: a natural distance between the two utterances is the KL divergence, while it does n't satisfy 
 the Mercer condition, we consider the following approximation</br>
 <center>$\begin{align}
-D(g_{a}\parallel g_{b}) = &\int_{R^{n}}g_{a}xlog\left(\frac{g_{a}(x)}{g_{b}(x)} \right)dx &#92;
-\leq & \sum_{i=1}^{N} \lambda _{i}D(N(.;m_{i}^{a},\Sigma _{i})\parallel N(.;m_{i}^{b},\Sigma _{i}))&#92;
+D(g_{a}\parallel g_{b}) = &\int_{R^{n}}g_{a}xlog\left(\frac{g_{a}(x)}{g_{b}(x)} \right)dx \\
+\leq & \sum_{i=1}^{N} \lambda _{i}D(N(.;m_{i}^{a},\Sigma _{i})\parallel N(.;m_{i}^{b},\Sigma _{i}))\\
 = &\frac{1}{2}\sum_{i=1}^{N}\lambda_{i}(m_{i}^{a}-m_{i}^{b})\Sigma ^{-1}(m_{i}^{a}-m_{i}^{b})
 \end{align}$</center></br>
 we can define a new distance formula,</br>
@@ -249,7 +234,7 @@ From the distance, we can find the corresponding inner product which is the kern
 
 <p>Nuisance Attribute Projection(NAP) attempts to remove the unwanted within-class variation of the observed feature vectors. 
 This is achieved by applying the transform</br>
-<center>$y&#8217; = P_{n}y = (I-V_{n}V_{n}^{T})y$.</center></br>
+<center>$y' = P_{n}y = (I-V_{n}V_{n}^{T})y$.</center></br>
 where Vn is the principal directions of within-class variability.
 </p>
 
@@ -258,8 +243,8 @@ where Vn is the principal directions of within-class variability.
 
 <p>The SVM NAP constructs a new kernel,
 <center>$\begin{align}
-K(m^{a},m^{b}) =& [Pb(m^{a})]^{T}[Pb(m^{b})]&#92;
-=& b(m^{a})^{t}Pb(m^{b})&#92;
+K(m^{a},m^{b}) =& [Pb(m^{a})]^{T}[Pb(m^{b})]\\
+=& b(m^{a})^{t}Pb(m^{b})\\
 =& b(m^{a})^{t}(I-vv^{t})b(m^{b})
 \end{align}$.</center></br>
 where $P$ is a projection ($P^{2} = P$) , $v$ is the direction being removed from the SVM expansion 
@@ -314,11 +299,11 @@ build GMM-UBM and all of the remained tasks.</p>
   
 
 
-<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+<time datetime="2012-08-13T22:38:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/assp/'>ASSP</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/assp/'>assp</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/alize/'>Alize</a>, <a class='tag' href='/blog/tags/gmm/'>GMM</a>, <a class='tag' href='/blog/tags/svm/'>SVM</a>, <a class='tag' href='/blog/tags/shuo-hua-ren-shi-bie/'>说话人识别</a></span>
@@ -326,24 +311,7 @@ build GMM-UBM and all of the remained tasks.</p>
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -380,12 +348,10 @@ build GMM-UBM and all of the remained tasks.</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

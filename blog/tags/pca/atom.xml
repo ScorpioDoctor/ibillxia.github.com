@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: PCA | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/pca/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -51,67 +51,66 @@
 
 
 
-<p><strong>PCS分类器的基本思路</strong>是，对于一个待分类样本$X$，将它向数据集中每个说话人模型（即PCS）投影，即
-计算$U_{k}^{T}(X-\mu _{k})$，其中$U_{k}$为数据集中第$k$个说话人的模型，$\mu _{k})$为每个模型的中心向量，定义投影
+<p><p><strong>PCS分类器的基本思路</strong>是，对于一个待分类样本$X$，将它向数据集中每个说话人模型（即PCS）投影，即
+计算$U<em>{k}^{T}(X-\mu </em>{k})$，其中$U<em>{k}$为数据集中第$k$个说话人的模型，$\mu </em>{k})$为每个模型的中心向量，定义投影
 量所保留的原向量的方差为：</br>
-<center>$f(k)=\parallel U_{k}^{T}(X-\mu _{k})\parallel ^{2}，k=1，2，…，n$.</center></br>
+<center>$f(k)=\parallel U<em>{k}^{T}(X-\mu </em>{k})\parallel ^{2}，k=1，2，…，n$.</center></br>
 这个值即为投影量保留的方差之和。如果X投影到正确类的PCS，即同一说话人模型，那么该值将达到最大，而投影到其他说话人
 模型上所保留的方差之和都比该值小。即有：</br>
-<center>$x \in model${ $k|max(f(k)),1 < k \leq n $ }.</center></p>
+<center>$x \in model${ $k|max(f(k)),1 &lt; k \leq n $ }.</center></p></p>
 
-<p><strong>TES分类器</strong>与PCS分类器类似，只是说话人模型是用TES来表示的，对应的说话人模型相似度的度量标准为：</br>
-<center>$g(k)=\parallel V_{k}^{T}(X-\mu _{k})\parallel ^{2}, k=1, 2, ..., n$.</center></br>
+<p><p><strong>TES分类器</strong>与PCS分类器类似，只是说话人模型是用TES来表示的，对应的说话人模型相似度的度量标准为：</br>
+<center>$g(k)=\parallel V<em>{k}^{T}(X-\mu </em>{k})\parallel ^{2}, k=1, 2, ..., n$.</center></br>
 其中$V_{k}$表示第$k$个说话人模型。而决策规则为：
-<center>$x\in model$ { $k|min(g(k)),1 < k \leq n $ }.</center></p>
+<center>$x\in model$ { $k|min(g(k)),1 &lt; k \leq n $ }.</center></p></p>
 
-</p><strong>P&T分类器</strong>是将以上两种分类器结合起来进行决策，最简单的结合方法是线性组合，可以设PCS分类器的
+<p></p><strong>P&amp;T分类器</strong>是将以上两种分类器结合起来进行决策，最简单的结合方法是线性组合，可以设PCS分类器的
 权重为$\lambda （0\leq \lambda \leq 1）$，而TES分类器的权重为1-λ，则衡量说话人模型相似度的标准为：</br>
 <center>$h(k)=\lambda f(k) - (1-\lambda)g(k), k=1, 2, ..., n$.</center></br>
 而对应的决策规则为：</br>
-<center>$x\in model$ { $k|min(h(k)),1 < k \leq n $ }.</center></p>
+<center>$x\in model$ { $k|min(h(k)),1 &lt; k \leq n $ }.</center></p></p>
 
-<p>在使用P&T分类器时要注意，在计算f(k)，g(k)之前，应先对PCS和TES进行归一化，以免某一个值太大而影响了另一个值的作用。</p>
+<p><p>在使用P&amp;T分类器时要注意，在计算f(k)，g(k)之前，应先对PCS和TES进行归一化，以免某一个值太大而影响了另一个值的作用。</p></p>
 
-<h2>3.主成分分类器应用于说话人识别</h2>
+<p><h2>3.主成分分类器应用于说话人识别</h2>
 <p>根据说话人识别任务的特点，基于PCA的分类器需要解决两个问题：</br>
 (1)训练说话人模型；</br>
-(2)对测试音进行鉴别。</p>
+(2)对测试音进行鉴别。</p></p>
 
-<p>说话人鉴别的<strong>训练过程</strong>，就是训练每个说话人的模型参数，在此以PCS分类器为例进行说明。PCS分类器的模型参数由两部分组成，
+<p><p>说话人鉴别的<strong>训练过程</strong>，就是训练每个说话人的模型参数，在此以PCS分类器为例进行说明。PCS分类器的模型参数由两部分组成，
 即主成分主方向数m和主成分子空间$PCS=[U1，U2，…，Um]$。关于主成分的计算在前面的文章中讲过，就不在赘述，这里重点说说主方向
 数确定的方法。为了使得PCS分类器的分类效果最好，我们可以选用少量的说话人以及他们的少量的测试语音，组成确定阈值的“验证
 集（validation set）”，变动主方向数$m$，选取使得识别率最好时的主方向数$m$作为参数。为简单起见，我们令所有说话人的主成分
-方向数取相同的值。</p>
+方向数取相同的值。</p></p>
 
-<p>测试音鉴别：设数据库中共有M个说话人模型，${X(n)|n=1,2,…,N}$为某个测试语音上提取的特征向量序列，则模型相似度度量标准为：</br>
-<center>$F(k) = \sum_{n=1}^{N} \parallel U_{k}^{T}(X(n)-\mu _{k}) \parallel ^{2}, k = 1,2,...,M$.</center></br>
+<p><p>测试音鉴别：设数据库中共有M个说话人模型，${X(n)|n=1,2,…,N}$为某个测试语音上提取的特征向量序列，则模型相似度度量标准为：</br>
+<center>$F(k) = \sum<em>{n=1}^{N} \parallel U</em>{k}^{T}(X(n)-\mu _{k}) \parallel ^{2}, k = 1,2,...,M$.</center></br>
 那么，使得这个值最大的说话人即为识别结果。
-</p>
+</p></p>
 
-<h2>4.实验结果</h2>
+<p><h2>4.实验结果</h2>
 <p>分别在无噪语料库YOHO和有噪语料库PHONE做实验，得到如下结果：</br>
-<center>{% img /images/2012/IMAG2012072001.jpg %}</center></br>
-<center>{% img /images/2012/IMAG2012072002.jpg %}</center>
-</p>
+<center><img src="/images/2012/IMAG2012072001.jpg"></center></br>
+<center><img src="/images/2012/IMAG2012072002.jpg"></center>
+</p></p>
 
-<h2>5.复杂度分析</h2>
-<p>P&T分类器的复杂度</br>
+<p><h2>5.复杂度分析</h2>
+<p>P&amp;T分类器的复杂度</br>
 模型训练阶段：</br>
-$PTtrain = N*d+N*d+d*d*N+4/3d^{3}+O(d^{2})+O(dlogd) 
-= O(N*d^{2})+O(d^{3})$
+$PTtrain = N<em>d+N</em>d+d<em>d</em>N+4/3d^{3}+O(d^{2})+O(dlogd)
+= O(N<em>d^{2})+O(d^{3})$
 模型测试阶段：
-$PTtest=M*Ntest*P*d+M*N*P+O(1)
-=O(M*Ntest*P*d)$
-</p>
+$PTtest=M</em>Ntest<em>P</em>d+M<em>N</em>P+O(1)
+=O(M<em>Ntest</em>P*d)$
+</p></p>
 
-<h2>6.小结</h2>
+<p><h2>6.小结</h2>
 <p>由实验结果及复杂度分析可知，基于PCA分类器的说话人识别不仅具有很好的识别率，而且时间复杂度较低，
-是比较理想的说话人识别分类器。</p>
+是比较理想的说话人识别分类器。</p></p>
 
-<h2>参考文献</h2>
+<p><h2>参考文献</h2>
 <p>[1]《说话人识别模型与方法》吴朝辉 杨迎春 著 清华大学出版社</br>
-[2]基于PCA与LDA的说话人识别研究 章万峰 浙江大学硕士论文</p>
-
+[2]基于PCA与LDA的说话人识别研究 章万峰 浙江大学硕士论文</p></p>
 ]]></content>
   </entry>
   

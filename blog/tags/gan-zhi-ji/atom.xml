@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 感知机 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/gan-zhi-ji/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -118,52 +118,51 @@ d) 发散状态。</br>
 <h4>1)自适应谐振理论(ART)</h4>
 
 
-<p>自适应谐振理论（adaptive resonance theory，简称ART）的目的是为人类的心理和认知活动建立一个统一的数学理论。1976年，美国学者Carpenter
+<p><p>自适应谐振理论（adaptive resonance theory，简称ART）的目的是为人类的心理和认知活动建立一个统一的数学理论。1976年，美国学者Carpenter
 和Grossberg提出了ART神经网络模型。它是利用生物神经细胞的自兴奋与侧抑制的原理来指导学习，让输入模式通过网络的双向连接权的作用来进行比较
 与识别，最后使网络对输入模式产生所谓的谐振，因此来完成对输入模式的记忆，并以同样的方式实现网络的回想。当网络已经存储了一定的内容之后，
 则可用它来进行识别。在识别过程中，如果输入是已记忆的或与已记忆的模式十分相似，则网络会把它回想出来。如果是没有记忆的新模式，则在不影响
-原有记忆的前提下，把它记忆下来，并用一个没用过的输出层神经元作为这一新模式的分类标志。<p>
+原有记忆的前提下，把它记忆下来，并用一个没用过的输出层神经元作为这一新模式的分类标志。<p></p>
 
-<p>ART网络主要有三种形式：ART1是处理双极型或二进制数据，即观察向量的每个分量是二值的，只能取0或1；ART2是用于处理连续型模拟信号，
+<p><p>ART网络主要有三种形式：ART1是处理双极型或二进制数据，即观察向量的每个分量是二值的，只能取0或1；ART2是用于处理连续型模拟信号，
 即观察向量的每个分量可取任意实数值，也可用于二进制输入；ART3是分级搜索模型，它兼容前两种结构的功能并将两层神经元网络扩大为任意
-多层神经元网络，并在神经元的运行模型中纳入人类神经元生物电—化学反应机制，因而具备了相当强的功能和扩展能力。</p>
+多层神经元网络，并在神经元的运行模型中纳入人类神经元生物电—化学反应机制，因而具备了相当强的功能和扩展能力。</p></p>
 
-<h4>2)自组织映射神经网络模型(SOM)</h4>
+<p><h4>2)自组织映射神经网络模型(SOM)</h4>
 <p>在人的感觉通道上一个很重要的组织原理是神经元有序地排列着，并且往往可以反映出所感觉到外界刺激的某些物理特性。如在听觉通道的每一个层次上，
 其神经元与神经纤维在结构上的排列与外界刺激的频率关系十分密切，对于某个频率，相应的神经元具有最大的响应，这种听觉通道上的有序排列一直延续到
-听觉皮层，尽管许多低层次上的组织是预先排好的，但高层次上的神经组织则是通过学习自组织而形成的。由此生物背景，提出了自组织映射神经网络模型（SOM）。</p>
+听觉皮层，尽管许多低层次上的组织是预先排好的，但高层次上的神经组织则是通过学习自组织而形成的。由此生物背景，提出了自组织映射神经网络模型（SOM）。</p></p>
 
-<h4>3)对流神经网络模型(CPN)</h4>
+<p><h4>3)对流神经网络模型(CPN)</h4>
 <p>CPN是由SOM模型和Grossberg外星网络组合而形成的一种神经网络模型。是由美国Hecht-Nielsen和Robert-Nielsen于1987年首先提出来的。一般认为，
-这种由两种或多种网络组合而成的新型网络往往具有比原网络模型更强的能力，它能够克服单个网络的缺陷，而且学习时间较短。</p>
+这种由两种或多种网络组合而成的新型网络往往具有比原网络模型更强的能力，它能够克服单个网络的缺陷，而且学习时间较短。</p></p>
 
-<h2>4.随机神经网络</h2>
+<p><h2>4.随机神经网络</h2>
 <h4>1) 模拟退火算法</h4>
 <p>在物理学中，对固体物质进行退火处理时，通常先将它加温溶化，使其中的粒子可自由地运动，然后随着物质温度的下降，粒子也形成了低能态的晶格。
 若在凝结点附近的温度下降速度足够慢，则固体物质一定会形成最低能量的基态。对于组合优化问题来说，它也有类似的过程，也就是说物理中固体物质的
-退火过程与组合优化问题具有相似性。组合优化问题也是在解空间寻求花费函数最小（或最大）的解。</p>
+退火过程与组合优化问题具有相似性。组合优化问题也是在解空间寻求花费函数最小（或最大）的解。</p></p>
 
-<h4>2) Boltzmann机</h4>
+<p><h4>2) Boltzmann机</h4>
 <p>Boltzmann机是由Hinton和Sejnowski提出来的一种统计神经网络模型，是在Hopfield网络基础之上引入了随机性机制而形成的。与Hopfield神经网络不同
-的是Boltzmann机具有学习能力，即其权值通过学习来调整，而不是预先设置。Boltzmann机是一种约束满足神经网络模型。</p>
+的是Boltzmann机具有学习能力，即其权值通过学习来调整，而不是预先设置。Boltzmann机是一种约束满足神经网络模型。</p></p>
 
-<p>基于模拟退火算法的波尔兹曼机训练的基本思想为：当神经网络中某个与温度对应的参数发生变化时，神经网络的兴奋模式也会如同物理上的热运动那
+<p><p>基于模拟退火算法的波尔兹曼机训练的基本思想为：当神经网络中某个与温度对应的参数发生变化时，神经网络的兴奋模式也会如同物理上的热运动那
 样发生变化：当温度逐渐下降时，由决定函数判断神经元是否处于兴奋状态。在从高温到低温的退火(annealing)中，能量并不会停留在局部极小值上，
-而以最大的概率到达全局最小值。</p>
+而以最大的概率到达全局最小值。</p></p>
 
-<h3>推荐资料</h3>
+<p><h3>推荐资料</h3>
 <p>Machine Learning Lecture by Andrew Ng, Stanford University</br>
 Lecture VIII: Neural Network - Representation</br>
 Lecture IX: Neural Network - Learning</br>
 Video courses on Coursera: https://class.coursera.org/ml-2012-002/lecture/index</br>
-Lecture homepage in Standford: http://cs229.stanford.edu/</p>
+Lecture homepage in Standford: http://cs229.stanford.edu/</p></p>
 
-<h3>参考文献</h3>
+<p><h3>参考文献</h3>
 <p>[1] Simon Haykin, “Neural Networks: a Comprehensive Foundation”, 2009 (3rd edition)</br>
 [2]T-61.3030 <a href="http://www.cis.hut.fi/Opinnot/T-61.3030/schedule2007.shtml">PRINCIPLES OF NEURAL COMPUTING</a> (5 CP)</br>
 [3]人工神经网络综述：<a href="http://ishare.iask.sina.com.cn/f/36537774.html">http://ishare.iask.sina.com.cn/f/36537774.html</a></br>
-</p>
-
+</p></p>
 ]]></content>
   </entry>
   
@@ -232,7 +231,7 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
 <p>生物神经元是大脑处理信息的基本单元，人脑大约由1011个神经元组成，神经元互相连接成神经网络。神经元以细胞体为主体，
 由许多向周围延伸的不规则树枝状纤维构成的神经细胞，其形状很像一棵枯树的枝干。主要由细胞体、树突、轴突和突触(Synapse，
 又称神经键)组成，如图1所示。</br>
-<center>{% img /images/2013/IMAG2013032001.png %}</center>
+<center><img src="/images/2013/IMAG2013032001.png"></center>
 <center>图1. 生物神经元结构图</center></br>
 更多关于神经元的生物学解剖，信息的处理与传递方式以及工作特点等内容请参见[4]。</p>
 
@@ -243,7 +242,7 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
 
 
 <p>神经元是神经网络中最基本的信息处理单元，其形式化表示如图2所示。</br>
-<center>{% img /images/2013/IMAG2013032002.png %}</center>
+<center><img src="/images/2013/IMAG2013032002.png"></center>
 <center>图2 神经元模型的形式化表示</center></p>
 
 
@@ -278,7 +277,7 @@ Lecture homepage in Standford: http://cs229.stanford.edu/</p>
 <p>神经网络（Neural Networks，NN）是由大量的、简单的处理单元（称为神经元）广泛地互相连接而形成的复杂网络系统，它反映了人脑功能的
 许多基本特征，是一个高度复杂的非线性动力学习系统。一个典型的神经网络结构如图3所示。这是一个多层的（包含两个隐层L2、L3）、包含两个
 输出单元的神经网络拓扑结构。</br>
-<center>{% img /images/2013/IMAG2013032003.png %}</center>
+<center><img src="/images/2013/IMAG2013032003.png"></center>
 <center>图3 一个典型的神经网络结构</center></p>
 
 

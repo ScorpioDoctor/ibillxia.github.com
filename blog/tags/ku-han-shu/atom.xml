@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 库函数 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/ku-han-shu/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -21,19 +21,15 @@
     <content type="html"><![CDATA[<p>`call_user_func`函数类似于一种特别的调用函数的方法，使用方法如下：</p>
 
 
-<p>``` php
-function a($b,$c)
-{</p>
-
-<pre><code>echo $b;
-echo $c;
-</code></pre>
-
-<p>}
+<pre><code class="php">function a($b,$c) 
+{
+    echo $b;
+    echo $c;
+}
 call_user_func('a', "111","222");
 call_user_func('a', "333","444");
 //显示 111 222 333 444
-```</p>
+</code></pre>
 
 <!--more-->
 
@@ -41,137 +37,104 @@ call_user_func('a', "333","444");
 <p>调用类内部的方法比较奇怪，居然用的是array，不知道开发者是如何考虑的，当然省去了new，也是满有新意的:</p>
 
 
-<p>``` php
-class a {</p>
-
-<pre><code>function b($c) 
-{
-    echo $c;
+<pre><code class="php">class a {
+    function b($c) 
+    {
+        echo $c;
+    }
 }
-</code></pre>
-
-<p>}
 call_user_func(array("a", "b"),"111");
 //显示 111
-```</p>
+</code></pre>
 
 <p>`call_user_func_array`函数和`call_user_func`很相似，只不过是换了一种方式传递了参数，让参数的结构更清晰:</p>
 
 
-<p>``` php
-unction a($b, $c)
-{</p>
-
-<pre><code>echo $b;
-echo $c;
-</code></pre>
-
-<p>}
+<pre><code class="php">unction a($b, $c) 
+{
+    echo $b;
+    echo $c;
+}
 call_user_func_array('a', array("111", "222"));
 //显示 111 222
-```</p>
+</code></pre>
 
 <p>`call_user_func_array`函数也可以调用类内部的方法的</p>
 
 
-<p>``` php
-Class ClassA {</p>
-
-<pre><code>function bc($b, $c) {
-    $bc = $b + $c;
-    echo $bc;
+<pre><code class="php">Class ClassA {
+    function bc($b, $c) {
+        $bc = $b + $c;
+        echo $bc;
+    }
 }
-</code></pre>
-
-<p>}
 call_user_func_array(array('ClassA','bc'), array("111", "222"));
 //显示 333
-```</p>
+</code></pre>
 
 <p>`call_user_func`函数和`call_user_func_array`函数都支持引用，这让他们和普通的函数调用更趋于功能一致:</p>
 
 
-<p>``` php
-function a(&amp;$b)
-{</p>
-
-<pre><code>$b++;
-</code></pre>
-
-<p>}
+<pre><code class="php">function a(&amp;$b)
+{
+    $b++;
+}
 $c = 0;
 call_user_func('a', &amp;$c);
 echo $c;//显示 1
 call_user_func_array('a', array(&amp;$c));
 echo $c;//显示 2
-```</p>
+</code></pre>
 
 <p>一个可以用于调试输出的例子：</p>
 
 
-<p>``` php
-function debug($var, $val)
-{</p>
-
-<pre><code>echo "***DEBUGGING\nVARIABLE: $var\nVALUE:";
-if (is_array($val) || is_object($val) || is_resource($val)) {
-    print_r($val);
-} else {
-    echo "\n$val\n";
+<pre><code class="php">function debug($var, $val) 
+{
+    echo "***DEBUGGING\nVARIABLE: $var\nVALUE:";
+    if (is_array($val) || is_object($val) || is_resource($val)) {
+        print_r($val);
+    } else {
+        echo "\n$val\n";
+    }
+    echo "***\n";
 }
-echo "***\n";
-</code></pre>
 
-<p>}</p>
+$c = mysql_connect();
+$host = $_SERVER["SERVER_NAME"];
 
-<p>$c = mysql_connect();
-$host = $_SERVER["SERVER_NAME"];</p>
-
-<p>call_user_func_array('debug', array("host", $host));
+call_user_func_array('debug', array("host", $host));
 call_user_func_array('debug', array("c", $c));
-call_user_func_array('debug', array("<em>POST", $</em>POST));
-```</p>
+call_user_func_array('debug', array("_POST", $_POST));
+</code></pre>
 
 <p>另外，如果和伪重载结合，还可以这样用：</p>
 
 
-<p>``` php
-function otest1 ($a)
-{</p>
+<pre><code class="php">function otest1 ($a)
+{
+    echo( '一个参数' );
+}
 
-<pre><code>echo( '一个参数' );
+function otest2 ( $a, $b)
+{
+    echo( '二个参数' );
+}
+
+function otest3 ( $a ,$b,$c)
+{
+    echo( '三个啦' );
+}
+
+function otest ()
+{
+    $args = func_get_args();
+    $num = func_num_args();
+    call_user_func_array( 'otest'.$num, $args );
+}
+
+otest(1,2);  //调用第一个函数，输出：一个参数
 </code></pre>
-
-<p>}</p>
-
-<p>function otest2 ( $a, $b)
-{</p>
-
-<pre><code>echo( '二个参数' );
-</code></pre>
-
-<p>}</p>
-
-<p>function otest3 ( $a ,$b,$c)
-{</p>
-
-<pre><code>echo( '三个啦' );
-</code></pre>
-
-<p>}</p>
-
-<p>function otest ()
-{</p>
-
-<pre><code>$args = func_get_args();
-$num = func_num_args();
-call_user_func_array( 'otest'.$num, $args );
-</code></pre>
-
-<p>}</p>
-
-<p>otest(1,2);  //调用第一个函数，输出：一个参数
-```</p>
 ]]></content>
   </entry>
   

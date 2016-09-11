@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: C++ | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -117,30 +117,25 @@
 
 <p>其中 insert iterator 是将一般的迭代器的赋值（assign）操作变为插入（insert）操作，而其他的自增和自减操作则不做任何处理的返回当前迭代器本身，包括从尾部插入的 <code>back_insert_iterator</code> 和从头部插入的 <code>front_insert_iterator</code> ，尾部插入的 insert iterator 的定义主要内容如下：</p>
 
-<p>``` cpp
-template <class _Container>
+<pre><code class="cpp">template &lt;class _Container&gt; 
 class back_insert_iterator {
 public:
-  back_insert_iterator<_Container>&amp;
-  operator=(const typename _Container::value_type&amp; __value) { // 赋值变为尾部插入</p>
-
-<pre><code>container-&gt;push_back(__value);
-return *this;
-</code></pre>
-
-<p>  }
-  back_insert_iterator<_Container>&amp; operator<em>() { return </em>this; } // 一下操作均返回迭代器本身
-  back_insert_iterator<_Container>&amp; operator++() { return <em>this; }
-  back_insert_iterator<_Container>&amp; operator++(int) { return </em>this; }
+  back_insert_iterator&lt;_Container&gt;&amp;
+  operator=(const typename _Container::value_type&amp; __value) { // 赋值变为尾部插入
+    container-&gt;push_back(__value);
+    return *this;
+  }
+  back_insert_iterator&lt;_Container&gt;&amp; operator*() { return *this; } // 一下操作均返回迭代器本身
+  back_insert_iterator&lt;_Container&gt;&amp; operator++() { return *this; }
+  back_insert_iterator&lt;_Container&gt;&amp; operator++(int) { return *this; }
 };
-```</p>
+</code></pre>
 
 <h4>3.2 reverse iterator</h4>
 
 <p>reverse iterator 则将一般的迭代器的行进方向逆转，是原本应该前进的 <code>operator++</code> 变为后退操作，而 <code>operator--</code> 变为前进操作，这样做对于需要从尾部开始遍历的算法非常有用。该迭代器的主要定义如下：</p>
 
-<p><code>
-template &lt;class _Iterator&gt;
+<pre><code>template &lt;class _Iterator&gt;
 class reverse_iterator {
 protected:
   _Iterator current;
@@ -157,8 +152,8 @@ public:
   _Self operator-(difference_type __n) const { return _Self(current + __n); }
   _Self&amp; operator-=(difference_type __n) { current += __n; return *this; }
   reference operator[](difference_type __n) const { return *(*this + __n); }  
-};
-</code></p>
+}; 
+</code></pre>
 
 <p>这种逆向的迭代器只用于那些具有双向迭代器的容器（如vector，list，deque等，而slist，stack，queue，priority queue等则不行）或需要逆向遍历的算法（如copy backward等）。</p>
 
@@ -168,42 +163,32 @@ public:
 
 <p>以 istream iterator 为例，它将迭代器绑定到一个输入数据流对象（istream object）上，其实就是在 istream iterator 内部维护一个 istream member，用户对这个 istream iterator 所做的 <code>operator++</code> 操作会被该迭代器变为这个 istream member 的输入操作 <code>operator&gt;&gt;</code>，这个迭代器是一个 input iterator，没有 <code>operator--</code> 操作，核心实现如下：</p>
 
-<p>```
-template <class _Tp, class _CharT = char, class _Traits = char_traits<_CharT>,</p>
-
-<pre><code>      class _Dist = ptrdiff_t&gt; 
-</code></pre>
-
-<p>class istream_iterator {
+<pre><code>template &lt;class _Tp, class _CharT = char, class _Traits = char_traits&lt;_CharT&gt;,
+          class _Dist = ptrdiff_t&gt; 
+class istream_iterator {
 public:
-  typedef <em>CharT                         char_type;
-  typedef </em>Traits                        traits_type;
-  typedef basic_istream&lt;<em>CharT, </em>Traits> istream_type;
-  reference operator<em>() const { return _M_value; }
-  pointer operator->() const { return &amp;(operator</em>()); }
-  istream_iterator&amp; operator++() { <em>M_read(); return <em>this; } // ++ 变为 >>
-  istream_iterator operator++(int)  { istream_iterator __tmp = </em>this; </em>M_read(); return <strong>tmp; }
-  bool _M_equal(const istream_iterator&amp; </strong>x) const</p>
-
-<pre><code>{ return (_M_ok == __x._M_ok) &amp;&amp; (!_M_ok || _M_stream == __x._M_stream); }
-</code></pre>
-
-<p>private:
-  istream_type* <em>M_stream;
-  </em>Tp <em>M_value;
-  bool </em>M_ok;
-  void _M_read() {</p>
-
-<pre><code>_M_ok = (_M_stream &amp;&amp; *_M_stream) ? true : false;
-if (_M_ok) {
-  *_M_stream &gt;&gt; _M_value; // 转变为输入操作（&gt;&gt;）
-  _M_ok = *_M_stream ? true : false;
-}
-</code></pre>
-
-<p>  }
+  typedef _CharT                         char_type;
+  typedef _Traits                        traits_type;
+  typedef basic_istream&lt;_CharT, _Traits&gt; istream_type;
+  reference operator*() const { return _M_value; }
+  pointer operator-&gt;() const { return &amp;(operator*()); }
+  istream_iterator&amp; operator++() { _M_read(); return *this; } // ++ 变为 &gt;&gt;
+  istream_iterator operator++(int)  { istream_iterator __tmp = *this; _M_read(); return __tmp; }
+  bool _M_equal(const istream_iterator&amp; __x) const
+    { return (_M_ok == __x._M_ok) &amp;&amp; (!_M_ok || _M_stream == __x._M_stream); }
+private:
+  istream_type* _M_stream;
+  _Tp _M_value;
+  bool _M_ok;
+  void _M_read() {
+    _M_ok = (_M_stream &amp;&amp; *_M_stream) ? true : false;
+    if (_M_ok) {
+      *_M_stream &gt;&gt; _M_value; // 转变为输入操作（&gt;&gt;）
+      _M_ok = *_M_stream ? true : false;
+    }
+  }
 };
-```</p>
+</code></pre>
 
 <p>可以看到以上的迭代器均非一般意义上的迭代器了，而是一个经过适配了的特殊的迭代器。</p>
 
@@ -213,38 +198,33 @@ if (_M_ok) {
 
 <p>STL中标准的 functor adaptor 包括对返回值进行逻辑否定的 <code>not1</code>，<code>not2</code>；对参数进行绑定的 <code>bind1st</code>，<code>bind2nd</code>；用于函数合成的 <code>compose1</code>，<code>compose2</code> （非STL标准，SGI私有）；用于函数指针的 <code>ptr_fun</code>；用于成员函数指针的 <code>mem_fun</code>，<code>mem_fun_ref</code> 等。其中逻辑否定、参数绑定、函数合成的比较简单，如下：</p>
 
-<p>```
-// not1其实是对unary_negate函数的一个简单的封装，定义了一个unary_negate类型匿名对象（函数）
-inline unary_negate<_Predicate> // 实际效果：!pred(param)
-not1(const <em>Predicate&amp; <strong>pred){ return unary_negate<_Predicate>(</strong>pred);}
-inline binary_negate<_Predicate> // 实际效果：!pred(param1,param2)
-not2(const </em>Predicate&amp; <strong>pred){ return binary_negate<_Predicate>(</strong>pred); }
-inline binder1st<_Operation> // 实际效果：op(x,param)
-bind1st(const <em>Operation&amp; __fn, const </em>Tp&amp; <strong>x) {
-  return binder1st<_Operation>(</strong>fn, <em>Arg1_type(__x));
+<pre><code>// not1其实是对unary_negate函数的一个简单的封装，定义了一个unary_negate类型匿名对象（函数）
+inline unary_negate&lt;_Predicate&gt; // 实际效果：!pred(param)
+not1(const _Predicate&amp; __pred){ return unary_negate&lt;_Predicate&gt;(__pred);} 
+inline binary_negate&lt;_Predicate&gt; // 实际效果：!pred(param1,param2)
+not2(const _Predicate&amp; __pred){ return binary_negate&lt;_Predicate&gt;(__pred); }
+inline binder1st&lt;_Operation&gt; // 实际效果：op(x,param)
+bind1st(const _Operation&amp; __fn, const _Tp&amp; __x) {
+  return binder1st&lt;_Operation&gt;(__fn, _Arg1_type(__x));
 }
-inline binder2nd<_Operation> // 实际效果：op(param,x)
-bind2nd(const </em>Operation&amp; <strong>fn, const _Tp&amp; </strong>x) {
-  return binder2nd<_Operation>(<strong>fn, _Arg2_type(</strong>x));
+inline binder2nd&lt;_Operation&gt; // 实际效果：op(param,x)
+bind2nd(const _Operation&amp; __fn, const _Tp&amp; __x) { 
+  return binder2nd&lt;_Operation&gt;(__fn, _Arg2_type(__x));
 }
-inline unary_compose&lt;<em>Operation1,</em>Operation2> // 实际效果：op1(op2(param))
-compose1(const <em>Operation1&amp; __fn1, const </em>Operation2&amp; <strong>fn2) {
-  return unary_compose&lt;<em>Operation1,</em>Operation2>(</strong>fn1, <strong>fn2);
+inline unary_compose&lt;_Operation1,_Operation2&gt; // 实际效果：op1(op2(param))
+compose1(const _Operation1&amp; __fn1, const _Operation2&amp; __fn2) {
+  return unary_compose&lt;_Operation1,_Operation2&gt;(__fn1, __fn2);
 }
-inline binary_compose&lt;<em>Operation1, </em>Operation2, <em>Operation3> // 实际效果：op1(op2(param),op3(param))
-compose2(const </em>Operation1&amp; </strong>fn1, const <em>Operation2&amp; __fn2, const </em>Operation3&amp; <em><em>fn3) {
-  return binary_compose&lt;</em>Operation1,</em>Operation2,_Operation3></p>
-
-<pre><code>(__fn1, __fn2, __fn3);
+inline binary_compose&lt;_Operation1, _Operation2, _Operation3&gt; // 实际效果：op1(op2(param),op3(param))
+compose2(const _Operation1&amp; __fn1, const _Operation2&amp; __fn2, const _Operation3&amp; __fn3) {
+  return binary_compose&lt;_Operation1,_Operation2,_Operation3&gt;
+    (__fn1, __fn2, __fn3);
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>用于函数指针的 <code>ptr_fun</code> 适配器使得我们可以将一般函数当做仿函数使用，就像原生指针可以当做迭代器传给STL算法一样，它的实际效果相当如 <code>fp(param)</code> 或 <code>fp(param1,param2)</code> ，前者定义如下：</p>
 
-<p><code>
-template &lt;class _Arg, class _Result&gt;
+<pre><code>template &lt;class _Arg, class _Result&gt;
 class pointer_to_unary_function : public unary_function&lt;_Arg, _Result&gt; {
 protected:
   _Result (*_M_ptr)(_Arg);
@@ -258,12 +238,11 @@ inline pointer_to_unary_function&lt;_Arg, _Result&gt; // 返回值型别
 ptr_fun(_Result (*__x)(_Arg)) { // 对pointer_to_unary_function 的封装
   return pointer_to_unary_function&lt;_Arg, _Result&gt;(__x);
 }
-</code></p>
+</code></pre>
 
 <p>用于成员函数指针的 <code>mem_fun</code> 适配器使得我们可以将成员函数当做仿函数使用，于是成员函数可以搭配各种泛型算法，而当使用父类的虚拟成员函数作为仿函数时，还可以使用泛型算法完成所谓的多态调用（polymorphic function call），这是泛型（genericity）与多态（polymorphism）之间的结合。另外需要注意的是，虽然多态可以对指针或引用起作用，但STL容器只支持“实值语意”，不支持“引用语意”，及容器的内容应该为实值而非引用（类似于<code>vecotr&lt;X&amp;&gt; vc</code> 这种）。一下是 <code>mem_fun</code> 的具体定义（还有很多个版本，这里只是最简单的一个）：</p>
 
-<p><code>
-// 无任何参数，通过pointer调用，non-const成员函数
+<pre><code>// 无任何参数，通过pointer调用，non-const成员函数
 template &lt;class _Ret, class _Tp&gt;
 class mem_fun_t : public unary_function&lt;_Tp*,_Ret&gt; {
 public:
@@ -275,7 +254,7 @@ private:
 template &lt;class _Ret, class _Tp&gt;
 inline mem_fun_t&lt;_Ret,_Tp&gt; // 返回类型
 mem_fun(_Ret (_Tp::*__f)()) { return mem_fun_t&lt;_Ret,_Tp&gt;(__f); } // mem_fun_t的匿名对象
-</code></p>
+</code></pre>
 
 <h2>推荐阅读：</h2>
 
@@ -309,52 +288,46 @@ mem_fun(_Ret (_Tp::*__f)()) { return mem_fun_t&lt;_Ret,_Tp&gt;(__f); } // mem_fu
 
 <p>该类用来封装一元函数的参数型别和返回值型别，其定义非常简单：</p>
 
-<p><code>cpp
-template &lt;class _Arg, class _Result&gt;
+<pre><code class="cpp">template &lt;class _Arg, class _Result&gt;
 struct unary_function {
   typedef _Arg argument_type; // 参数型别
   typedef _Result result_type; // 返回值型别
 };
-</code></p>
+</code></pre>
 
 <p>仿函数可以继承该类，这样用户就可以取得该仿函数的参数型别，并以相同方法获得其返回值：</p>
 
-<p>``` cpp
-template <class _Tp>
-struct negate : public unary_function&lt;<em>Tp,</em>Tp> { // 仿函数 negate 继承 unary_function
-  <em>Tp operator()(const </em>Tp&amp; <strong>x) const { return -</strong>x; }
+<pre><code class="cpp">template &lt;class _Tp&gt;
+struct negate : public unary_function&lt;_Tp,_Tp&gt; { // 仿函数 negate 继承 unary_function
+  _Tp operator()(const _Tp&amp; __x) const { return -__x; }
 };
-template <class _Predicate>
-class unary_negate : public unary_function<typename _Predicate::argument_type, bool> {
+template &lt;class _Predicate&gt;
+class unary_negate : public unary_function&lt;typename _Predicate::argument_type, bool&gt; {
 protected:
-  <em>Predicate </em>M_pred;
+  _Predicate _M_pred;
 public:
-  explicit unary_negate(const <em>Predicate&amp; __x) : </em>M_pred(<strong>x) {}
-  bool operator()(const typename _Predicate::argument_type&amp; </strong>x) const { // 获取参数的型别argument_type</p>
-
-<pre><code>return !_M_pred(__x);
-</code></pre>
-
-<p>  }
+  explicit unary_negate(const _Predicate&amp; __x) : _M_pred(__x) {}
+  bool operator()(const typename _Predicate::argument_type&amp; __x) const { // 获取参数的型别argument_type
+    return !_M_pred(__x);
+  }
 };
-```</p>
+</code></pre>
 
 <h4>2.2 binary_function</h4>
 
 <p>该类用来封装二元函数的参数一、参数二型别和返回值类型，仅比一元函数多了一个输入参数型别的定义而已，其定义如下：</p>
 
-<p><code>cpp
-template &lt;class _Arg1, class _Arg2, class _Result&gt;
+<pre><code class="cpp">template &lt;class _Arg1, class _Arg2, class _Result&gt;
 struct binary_function {
   typedef _Arg1 first_argument_type; // 参数一型别
   typedef _Arg2 second_argument_type; // 参数二型别
   typedef _Result result_type; // 返回值型别
-};
+}; 
 template &lt;class _Tp&gt;
 struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; { // 仿函数 plus 继承 binary_function
   _Tp operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x + __y; }
 };
-</code></p>
+</code></pre>
 
 <h2>3. STL 内建仿函数</h2>
 
@@ -364,8 +337,7 @@ struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; { // 仿函数 plus 继�
 
 <p>主要包括加法(plus)、减法(minus)、乘法(multiplies)、除法(divides)、取模(modulus)、否定(negation)等运算，除了否定以一元运算其他均为二元运算，如下：</p>
 
-<p><code>cpp
-template &lt;class _Tp&gt;
+<pre><code class="cpp">template &lt;class _Tp&gt;
 struct plus : public binary_function&lt;_Tp,_Tp,_Tp&gt; {
   _Tp operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x + __y; } // 加法，减、乘、除、取模类似
 };
@@ -373,37 +345,33 @@ template &lt;class _Tp&gt;
 struct negate : public unary_function&lt;_Tp,_Tp&gt; {
   _Tp operator()(const _Tp&amp; __x) const { return -__x; }
 };
-</code></p>
+</code></pre>
 
 <p>仿函数搭配STL算法可以很灵活，例如对vector的每个元素求连乘如下：</p>
 
-<p><code>cpp
-accumulate(vct.begin(),vct.end(),1,multiplies&lt;int&gt;());
-</code></p>
+<pre><code class="cpp">accumulate(vct.begin(),vct.end(),1,multiplies&lt;int&gt;());
+</code></pre>
 
 <h4>3.2 关系运算类(Relational)仿函数</h4>
 
 <p>主要有等于(equal_to)、不等于(not_equal_to)、大于(greater)、大于等于(greater_equal)、小于(less)、小于等于(less_equal)等六种运算，每一个都是二元运算，如下：</p>
 
-<p><code>cpp
-template &lt;class _Tp&gt;
+<pre><code class="cpp">template &lt;class _Tp&gt;
 struct equal_to : public binary_function&lt;_Tp,_Tp,bool&gt; {
   bool operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x == __y; } // 相等，其他类似 !=, &gt;, &lt;, &gt;=, &lt;=
 };
-</code></p>
+</code></pre>
 
 <p>例如，对vector进行递减顺序排序：</p>
 
-<p><code>cpp
-sort(vct.begin(),vct.end(),less&lt;int&gt;());
-</code></p>
+<pre><code class="cpp">sort(vct.begin(),vct.end(),less&lt;int&gt;());
+</code></pre>
 
 <h4>3.3 逻辑运算类(Logical)仿函数</h4>
 
 <p>主要是与(logical_and)、或(logical_or)、非(logical_not)三种逻辑运算，前两者为二元运算，后者为一元运算，如下：</p>
 
-<p><code>cpp
-template &lt;class _Tp&gt;
+<pre><code class="cpp">template &lt;class _Tp&gt;
 struct logical_and : public binary_function&lt;_Tp,_Tp,bool&gt; {
   bool operator()(const _Tp&amp; __x, const _Tp&amp; __y) const { return __x &amp;&amp; __y; } // 与，或(||)类似
 };
@@ -411,51 +379,44 @@ template &lt;class _Tp&gt;
 struct logical_not : public unary_function&lt;_Tp,bool&gt;{
   bool operator()(const _Tp&amp; __x) const { return !__x; } // 非
 };
-</code></p>
+</code></pre>
 
 <h4>3.4 证同(identity)、选择(select)、投射(project)等非标准仿函数</h4>
 
 <p>这类仿函数都只是将参数原封不动的返回，其中某些仿函数对传回的参数有刻意的选择，或是刻意的忽略。之所以不在STL或其他泛型程序设计中直接使用原本及其简单的identity，project，select等操作，而要再划分一层出来，完全是为了间接性——间接性是抽象化的重要方法。另外，需要说明的是，这些仿函数并非C++标准，只是在SGI STL的实现中作为内部使用，一下是相关部分代码：</p>
 
-<p>``` cpp
-// 证同函数(identity)，任何数值通过此函数后不会有任何改变，它用于set实现中，用来指定RB-tree所需的
+<pre><code class="cpp">// 证同函数(identity)，任何数值通过此函数后不会有任何改变，它用于set实现中，用来指定RB-tree所需的
 // KeyOfValue op，因为set元素的键值即实值，所以采用identity
-template <class _Tp>
-struct <em>Identity : public unary_function&lt;</em>Tp,<em>Tp> {
-  const </em>Tp&amp; operator()(const <em>Tp&amp; <strong>x) const { return </strong>x; }
+template &lt;class _Tp&gt;
+struct _Identity : public unary_function&lt;_Tp,_Tp&gt; {
+  const _Tp&amp; operator()(const _Tp&amp; __x) const { return __x; }
 };
 // 选择函数(select)，接受一个pair返回其第一个元素，用于map实现中，用来指定RB-tree所需KeyOfValue op，
 // 因为map以pair的第一个元素作为键值
-template <class _Pair>
-struct </em>Select1st : public unary_function&lt;<em>Pair, typename </em>Pair::first_type> {
-  const typename <em>Pair::first_type&amp; operator()(const </em>Pair&amp; __x) const {</p>
-
-<pre><code>return __x.first;
-</code></pre>
-
-<p>  }
+template &lt;class _Pair&gt;
+struct _Select1st : public unary_function&lt;_Pair, typename _Pair::first_type&gt; {
+  const typename _Pair::first_type&amp; operator()(const _Pair&amp; __x) const {
+    return __x.first;
+  }
 };
 // 类似与select1st，接受pair返回第二个参数，SGI STL内部并未用到该函数
-template <class _Pair>
-struct <em>Select2nd : public unary_function&lt;</em>Pair, typename <em>Pair::second_type>{
-  const typename </em>Pair::second_type&amp; operator()(const _Pair&amp; __x) const {</p>
-
-<pre><code>return __x.second;
-</code></pre>
-
-<p>  }
+template &lt;class _Pair&gt;
+struct _Select2nd : public unary_function&lt;_Pair, typename _Pair::second_type&gt;{
+  const typename _Pair::second_type&amp; operator()(const _Pair&amp; __x) const {
+    return __x.second;
+  }
 };
 // 投射函数(project)，传回第一参数，忽略第二参数，SGI STL内部并未用到该函数
-template <class _Arg1, class _Arg2>
-struct <em>Project1st : public binary_function&lt;</em>Arg1, <em>Arg2, </em>Arg1> {
-  <em>Arg1 operator()(const </em>Arg1&amp; <strong>x, const _Arg2&amp;) const { return </strong>x; }
+template &lt;class _Arg1, class _Arg2&gt;
+struct _Project1st : public binary_function&lt;_Arg1, _Arg2, _Arg1&gt; {
+  _Arg1 operator()(const _Arg1&amp; __x, const _Arg2&amp;) const { return __x; }
 };
 // 投射函数(project)，传回第二参数，忽略第一参数，SGI STL内部并未用到该函数
-template <class _Arg1, class _Arg2>
-struct <em>Project2nd : public binary_function&lt;</em>Arg1, <em>Arg2, </em>Arg2> {
-  <em>Arg2 operator()(const </em>Arg1&amp;, const _Arg2&amp; <strong>y) const { return </strong>y; }
+template &lt;class _Arg1, class _Arg2&gt;
+struct _Project2nd : public binary_function&lt;_Arg1, _Arg2, _Arg2&gt; {
+  _Arg2 operator()(const _Arg1&amp;, const _Arg2&amp; __y) const { return __y; }
 };
-```</p>
+</code></pre>
 
 <p>除此之外，SGI STL实现中还有 <code>constant_void_fun</code>，<code>constant_unary_fun</code>， <code>constant_binary_fun</code>， <code>subtractive_rng</code>， <code>mem_fun_t</code> 等等，想深入详细了解的可以去看看源代码，还是很好理解的。</p>
 
@@ -479,9 +440,8 @@ struct <em>Project2nd : public binary_function&lt;</em>Arg1, <em>Arg2, </em>Arg2
 <p><strong>2. for_each</strong><br/>
 也很简单，就是对区间 [first, last) 中的每一个元素执行一个给定函数的运算，就一行语句：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) __f(*__first);
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) __f(*__first);
+</code></pre>
 
 <p>其中 <code>__f</code> 为用户传入的一个指定的仿函数。该算法的返回值仍为传入的仿函数 <code>__f</code> 。</p>
 
@@ -491,9 +451,8 @@ for ( ; __first != __last; ++__first) __f(*__first);
 <p><strong>3. 查找 find</strong><br/>
 函数 <code>find</code> 查找特定值的元素，函数 <code>find_if</code> 查找经过用户的指定函数 func（STL中的pred函数） 运算后结果为 true 的元素。主要代码也只有一行：</p>
 
-<p><code>cpp
-while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
-</code></p>
+<pre><code class="cpp">while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
+</code></pre>
 
 <p>另外，关于find，考虑偏特化特性，还有在迭代器为随机存取迭代器时，每次循环进行4次判断和自增，这是所谓的 <a href="http://en.wikipedia.org/wiki/Loop_unrolling">loop unrolling</a>，在StackOverflow 上也有相关解释 <a href="http://stackoverflow.com/questions/24295972/">questions-24295972</a>。如果学过体系结构，应该也会提及循环展开的加速方法。</p>
 
@@ -504,13 +463,9 @@ while (__first != __last &amp;&amp; !(*__first == __val)) ++__first;
 <p><strong>4. 计数 count</strong><br/>
 该算法查找序列中值与给定值相等的元素的个数，即进行计数，返回为void，计数结果通过传入的引用参数 <code>_Size&amp; __n</code> 来返回给用户，主要代码如下：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++__first)</p>
-
-<pre><code>if (*__first == __value) ++__n;
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
+    if (*__first == __value) ++__n;
 </code></pre>
-
-<p>```</p>
 
 <p>以上这个是非STL标准的，另外还有一个版本返回值为迭代器的 <code>difference_type</code> 的偏特化版本，这个才是STL标准。</p>
 
@@ -522,68 +477,50 @@ for ( ; <strong>first != </strong>last; ++__first)</p>
 <p><strong>6. 区间置换 swap_ranges</strong><br/>
 交换两个长度相等的区间：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2)</p>
-
-<pre><code>iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2)
+    iter_swap(__first1, __first2); // 迭代器的交换，使用iter_swap
 </code></pre>
-
-<p>```</p>
 
 <p><strong>7. 区间变换运算 transform</strong><br/>
 对区间的每个元素进行opr运算，结果放在result中，仅这一点与 <code>for_each</code> 不同：</p>
 
-<p>``` cpp
-for ( ; <strong>first != </strong>last; ++<strong>first, ++</strong>result)</p>
-
-<pre><code>*__result = __opr(*__first);
+<pre><code class="cpp">for ( ; __first != __last; ++__first, ++__result)
+    *__result = __opr(*__first);
 </code></pre>
-
-<p>```</p>
 
 <p>还有一个版本是两个等长序列的运算，结果放在result中：</p>
 
-<p>``` cpp
-for ( ; <strong>first1 != </strong>last1; ++<strong>first1, ++</strong>first2, ++__result)</p>
-
-<pre><code>*__result = __binary_op(*__first1, *__first2);
+<pre><code class="cpp">for ( ; __first1 != __last1; ++__first1, ++__first2, ++__result)
+    *__result = __binary_op(*__first1, *__first2);
 </code></pre>
-
-<p>```</p>
 
 <p>注意该算法不需要传入第二个区间的last迭代器。</p>
 
 <p><strong>8. 替换 replace</strong><br/>
 将序列中所有值为oldval的元素值都改为newval：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first)
+<pre><code class="cpp">for ( ; __first != __last; ++__first)
    if (*__first == __old_value) *__first = __new_value;
-</code></p>
+</code></pre>
 
 <p>另外还有三个版本的替换： <code>replace_if</code>，判断条件可以自己指定，而不一定是相等；<code>replace_copy</code>，将修改后的结果存到一个新的序列中；<code>replace_copy_if</code> 是前两者的合体。</p>
 
 <p><strong>9.生成 generate</strong><br/>
 将序列中的元素的值按给定函数赋值：</p>
 
-<p><code>cpp
-for ( ; __first != __last; ++__first) *__first = __gen();
-</code></p>
+<pre><code class="cpp">for ( ; __first != __last; ++__first) *__first = __gen();
+</code></pre>
 
 <p>还有一个 <code>generate_n</code> 将序列中的前n个元素的值按给定函数赋值。</p>
 
 <p><strong>10.移除 remove</strong><br/>
 移除序列中值为val的元素，与 replace 算法类似，有4个版本，其中 <code>remove</code> 和 <code>remove_if</code> 分别通过 <code>remove_copy</code>、<code>remove_copy_if</code> 实现，只需将后者中的result参数设为该序列的起点first。</p>
 
-<p>``` cpp
-<strong>first = find(</strong>first, <strong>last, </strong>value);
-_ForwardIter <strong>i = </strong>first;
-return <strong>first == </strong>last ? __first</p>
-
-<pre><code>               : remove_copy(++__i, __last, __first, __value);
+<pre><code class="cpp">__first = find(__first, __last, __value);
+_ForwardIter __i = __first;
+return __first == __last ? __first 
+                   : remove_copy(++__i, __last, __first, __value);
 </code></pre>
-
-<p>```</p>
 
 <p><strong>11.unique和unique_copy</strong><br/>
 将区间的元素的值唯一化，即去掉相邻的重复的项。由于判断时是针对相邻的元素，所以一般需要结合sort使用，如果序列无序需要先对序列排序再进行唯一化。<code>unique</code> 的实现是调用 <code>unique_copy</code> 来实现的，只是将参数中result仍设为输入序列的first。</p>
@@ -593,9 +530,8 @@ return <strong>first == </strong>last ? __first</p>
 <p><strong>12.反转 reverse</strong><br/>
 将区间中元素进行反转，一下是迭代器为随机存取迭代器时的实现：</p>
 
-<p><code>cpp
-while (__first &lt; __last) iter_swap(__first++, --__last);
-</code></p>
+<pre><code class="cpp">while (__first &lt; __last) iter_swap(__first++, --__last);
+</code></pre>
 
 <p>还有迭代器为双向迭代器的版本和非质变算法版本 <code>reverse_copy</code>。</p>
 
@@ -607,13 +543,9 @@ while (__first &lt; __last) iter_swap(__first++, --__last);
 <p><strong>14.随机相关算法 random</strong><br/>
 <code>random_shuffle</code> 算法将序列随机重排，具体实现是对序列中每个位置的元素与序列中一个随机的元素进行对调：</p>
 
-<p>``` cpp
-for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>last; ++__i)</p>
-
-<pre><code>iter_swap(__i, __first + __random_number((__i - __first) + 1));
+<pre><code class="cpp">for (_RandomAccessIter __i = __first + 1; __i != __last; ++__i)
+    iter_swap(__i, __first + __random_number((__i - __first) + 1));
 </code></pre>
-
-<p>```</p>
 
 <p>除了这个版本采用STL的random函数生成随机数的版本外，还有一个版本可以自己指定随机数生成函数。</p>
 
@@ -729,37 +661,30 @@ for (_RandomAccessIter <strong>i = </strong>first + 1; <strong>i != </strong>las
 
 
 <p>源码如下：
-``` cpp
-template <class _InputIter1, class _InputIter2>
-bool lexicographical_compare(<em>InputIter1 __first1, </em>InputIter1 <strong>last1, _InputIter2 </strong>first2, _InputIter2 <strong>last2) {
-  for ( ; </strong>first1 != <strong>last1 &amp;&amp; </strong>first2 != <strong>last2; ++</strong>first1, ++__first2) {</p>
-
-<pre><code>if (*__first1 &lt; *__first2)
-  return true;
-if (*__first2 &lt; *__first1)
-  return false;
-</code></pre>
-
-<p>  }
-  return <strong>first1 == </strong>last1 &amp;&amp; <strong>first2 != </strong>last2;
+<code>cpp
+template &lt;class _InputIter1, class _InputIter2&gt;
+bool lexicographical_compare(_InputIter1 __first1, _InputIter1 __last1, _InputIter2 __first2, _InputIter2 __last2) {
+  for ( ; __first1 != __last1 &amp;&amp; __first2 != __last2; ++__first1, ++__first2) {
+    if (*__first1 &lt; *__first2)
+      return true;
+    if (*__first2 &lt; *__first1)
+      return false;
+  }
+  return __first1 == __last1 &amp;&amp; __first2 != __last2;
 }
-```</p>
+</code></p>
 
 <p>除了这个默认的版本外，还有一个版本提供比较方法（仿函数）的参数。另外，对于纯字符串的比较，SGI STL还做了进一步优化，使用原生指针和C标准函数 <code>memcmp()</code> 进行比较，如下：</p>
 
-<p>``` cpp
-inline bool
-lexicographical_compare(const unsigned char<em> __first1, const unsigned char</em> __last1,</p>
-
-<pre><code>                    const unsigned char* __first2,const unsigned char* __last2) {
-</code></pre>
-
-<p>  const size_t <strong>len1 = </strong>last1 - <strong>first1;
-  const size_t </strong>len2 = <strong>last2 - </strong>first2;
-  const int <strong>result = memcmp(</strong>first1, <strong>first2, min(</strong>len1, <strong>len2));
-  return </strong>result != 0 ? <strong>result &lt; 0 : </strong>len1 &lt; __len2;
+<pre><code class="cpp">inline bool 
+lexicographical_compare(const unsigned char* __first1, const unsigned char* __last1,
+                        const unsigned char* __first2,const unsigned char* __last2) {
+  const size_t __len1 = __last1 - __first1;
+  const size_t __len2 = __last2 - __first2;
+  const int __result = memcmp(__first1, __first2, min(__len1, __len2));
+  return __result != 0 ? __result &lt; 0 : __len1 &lt; __len2;
 }
-```</p>
+</code></pre>
 
 <h2>3. 复制/拷贝算法</h2>
 
@@ -771,182 +696,133 @@ lexicographical_compare(const unsigned char<em> __first1, const unsigned char</e
 
 <p>在介绍 copy 算法的源码具体实现前，根据源码及其注释再做一个简单的小结：copy 算法中的一些辅助函数有两个目的，其一是对于简单的数据类型尽量使用 memmove，其二是对于具有 RandomAccessIterators 的对象使用一个计数器来进行循环；除此之外，SGI STL针对编译器是否具有函数模板偏特化、类模板偏特化等进行了适配。下面是 copy 的源码，其中添加了比较详细具体的注释：</p>
 
-<p>``` cpp
-// 首先是几个与偏特化无关的公用的3个函数
-template <class _InputIter, class _OutputIter, class _Distance>
-inline <em>OutputIter
-__copy(</em>InputIter <strong>first, _InputIter </strong>last,</p>
-
-<pre><code>   _OutputIter __result,input_iterator_tag, _Distance*){
-</code></pre>
-
-<p>  for ( ; <strong>first != </strong>last; ++<strong>result, ++</strong>first) // 使用迭代器遍历和复制</p>
-
-<pre><code>*__result = *__first;
-</code></pre>
-
-<p>  return <strong>result;
+<pre><code class="cpp">// 首先是几个与偏特化无关的公用的3个函数
+template &lt;class _InputIter, class _OutputIter, class _Distance&gt;
+inline _OutputIter 
+__copy(_InputIter __first, _InputIter __last,
+       _OutputIter __result,input_iterator_tag, _Distance*){
+  for ( ; __first != __last; ++__result, ++__first) // 使用迭代器遍历和复制
+    *__result = *__first;
+  return __result;
 }
-template <class _RandomAccessIter, class _OutputIter, class _Distance>
+template &lt;class _RandomAccessIter, class _OutputIter, class _Distance&gt;
 inline _OutputIter
-</strong>copy(<em>RandomAccessIter __first, </em>RandomAccessIter __last,</p>
-
-<pre><code>   _OutputIter __result, random_access_iterator_tag, _Distance*){
-</code></pre>
-
-<p>  for (_Distance <strong>n = </strong>last - <strong>first; </strong>n > 0; --__n) { //对于随机访问迭代器，使用一个计数器n</p>
-
-<pre><code>*__result = *__first;
-++__first;
-++__result;
-</code></pre>
-
-<p>  }
-  return <strong>result;
+__copy(_RandomAccessIter __first, _RandomAccessIter __last,
+       _OutputIter __result, random_access_iterator_tag, _Distance*){
+  for (_Distance __n = __last - __first; __n &gt; 0; --__n) { //对于随机访问迭代器，使用一个计数器n
+    *__result = *__first;
+    ++__first;
+    ++__result;
+  }
+  return __result;
 }
-template <class _Tp>
+template &lt;class _Tp&gt;
 inline _Tp*
-</strong>copy_trivial(const <em>Tp* __first, const </em>Tp<em> <em>_last, </em>Tp</em> <strong>result) {
-  memmove(</strong>result, <strong>first, sizeof(_Tp) * (</strong>last - <strong>first)); // 直接使用 memmove
-  return </strong>result + (<strong>last - </strong>first);
+__copy_trivial(const _Tp* __first, const _Tp* __last, _Tp* __result) {
+  memmove(__result, __first, sizeof(_Tp) * (__last - __first)); // 直接使用 memmove
+  return __result + (__last - __first);
 }
-//============== __STL_FUNCTION_TMPL_PARTIAL_ORDER 对于具有函数模板偏特性的编译器</p>
-
-<h1>if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)</h1>
-
-<p>template <class _InputIter, class _OutputIter>
-inline <em>OutputIter
-__copy_aux2(</em>InputIter <strong>first, _InputIter </strong>last, <em>OutputIter <strong>result, </strong>false_type) { // false_type 的重载版
-  return <strong>copy(</strong>first, <strong>last, </strong>result, <strong>ITERATOR_CATEGORY(</strong>first), <strong>DISTANCE_TYPE(</strong>first));
+//============== __STL_FUNCTION_TMPL_PARTIAL_ORDER 对于具有函数模板偏特性的编译器
+#if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
+template &lt;class _InputIter, class _OutputIter&gt;
+inline _OutputIter 
+__copy_aux2(_InputIter __first, _InputIter __last, _OutputIter __result, __false_type) { // false_type 的重载版
+  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
 }
-template <class _InputIter, class _OutputIter>
-inline </em>OutputIter
-<strong>copy_aux2(_InputIter </strong>first, <em>InputIter __last, </em>OutputIter <strong>result, </strong>true_type) { // true_type 的重载版
-  return <strong>copy(</strong>first, <strong>last, </strong>result, <strong>ITERATOR_CATEGORY(</strong>first), <strong>DISTANCE_TYPE(</strong>first));
-}</p>
-
-<h1>ifndef <strong>USLC</strong></h1>
-
-<p>template <class _Tp>
-inline <em>Tp*
-__copy_aux2(</em>Tp<em> <em>_first, </em>Tp</em> <strong>last, _Tp* </strong>result, <strong>true_type) { // 原生指针的重载版
-  return </strong>copy_trivial(<strong>first, </strong>last, __result);
-}</p>
-
-<h1>endif /<em> <strong>USLC</strong> </em>/</h1>
-
-<p>template <class _Tp>
-inline <em>Tp*
-__copy_aux2(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result, <strong>true_type) { // 常量指针的重载版
-  return </strong>copy_trivial(<strong>first, </strong>last, <strong>result);
+template &lt;class _InputIter, class _OutputIter&gt;
+inline _OutputIter 
+__copy_aux2(_InputIter __first, _InputIter __last, _OutputIter __result, __true_type) { // true_type 的重载版
+  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
 }
-template <class _InputIter, class _OutputIter, class _Tp>
-inline _OutputIter
-</strong>copy_aux(<em>InputIter __first, </em>InputIter <strong>last, _OutputIter </strong>result, <em>Tp*) {
-  typedef typename __type_traits<_Tp>::has_trivial_assignment_operator </em>Trivial;
-  return <strong>copy_aux2(</strong>first, <strong>last, </strong>result, <em>Trivial());
+#ifndef __USLC__
+template &lt;class _Tp&gt;
+inline _Tp* 
+__copy_aux2(_Tp* __first, _Tp* __last, _Tp* __result, __true_type) { // 原生指针的重载版
+  return __copy_trivial(__first, __last, __result);
 }
-template <class _InputIter, class _OutputIter>
-inline </em>OutputIter
-copy(<em>InputIter __first, </em>InputIter <strong>last, _OutputIter </strong>result) { //最终的对外接口
-  return <strong>copy_aux(</strong>first, <strong>last, </strong>result, <strong>VALUE_TYPE(</strong>first));
+#endif /* __USLC__ */
+template &lt;class _Tp&gt;
+inline _Tp* 
+__copy_aux2(const _Tp* __first, const _Tp* __last, _Tp* __result, __true_type) { // 常量指针的重载版
+  return __copy_trivial(__first, __last, __result);
 }
-//============== __STL_CLASS_PARTIAL_SPECIALIZATION 对于具有类模板偏特性的编译器</p>
-
-<h1>elif defined(__STL_CLASS_PARTIAL_SPECIALIZATION)</h1>
-
-<p>template <class _InputIter, class _OutputIter, class _BoolType>
-struct <strong>copy_dispatch { // 类1，泛化版
-  static <em>OutputIter copy(</em>InputIter </strong>first, <em>InputIter __last, </em>OutputIter __result) {</p>
-
-<pre><code>typedef typename iterator_traits&lt;_InputIter&gt;::iterator_category _Category;
-typedef typename iterator_traits&lt;_InputIter&gt;::difference_type _Distance;
-return __copy(__first, __last, __result, _Category(), (_Distance*) 0);
-</code></pre>
-
-<p>  }
+template &lt;class _InputIter, class _OutputIter, class _Tp&gt;
+inline _OutputIter 
+__copy_aux(_InputIter __first, _InputIter __last, _OutputIter __result, _Tp*) {
+  typedef typename __type_traits&lt;_Tp&gt;::has_trivial_assignment_operator _Trivial;
+  return __copy_aux2(__first, __last, __result, _Trivial());
+}
+template &lt;class _InputIter, class _OutputIter&gt;
+inline _OutputIter 
+copy(_InputIter __first, _InputIter __last, _OutputIter __result) { //最终的对外接口
+  return __copy_aux(__first, __last, __result, __VALUE_TYPE(__first));
+}
+//============== __STL_CLASS_PARTIAL_SPECIALIZATION 对于具有类模板偏特性的编译器
+#elif defined(__STL_CLASS_PARTIAL_SPECIALIZATION)
+template &lt;class _InputIter, class _OutputIter, class _BoolType&gt;
+struct __copy_dispatch { // 类1，泛化版
+  static _OutputIter copy(_InputIter __first, _InputIter __last, _OutputIter __result) {
+    typedef typename iterator_traits&lt;_InputIter&gt;::iterator_category _Category;
+    typedef typename iterator_traits&lt;_InputIter&gt;::difference_type _Distance;
+    return __copy(__first, __last, __result, _Category(), (_Distance*) 0);
+  }
 };
-template <class _Tp>
-struct <strong>copy_dispatch&lt;<em>Tp*, </em>Tp*, </strong>true_type>{ // 类2，特化版
-  static <em>Tp* copy(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result) {</p>
-
-<pre><code>return __copy_trivial(__first, __last, __result);
-</code></pre>
-
-<p>  }
+template &lt;class _Tp&gt;
+struct __copy_dispatch&lt;_Tp*, _Tp*, __true_type&gt;{ // 类2，特化版
+  static _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) {
+    return __copy_trivial(__first, __last, __result);
+  }
 };
-template <class _Tp>
-struct <strong>copy_dispatch<const _Tp*, _Tp*, __true_type>{ // 类3，特化版
-  static <em>Tp* copy(const </em>Tp* </strong>first, const <em>Tp* __last, </em>Tp* __result) {</p>
-
-<pre><code>return __copy_trivial(__first, __last, __result);
-</code></pre>
-
-<p>  }
+template &lt;class _Tp&gt;
+struct __copy_dispatch&lt;const _Tp*, _Tp*, __true_type&gt;{ // 类3，特化版
+  static _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) {
+    return __copy_trivial(__first, __last, __result);
+  }
 };
-template <class _InputIter, class _OutputIter>
-inline <em>OutputIter
-copy(</em>InputIter <strong>first, _InputIter </strong>last, <em>OutputIter __result) { // 对外接口
-  typedef typename iterator_traits<_InputIter>::value_type </em>Tp;
-  typedef typename <strong>type_traits<_Tp>::has_trivial_assignment_operator _Trivial;
-  return </strong>copy_dispatch&lt;<em>InputIter, </em>OutputIter, _Trivial></p>
+template &lt;class _InputIter, class _OutputIter&gt;
+inline _OutputIter 
+copy(_InputIter __first, _InputIter __last, _OutputIter __result) { // 对外接口
+  typedef typename iterator_traits&lt;_InputIter&gt;::value_type _Tp;
+  typedef typename __type_traits&lt;_Tp&gt;::has_trivial_assignment_operator _Trivial;
+  return __copy_dispatch&lt;_InputIter, _OutputIter, _Trivial&gt;
+    ::copy(__first, __last, __result);
+}
+//============== 其他，完全不具有偏特化特性的情况
+#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+template &lt;class _InputIter, class _OutputIter&gt;
+inline _OutputIter 
+copy(_InputIter __first, _InputIter __last, _OutputIter __result){ // 对外接口，泛化版
+  return __copy(__first, __last, __result, __ITERATOR_CATEGORY(__first), __DISTANCE_TYPE(__first));
+}
 
-<pre><code>::copy(__first, __last, __result);
+#define __SGI_STL_DECLARE_COPY_TRIVIAL(_Tp)                                \
+  inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) { \ // 对外接口，特化版
+    memmove(__result, __first, sizeof(_Tp) * (__last - __first));          \
+    return __result + (__last - __first);                                  \
+  }
+
+__SGI_STL_DECLARE_COPY_TRIVIAL(char)
+__SGI_STL_DECLARE_COPY_TRIVIAL(signed char)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned char)
+__SGI_STL_DECLARE_COPY_TRIVIAL(short)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned short)
+__SGI_STL_DECLARE_COPY_TRIVIAL(int)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned int)
+__SGI_STL_DECLARE_COPY_TRIVIAL(long)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long)
+#ifdef __STL_HAS_WCHAR_T
+__SGI_STL_DECLARE_COPY_TRIVIAL(wchar_t)
+#endif
+#ifdef _STL_LONG_LONG
+__SGI_STL_DECLARE_COPY_TRIVIAL(long long)
+__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long long)
+#endif
+__SGI_STL_DECLARE_COPY_TRIVIAL(float)
+__SGI_STL_DECLARE_COPY_TRIVIAL(double)
+__SGI_STL_DECLARE_COPY_TRIVIAL(long double)
+#undef __SGI_STL_DECLARE_COPY_TRIVIAL
+#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 </code></pre>
-
-<p>}
-//============== 其他，完全不具有偏特化特性的情况</p>
-
-<h1>else /<em> __STL_CLASS_PARTIAL_SPECIALIZATION </em>/</h1>
-
-<p>template <class _InputIter, class _OutputIter>
-inline <em>OutputIter
-copy(</em>InputIter <strong>first, _InputIter </strong>last, _OutputIter <strong>result){ // 对外接口，泛化版
-  return </strong>copy(<strong>first, </strong>last, <strong>result, </strong>ITERATOR_CATEGORY(<strong>first), </strong>DISTANCE_TYPE(__first));
-}</p>
-
-<h1>define <em>_SGI_STL_DECLARE_COPY_TRIVIAL(</em>Tp)                                \</h1>
-
-<p>  inline <em>Tp* copy(const </em>Tp<em> <em>_first, const </em>Tp</em> <strong>last, _Tp* </strong>result) { \ // 对外接口，特化版</p>
-
-<pre><code>memmove(__result, __first, sizeof(_Tp) * (__last - __first));          \
-return __result + (__last - __first);                                  \
-</code></pre>
-
-<p>  }</p>
-
-<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(char)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(signed char)
-<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned char)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(short)
-<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned short)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(int)
-<strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned int)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(long)
-__SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long)</p>
-
-<h1>ifdef __STL_HAS_WCHAR_T</h1>
-
-<p>__SGI_STL_DECLARE_COPY_TRIVIAL(wchar_t)</p>
-
-<h1>endif</h1>
-
-<h1>ifdef _STL_LONG_LONG</h1>
-
-<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(long long)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(unsigned long long)</p>
-
-<h1>endif</h1>
-
-<p><strong>SGI_STL_DECLARE_COPY_TRIVIAL(float)
-</strong>SGI_STL_DECLARE_COPY_TRIVIAL(double)
-__SGI_STL_DECLARE_COPY_TRIVIAL(long double)</p>
-
-<h1>undef __SGI_STL_DECLARE_COPY_TRIVIAL</h1>
-
-<h1>endif /<em> __STL_CLASS_PARTIAL_SPECIALIZATION </em>/</h1>
-
-<p>```</p>
 
 <p>以上是 copy 的完整代码，关于复制还有两个接口，一个是 <code>copy_n</code>，另一个是 <code>copy_backward</code>，前者复制区间 <code>[first, last)</code> 中前 n 个元素，后者从last-1 往 first 复制，这里就不详细展开了。</p>
 ]]></content>

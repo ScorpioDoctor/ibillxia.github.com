@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: swap | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/swap/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -30,60 +30,47 @@
 
 <p>加减法最简单、最好理解了，设待交换的两个变量分别为 a 和 b ，首先将两者的和赋给 a ；然后将 a 与 b的差赋给 b ，这样 b 就是 a 原来的值了；最后再将 a 与 b 的差赋给 a ，这样 a 就是 b 原来的值了。具体代码如下：</p>
 
-<p>``` cpp
-inline template <class T>
-void xswap(T &amp;a,T &amp;b){</p>
-
-<pre><code>a=a+b;
-//printf("a=%u\n",a);
-b=a-b;
-a=a-b;
+<pre><code class="cpp">inline template &lt;class T&gt;
+void xswap(T &amp;a,T &amp;b){
+    a=a+b;
+    //printf("a=%u\n",a);
+    b=a-b;
+    a=a-b;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <!-- more -->
 
 
 <p>当然也可以先减后加：</p>
 
-<p>``` cpp
-inline template <class T>
-void xswap2(T &amp;a,T &amp;b){</p>
-
-<pre><code>a=a-b;
-//printf("a=%u\n",a);
-b=a+b;
-a=b-a;
+<pre><code class="cpp">inline template &lt;class T&gt;
+void xswap2(T &amp;a,T &amp;b){
+    a=a-b;
+    //printf("a=%u\n",a);
+    b=a+b;
+    a=b-a;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>这里实现的原理与先加后减类似。粗一看，这样实现两个变量的原地交换很简单有效。但是，这其中有一个很隐秘的bug，就是溢出的问题，在先加后减的实现中，如果 a 与 b 的和大于该类型的能表示的最大值，会发生神马捏？我写了一个 main 函数来简单的测试了一下：</p>
 
-<p>``` cpp
-int main()
-{</p>
-
-<pre><code>unsigned char a=255,b=1;
-printf("a=%u,b=%u\n",a,b);
-xswap(a,b);
-printf("a=%u,b=%u\n",a,b);
-return 0;
+<pre><code class="cpp">int main()
+{
+    unsigned char a=255,b=1;
+    printf("a=%u,b=%u\n",a,b);
+    xswap(a,b);
+    printf("a=%u,b=%u\n",a,b);
+    return 0;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>将上面的 xswap 函数中的注释取消，编译运行后（使用Code::Blocks 13.12 MinGW g++编译），得到如下输出：</p>
 
-<p><code>
-a=255,b=1
+<pre><code>a=255,b=1
 a=0
 a=1,b=255
-</code></p>
+</code></pre>
 
 <p>可以看到其中第2行输出的 a 的值为 0，产生了上溢（如果 a , b 同为负，可能产生下溢）。虽然最后交换的结果还是对的，但溢出的部分可能对内存中其他变量产生不可预测的后果。因此，不建议这么实现原地交换两个变量，如果实在需要用这种方法，一定要在进行加或减之前，判断时候回产生溢出。</p>
 
@@ -91,17 +78,13 @@ a=1,b=255
 
 <p>异或法的基本原理类似，但还利用了异或的如下两个特性： a ^ 0 = a, a ^ a = 0. 用异或来实现两个变量的交换如下：</p>
 
-<p>``` cpp
-template <class T>
-inline void xswap3(T &amp;a,T &amp;b){</p>
-
-<pre><code>a=a^b;
-b=a^b;
-a=b^a;
+<pre><code class="cpp">template &lt;class T&gt;
+inline void xswap3(T &amp;a,T &amp;b){
+    a=a^b;
+    b=a^b;
+    a=b^a;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>由于异或是按位运算的，所以不存在溢出问题。因此，如果一定要原地实现两个变量的交换的话，建议用异或的方法。</p>
 
@@ -109,20 +92,16 @@ a=b^a;
 
 <p>实际上，我们还可以利用上面的思想，将两个变量扩展到多个变量的原地交换，例如三个变量的交换：</p>
 
-<p>``` cpp
-template <class T>
-inline void swap3(T &amp;a,T &amp;b,T &amp;c){</p>
-
-<pre><code>a=a^b;
-b=a^b;
-a=b^a;
-b=b^c;
-c=b^c;
-b=b^c;
+<pre><code class="cpp">template &lt;class T&gt;
+inline void swap3(T &amp;a,T &amp;b,T &amp;c){
+    a=a^b;
+    b=a^b;
+    a=b^a;
+    b=b^c;
+    c=b^c;
+    b=b^c;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <p>即先交换 a 和 b，再交换 b (=a) 和 c。另外，上面的式子可以简化和压缩到一个式子，具体的技巧读者可以自行google，这里不提倡这么做。</p>
 
@@ -130,26 +109,25 @@ b=b^c;
 
 <p>最后，我们来看看STL标准库是如何实现swap的（这里的实现版本是 move.h 文件中的一个，在 STL 中还有针对 vector, string, tree, map, multimap, deque 的 swap 函数）。</p>
 
-<p>``` cpp
-/<em>*
+<pre><code class="cpp">/**
 *  @brief Swaps two values.
 *  @ingroup mutating_algorithms
-*  @param  <strong>a  A thing of arbitrary type.
-*  @param  </strong>b  Another thing of arbitrary type.
+*  @param  __a  A thing of arbitrary type.
+*  @param  __b  Another thing of arbitrary type.
 *  @return   Nothing.
-</em>/
-template<typename _Tp>
+*/
+template&lt;typename _Tp&gt;
 inline void
-swap(<em>Tp&amp; __a, </em>Tp&amp; <strong>b)
+swap(_Tp&amp; __a, _Tp&amp; __b)
 {
   // concept requirements
-  </strong>glibcxx_function_requires(_SGIAssignableConcept<_Tp>)</p>
+  __glibcxx_function_requires(_SGIAssignableConcept&lt;_Tp&gt;)
 
-<p>  <em>Tp __tmp = </em>GLIBCXX_MOVE(<strong>a);
-  </strong>a = <em>GLIBCXX_MOVE(<strong>b);
-  </strong>b = </em>GLIBCXX_MOVE(__tmp);
+  _Tp __tmp = _GLIBCXX_MOVE(__a);
+  __a = _GLIBCXX_MOVE(__b);
+  __b = _GLIBCXX_MOVE(__tmp);
 }
-```</p>
+</code></pre>
 
 <p>可以看到，这里新声明了一个变量 __tmp 来中转。至于为什么没有原地进行交换，一个可能的解释是：对于 inline 函数来说，函数调用的代码会直接被改函数体替换，再经过编译优化，最后可能只需要借助一个寄存器变量就可以实现两个变量的交换了，这是非常快的，与通过按位的异或运算的实现，在性能上区别不是太大。</p>
 

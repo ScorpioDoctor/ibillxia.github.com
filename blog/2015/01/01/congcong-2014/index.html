@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true">Jan 1<span>st</span>, 2015</time>
+<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -205,7 +190,7 @@ $(document).ready(function(){
 
 <h2>学业-平平淡淡</h2>
 
-<p>作为一个仍在校园里生活的学生，学业还是最重要的，年终总结也必然要提到。作为一个研究僧硕士狗+码农程序猿，这一年在学业上是平平淡淡、颗粒无收，没有什么值得一提的，没有发表什么论文，也没有学到什么新的知识和技术。如果真要扯一点的话，那就是3月份参加了阿里的大数据竞赛，把推荐系统及相关算法学习和捣鼓了一番，虽然最后连初赛都没过，但还是收获不少吧。在推荐算法方面，主要看了libMF的代码和论文，然后把比较好的一些开源推荐工具进行了非常简单的也并非太原创的总结——<a href="http://ibillxia.github.io/blog/2014/03/10/top-10-open-source-recommendation-systems/">TOP 10开源的推荐系统简介</a>，没想到居然被人推荐到Fenng的类似于Haker news的<a href="http://news.dbanotes.net/">dbanotes startup news</a>上了，那几天博客的访问量一下子飙上去了不少，想想还是挺鸡冻的有木有\<sup>-\^</sup></p>
+<p>作为一个仍在校园里生活的学生，学业还是最重要的，年终总结也必然要提到。作为一个研究僧硕士狗+码农程序猿，这一年在学业上是平平淡淡、颗粒无收，没有什么值得一提的，没有发表什么论文，也没有学到什么新的知识和技术。如果真要扯一点的话，那就是3月份参加了阿里的大数据竞赛，把推荐系统及相关算法学习和捣鼓了一番，虽然最后连初赛都没过，但还是收获不少吧。在推荐算法方面，主要看了libMF的代码和论文，然后把比较好的一些开源推荐工具进行了非常简单的也并非太原创的总结——<a href="http://ibillxia.github.io/blog/2014/03/10/top-10-open-source-recommendation-systems/">TOP 10开源的推荐系统简介</a>，没想到居然被人推荐到Fenng的类似于Haker news的<a href="http://news.dbanotes.net/">dbanotes startup news</a>上了，那几天博客的访问量一下子飙上去了不少，想想还是挺鸡冻的有木有^-^</p>
 
 <p>在参加这个比赛的过程中还对并行计算和并发编程进行了一些浅显的研究，因为发现简单的算法运行时间太长，而多核CPU根本没法好好利用，于是捣鼓了一下Hadoop和Mahout，学了一下一门比较新的传说对并发支持比较nice的由高大上的Google开发的Go语言，并总结在 <a href="http://ibillxia.github.io/blog/2014/03/16/go-concurrent-programming-first-try/">Go并发编程初探</a> 一文中，但之后就没有怎么用Go做什么东西了，新的一年希望能捡起来再捣鼓出一点东西来。</p>
 
@@ -256,11 +241,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true">Jan 1<span>st</span>, 2015</time>
+<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/life/'>Life</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/life/'>life</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/zju/'>ZJU</a>, <a class='tag' href='/blog/tags/xue-xi/'>学习</a>, <a class='tag' href='/blog/tags/sheng-huo/'>生活</a></span>
@@ -268,24 +253,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -322,12 +290,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

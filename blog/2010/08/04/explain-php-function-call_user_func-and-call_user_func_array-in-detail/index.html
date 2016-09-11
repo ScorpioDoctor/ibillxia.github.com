@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-04T21:38:00+08:00" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+<time datetime="2010-08-04T21:38:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -206,14 +191,14 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function a($b,$c) </span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">  echo $b;</span>
-</span><span class='line'><span class="x">  echo $c;</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">call_user_func(&#39;a&#39;, &quot;111&quot;,&quot;222&quot;);</span>
-</span><span class='line'><span class="x">call_user_func(&#39;a&#39;, &quot;333&quot;,&quot;444&quot;);</span>
-</span><span class='line'><span class="x">//显示 111 222 333 444</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">function</span> <span class="nf">a</span><span class="p">(</span><span class="nv">$b</span><span class="p">,</span><span class="nv">$c</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">echo</span> <span class="nv">$b</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">echo</span> <span class="nv">$c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nb">call_user_func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="s2">&quot;222&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nb">call_user_func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s2">&quot;333&quot;</span><span class="p">,</span><span class="s2">&quot;444&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">//显示 111 222 333 444</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -235,14 +220,14 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">class a {</span>
-</span><span class='line'><span class="x">  function b($c) </span>
-</span><span class='line'><span class="x">  {</span>
-</span><span class='line'><span class="x">      echo $c;</span>
-</span><span class='line'><span class="x">  }</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">call_user_func(array(&quot;a&quot;, &quot;b&quot;),&quot;111&quot;);</span>
-</span><span class='line'><span class="x">//显示 111</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">class</span> <span class="nc">a</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">b</span><span class="p">(</span><span class="nv">$c</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">echo</span> <span class="nv">$c</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nb">call_user_func</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span><span class="s2">&quot;111&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">//显示 111</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -260,13 +245,13 @@ $(document).ready(function(){
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">unction a($b, $c) </span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">  echo $b;</span>
-</span><span class='line'><span class="x">  echo $c;</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">call_user_func_array(&#39;a&#39;, array(&quot;111&quot;, &quot;222&quot;));</span>
-</span><span class='line'><span class="x">//显示 111 222</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">unction</span> <span class="nx">a</span><span class="p">(</span><span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">echo</span> <span class="nv">$b</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">echo</span> <span class="nv">$c</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;111&quot;</span><span class="p">,</span> <span class="s2">&quot;222&quot;</span><span class="p">));</span>
+</span><span class='line'><span class="c1">//显示 111 222</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -285,14 +270,14 @@ $(document).ready(function(){
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">Class ClassA {</span>
-</span><span class='line'><span class="x">  function bc($b, $c) {</span>
-</span><span class='line'><span class="x">      $bc = $b + $c;</span>
-</span><span class='line'><span class="x">      echo $bc;</span>
-</span><span class='line'><span class="x">  }</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">call_user_func_array(array(&#39;ClassA&#39;,&#39;bc&#39;), array(&quot;111&quot;, &quot;222&quot;));</span>
-</span><span class='line'><span class="x">//显示 333</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">Class</span> <span class="nc">ClassA</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">bc</span><span class="p">(</span><span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$bc</span> <span class="o">=</span> <span class="nv">$b</span> <span class="o">+</span> <span class="nv">$c</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">echo</span> <span class="nv">$bc</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;ClassA&#39;</span><span class="p">,</span><span class="s1">&#39;bc&#39;</span><span class="p">),</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;111&quot;</span><span class="p">,</span> <span class="s2">&quot;222&quot;</span><span class="p">));</span>
+</span><span class='line'><span class="c1">//显示 333</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -312,15 +297,15 @@ $(document).ready(function(){
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function a(&amp;$b)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">  $b++;</span>
-</span><span class='line'><span class="x">}</span>
-</span><span class='line'><span class="x">$c = 0;</span>
-</span><span class='line'><span class="x">call_user_func(&#39;a&#39;, &amp;$c);</span>
-</span><span class='line'><span class="x">echo $c;//显示 1</span>
-</span><span class='line'><span class="x">call_user_func_array(&#39;a&#39;, array(&amp;$c));</span>
-</span><span class='line'><span class="x">echo $c;//显示 2</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">function</span> <span class="nf">a</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$b</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nv">$b</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nv">$c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="nb">call_user_func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$c</span><span class="p">);</span>
+</span><span class='line'><span class="k">echo</span> <span class="nv">$c</span><span class="p">;</span><span class="c1">//显示 1</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$c</span><span class="p">));</span>
+</span><span class='line'><span class="k">echo</span> <span class="nv">$c</span><span class="p">;</span><span class="c1">//显示 2</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -348,23 +333,23 @@ $(document).ready(function(){
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function debug($var, $val) </span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    echo &quot;***DEBUGGING\nVARIABLE: $var\nVALUE:&quot;;</span>
-</span><span class='line'><span class="x">    if (is_array($val) || is_object($val) || is_resource($val)) {</span>
-</span><span class='line'><span class="x">        print_r($val);</span>
-</span><span class='line'><span class="x">    } else {</span>
-</span><span class='line'><span class="x">        echo &quot;\n$val\n&quot;;</span>
-</span><span class='line'><span class="x">    }</span>
-</span><span class='line'><span class="x">    echo &quot;***\n&quot;;</span>
-</span><span class='line'><span class="x">}</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">function</span> <span class="nf">debug</span><span class="p">(</span><span class="nv">$var</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">echo</span> <span class="s2">&quot;***DEBUGGING</span><span class="se">\n</span><span class="s2">VARIABLE: </span><span class="si">$var</span><span class="se">\n</span><span class="s2">VALUE:&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="nb">is_array</span><span class="p">(</span><span class="nv">$val</span><span class="p">)</span> <span class="o">||</span> <span class="nb">is_object</span><span class="p">(</span><span class="nv">$val</span><span class="p">)</span> <span class="o">||</span> <span class="nb">is_resource</span><span class="p">(</span><span class="nv">$val</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nb">print_r</span><span class="p">(</span><span class="nv">$val</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">echo</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">$val</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">echo</span> <span class="s2">&quot;***</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">$c = mysql_connect();</span>
-</span><span class='line'><span class="x">$host = $_SERVER[&quot;SERVER_NAME&quot;];</span>
+</span><span class='line'><span class="nv">$c</span> <span class="o">=</span> <span class="nb">mysql_connect</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$host</span> <span class="o">=</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s2">&quot;SERVER_NAME&quot;</span><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">call_user_func_array(&#39;debug&#39;, array(&quot;host&quot;, $host));</span>
-</span><span class='line'><span class="x">call_user_func_array(&#39;debug&#39;, array(&quot;c&quot;, $c));</span>
-</span><span class='line'><span class="x">call_user_func_array(&#39;debug&#39;, array(&quot;_POST&quot;, $_POST));</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="nv">$host</span><span class="p">));</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="nv">$c</span><span class="p">));</span>
+</span><span class='line'><span class="nb">call_user_func_array</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;_POST&quot;</span><span class="p">,</span> <span class="nv">$_POST</span><span class="p">));</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -398,29 +383,29 @@ $(document).ready(function(){
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="x">function otest1 ($a)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    echo( &#39;一个参数&#39; );</span>
-</span><span class='line'><span class="x">}</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">function</span> <span class="nf">otest1</span> <span class="p">(</span><span class="nv">$a</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">echo</span><span class="p">(</span> <span class="s1">&#39;一个参数&#39;</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">function otest2 ( $a, $b)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    echo( &#39;二个参数&#39; );</span>
-</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">otest2</span> <span class="p">(</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">echo</span><span class="p">(</span> <span class="s1">&#39;二个参数&#39;</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">function otest3 ( $a ,$b,$c)</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    echo( &#39;三个啦&#39; );</span>
-</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">otest3</span> <span class="p">(</span> <span class="nv">$a</span> <span class="p">,</span><span class="nv">$b</span><span class="p">,</span><span class="nv">$c</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">echo</span><span class="p">(</span> <span class="s1">&#39;三个啦&#39;</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">function otest ()</span>
-</span><span class='line'><span class="x">{</span>
-</span><span class='line'><span class="x">    $args = func_get_args();</span>
-</span><span class='line'><span class="x">    $num = func_num_args();</span>
-</span><span class='line'><span class="x">    call_user_func_array( &#39;otest&#39;.$num, $args );</span>
-</span><span class='line'><span class="x">}</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">otest</span> <span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nv">$args</span> <span class="o">=</span> <span class="nb">func_get_args</span><span class="p">();</span>
+</span><span class='line'>    <span class="nv">$num</span> <span class="o">=</span> <span class="nb">func_num_args</span><span class="p">();</span>
+</span><span class='line'>    <span class="nb">call_user_func_array</span><span class="p">(</span> <span class="s1">&#39;otest&#39;</span><span class="o">.</span><span class="nv">$num</span><span class="p">,</span> <span class="nv">$args</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="x">otest(1,2);  //调用第一个函数，输出：一个参数</span>
+</span><span class='line'><span class="nx">otest</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>  <span class="c1">//调用第一个函数，输出：一个参数</span>
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
@@ -449,11 +434,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-04T21:38:00+08:00" pubdate data-updated="true">Aug 4<span>th</span>, 2010</time>
+<time datetime="2010-08-04T21:38:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/php/'>PHP</a>, <a class='tag' href='/blog/tags/ku-han-shu/'>库函数</a></span>
@@ -461,24 +446,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -515,12 +483,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

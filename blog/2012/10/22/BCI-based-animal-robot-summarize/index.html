@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -255,7 +240,7 @@ $(document).ready(function(){
 
 
 <p>在动物实验方面，2000年Nature发表了“Real Braining for Real Robots”一文，报道了从猴子大脑皮层获取的神经信号实时控制千里
-之外的一个机器人。2002年，Nature上报道了美国纽约州立大学有关遥控大鼠的研究工作，给人们展现了生物机器人(Bio&#8211;robot)的应用
+之外的一个机器人。2002年，Nature上报道了美国纽约州立大学有关遥控大鼠的研究工作，给人们展现了生物机器人(Bio--robot)的应用
 前景。美国DARPA称，该部门的专家正在研究用电子装置培训诸如嶂螂等动物的计划，将各种形形色色的动物训练成武器，以打造出一批
 全新的“生物士兵”。</p>
 
@@ -354,13 +339,13 @@ BCI技术包括微电极系统、神经信号的记录分析及特征识别系�
 <h3>5 展望未来</h3>
 
 
-<p>尽管目前的动物机器人研究还处于起步阶段，还不成熟，但是，在科技日新月异的今天，随着各门相关的科学与技术的发展与进步，
+<p><p>尽管目前的动物机器人研究还处于起步阶段，还不成熟，但是，在科技日新月异的今天，随着各门相关的科学与技术的发展与进步，
 动物机器人的研究将更加深入和成熟，也将会使BCI技术发展更迅猛、性能更优越、应用更广泛、前景更光明，动物机器人也必将成为一种
-更为实用的机器人，应用于人类现实生活中的更多领域。<p>
+更为实用的机器人，应用于人类现实生活中的更多领域。<p></p>
 
-<p>或许电影“豚鼠特工队”中那样高度智能化的、无比完美的动物机器人在不久的将来会成为现实。</p>
+<p><p>或许电影“豚鼠特工队”中那样高度智能化的、无比完美的动物机器人在不久的将来会成为现实。</p></p>
 
-<h3>参考文献</h3>
+<p><h3>参考文献</h3>
 <p>
 [1] 王勇．基于BCI技术的动物机器人的研究［硕］．2006，5</br>
 [2] 杨雪．基于动物实验的脑－机接口的研究［硕］．2007，5</br>
@@ -368,8 +353,7 @@ BCI技术包括微电极系统、神经信号的记录分析及特征识别系�
 [4] 王文波，戴振东．动物机器人的研究现状与发展．</br>
 [5] 王永玲，原魁，李剑锋等．一种新型的动物机器人遥控训练系统．高技术通讯，2007，17(7) : 698 -702</br>
 [6] Talwar S K，Xu S H，Hawley E S，etal．Behavi oral neuro science：rat navigation guided by remote control [ J ]. Nature，2002，417(6884): 37 -38．
-</p>
-
+</p></p>
 </div>
 <div id="copyleft" class="well" >
 	<span>Original Link: <a rel="full-article" href="">http://ibillxia.github.io/blog/2012/10/22/BCI-based-animal-robot-summarize/</a></br>
@@ -396,11 +380,11 @@ BCI技术包括微电极系统、神经信号的记录分析及特征识别系�
   
 
 
-<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true">Oct 22<span>nd</span>, 2012</time>
+<time datetime="2012-10-22T23:09:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/intelligence/'>Intelligence</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/intelligence/'>intelligence</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/bci/'>BCI</a>, <a class='tag' href='/blog/tags/ji-qi-ren/'>机器人</a></span>
@@ -408,24 +392,7 @@ BCI技术包括微电极系统、神经信号的记录分析及特征识别系�
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -462,12 +429,10 @@ BCI技术包括微电极系统、神经信号的记录分析及特征识别系�
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

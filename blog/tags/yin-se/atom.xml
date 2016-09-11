@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 音色 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/yin-se/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -61,35 +61,54 @@ import进来，因为ms与numpy的版本有冲突，出现了什么“numpy.dtyp
 
 <p>
 闲话少说了，上代码吧，其实看看这代码也挺简单的，就调一个matplotlib.pyplot.specgram()就可以了。
-``` py3
-import wave
-import numpy as np
-import matplotlib.pyplot as plt
-
-fw = wave.open('aeiou.wav','r')
-soundInfo = fw.readframes(-1)
-soundInfo = np.fromstring(soundInfo,np.int16)
-f = fw.getframerate()
-fw.close()
-
-plt.subplot(211)
-plt.plot(soundInfo)
-plt.ylabel('Amplitude')
-plt.title('Wave from and spectrogram of aeiou.wav')
-
-plt.subplot(212)
-plt.specgram(soundInfo,Fs = f, scale_by_freq = True, sides = 'default')
-plt.ylabel('Frequency')
-plt.xlabel('time(seconds)')
-plt.show()
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='py3'><span class='line'><span class="kn">import</span> <span class="nn">wave</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">fw</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;aeiou.wav&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">soundInfo</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="n">soundInfo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">soundInfo</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">getframerate</span><span class="p">()</span>
+</span><span class='line'><span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">soundInfo</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;Amplitude&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&#39;Wave from and spectrogram of aeiou.wav&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">specgram</span><span class="p">(</span><span class="n">soundInfo</span><span class="p">,</span><span class="n">Fs</span> <span class="o">=</span> <span class="n">f</span><span class="p">,</span> <span class="n">scale_by_freq</span> <span class="o">=</span> <span class="k">True</span><span class="p">,</span> <span class="n">sides</span> <span class="o">=</span> <span class="s">&#39;default&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;Frequency&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;time(seconds)&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 
 
 
 <p>程序运行的效果如下图：
-<center>{% img /images/2013/IMAG2013051801.png %}</center>
+<center><img src="/images/2013/IMAG2013051801.png"></center>
 虽然程序简单，但还有一些小bug，比如subplot(212)的xlabel和ylabel无法显示，这个问题暂时还没有解决。（更新：这个问题已解决，把mpp.show()放到
 最后一行就可以了，顺便图也更新了）</p>
 

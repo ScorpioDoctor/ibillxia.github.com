@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 过零率 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/guo-ling-lu/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -53,74 +53,131 @@
 <h2>ZCR的Python实现</h2>
 
 
-<p>ZCR的Python实现如下：
-``` py3
-import math
-import numpy as np
+<p><p>ZCR的Python实现如下：
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='py3'><span class='line'><span class="kn">import</span> <span class="nn">math</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="nf">ZeroCR</span><span class="p">(</span><span class="n">waveData</span><span class="p">,</span><span class="n">frameSize</span><span class="p">,</span><span class="n">overLap</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">wlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">waveData</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">step</span> <span class="o">=</span> <span class="n">frameSize</span> <span class="o">-</span> <span class="n">overLap</span>
+</span><span class='line'>    <span class="n">frameNum</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">wlen</span><span class="o">/</span><span class="n">step</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">zcr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">frameNum</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">frameNum</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">curFrame</span> <span class="o">=</span> <span class="n">waveData</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">step</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">step</span><span class="o">+</span><span class="n">frameSize</span><span class="p">,</span><span class="n">wlen</span><span class="p">))]</span>
+</span><span class='line'>        <span class="c">#To avoid DC bias, usually we need to perform mean subtraction on each frame</span>
+</span><span class='line'>        <span class="c">#ref: http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/basicFeatureZeroCrossingRate.asp</span>
+</span><span class='line'>        <span class="n">curFrame</span> <span class="o">=</span> <span class="n">curFrame</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">curFrame</span><span class="p">)</span> <span class="c"># zero-justified</span>
+</span><span class='line'>        <span class="n">zcr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">curFrame</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">curFrame</span><span class="p">[</span><span class="mi">1</span><span class="p">::]</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">zcr</span>
+</span></code></pre></td></tr></table></div></figure>
+</p></p>
 
-def ZeroCR(waveData,frameSize,overLap):
-    wlen = len(waveData)
-    step = frameSize - overLap
-    frameNum = math.ceil(wlen/step)
-    zcr = np.zeros((frameNum,1))
-    for i in range(frameNum):
-        curFrame = waveData[np.arange(i*step,min(i*step+frameSize,wlen))]
-        #To avoid DC bias, usually we need to perform mean subtraction on each frame
-        #ref: http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/basicFeatureZeroCrossingRate.asp
-        curFrame = curFrame - np.mean(curFrame) # zero-justified
-        zcr[i] = sum(curFrame[0:-1]*curFrame[1::]<=0)
-    return zcr
-```
-</p>
+<p><p>对于给定语音文件aeiou.wav，利用上面的函数计算ZCR的代码如下：
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='py3'><span class='line'><span class="kn">import</span> <span class="nn">math</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">wave</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;============</span> <span class="n">test</span> <span class="n">the</span> <span class="n">algorithm</span> <span class="o">=============&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">read</span> <span class="n">wave</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">get</span> <span class="n">parameters</span><span class="o">.&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">fw</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;aeiou.wav&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">params</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
+</span><span class='line'><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</span><span class='line'><span class="n">nchannels</span><span class="p">,</span> <span class="n">sampwidth</span><span class="p">,</span> <span class="n">framerate</span><span class="p">,</span> <span class="n">nframes</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+</span><span class='line'><span class="n">str_data</span> <span class="o">=</span> <span class="n">fw</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
+</span><span class='line'><span class="n">wave_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">str_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">short</span><span class="p">)</span>
+</span><span class='line'><span class="n">wave_data</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">wave_data</span> <span class="o">=</span> <span class="n">wave_data</span><span class="o">.</span><span class="n">T</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">fw</span><span class="o">.</span><span class="n">close</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">calculate</span> <span class="n">Zero</span> <span class="n">Cross</span> <span class="n">Rate</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">frameSize</span> <span class="o">=</span> <span class="mi">256</span>
+</span><span class='line'><span class="n">overLap</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">zcr</span> <span class="o">=</span> <span class="n">ZeroCR</span><span class="p">(</span><span class="n">wave_data</span><span class="p">,</span><span class="n">frameSize</span><span class="p">,</span><span class="n">overLap</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">plot</span> <span class="n">the</span> <span class="n">wave</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave_data</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">framerate</span><span class="p">)</span>
+</span><span class='line'><span class="n">time2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">zcr</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wave_data</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">zcr</span><span class="p">)</span> <span class="o">/</span> <span class="n">framerate</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">wave_data</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Amplitude&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time2</span><span class="p">,</span> <span class="n">zcr</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;ZCR&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;time (seconds)&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+</p></p>
 
-<p>对于给定语音文件aeiou.wav，利用上面的函数计算ZCR的代码如下：
-``` py3
-import math
-import wave
-import numpy as np
-import pylab as pl
+<p><p>运行以上程序得到下图：
+<center><img src="/images/2013/IMAG2013051502.png"></center>
+</p></p>
 
-# ============ test the algorithm =============
-# read wave file and get parameters.
-fw = wave.open('aeiou.wav','rb')
-params = fw.getparams()
-print(params)
-nchannels, sampwidth, framerate, nframes = params[:4]
-str_data = fw.readframes(nframes)
-wave_data = np.fromstring(str_data, dtype=np.short)
-wave_data.shape = -1, 1
-#wave_data = wave_data.T
-fw.close()
-
-# calculate Zero Cross Rate
-frameSize = 256
-overLap = 0
-zcr = ZeroCR(wave_data,frameSize,overLap)
-
-# plot the wave
-time = np.arange(0, len(wave_data)) * (1.0 / framerate)
-time2 = np.arange(0, len(zcr)) * (len(wave_data)/len(zcr) / framerate)
-pl.subplot(211)
-pl.plot(time, wave_data)
-pl.ylabel("Amplitude")
-pl.subplot(212)
-pl.plot(time2, zcr)
-pl.ylabel("ZCR")
-pl.xlabel("time (seconds)")
-pl.show()
-```
-</p>
-
-<p>运行以上程序得到下图：
-<center>{% img /images/2013/IMAG2013051502.png %}</center>
-</p>
-
-<h2>参考（References）</h2>
+<p><h2>参考（References）</h2>
 <p>
-[1]Zero Crossing Rate (過零率): http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/basicFeatureZeroCrossingRate.asp?title=5-3%20Zero%20Crossing%20Rate%20(%B9L%B9s%B2v)&language=english</br>
+[1]Zero Crossing Rate (過零率): http://neural.cs.nthu.edu.tw/jang/books/audiosignalprocessing/basicFeatureZeroCrossingRate.asp?title=5-3%20Zero%20Crossing%20Rate%20(%B9L%B9s%B2v)&amp;language=english</br>
 [2]Wiki: http://zh.wikipedia.org/zh/过零率
-</p>
-
+</p></p>
 ]]></content>
   </entry>
   

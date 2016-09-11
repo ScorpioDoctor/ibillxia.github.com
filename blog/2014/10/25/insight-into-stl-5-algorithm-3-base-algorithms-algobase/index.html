@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true">Oct 25<span>th</span>, 2014</time>
+<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -244,9 +229,9 @@ $(document).ready(function(){
 </span><span class='line'><span class="kt">bool</span> <span class="n">lexicographical_compare</span><span class="p">(</span><span class="n">_InputIter1</span> <span class="n">__first1</span><span class="p">,</span> <span class="n">_InputIter1</span> <span class="n">__last1</span><span class="p">,</span> <span class="n">_InputIter2</span> <span class="n">__first2</span><span class="p">,</span> <span class="n">_InputIter2</span> <span class="n">__last2</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="n">__first1</span> <span class="o">!=</span> <span class="n">__last1</span> <span class="o">&amp;&amp;</span> <span class="n">__first2</span> <span class="o">!=</span> <span class="n">__last2</span><span class="p">;</span> <span class="o">++</span><span class="n">__first1</span><span class="p">,</span> <span class="o">++</span><span class="n">__first2</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">__first2</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">__first2</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">__first1</span><span class="p">)</span>
-</span><span class='line'>      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  <span class="k">return</span> <span class="n">__first1</span> <span class="o">==</span> <span class="n">__last1</span> <span class="o">&amp;&amp;</span> <span class="n">__first2</span> <span class="o">!=</span> <span class="n">__last2</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
@@ -264,10 +249,10 @@ $(document).ready(function(){
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kr">inline</span> <span class="kt">bool</span>
-</span><span class='line'><span class="n">lexicographical_compare</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last1</span><span class="p">,</span>
+</span><span class='line'><span class="nf">lexicographical_compare</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last1</span><span class="p">,</span>
 </span><span class='line'>                        <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first2</span><span class="p">,</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last2</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">const</span> <span class="n">size_t</span> <span class="n">__len1</span> <span class="o">=</span> <span class="n">__last1</span> <span class="o">-</span> <span class="n">__first1</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="n">size_t</span> <span class="n">__len2</span> <span class="o">=</span> <span class="n">__last2</span> <span class="o">-</span> <span class="n">__first2</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">__len1</span> <span class="o">=</span> <span class="n">__last1</span> <span class="o">-</span> <span class="n">__first1</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">__len2</span> <span class="o">=</span> <span class="n">__last2</span> <span class="o">-</span> <span class="n">__first2</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">const</span> <span class="kt">int</span> <span class="n">__result</span> <span class="o">=</span> <span class="n">memcmp</span><span class="p">(</span><span class="n">__first1</span><span class="p">,</span> <span class="n">__first2</span><span class="p">,</span> <span class="n">min</span><span class="p">(</span><span class="n">__len1</span><span class="p">,</span> <span class="n">__len2</span><span class="p">));</span>
 </span><span class='line'>  <span class="k">return</span> <span class="n">__result</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">__result</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">__len1</span> <span class="o">&lt;</span> <span class="n">__len2</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
@@ -464,7 +449,7 @@ $(document).ready(function(){
 </span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
 </span><span class='line'><span class="n">__copy_aux</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Tp</span><span class="o">*</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="k">typename</span> <span class="n">__type_traits</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">&gt;::</span><span class="n">has_trivial_assignment_operator</span> <span class="n">_Trivial</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">__copy_aux2</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Trivial</span><span class="p">());</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nf">__copy_aux2</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Trivial</span><span class="p">());</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_InputIter</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_OutputIter</span><span class="o">&gt;</span>
 </span><span class='line'><span class="kr">inline</span> <span class="n">_OutputIter</span>
@@ -478,7 +463,7 @@ $(document).ready(function(){
 </span><span class='line'>  <span class="k">static</span> <span class="n">_OutputIter</span> <span class="n">copy</span><span class="p">(</span><span class="n">_InputIter</span> <span class="n">__first</span><span class="p">,</span> <span class="n">_InputIter</span> <span class="n">__last</span><span class="p">,</span> <span class="n">_OutputIter</span> <span class="n">__result</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="o">&gt;::</span><span class="n">iterator_category</span> <span class="n">_Category</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">_InputIter</span><span class="o">&gt;::</span><span class="n">difference_type</span> <span class="n">_Distance</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Category</span><span class="p">(),</span> <span class="p">(</span><span class="n">_Distance</span><span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nf">__copy</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">,</span> <span class="n">__result</span><span class="p">,</span> <span class="n">_Category</span><span class="p">(),</span> <span class="p">(</span><span class="n">_Distance</span><span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">};</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
@@ -566,11 +551,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true">Oct 25<span>th</span>, 2014</time>
+<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/stl/'>STL</a>, <a class='tag' href='/blog/tags/suan-fa/'>算法</a></span>
@@ -578,24 +563,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -632,12 +600,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

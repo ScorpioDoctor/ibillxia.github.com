@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -230,7 +215,7 @@ $(document).ready(function(){
 <span class='line-number'>12</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Container</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">back_insert_iterator</span> <span class="p">{</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'><span class="nl">public:</span>
 </span><span class='line'>  <span class="n">back_insert_iterator</span><span class="o">&lt;</span><span class="n">_Container</span><span class="o">&gt;&amp;</span>
 </span><span class='line'>  <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="k">typename</span> <span class="n">_Container</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;</span> <span class="n">__value</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 赋值变为尾部插入</span>
 </span><span class='line'>    <span class="n">container</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">__value</span><span class="p">);</span>
@@ -267,12 +252,12 @@ $(document).ready(function(){
 <span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Iterator</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">reverse_iterator</span> <span class="p">{</span>
-</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'><span class="nl">protected:</span>
 </span><span class='line'>  <span class="n">_Iterator</span> <span class="n">current</span><span class="p">;</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'><span class="nl">public:</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_Iterator</span> <span class="n">iterator_type</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">reverse_iterator</span><span class="o">&lt;</span><span class="n">_Iterator</span><span class="o">&gt;</span> <span class="n">_Self</span><span class="p">;</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'><span class="nl">public:</span>
 </span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">++</span><span class="p">()</span> <span class="p">{</span> <span class="o">--</span><span class="n">current</span><span class="p">;</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// 前置自增变为自减</span>
 </span><span class='line'>  <span class="n">_Self</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">_Self</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="o">--</span><span class="n">current</span><span class="p">;</span> <span class="k">return</span> <span class="n">__tmp</span><span class="p">;</span> <span class="p">}</span>
 </span><span class='line'>  <span class="n">_Self</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">--</span><span class="p">()</span> <span class="p">{</span> <span class="o">++</span><span class="n">current</span><span class="p">;</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// 前置自减变为自增</span>
@@ -320,9 +305,9 @@ $(document).ready(function(){
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Tp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_CharT</span> <span class="o">=</span> <span class="kt">char</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Traits</span> <span class="o">=</span> <span class="n">char_traits</span><span class="o">&lt;</span><span class="n">_CharT</span><span class="o">&gt;</span><span class="p">,</span>
-</span><span class='line'>          <span class="k">class</span> <span class="nc">_Dist</span> <span class="o">=</span> <span class="n">ptrdiff_t</span><span class="o">&gt;</span>
+</span><span class='line'>          <span class="k">class</span> <span class="nc">_Dist</span> <span class="o">=</span> <span class="kt">ptrdiff_t</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">istream_iterator</span> <span class="p">{</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'><span class="nl">public:</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_CharT</span>                         <span class="n">char_type</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">_Traits</span>                        <span class="n">traits_type</span><span class="p">;</span>
 </span><span class='line'>  <span class="k">typedef</span> <span class="n">basic_istream</span><span class="o">&lt;</span><span class="n">_CharT</span><span class="p">,</span> <span class="n">_Traits</span><span class="o">&gt;</span> <span class="n">istream_type</span><span class="p">;</span>
@@ -332,15 +317,15 @@ $(document).ready(function(){
 </span><span class='line'>  <span class="n">istream_iterator</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>  <span class="p">{</span> <span class="n">istream_iterator</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="n">_M_read</span><span class="p">();</span> <span class="k">return</span> <span class="n">__tmp</span><span class="p">;</span> <span class="p">}</span>
 </span><span class='line'>  <span class="kt">bool</span> <span class="n">_M_equal</span><span class="p">(</span><span class="k">const</span> <span class="n">istream_iterator</span><span class="o">&amp;</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span>
 </span><span class='line'>    <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">_M_ok</span> <span class="o">==</span> <span class="n">__x</span><span class="p">.</span><span class="n">_M_ok</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">_M_ok</span> <span class="o">||</span> <span class="n">_M_stream</span> <span class="o">==</span> <span class="n">__x</span><span class="p">.</span><span class="n">_M_stream</span><span class="p">);</span> <span class="p">}</span>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'><span class="nl">private:</span>
 </span><span class='line'>  <span class="n">istream_type</span><span class="o">*</span> <span class="n">_M_stream</span><span class="p">;</span>
 </span><span class='line'>  <span class="n">_Tp</span> <span class="n">_M_value</span><span class="p">;</span>
 </span><span class='line'>  <span class="kt">bool</span> <span class="n">_M_ok</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">void</span> <span class="n">_M_read</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">_M_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">_M_stream</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">_M_stream</span><span class="p">)</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>  <span class="kt">void</span> <span class="nf">_M_read</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">_M_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">_M_stream</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">_M_stream</span><span class="p">)</span> <span class="o">?</span> <span class="nb">true</span> <span class="o">:</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">_M_ok</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>      <span class="o">*</span><span class="n">_M_stream</span> <span class="o">&gt;&gt;</span> <span class="n">_M_value</span><span class="p">;</span> <span class="c1">// 转变为输入操作（&gt;&gt;）</span>
-</span><span class='line'>      <span class="n">_M_ok</span> <span class="o">=</span> <span class="o">*</span><span class="n">_M_stream</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">_M_ok</span> <span class="o">=</span> <span class="o">*</span><span class="n">_M_stream</span> <span class="o">?</span> <span class="nb">true</span> <span class="o">:</span> <span class="nb">false</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">};</span>
@@ -420,9 +405,9 @@ $(document).ready(function(){
 <span class='line-number'>14</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Arg</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Result</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">pointer_to_unary_function</span> <span class="o">:</span> <span class="k">public</span> <span class="n">unary_function</span><span class="o">&lt;</span><span class="n">_Arg</span><span class="p">,</span> <span class="n">_Result</span><span class="o">&gt;</span> <span class="p">{</span>
-</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'><span class="nl">protected:</span>
 </span><span class='line'>  <span class="n">_Result</span> <span class="p">(</span><span class="o">*</span><span class="n">_M_ptr</span><span class="p">)(</span><span class="n">_Arg</span><span class="p">);</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'><span class="nl">public:</span>
 </span><span class='line'>  <span class="n">pointer_to_unary_function</span><span class="p">()</span> <span class="p">{}</span>
 </span><span class='line'>  <span class="k">explicit</span> <span class="n">pointer_to_unary_function</span><span class="p">(</span><span class="n">_Result</span> <span class="p">(</span><span class="o">*</span><span class="n">__x</span><span class="p">)(</span><span class="n">_Arg</span><span class="p">))</span> <span class="o">:</span> <span class="n">_M_ptr</span><span class="p">(</span><span class="n">__x</span><span class="p">)</span> <span class="p">{}</span>
 </span><span class='line'>  <span class="n">_Result</span> <span class="k">operator</span><span class="p">()(</span><span class="n">_Arg</span> <span class="n">__x</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_M_ptr</span><span class="p">(</span><span class="n">__x</span><span class="p">);</span> <span class="p">}</span>
@@ -452,15 +437,15 @@ $(document).ready(function(){
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">// 无任何参数，通过pointer调用，non-const成员函数</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Ret</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
 </span><span class='line'><span class="k">class</span> <span class="nc">mem_fun_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">unary_function</span><span class="o">&lt;</span><span class="n">_Tp</span><span class="o">*</span><span class="p">,</span><span class="n">_Ret</span><span class="o">&gt;</span> <span class="p">{</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">explicit</span> <span class="n">mem_fun_t</span><span class="p">(</span><span class="n">_Ret</span> <span class="p">(</span><span class="n">_Tp</span><span class="o">::*</span><span class="n">__pf</span><span class="p">)())</span> <span class="o">:</span> <span class="n">_M_f</span><span class="p">(</span><span class="n">__pf</span><span class="p">)</span> <span class="p">{}</span>
+</span><span class='line'><span class="nl">public:</span>
+</span><span class='line'>  <span class="k">explicit</span> <span class="kt">mem_fun_t</span><span class="p">(</span><span class="n">_Ret</span> <span class="p">(</span><span class="n">_Tp</span><span class="o">::*</span><span class="n">__pf</span><span class="p">)())</span> <span class="o">:</span> <span class="n">_M_f</span><span class="p">(</span><span class="n">__pf</span><span class="p">)</span> <span class="p">{}</span>
 </span><span class='line'>  <span class="n">_Ret</span> <span class="k">operator</span><span class="p">()(</span><span class="n">_Tp</span><span class="o">*</span> <span class="n">__p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="n">__p</span><span class="o">-&gt;*</span><span class="n">_M_f</span><span class="p">)();</span> <span class="p">}</span>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'><span class="nl">private:</span>
 </span><span class='line'>  <span class="n">_Ret</span> <span class="p">(</span><span class="n">_Tp</span><span class="o">::*</span><span class="n">_M_f</span><span class="p">)();</span>
 </span><span class='line'><span class="p">};</span>
 </span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Ret</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Tp</span><span class="o">&gt;</span>
-</span><span class='line'><span class="kr">inline</span> <span class="n">mem_fun_t</span><span class="o">&lt;</span><span class="n">_Ret</span><span class="p">,</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="c1">// 返回类型</span>
-</span><span class='line'><span class="n">mem_fun</span><span class="p">(</span><span class="n">_Ret</span> <span class="p">(</span><span class="n">_Tp</span><span class="o">::*</span><span class="n">__f</span><span class="p">)())</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mem_fun_t</span><span class="o">&lt;</span><span class="n">_Ret</span><span class="p">,</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">__f</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// mem_fun_t的匿名对象</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">mem_fun_t</span><span class="o">&lt;</span><span class="n">_Ret</span><span class="p">,</span><span class="n">_Tp</span><span class="o">&gt;</span> <span class="c1">// 返回类型</span>
+</span><span class='line'><span class="n">mem_fun</span><span class="p">(</span><span class="n">_Ret</span> <span class="p">(</span><span class="n">_Tp</span><span class="o">::*</span><span class="n">__f</span><span class="p">)())</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">mem_fun_t</span><span class="o">&lt;</span><span class="n">_Ret</span><span class="p">,</span><span class="n">_Tp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">__f</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// mem_fun_t的匿名对象</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -493,11 +478,11 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>Program</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/program/'>program</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/c-plus-plus/'>C++</a>, <a class='tag' href='/blog/tags/stl/'>STL</a>, <a class='tag' href='/blog/tags/gua-pei-qi/'>适配器</a></span>
@@ -505,24 +490,7 @@ $(document).ready(function(){
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -559,12 +527,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

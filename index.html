@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -186,7 +171,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2015-01-25T22:30:00+08:00" pubdate data-updated="true">Jan 25<span>th</span>, 2015</time>
+<time datetime="2015-01-25T22:30:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2015/01/25/hui-hang-gu-dao/#disqus_thread">Comments</a>
         
@@ -236,7 +221,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true">Jan 1<span>st</span>, 2015</time>
+<time datetime="2015-01-01T13:30:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2015/01/01/congcong-2014/#disqus_thread">Comments</a>
         
@@ -284,7 +269,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-12-06T20:17:00+08:00" pubdate data-updated="true">Dec 6<span>th</span>, 2014</time>
+<time datetime="2014-12-06T20:17:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/12/06/world-most-famous-musicians-and-there-works/#disqus_thread">Comments</a>
         
@@ -334,7 +319,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-26T18:19:00+08:00" pubdate data-updated="true">Nov 26<span>th</span>, 2014</time>
+<time datetime="2014-11-26T18:19:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/11/26/insight-into-stl-archive/#disqus_thread">Comments</a>
         
@@ -400,7 +385,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+<time datetime="2014-11-23T20:21:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/11/23/insight-into-stl-7-adaptor/#disqus_thread">Comments</a>
         
@@ -453,7 +438,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-15T10:06:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2014</time>
+<time datetime="2014-11-15T10:06:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/11/15/insight-into-stl-6-functor-or-function-objects/#disqus_thread">Comments</a>
         
@@ -508,7 +493,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-11-01T10:33:00+08:00" pubdate data-updated="true">Nov 1<span>st</span>, 2014</time>
+<time datetime="2014-11-01T10:33:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/11/01/insight-into-stl-5-algorithm-4-relative-complexity-algorithms/#disqus_thread">Comments</a>
         
@@ -566,7 +551,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true">Oct 25<span>th</span>, 2014</time>
+<time datetime="2014-10-25T21:13:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/10/25/insight-into-stl-5-algorithm-3-base-algorithms-algobase/#disqus_thread">Comments</a>
         
@@ -627,7 +612,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-10-19T20:28:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2014</time>
+<time datetime="2014-10-19T20:28:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/10/19/insight-into-stl-5-algorithm-2-numeric-algorithms/#disqus_thread">Comments</a>
         
@@ -721,7 +706,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2014-10-12T21:30:00+08:00" pubdate data-updated="true">Oct 12<span>th</span>, 2014</time>
+<time datetime="2014-10-12T21:30:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="/blog/2014/10/12/insight-into-stl-5-algorithm-1-overview/#disqus_thread">Comments</a>
         
@@ -752,7 +737,7 @@ $(document).ready(function(){
 
 <p>
 算法执行时间的增长率与$f(n)$的增长率正相关，称作渐近时间复杂度（Asymptotic Time Complexity），简称时间复杂度。
-常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O(n<sup>2</sup> )$ ，立方阶 $O(n<sup>3</sup> )$ ，&#8230;， k次方阶 $O( n<sup>k</sup> )$ ,指数阶 $O( 2<sup>n</sup> )$ 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
+常见的时间复杂度有：常数阶 $O(1)$ ,对数阶 $O({log}_ {2}n)$ ,线性阶 $O(n)$ , 线性对数阶 $O(n{log}_ {2} n)$ ,平方阶 $O(n<sup>2</sup> )$ ，立方阶 $O(n<sup>3</sup> )$ ，...， k次方阶 $O( n<sup>k</sup> )$ ,指数阶 $O( 2<sup>n</sup> )$ 。随着问题规模 $n$ 的不断增大，上述时间复杂度不断增大，算法的执行效率越低。</p>
 
 <p>算法的<strong>空间复杂度</strong>是指算法需要消耗的空间资源。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
 
@@ -769,7 +754,7 @@ $(document).ready(function(){
   
   <ul class="pager">
     
-    <li class="previous"><a href="/blog/page/2/">&larr; Older</a></li>
+    <li class="previous"><a href="/page2">&larr; Older</a></li>
     
     <li><a href="/blog/archives">Blog Archives</a></li>
     
@@ -783,12 +768,10 @@ $(document).ready(function(){
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

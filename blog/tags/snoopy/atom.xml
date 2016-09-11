@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Snoopy | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/snoopy/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -110,223 +110,418 @@ submitlinks(\$URI) </br>
 <p>Demo 1：抓取百度首页示例</p>
 
 
-<p>{% codeblock lang:php %}
-&lt;?
-include "Snoopy.class.php";
-$snoopy = new Snoopy;
-$snoopy->proxy_host = "www.baidu.com";
-$snoopy->proxy_port = "8080";
-$snoopy->agent = "(compatible; MSIE 4.01; MSN 2.5; AOL 4.0; Windows 98)";
-$snoopy->referer = "http://www.baidu.com/";
-$snoopy->cookies["SessionID"] = 238472834723489l;
-$snoopy->cookies["favoriteColor"] = "RED";
-$snoopy->rawheaders["Pragma"] = "no-cache";
-$snoopy->maxredirs = 2;
-$snoopy->offsiteok = false;
-$snoopy->expandlinks = false;
-$snoopy->user = "joe";
-$snoopy->pass = "bloe";
-if($snoopy->fetchtext("http://www.baidu.com"))
-{
-echo " <PRE>".htmlspecialchars($snoopy->results)." </PRE>\n"; <BR>
-} <BR>
-else <BR>
-echo "error fetching document: ".$snoopy->error."\n";
-?>
-{% endcodeblock %}</p>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="o">?</span>
+</span><span class='line'><span class="k">include</span> <span class="s2">&quot;Snoopy.class.php&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Snoopy</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">proxy_host</span> <span class="o">=</span> <span class="s2">&quot;www.baidu.com&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">proxy_port</span> <span class="o">=</span> <span class="s2">&quot;8080&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">agent</span> <span class="o">=</span> <span class="s2">&quot;(compatible; MSIE 4.01; MSN 2.5; AOL 4.0; Windows 98)&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">referer</span> <span class="o">=</span> <span class="s2">&quot;http://www.baidu.com/&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="p">[</span><span class="s2">&quot;SessionID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">238472834723489</span><span class="nx">l</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="p">[</span><span class="s2">&quot;favoriteColor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;RED&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">rawheaders</span><span class="p">[</span><span class="s2">&quot;Pragma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;no-cache&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">maxredirs</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">offsiteok</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">expandlinks</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">user</span> <span class="o">=</span> <span class="s2">&quot;joe&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">pass</span> <span class="o">=</span> <span class="s2">&quot;bloe&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">fetchtext</span><span class="p">(</span><span class="s2">&quot;http://www.baidu.com&quot;</span><span class="p">))</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">echo</span> <span class="s2">&quot; &lt;PRE&gt;&quot;</span><span class="o">.</span><span class="nb">htmlspecialchars</span><span class="p">(</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot; &lt;/PRE&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span> <span class="o">&lt;</span><span class="nx">BR</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">}</span> <span class="o">&lt;</span><span class="nx">BR</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">else</span> <span class="o">&lt;</span><span class="nx">BR</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">echo</span> <span class="s2">&quot;error fetching document: &quot;</span><span class="o">.</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">error</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>Demo 2: snoopy登录并采集phpchina示例 </p>
 
 
-<p>{% codeblock lang:php %}
-&lt;?php
-//采集phpchina
-set_time_limit(0);
-require_once("Snoopy.class.php");
-$snoopy=new Snoopy();
-//登陆论坛
-$submit_url = "http://www.phpchina.com/bbs/logging.php?action=login";
-$submit_vars["loginmode"] = "normal";
-$submit_vars["styleid"] = "1";
-$submit_vars["cookietime"] = "315360000";
-$submit_vars["loginfield"] = "username";
-$submit_vars["username"] = "<strong><em>"; //你的用户名
-$submit_vars["password"] = "</em></strong>**"; //你的密码
-$submit_vars["questionid"] = "0";
-$submit_vars["answer"] = "";
-$submit_vars["loginsubmit"] = "提 交";
-$snoopy->submit($submit_url,$submit_vars);</p>
-
-<p>if ($snoopy->results)
-{</p>
-
-<pre><code>//获取连接地址 
-$snoopy-&gt;fetchlinks("http://www.phpchina.com/bbs"); 
-$url=array(); 
-$url=$snoopy-&gt;results; 
-//print_r($url); 
-foreach ($url as $key=&gt;$value) 
-{ 
-    //匹配http://www.phpchina.com/bbs/forumdisplay.php?fid=156&amp;sid=VfcqTR地址即论坛板块地址 
-    if (!preg_match("/^(http:\/\/www\.phpchina\.com\/bbs\/forumdisplay\.php\?fid=)[0-9]*&amp;sid=[a-zA-Z]{6}/i",$value)) 
-    { 
-        unset($url[$key]); 
-    } 
-} 
-//print_r($url); 
-//获取到板块数组$url，循环访问，此处获取第一个模块第一页的数据 
-$i=0; 
-foreach ($url as $key=&gt;$value) 
-{ 
-    if ($i&gt;=1) 
-    { 
-        //测试限制 
-        break; 
-    } 
-    else 
-    { 
-        //访问该模块，提取帖子的连接地址，正式访问里需要提取帖子分页的数据，然后根据分页数据提取帖子数据 
-        $snoopy=new Snoopy(); 
-        $snoopy-&gt;fetchlinks($value); 
-        $tie=array(); 
-        $tie[$i]=$snoopy-&gt;results; 
-        //print_r($tie); 
-        //转换数组 
-        foreach ($tie[$i] as $key=&gt;$value) 
-        { 
-            //匹配http://www.phpchina.com/bbs/viewthread.php?tid=68127&amp;amp; extra=page%3D1&amp;amp;page=1&amp;sid=iBLZfK 
-            if (!preg_match("/^(http:\/\/www\.phpchina\.com\/bbs\/viewthread\.php\?tid=)[0-9]*&amp;amp;extra=page\%3D1&amp;amp;page=[0-9]*&amp;sid=[a-zA-Z]{6}/i",$value)) 
-            { 
-                unset($tie[$i][$key]); 
-            } 
-        } 
-        //print_r($tie[$i]); 
-        //归类数组，将同一个帖子不同页面的内容放一个数组里 
-        $left='';//连接左边公用地址 
-        $j=0; 
-        $page=array(); 
-        foreach ($tie[$i] as $key=&gt;$value) 
-        { 
-            $left=substr($value,0,52); 
-            $m=0; 
-            foreach ($tie[$i] as $pkey=&gt;$pvalue) 
-            { 
-                //重组数组 
-                if (substr($pvalue,0,52)==$left) 
-                { 
-                    $page[$j][$m]=$pvalue; 
-                    $m++; 
-                } 
-            } 
-            $j++; 
-        } 
-        //去除重复项开始 
-        //$page=array_unique($page);只能用于一维数组 
-        $paget[0]=$page[0]; 
-        $nums=count($page); 
-        for ($n=1;$n &lt;$nums;$n++) 
-        { 
-            $paget[$n]=array_diff($page[$n],$page[$n-1]); 
-        } 
-        //去除多维数组重复值结束 
-        //去除数组空值 
-        unset($page); 
-        $page=array();//重新定义page数组 
-        $page=array_filter($paget); 
-        //print_r($page); 
-        $u=0; 
-        $title=array(); 
-        $content=array(); 
-        $temp=''; 
-        $tt=array(); 
-        foreach ($page as $key=&gt;$value) 
-        { 
-            //外围循环，针对一个帖子 
-            if (is_array($value)) 
-            { 
-                foreach ($value as $k1=&gt;$v1) 
-                { 
-                    //页内循环，针对一个帖子的N页 
-                    $snoopy=new Snoopy(); 
-                    $snoopy-&gt;fetch($v1); 
-                    $temp=$snoopy-&gt;results; 
-                    //读取标题 
-                    if (!preg_match_all("/ &lt;h2&gt;(.*) &lt;\/h2&gt;/i",$temp,$tt)) 
-                    { 
-                        echo "no title"; 
-                        exit; 
-                    } 
-                    else 
-                    { 
-                        $title[$u]=$tt[1][1]; 
-                    } 
-                    unset($tt); 
-                    //读取内容 
-                    if (!preg_match_all("/ &lt;div id=\"postmessage_[0-9]{1,8}\" class=\"t_msgfont\"&gt;(.*) &lt;\/div&gt;/i",$temp,$tt)) 
-                    { 
-                        print_r($tt); 
-                        echo "no content1"; 
-                        exit; 
-                    } 
-                    else 
-                    { 
-                        foreach ($tt[1] as $c=&gt;$c2) 
-                        { 
-                            $content[$u].=$c2; 
-                        } 
-                    } 
-                } 
-            } 
-            else 
-            { 
-                //直接取页内容 
-                $snoopy=new Snoopy(); 
-                $snoopy-&gt;fetch($value); 
-                $temp=$snoopy-&gt;results; 
-                //读取标题 
-                if (!preg_match_all("/ &lt;h2&gt;(.*) &lt;\/h2&gt;/i",$temp,$tt)) 
-                { 
-                    echo "no title"; 
-                    exit; 
-                } 
-                else 
-                { 
-                    $title[$u]=$tt[1][1]; 
-                } 
-                unset($tt); 
-                //读取内容 
-                if (!preg_match_all("/ &lt;div id=\"postmessage_[0-9]*\" class=\"t_msgfont\"&gt;(.*) &lt;\/div&gt;/i",$temp,$tt)) 
-                { 
-                    echo "no content2"; 
-                    exit; 
-                } 
-                else 
-                { 
-                    foreach ($tt[1] as $c=&gt;$c2) 
-                    { 
-                        $content[$u].=$c2; 
-                    } 
-                } 
-            } 
-            $u++; 
-        } 
-        print_r($content); 
-    } 
-    $i++; 
-} 
-</code></pre>
-
-<p>}
-else
-{</p>
-
-<pre><code>echo "login failed"; 
-exit; 
-</code></pre>
-
-<p>}
-?>
-{% endcodeblock %}</p>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="o">?</span><span class="nx">php</span>
+</span><span class='line'><span class="c1">//采集phpchina</span>
+</span><span class='line'><span class="nb">set_time_limit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="k">require_once</span><span class="p">(</span><span class="s2">&quot;Snoopy.class.php&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">=</span><span class="k">new</span> <span class="nx">Snoopy</span><span class="p">();</span>
+</span><span class='line'><span class="c1">//登陆论坛</span>
+</span><span class='line'><span class="nv">$submit_url</span> <span class="o">=</span> <span class="s2">&quot;http://www.phpchina.com/bbs/logging.php?action=login&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;loginmode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;styleid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;cookietime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;315360000&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;loginfield&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;username&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;strong&gt;&lt;em&gt;&quot;</span><span class="p">;</span> <span class="c1">//你的用户名</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;/em&gt;&lt;/strong&gt;**&quot;</span><span class="p">;</span> <span class="c1">//你的密码</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;questionid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;answer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$submit_vars</span><span class="p">[</span><span class="s2">&quot;loginsubmit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;提 交&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">submit</span><span class="p">(</span><span class="nv">$submit_url</span><span class="p">,</span><span class="nv">$submit_vars</span><span class="p">);</span><span class="o">&lt;/</span><span class="nx">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">//获取连接地址</span>
+</span><span class='line'>    <span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">fetchlinks</span><span class="p">(</span><span class="s2">&quot;http://www.phpchina.com/bbs&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nv">$url</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>    <span class="nv">$url</span><span class="o">=</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">//print_r($url);</span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$url</span> <span class="k">as</span> <span class="nv">$key</span><span class="o">=&gt;</span><span class="nv">$value</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">//匹配http://www.phpchina.com/bbs/forumdisplay.php?fid=156&amp;amp;sid=VfcqTR地址即论坛板块地址</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match</span><span class="p">(</span><span class="s2">&quot;/^(http:\/\/www.phpchina.com\/bbs\/forumdisplay.php\?fid=)[0-9]&lt;em&gt;&amp;amp;sid=[a-zA-Z]{6}/i&quot;</span><span class="p">,</span><span class="nv">$value</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="nb">unset</span><span class="p">(</span><span class="nv">$url</span><span class="p">[</span><span class="nv">$key</span><span class="p">]);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">//print_r($url);</span>
+</span><span class='line'>    <span class="c1">//获取到板块数组$url，循环访问，此处获取第一个模块第一页的数据</span>
+</span><span class='line'>    <span class="nv">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$url</span> <span class="k">as</span> <span class="nv">$key</span><span class="o">=&gt;</span><span class="nv">$value</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$i</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="c1">//测试限制</span>
+</span><span class='line'>            <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="c1">//访问该模块，提取帖子的连接地址，正式访问里需要提取帖子分页的数据，然后根据分页数据提取帖子数据</span>
+</span><span class='line'>            <span class="nv">$snoopy</span><span class="o">=</span><span class="k">new</span> <span class="nx">Snoopy</span><span class="p">();</span>
+</span><span class='line'>            <span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">fetchlinks</span><span class="p">(</span><span class="nv">$value</span><span class="p">);</span>
+</span><span class='line'>            <span class="nv">$tie</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>            <span class="nv">$tie</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span><span class="o">=</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">;</span>
+</span><span class='line'>            <span class="c1">//print_r($tie);</span>
+</span><span class='line'>            <span class="c1">//转换数组</span>
+</span><span class='line'>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tie</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$key</span><span class="o">=&gt;</span><span class="nv">$value</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="c1">//匹配http://www.phpchina.com/bbs/viewthread.php?tid=68127&amp;amp; extra=page%3D1&amp;amp;page=1&amp;amp;sid=iBLZfK</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match</span><span class="p">(</span><span class="s2">&quot;/^(http:\/\/www.phpchina.com\/bbs\/viewthread.php\?tid=)[0-9]&lt;/em&gt;&amp;amp;extra=page\%3D1&amp;amp;page=[0-9]&lt;em&gt;&amp;amp;sid=[a-zA-Z]{6}/i&quot;</span><span class="p">,</span><span class="nv">$value</span><span class="p">))</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="nb">unset</span><span class="p">(</span><span class="nv">$tie</span><span class="p">[</span><span class="nv">$i</span><span class="p">][</span><span class="nv">$key</span><span class="p">]);</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="c1">//print_r($tie[$i]);</span>
+</span><span class='line'>            <span class="c1">//归类数组，将同一个帖子不同页面的内容放一个数组里</span>
+</span><span class='line'>            <span class="nv">$left</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span><span class="c1">//连接左边公用地址</span>
+</span><span class='line'>            <span class="nv">$j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>            <span class="nv">$page</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tie</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$key</span><span class="o">=&gt;</span><span class="nv">$value</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="nv">$left</span><span class="o">=</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$value</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">52</span><span class="p">);</span>
+</span><span class='line'>                <span class="nv">$m</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>                <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tie</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$pkey</span><span class="o">=&gt;</span><span class="nv">$pvalue</span><span class="p">)</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="c1">//重组数组</span>
+</span><span class='line'>                    <span class="k">if</span> <span class="p">(</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$pvalue</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">52</span><span class="p">)</span><span class="o">==</span><span class="nv">$left</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="nv">$page</span><span class="p">[</span><span class="nv">$j</span><span class="p">][</span><span class="nv">$m</span><span class="p">]</span><span class="o">=</span><span class="nv">$pvalue</span><span class="p">;</span>
+</span><span class='line'>                        <span class="nv">$m</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="nv">$j</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="c1">//去除重复项开始</span>
+</span><span class='line'>            <span class="c1">//$page=array_unique($page);只能用于一维数组</span>
+</span><span class='line'>            <span class="nv">$paget</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="nv">$page</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>            <span class="nv">$nums</span><span class="o">=</span><span class="nb">count</span><span class="p">(</span><span class="nv">$page</span><span class="p">);</span>
+</span><span class='line'>            <span class="k">for</span> <span class="p">(</span><span class="nv">$n</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="nv">$n</span> <span class="o">&amp;</span><span class="nx">lt</span><span class="p">;</span><span class="nv">$nums</span><span class="p">;</span><span class="nv">$n</span><span class="o">++</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="nv">$paget</span><span class="p">[</span><span class="nv">$n</span><span class="p">]</span><span class="o">=</span><span class="nb">array_diff</span><span class="p">(</span><span class="nv">$page</span><span class="p">[</span><span class="nv">$n</span><span class="p">],</span><span class="nv">$page</span><span class="p">[</span><span class="nv">$n</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="c1">//去除多维数组重复值结束</span>
+</span><span class='line'>            <span class="c1">//去除数组空值</span>
+</span><span class='line'>            <span class="nb">unset</span><span class="p">(</span><span class="nv">$page</span><span class="p">);</span>
+</span><span class='line'>            <span class="nv">$page</span><span class="o">=</span><span class="k">array</span><span class="p">();</span><span class="c1">//重新定义page数组</span>
+</span><span class='line'>            <span class="nv">$page</span><span class="o">=</span><span class="nb">array_filter</span><span class="p">(</span><span class="nv">$paget</span><span class="p">);</span>
+</span><span class='line'>            <span class="c1">//print_r($page);</span>
+</span><span class='line'>            <span class="nv">$u</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>            <span class="nv">$title</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>            <span class="nv">$content</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>            <span class="nv">$temp</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'>            <span class="nv">$tt</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span><span class='line'>            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$page</span> <span class="k">as</span> <span class="nv">$key</span><span class="o">=&gt;</span><span class="nv">$value</span><span class="p">)</span>
+</span><span class='line'>            <span class="p">{</span>
+</span><span class='line'>                <span class="c1">//外围循环，针对一个帖子</span>
+</span><span class='line'>                <span class="k">if</span> <span class="p">(</span><span class="nb">is_array</span><span class="p">(</span><span class="nv">$value</span><span class="p">))</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$value</span> <span class="k">as</span> <span class="nv">$k1</span><span class="o">=&gt;</span><span class="nv">$v1</span><span class="p">)</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="c1">//页内循环，针对一个帖子的N页</span>
+</span><span class='line'>                        <span class="nv">$snoopy</span><span class="o">=</span><span class="k">new</span> <span class="nx">Snoopy</span><span class="p">();</span>
+</span><span class='line'>                        <span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">(</span><span class="nv">$v1</span><span class="p">);</span>
+</span><span class='line'>                        <span class="nv">$temp</span><span class="o">=</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">;</span>
+</span><span class='line'>                        <span class="c1">//读取标题</span>
+</span><span class='line'>                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="s2">&quot;/ &lt;h2&gt;(.&lt;/em&gt;) &amp;lt;\/h2&gt;/i&quot;</span><span class="p">,</span><span class="nv">$temp</span><span class="p">,</span><span class="nv">$tt</span><span class="p">))</span>
+</span><span class='line'>                        <span class="p">{</span>
+</span><span class='line'>                            <span class="k">echo</span> <span class="s2">&quot;no title&quot;</span><span class="p">;</span>
+</span><span class='line'>                            <span class="k">exit</span><span class="p">;</span>
+</span><span class='line'>                        <span class="p">}</span>
+</span><span class='line'>                        <span class="k">else</span>
+</span><span class='line'>                        <span class="p">{</span>
+</span><span class='line'>                            <span class="nv">$title</span><span class="p">[</span><span class="nv">$u</span><span class="p">]</span><span class="o">=</span><span class="nv">$tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>                        <span class="p">}</span>
+</span><span class='line'>                        <span class="nb">unset</span><span class="p">(</span><span class="nv">$tt</span><span class="p">);</span>
+</span><span class='line'>                        <span class="c1">//读取内容</span>
+</span><span class='line'>                        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="s2">&quot;/ &lt;div id=</span><span class="se">\&quot;</span><span class="s2">postmessage_[0-9]{1,8}</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">t_msgfont</span><span class="se">\&quot;</span><span class="s2">&gt;(.&lt;em&gt;) &amp;lt;\/div&gt;/i&quot;</span><span class="p">,</span><span class="nv">$temp</span><span class="p">,</span><span class="nv">$tt</span><span class="p">))</span>
+</span><span class='line'>                        <span class="p">{</span>
+</span><span class='line'>                            <span class="nb">print_r</span><span class="p">(</span><span class="nv">$tt</span><span class="p">);</span>
+</span><span class='line'>                            <span class="k">echo</span> <span class="s2">&quot;no content1&quot;</span><span class="p">;</span>
+</span><span class='line'>                            <span class="k">exit</span><span class="p">;</span>
+</span><span class='line'>                        <span class="p">}</span>
+</span><span class='line'>                        <span class="k">else</span>
+</span><span class='line'>                        <span class="p">{</span>
+</span><span class='line'>                            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$c</span><span class="o">=&gt;</span><span class="nv">$c2</span><span class="p">)</span>
+</span><span class='line'>                            <span class="p">{</span>
+</span><span class='line'>                                <span class="nv">$content</span><span class="p">[</span><span class="nv">$u</span><span class="p">]</span><span class="o">.=</span><span class="nv">$c2</span><span class="p">;</span>
+</span><span class='line'>                            <span class="p">}</span>
+</span><span class='line'>                        <span class="p">}</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="k">else</span>
+</span><span class='line'>                <span class="p">{</span>
+</span><span class='line'>                    <span class="c1">//直接取页内容</span>
+</span><span class='line'>                    <span class="nv">$snoopy</span><span class="o">=</span><span class="k">new</span> <span class="nx">Snoopy</span><span class="p">();</span>
+</span><span class='line'>                    <span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">(</span><span class="nv">$value</span><span class="p">);</span>
+</span><span class='line'>                    <span class="nv">$temp</span><span class="o">=</span><span class="nv">$snoopy</span><span class="o">-&gt;</span><span class="na">results</span><span class="p">;</span>
+</span><span class='line'>                    <span class="c1">//读取标题</span>
+</span><span class='line'>                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="s2">&quot;/ &lt;h2&gt;(.&lt;/em&gt;) &amp;lt;\/h2&gt;/i&quot;</span><span class="p">,</span><span class="nv">$temp</span><span class="p">,</span><span class="nv">$tt</span><span class="p">))</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="k">echo</span> <span class="s2">&quot;no title&quot;</span><span class="p">;</span>
+</span><span class='line'>                        <span class="k">exit</span><span class="p">;</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                    <span class="k">else</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="nv">$title</span><span class="p">[</span><span class="nv">$u</span><span class="p">]</span><span class="o">=</span><span class="nv">$tt</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                    <span class="nb">unset</span><span class="p">(</span><span class="nv">$tt</span><span class="p">);</span>
+</span><span class='line'>                    <span class="c1">//读取内容</span>
+</span><span class='line'>                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="s2">&quot;/ &lt;div id=</span><span class="se">\&quot;</span><span class="s2">postmessage_[0-9]*</span><span class="se">\&quot;</span><span class="s2"> class=</span><span class="se">\&quot;</span><span class="s2">t_msgfont</span><span class="se">\&quot;</span><span class="s2">&gt;(.*) &amp;lt;\/div&gt;/i&quot;</span><span class="p">,</span><span class="nv">$temp</span><span class="p">,</span><span class="nv">$tt</span><span class="p">))</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="k">echo</span> <span class="s2">&quot;no content2&quot;</span><span class="p">;</span>
+</span><span class='line'>                        <span class="k">exit</span><span class="p">;</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                    <span class="k">else</span>
+</span><span class='line'>                    <span class="p">{</span>
+</span><span class='line'>                        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$c</span><span class="o">=&gt;</span><span class="nv">$c2</span><span class="p">)</span>
+</span><span class='line'>                        <span class="p">{</span>
+</span><span class='line'>                            <span class="nv">$content</span><span class="p">[</span><span class="nv">$u</span><span class="p">]</span><span class="o">.=</span><span class="nv">$c2</span><span class="p">;</span>
+</span><span class='line'>                        <span class="p">}</span>
+</span><span class='line'>                    <span class="p">}</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="nv">$u</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="nb">print_r</span><span class="p">(</span><span class="nv">$content</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">echo</span> <span class="s2">&quot;login failed&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">exit</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
 ]]></content>
   </entry>
   

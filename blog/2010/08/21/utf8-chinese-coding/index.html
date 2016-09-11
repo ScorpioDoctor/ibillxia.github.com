@@ -88,35 +88,20 @@ $(document).bind('DOMNodeInserted', function(event) {
    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-
-	// hide #back-top first
-	$("#back-top").hide();
-	
-	// fade in #back-top
-	$(function () {
-		$(window).scroll(function () {
-			if ($(this).scrollTop() > 100) {
-				$('#back-top').fadeIn();
-			} else {
-				$('#back-top').fadeOut();
-			}
-		});
-
-		// scroll body to 0px on click
-		$('#back-top a').click(function () {
-			$('body,html').animate({
-				scrollTop: 0
-			}, 800);
-			return false;
-		});
-	});
-
-});
-</script>
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-39460228-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -184,7 +169,7 @@ $(document).ready(function(){
   
 
 
-<time datetime="2010-08-21T10:31:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2010</time>
+<time datetime="2010-08-21T10:31:00+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -197,7 +182,7 @@ $(document).ready(function(){
 00000000-0000007F的字符，用单个字节来表示； </br>
 00000080-000007FF的字符用两个字节表示 （中文的编码范围） </br>
 00000800-0000FFFF的字符用3字节表示</br>
-编码转换：iconv -f “文件目前编码” -t “文件转换后的编码” -o “转换后生成的新文件名” “源文件名”temp = Iconv.conv(&#8220;UTF-8&#8221;,&#8221;gb2312&#8221;,a) </p>
+编码转换：iconv -f “文件目前编码” -t “文件转换后的编码” -o “转换后生成的新文件名” “源文件名”temp = Iconv.conv("UTF-8","gb2312",a) </p>
 
 
 
@@ -272,20 +257,20 @@ UCS-2编码(16进制) UTF-8 字节流(二进制)</br>
 
 <p>Unicode规范中推荐的标记字节顺序的方法是BOM。BOM不是“Bill Of Material”的BOM表，而是Byte Order Mark。BOM是一个有点小聪明的想法：</br>
 
-在UCS编码中有一个叫做&#8221;ZERO WIDTH NO-BREAK SPACE&#8221;的字符，它的编码是FEFF。
+在UCS编码中有一个叫做"ZERO WIDTH NO-BREAK SPACE"的字符，它的编码是FEFF。
 而FFFE在UCS中是不存在的字符，所以不应该出现在实际传输中。</br>
-UCS规范建议我们在传输字节流前，先传输字符&#8221;ZERO WIDTH NO-BREAK SPACE&#8221;。</p>
+UCS规范建议我们在传输字节流前，先传输字符"ZERO WIDTH NO-BREAK SPACE"。</p>
 
 
 
 
 <p>这样如果接收者收到FEFF，就表明这个字节流是Big-Endian的；如果收到FFFE，就表明这个字节流是Little-Endian的。
-因此字符&#8221;ZERO WIDTH NO-BREAK SPACE&#8221;又被称作BOM。</p>
+因此字符"ZERO WIDTH NO-BREAK SPACE"又被称作BOM。</p>
 
 
 
 
-<p>UTF-8不需要BOM来表明字节顺序，但可以用BOM来表明编码方式。字符&#8221;ZERO WIDTH NO-BREAK SPACE&#8221;的UTF-8编码是EF BB BF（读者
+<p>UTF-8不需要BOM来表明字节顺序，但可以用BOM来表明编码方式。字符"ZERO WIDTH NO-BREAK SPACE"的UTF-8编码是EF BB BF（读者
 可以用我们前面介绍的编码方法验证一下）。所以如果接收者收到以EF BB BF开头的字节流，就知道这是UTF-8编码了。</p>
 
 
@@ -321,11 +306,11 @@ UCS规范建议我们在传输字节流前，先传输字符&#8221;ZERO WIDTH NO
   
 
 
-<time datetime="2010-08-21T10:31:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2010</time>
+<time datetime="2010-08-21T10:31:00+08:00" pubdate data-updated="true"></time>
 		
 		
 		
-		  <span class="categories">Posted in <a class='category' href='/blog/categories/technics/'>Technics</a></span>
+		  <span class="categories">Posted in <a class='category' href='/blog/categories/technics/'>technics</a></span>
 		
 		
 		  <span class="tags">Tagged with <a class='tag' href='/blog/tags/utf8/'>UTF8</a>, <a class='tag' href='/blog/tags/unicode/'>Unicode</a>, <a class='tag' href='/blog/tags/bian-ma/'>编码</a></span>
@@ -333,24 +318,7 @@ UCS规范建议我们在传输字节流前，先传输字符&#8221;ZERO WIDTH NO
     </p>
     
       
-         <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style_32x32">
-	<a class="jiathis_button_weixin"></a>
-	<a class="jiathis_button_qzone"></a>
-	<a class="jiathis_button_douban"></a>
-	<a class="jiathis_button_tsina"></a>
-	<a class="jiathis_button_renren"></a>
-	<a class="jiathis_button_tqq"></a>
-	<a class="jiathis_button_fb"></a>
-	<a class="jiathis_button_twitter"></a>
-	<a class="jiathis_button_tumblr"></a>
-	<a class="jiathis_button_googleplus"></a>
-	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	<a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
+         <!-- JiaThis Button BEGIN --><div class="jiathis_style_32x32">	<a class="jiathis_button_weixin"></a>	<a class="jiathis_button_qzone"></a>	<a class="jiathis_button_douban"></a>	<a class="jiathis_button_tsina"></a>	<a class="jiathis_button_renren"></a>	<a class="jiathis_button_tqq"></a>	<a class="jiathis_button_fb"></a>	<a class="jiathis_button_twitter"></a>	<a class="jiathis_button_tumblr"></a>	<a class="jiathis_button_googleplus"></a>	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>	<a class="jiathis_counter_style"></a></div><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1362901762548695" charset="utf-8"></script><!-- JiaThis Button END -->
       
     
 	</br>
@@ -387,12 +355,10 @@ UCS规范建议我们在传输字节流前，先传输字符&#8221;ZERO WIDTH NO
 
     </div>
   </div>
-  <footer role="contentinfo" class="page-footer"><p id = "back-top">
-	<a href="#top"><span></span>Back to Top</a>
-</p>
+  <footer role="contentinfo" class="page-footer">
 <hr>
 <p>
-  Copyright &copy; 2009 - 2015 - <a href="http://about.me/ibillxia">Bill Xia</a> -
+  Copyright &copy; 2009 - 2016 - <a href="http://about.me/ibillxia">Bill Xia</a> -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> - Theme by <a href="https://github.com/bkutil/bootstrap-theme">bootstrap-theme</a> </span>
 </p>
 

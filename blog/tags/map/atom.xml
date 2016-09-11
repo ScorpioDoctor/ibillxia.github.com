@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: map | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/map/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -57,59 +57,44 @@ inline pair&lt;_T1, _T2&gt; make_pair(const _T1&amp; __x, const _T2&amp; __y) { 
 
 
 <p>然后是 map 的定义，大体上和 set 差不多，只是在使用 RB-tree 作为容器时，传入的模板参数是一个 pair，主要代码如下：<br/>
-``` cpp
-template <class _Key, class _Tp, class _Compare, class _Alloc>
+<code>cpp
+template &lt;class _Key, class _Tp, class _Compare, class _Alloc&gt;
 class map {
 public:
-  typedef <em>Key                  key_type;
-  typedef </em>Tp                   data_type;
-  typedef <em>Tp                   mapped_type;
-  typedef pair<const _Key, _Tp> value_type;
-  typedef </em>Compare              key_compare;
+  typedef _Key                  key_type;
+  typedef _Tp                   data_type;
+  typedef _Tp                   mapped_type;
+  typedef pair&lt;const _Key, _Tp&gt; value_type;
+  typedef _Compare              key_compare;
   // 一个用于键值比较的内部类
-  class value_compare : public binary_function&lt;value_type, value_type, bool> {
-  friend class map&lt;<em>Key,</em>Tp,<em>Compare,</em>Alloc>;
-  protected :</p>
-
-<pre><code>_Compare comp;
-value_compare(_Compare __c) : comp(__c) {}
-</code></pre>
-
-<p>  public:</p>
-
-<pre><code>bool operator()(const value_type&amp; __x, const value_type&amp; __y) const {
-  return comp(__x.first, __y.first);
-}
-</code></pre>
-
-<p>  };
+  class value_compare : public binary_function&lt;value_type, value_type, bool&gt; {
+  friend class map&lt;_Key,_Tp,_Compare,_Alloc&gt;;
+  protected :
+    _Compare comp;
+    value_compare(_Compare __c) : comp(__c) {}
+  public:
+    bool operator()(const value_type&amp; __x, const value_type&amp; __y) const {
+      return comp(__x.first, __y.first);
+    }
+  };
 private:
-  typedef <em>Rb_tree&lt;key_type, value_type, </em>Select1st<value_type>,</p>
-
-<pre><code>key_compare, _Alloc&gt; _Rep_type; // 这里的value_type是一个pair&lt;const _Key, _Tp&gt;
-</code></pre>
-
-<p>  <em>Rep_type </em>M_t;  // 用红黑树作为底层容器
+  typedef _Rb_tree&lt;key_type, value_type, _Select1st&lt;value_type&gt;,
+    key_compare, _Alloc&gt; _Rep_type; // 这里的value_type是一个pair&lt;const _Key, _Tp&gt;
+  _Rep_type _M_t;  // 用红黑树作为底层容器
 public:
-  map() : <em>M_t(</em>Compare(), allocator_type()) {} // 默认构造函数
-  bool empty() const { return <em>M_t.empty(); } // 判断是否为空
-  size_type size() const { return </em>M_t.size(); } // 获取元素个数
-  map(const value_type<em> __first, const value_type</em> __last)</p>
-
-<pre><code>: _M_t(_Compare(), allocator_type())
-{ _M_t.insert_unique(__first, __last); } // 构造函数，使用insert_unique，键值不允许重复
-</code></pre>
-
-<p>  void insert(const value_type<em> __first, const value_type</em> __last) { // 插入操作</p>
-
-<pre><code>_M_t.insert_unique(__first, __last);
-</code></pre>
-
-<p>  }
-  void erase(iterator <strong>position) { _M_t.erase(</strong>position); } // 删除操作
-  iterator find(const key_type&amp; <strong>x) { return _M_t.find(</strong>x); } // 查找操作
+  map() : _M_t(_Compare(), allocator_type()) {} // 默认构造函数
+  bool empty() const { return _M_t.empty(); } // 判断是否为空
+  size_type size() const { return _M_t.size(); } // 获取元素个数
+  map(const value_type* __first, const value_type* __last)
+    : _M_t(_Compare(), allocator_type())
+    { _M_t.insert_unique(__first, __last); } // 构造函数，使用insert_unique，键值不允许重复
+  void insert(const value_type* __first, const value_type* __last) { // 插入操作
+    _M_t.insert_unique(__first, __last);
+  }
+  void erase(iterator __position) { _M_t.erase(__position); } // 删除操作
+  iterator find(const key_type&amp; __x) { return _M_t.find(__x); } // 查找操作
 };
-```
+</code>
 可以看到，基本也是对底层容器 RB-tree 的一个简单的封装。</p>
 
 <h2>3. multimap</h2>

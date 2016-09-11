@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 哈希表 | Bill's Blog]]></title>
   <link href="http://ibillxia.github.io/blog/tags/ha-xi-biao/atom.xml" rel="self"/>
   <link href="http://ibillxia.github.io/"/>
-  <updated>2015-03-31T21:07:57+08:00</updated>
+  <updated>2016-09-11T18:17:56+08:00</updated>
   <id>http://ibillxia.github.io/</id>
   <author>
     <name><![CDATA[Bill Xia]]></name>
@@ -30,7 +30,7 @@
 
 <h4>二次探测</h4>
 
-<p>与线性探测类似，但向后寻找的策略是探测距当前位置为平方数的位置，即 $index = H+i<em><sup>{2}$</sup> </em>。但这样会有一个问题，那就是能否保证每次探测的是不同的位置，即是否存在某次插入时，探测完一圈后回到自己而出现死循环。</p>
+<p>与线性探测类似，但向后寻找的策略是探测距当前位置为平方数的位置，即 $index = H+i<em>^{2}$ </em>。但这样会有一个问题，那就是能否保证每次探测的是不同的位置，即是否存在某次插入时，探测完一圈后回到自己而出现死循环。</p>
 
 <h4>开链</h4>
 
@@ -43,12 +43,11 @@
 <!-- more -->
 
 
-<p><code>cpp
-template &lt;class _Val&gt;
+<pre><code class="cpp">template &lt;class _Val&gt;
 struct _Hashtable_node { // 链表节点的定义
   _Hashtable_node* _M_next; // 指向下一个节点
   _Val _M_val;
-};
+}; 
 template &lt;class _Val, class _Key, class _HashFcn, class _ExtractKey, class _EqualKey, class _Alloc&gt;
 class hashtable {
 private:
@@ -56,9 +55,10 @@ private:
   hasher                _M_hash; // 哈希函数
   typedef _Hashtable_node&lt;_Val&gt; _Node; // 节点类型别名定义
   vector&lt;_Node*,_Alloc&gt; _M_buckets; // hash table，存储链表的索引
-};
-</code>
-这里 hashtable 的模板参数很多，其含义如下：</p>
+}; 
+</code></pre>
+
+<p>这里 hashtable 的模板参数很多，其含义如下：</p>
 
 <blockquote><p><em>Val: 节点的实值类型
 </em>Key: 节点的键值类型
@@ -91,227 +91,223 @@ inline unsigned long __stl_next_prime(unsigned long __n) {
 <h4>节点空间配置</h4>
 
 <p>首先只考虑比较简单的情况，即哈希表的大小不需要调整，此时空间配置主要是链表节点的配置，而 hashtable 使用 vector 作为容器，链表节点的空间配置（分配和释放）如下：<br/>
-``` cpp
-typedef simple_alloc&lt;<em>Node, </em>Alloc> <em>M_node_allocator_type;
-</em>Node<em> <em>M_get_node() { return </em>M_node_allocator_type::allocate(1); } // 分配一个节点的空间
-void <em>M_put_node(</em>Node</em> <strong>p) { _M_node_allocator_type::deallocate(</strong>p, 1); } // 释放一个节点的空间
-<em>Node* </em>M_new_node(const value_type&amp; __obj) {</p>
-
-<pre><code>_Node* __n = _M_get_node();
-__n-&gt;_M_next = 0;
-__STL_TRY {
-    construct(&amp;__n-&gt;_M_val, __obj);
-    return __n;
+<code>cpp
+typedef simple_alloc&lt;_Node, _Alloc&gt; _M_node_allocator_type;
+_Node* _M_get_node() { return _M_node_allocator_type::allocate(1); } // 分配一个节点的空间
+void _M_put_node(_Node* __p) { _M_node_allocator_type::deallocate(__p, 1); } // 释放一个节点的空间
+_Node* _M_new_node(const value_type&amp; __obj) {
+    _Node* __n = _M_get_node();
+    __n-&gt;_M_next = 0;
+    __STL_TRY {
+        construct(&amp;__n-&gt;_M_val, __obj);
+        return __n;
+    }
+    __STL_UNWIND(_M_put_node(__n));
 }
-__STL_UNWIND(_M_put_node(__n));
-</code></pre>
-
-<p>}
-void <em>M_delete_node(</em>Node* __n) {</p>
-
-<pre><code>destroy(&amp;__n-&gt;_M_val);
-_M_put_node(__n);
-</code></pre>
-
-<p>}
-```</p>
+void _M_delete_node(_Node* __n) {
+    destroy(&amp;__n-&gt;_M_val);
+    _M_put_node(__n);
+}
+</code></p>
 
 <h4>插入操作表格重新整理</h4>
 
 <p>哈希表的插入操作有两个问题要考虑，一个是 是否允许插入相同键值的元素，另一个是 是否需要扩充表的大小。在 STL 中，首先是判断新插入一个元素后是否需要扩充，判断的条件是插入后元素的个数大于当前哈希表的大小；而是否允许元素重复则通过提供 <code>insert_unique</code> 和 <code>insert_equal</code> 来解决。相关代码如下：<br/>
-``` cpp
-pair&lt;iterator, bool> insert_unique(const value_type&amp; __obj) {</p>
-
-<pre><code>resize(_M_num_elements + 1); // 先进行扩充（如有必要）
-return insert_unique_noresize(__obj); // 然后插入
-</code></pre>
-
-<p>}
-iterator insert_equal(const value_type&amp; __obj) {</p>
-
-<pre><code>resize(_M_num_elements + 1);
-return insert_equal_noresize(__obj);
-</code></pre>
-
-<p>}
-void hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::resize(size_type <strong>num_elements_hint) { // 扩充表格
-  const size_type </strong>old_n = _M_buckets.size();
-  if (<strong>num_elements_hint > </strong>old_n) { // 判断是否需要扩充</p>
-
-<pre><code>const size_type __n = _M_next_size(__num_elements_hint); // 下一个质数
-if (__n &gt; __old_n) {
-  vector&lt;_Node*, _All&gt; __tmp(__n, (_Node*)(0), _M_buckets.get_allocator()); // 新的buckets
-  __STL_TRY {
-    for (size_type __bucket = 0; __bucket &lt; __old_n; ++__bucket) { // 遍历旧的buckets
-      _Node* __first = _M_buckets[__bucket];
-      while (__first) { // 处理每一个链表
-        size_type __new_bucket = _M_bkt_num(__first-&gt;_M_val, __n); // 确定当前节点落在新buckets中的位置
-        _M_buckets[__bucket] = __first-&gt;_M_next; // 指向下一个节点
-        __first-&gt;_M_next = __tmp[__new_bucket]; // 在新buckets的新索引位置头部插入
-        __tmp[__new_bucket] = __first;
-        __first = _M_buckets[__bucket]; // 指向旧链表下一个节点
+<code>cpp
+pair&lt;iterator, bool&gt; insert_unique(const value_type&amp; __obj) {
+    resize(_M_num_elements + 1); // 先进行扩充（如有必要）
+    return insert_unique_noresize(__obj); // 然后插入
+}
+iterator insert_equal(const value_type&amp; __obj) {
+    resize(_M_num_elements + 1);
+    return insert_equal_noresize(__obj);
+}
+void hashtable&lt;_Val,_Key,_HF,_Ex,_Eq,_All&gt;::resize(size_type __num_elements_hint) { // 扩充表格
+  const size_type __old_n = _M_buckets.size();
+  if (__num_elements_hint &gt; __old_n) { // 判断是否需要扩充
+    const size_type __n = _M_next_size(__num_elements_hint); // 下一个质数
+    if (__n &gt; __old_n) {
+      vector&lt;_Node*, _All&gt; __tmp(__n, (_Node*)(0), _M_buckets.get_allocator()); // 新的buckets
+      __STL_TRY {
+        for (size_type __bucket = 0; __bucket &lt; __old_n; ++__bucket) { // 遍历旧的buckets
+          _Node* __first = _M_buckets[__bucket];
+          while (__first) { // 处理每一个链表
+            size_type __new_bucket = _M_bkt_num(__first-&gt;_M_val, __n); // 确定当前节点落在新buckets中的位置
+            _M_buckets[__bucket] = __first-&gt;_M_next; // 指向下一个节点
+            __first-&gt;_M_next = __tmp[__new_bucket]; // 在新buckets的新索引位置头部插入
+            __tmp[__new_bucket] = __first;
+            __first = _M_buckets[__bucket]; // 指向旧链表下一个节点
+          }
+        }
+        _M_buckets.swap(__tmp); // 交换新旧buckets，退出后临时buckets __tmp 自动释放
       }
     }
-    _M_buckets.swap(__tmp); // 交换新旧buckets，退出后临时buckets __tmp 自动释放
   }
 }
-</code></pre>
-
-<p>  }
-}
-template <class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All>
-pair<typename hashtable<_Val,_Key,_HF,_Ex,_Eq,_All>::iterator, bool>
-hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::insert_unique_noresize(const value_type&amp; <strong>obj) { // 不允许键值重复
-  const size_type </strong>n = <em>M_bkt_num(__obj);
-  </em>Node<em> <strong>first = _M_buckets[</strong>n];
-  for (_Node</em> <strong>cur = </strong>first; <strong>cur; </strong>cur = <em>_cur-></em>M_next)</p>
-
-<pre><code>if (_M_equals(_M_get_key(__cur-&gt;_M_val), _M_get_key(__obj))) // 判断是否存在重复的key
-  return pair&lt;iterator, bool&gt;(iterator(__cur, this), false); 
-</code></pre>
-
-<p>  <em>Node* __tmp = </em>M_new_node(<strong>obj);
-  </strong>tmp-><em>M_next = __first;
-  </em>M_buckets[<strong>n] = </strong>tmp;
+template &lt;class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All&gt;
+pair&lt;typename hashtable&lt;_Val,_Key,_HF,_Ex,_Eq,_All&gt;::iterator, bool&gt;
+hashtable&lt;_Val,_Key,_HF,_Ex,_Eq,_All&gt;::insert_unique_noresize(const value_type&amp; __obj) { // 不允许键值重复
+  const size_type __n = _M_bkt_num(__obj);
+  _Node* __first = _M_buckets[__n];
+  for (_Node* __cur = __first; __cur; __cur = __cur-&gt;_M_next)
+    if (_M_equals(_M_get_key(__cur-&gt;_M_val), _M_get_key(__obj))) // 判断是否存在重复的key
+      return pair&lt;iterator, bool&gt;(iterator(__cur, this), false);
+  _Node* __tmp = _M_new_node(__obj);
+  __tmp-&gt;_M_next = __first;
+  _M_buckets[__n] = __tmp;
   ++_M_num_elements;
-  return pair&lt;iterator, bool>(iterator(__tmp, this), true);
+  return pair&lt;iterator, bool&gt;(iterator(__tmp, this), true);
 }
-```
+</code>
 允许键值重复的插入操作类似的，只是为了确保相同键值的挨在一起，先要找到相同键值的位置，然后插入。</p>
 
 <h4>整体复制和清空</h4>
 
 <p>复制和清空时分别涉及空间的分配和释放，所以在这里也介绍一下。首先是复制操作，需要先将目标 hashtable 清空，然后将源 hashtable 的 buckets 中的每个链表一一复制，如下：<br/>
-``` cpp
-template <class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All>
-void hashtable&lt;<em>Val,</em>Key,<em>HF,</em>Ex,<em>Eq,</em>All>::<em>M_copy_from(const hashtable&amp; __ht) {
-  </em>M_buckets.clear(); // 先清空目标 hashtable
-  <em>M_buckets.reserve(__ht.</em>M_buckets.size()); // 大小重置为源 hashtable 的大小
-  <em>M_buckets.insert(</em>M_buckets.end(), <strong>ht.<em>M_buckets.size(), (</em>Node*) 0); // 将目标 hashtable 的 buckets 置空
-  </strong>STL_TRY {</p>
-
-<pre><code>for (size_type __i = 0; __i &lt; __ht._M_buckets.size(); ++__i) { // 遍历 buckets
-  const _Node* __cur = __ht._M_buckets[__i];
-  if (__cur) {
-    _Node* __copy = _M_new_node(__cur-&gt;_M_val);
-    _M_buckets[__i] = __copy;
-    for (_Node* __next = __cur-&gt;_M_next; __next; __cur = __next,
-            __next = __cur-&gt;_M_next) { // 复制每个节点
-      __copy-&gt;_M_next = _M_new_node(__next-&gt;_M_val);
-      __copy = __copy-&gt;_M_next;
+<code>cpp
+template &lt;class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All&gt;
+void hashtable&lt;_Val,_Key,_HF,_Ex,_Eq,_All&gt;::_M_copy_from(const hashtable&amp; __ht) {
+  _M_buckets.clear(); // 先清空目标 hashtable
+  _M_buckets.reserve(__ht._M_buckets.size()); // 大小重置为源 hashtable 的大小
+  _M_buckets.insert(_M_buckets.end(), __ht._M_buckets.size(), (_Node*) 0); // 将目标 hashtable 的 buckets 置空
+  __STL_TRY {
+    for (size_type __i = 0; __i &lt; __ht._M_buckets.size(); ++__i) { // 遍历 buckets
+      const _Node* __cur = __ht._M_buckets[__i];
+      if (__cur) {
+        _Node* __copy = _M_new_node(__cur-&gt;_M_val);
+        _M_buckets[__i] = __copy;
+        for (_Node* __next = __cur-&gt;_M_next; __next; __cur = __next,
+                __next = __cur-&gt;_M_next) { // 复制每个节点
+          __copy-&gt;_M_next = _M_new_node(__next-&gt;_M_val);
+          __copy = __copy-&gt;_M_next;
+        }
+      }
     }
+    _M_num_elements = __ht._M_num_elements;
   }
-}
-_M_num_elements = __ht._M_num_elements;
-</code></pre>
-
-<p>  }
   __STL_UNWIND(clear());
 }
-```</p>
+</code></p>
 
 <h2>4. hashtable 的迭代器</h2>
 
 <p>hashtable 的迭代器是前向的单向迭代器，遍历的方式是先遍历完一个 list 然后切换到下一个 bucket 指向的 list 进行遍历。以下是 hashtable 的迭代器的定义：<br/>
-``` cpp
-template <class _Val, class _Key, class _HashFcn, class _ExtractKey, class _EqualKey, class _Alloc>
-struct <em>Hashtable_iterator {
-  typedef hashtable&lt;</em>Val,<em>Key,</em>HashFcn,<em>ExtractKey,</em>EqualKey,<em>Alloc> </em>Hashtable;
-  typedef <em>Hashtable_iterator&lt;</em>Val, <em>Key, </em>HashFcn, <em>ExtractKey, </em>EqualKey, <em>Alloc> iterator;
-  typedef </em>Hashtable_const_iterator&lt;<em>Val, </em>Key, <em>HashFcn, </em>ExtractKey, <em>EqualKey, </em>Alloc> const_iterator;
-  typedef <em>Hashtable_node<_Val> </em>Node;</p>
-
-<p>  <em>Node* </em>M_cur; // 指向当前节点
-  <em>Hashtable* </em>M_ht; // 指向当前节点所在 bucket</p>
-
-<p>  <em>Hashtable_iterator(</em>Node<em> <em>_n, </em>Hashtable</em> <strong>tab) : _M_cur(</strong>n), <em>M_ht(__tab) {}
-  </em>Hashtable_iterator() {}
-  reference operator<em>() const { return <em>M_cur-></em>M_val; }
-  iterator&amp; operator++();
-  iterator operator++(int);
-  bool operator==(const iterator&amp; <strong>it) const { return _M_cur == </strong>it.<em>M_cur; }
-  bool operator!=(const iterator&amp; __it) const { return </em>M_cur != <em><em>it.</em>M_cur; }
-};
-template <class _Val, class _Key, class _HF, class _ExK, class _EqK, class _All>
-</em>Hashtable_iterator&lt;<em>Val,</em>Key,<em>HF,</em>ExK,<em>EqK,</em>All>&amp;
-<em>Hashtable_iterator&lt;</em>Val,<em>Key,</em>HF,<em>ExK,</em>EqK,<em>All>::operator++(){
-  const </em>Node</em> <em><em>old = </em>M_cur;
-  </em>M_cur = <em>M_cur-></em>M_next;
-  if (!_M_cur) { // 到了当前 bucket 的尾部</p>
-
-<pre><code>size_type __bucket = _M_ht-&gt;_M_bkt_num(__old-&gt;_M_val);
-while (!_M_cur &amp;&amp; ++__bucket &lt; _M_ht-&gt;_M_buckets.size())
-  _M_cur = _M_ht-&gt;_M_buckets[__bucket];
-</code></pre>
-
-<p>  }
-  return *this;
-}
-```</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Val</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_HashFcn</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_ExtractKey</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_EqualKey</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Alloc</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">struct</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="n">hashtable</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Val</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Key</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">HashFcn</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ExtractKey</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">EqualKey</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Alloc</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Val</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Key</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">HashFcn</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ExtractKey</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">EqualKey</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Alloc</span><span class="o">&gt;</span> <span class="n">iterator</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_const_iterator</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Val</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Key</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">HashFcn</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ExtractKey</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">EqualKey</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Alloc</span><span class="o">&gt;</span> <span class="n">const_iterator</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">typedef</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_node</span><span class="o">&lt;</span><span class="n">_Val</span><span class="o">&gt;</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Node</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Node</span><span class="o">*</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="p">;</span> <span class="c1">// 指向当前节点</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable</span><span class="o">*</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_ht</span><span class="p">;</span> <span class="c1">// 指向当前节点所在 bucket&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span><span class="p">(</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Node</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">_n</span><span class="p">,</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">tab</span><span class="p">)</span> <span class="o">:</span> <span class="n">_M_cur</span><span class="p">(</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">n</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_ht</span><span class="p">(</span><span class="n">__tab</span><span class="p">)</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span><span class="p">()</span> <span class="p">{}</span>
+</span><span class='line'>  <span class="n">reference</span> <span class="k">operator</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="o">-&gt;&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_val</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">iterator</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="k">operator</span><span class="o">++</span><span class="p">();</span>
+</span><span class='line'>  <span class="n">iterator</span> <span class="k">operator</span><span class="o">++</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">iterator</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">it</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_M_cur</span> <span class="o">==</span> <span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">it</span><span class="p">.</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="k">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">iterator</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">__it</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span> <span class="o">!=</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">it</span><span class="p">.</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">_Val</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_Key</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_HF</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_ExK</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_EqK</span><span class="p">,</span> <span class="k">class</span> <span class="nc">_All</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Val</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Key</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">HF</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ExK</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">EqK</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">All</span><span class="o">&gt;&amp;</span><span class="n">amp</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Hashtable_iterator</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Val</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Key</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">HF</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">ExK</span><span class="p">,</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">EqK</span><span class="p">,</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">All</span><span class="o">&gt;::</span><span class="k">operator</span><span class="o">++</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">const</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">Node</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">old</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span><span class="o">-&gt;&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_next</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_M_cur</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 到了当前 bucket 的尾部</span>
+</span><span class='line'>    <span class="n">size_type</span> <span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bucket</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_ht</span><span class="o">-&gt;&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_bkt_num</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">old</span><span class="o">-&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_val</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="o">!&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="o">++&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="n">bucket</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_ht</span><span class="o">-&gt;&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_buckets</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_cur</span> <span class="o">=</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">M_ht</span><span class="o">-&gt;</span><span class="n">_M_buckets</span><span class="p">[</span><span class="n">__bucket</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <h2>5. 哈希函数</h2>
 
 <p>在第三节中介绍 hashtable 的数据结构时，提到了一个哈希函数类型的模板参数，从键值到索引位置的映射由这个哈希函数来完成，实际中是通过函数 <code>_M_bkt_num_key</code> 来完成这个映射的，如下：<br/>
-``` cpp
-size_type _M_bkt_num_key(const key_type&amp; __key) const {</p>
-
-<pre><code>return _M_bkt_num_key(__key, _M_buckets.size());
-</code></pre>
-
-<p>}
-size_type _M_bkt_num_key(const key_type&amp; <strong>key, size_t </strong>n) const {</p>
-
-<pre><code>return _M_hash(__key) % __n; // 在这里调用函数 _M_hash，实现映射
-</code></pre>
-
-<p>}
-<code>
-这里的 `_M_hash` 是一个哈希函数类型的成员，可以看做是一个函数指针，真正的函数的定义在 `&lt;stl_hash_fun.h&gt;` 中，针对 char，int，long 等整数型别，这里大部分的 hash function 什么也没做，只是重视返回原始值，但对字符串（const char* ）设计了一个转换函数，如下：  
-</code> cpp
-template <class _Key> struct hash { }; // 仿函数 hash
-inline size_t <strong>stl_hash_string(const char* </strong>s) { // 将字符串映射为整型
-  unsigned long <strong>h = 0;
-  for ( ; *</strong>s; ++__s)</p>
-
-<pre><code>__h = 5*__h + *__s;
-</code></pre>
-
-<p>  return size_t(<strong>h);
+<code>cpp
+size_type _M_bkt_num_key(const key_type&amp; __key) const {
+    return _M_bkt_num_key(__key, _M_buckets.size());
 }
-</strong>STL_TEMPLATE_NULL struct hash&lt;char<em>> {
-  size_t operator()(const char</em> <strong>s) const { return </strong>stl_hash_string(<strong>s); } // 函数调用操作符 operator()
+size_type _M_bkt_num_key(const key_type&amp; __key, size_t __n) const {
+    return _M_hash(__key) % __n; // 在这里调用函数 _M_hash，实现映射
+}
+</code>
+这里的 <code>_M_hash</code> 是一个哈希函数类型的成员，可以看做是一个函数指针，真正的函数的定义在 <code>&lt;stl_hash_fun.h&gt;</code> 中，针对 char，int，long 等整数型别，这里大部分的 hash function 什么也没做，只是重视返回原始值，但对字符串（const char* ）设计了一个转换函数，如下：<br/>
+<code>cpp
+template &lt;class _Key&gt; struct hash { }; // 仿函数 hash
+inline size_t __stl_hash_string(const char* __s) { // 将字符串映射为整型
+  unsigned long __h = 0;
+  for ( ; *__s; ++__s)
+    __h = 5*__h + *__s;
+  return size_t(__h);
+}
+__STL_TEMPLATE_NULL struct hash&lt;char*&gt; {
+  size_t operator()(const char* __s) const { return __stl_hash_string(__s); } // 函数调用操作符 operator()
 };
-</strong>STL_TEMPLATE_NULL struct hash<const char*> {
-  size_t operator()(const char* <strong>s) const { return </strong>stl_hash_string(<strong>s); }
+__STL_TEMPLATE_NULL struct hash&lt;const char*&gt; {
+  size_t operator()(const char* __s) const { return __stl_hash_string(__s); }
 };
-</strong>STL_TEMPLATE_NULL struct hash<char> {
-  size_t operator()(char <strong>x) const { return </strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;char&gt; {
+  size_t operator()(char __x) const { return __x; }
 };
-<strong>STL_TEMPLATE_NULL struct hash<unsigned char> {
-  size_t operator()(unsigned char </strong>x) const { return <strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;unsigned char&gt; {
+  size_t operator()(unsigned char __x) const { return __x; }
 };
-</strong>STL_TEMPLATE_NULL struct hash<signed char> {
-  size_t operator()(unsigned char <strong>x) const { return </strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;signed char&gt; {
+  size_t operator()(unsigned char __x) const { return __x; }
 };
-<strong>STL_TEMPLATE_NULL struct hash<short> {
-  size_t operator()(short </strong>x) const { return <strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;short&gt; {
+  size_t operator()(short __x) const { return __x; }
 };
-</strong>STL_TEMPLATE_NULL struct hash<unsigned short> {
-  size_t operator()(unsigned short <strong>x) const { return </strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;unsigned short&gt; {
+  size_t operator()(unsigned short __x) const { return __x; }
 };
-<strong>STL_TEMPLATE_NULL struct hash<int> {
-  size_t operator()(int </strong>x) const { return <strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;int&gt; {
+  size_t operator()(int __x) const { return __x; }
 };
-</strong>STL_TEMPLATE_NULL struct hash<unsigned int> {
-  size_t operator()(unsigned int <strong>x) const { return </strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;unsigned int&gt; {
+  size_t operator()(unsigned int __x) const { return __x; }
 };
-<strong>STL_TEMPLATE_NULL struct hash<long> {
-  size_t operator()(long </strong>x) const { return <strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;long&gt; {
+  size_t operator()(long __x) const { return __x; }
 };
-</strong>STL_TEMPLATE_NULL struct hash<unsigned long> {
-  size_t operator()(unsigned long <strong>x) const { return </strong>x; }
+__STL_TEMPLATE_NULL struct hash&lt;unsigned long&gt; {
+  size_t operator()(unsigned long __x) const { return __x; }
 };
-```
+</code>
 关于函数调用操作符的更多介绍，可以参见我的另一篇文章 【<a href="http://ibillxia.github.io/blog/2014/05/24/function-pointer-in-c-and-function-call-operator-in-cpp/">C语言函数指针与C++函数调用操作符</a>】。</p>
 ]]></content>
   </entry>
